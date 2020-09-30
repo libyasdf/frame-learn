@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>南方文产交所影视版权经营-首页</title>
+<link rel="stylesheet" href="css/default.css" />
+<script src="../common/js/jquery-1.11.2.min.js"></script>
+<link rel="stylesheet" href="../common/css/bootstrap.min.css">
+<script type="text/javascript" src="jquery.base64.js"></script>
+<script type="text/javascript" src="tableExport.js"></script>
+<script type="text/javascript" src="sprintf.js"></script>
+<script type="text/javascript" src="jspdf.js"></script>
+<script type="text/javascript" src="base64.js"></script>
+<script type="text/javascript" src="jquery-latest.js"></script>
+<script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	$("#customers").tablesorter()
+	$("a.append").click(appendData);
+});
+
+var lastStudent = 23;
+var limit = 500;
+
+function appendData() {
+	
+	var tdTagStart = '<td>';
+	var tdTagEnd = '</td>';
+	var sex = ['male','female'];
+	var major = ['Mathematics','Languages'];
+	
+	
+	for(var i = 0; i < limit; i++) { 
+		var rnd = i % 2;
+		var row = '<tr>';	
+		row += tdTagStart + 'student' + (lastStudent++) + tdTagEnd;
+		row += tdTagStart + major[rnd] + tdTagEnd;
+		row += tdTagStart + sex[rnd] + tdTagEnd;
+		
+		row += tdTagStart +  randomNumber() + tdTagEnd;
+		row += tdTagStart +  randomNumber() + tdTagEnd;
+		row += tdTagStart +  randomNumber() + tdTagEnd;
+		row += tdTagStart +  randomNumber() + tdTagEnd;
+		
+		row += '</tr>';
+		
+		$("#customers/tbody:first").append(row);
+		
+	};
+	$("#customers").update();
+	return false;
+}
+
+function randomNumber() {
+	return Math.floor(Math.random()*101)
+}
+</script>
+
+</head>
+<body>
+	<button class="btn btn-success"
+		onClick="$('#customers').tableExport({type: 'excel', escape: 'false'});">Excel
+		Export</button>
+	<button class="btn btn-success"
+		onClick="$('#customers').tableExport({type: 'pdf', escape: 'false'});">CSV
+		Export</button>
+	<table id="customers" class="table table-striped table-bordered" >
+		<thead>
+			<tr class='warning'>
+				<th>Country</th>
+				<th>Population</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+			<tr>
+				<td>Chinna</td>
+				<td>1,363,480,000</td>
+				<td>March 24, 2014</td>
+			</tr>
+			<tr>
+				<td>India</td>
+				<td>1,241,900,000</td>
+				<td>March 24, 2014</td>
+			</tr>
+			<tr>
+				<td>United States</td>
+				<td>317,746,000</td>
+				<td>March 24, 2014</td>
+			</tr>
+			<tr>
+				<td>Indonesia</td>
+				<td>249,866,000</td>
+				<td>July 1, 2013</td>
+			</tr>
+			<tr>
+				<td>Brazil</td>
+				<td>201,032,714</td>
+				<td>July 1, 2013</td>
+			</tr>
+	</table>
+</body>
+</html>
+

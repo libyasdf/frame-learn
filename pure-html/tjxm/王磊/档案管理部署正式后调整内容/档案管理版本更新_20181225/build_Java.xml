@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理java_20181225"></property>
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../">
+		<!-- 模块内页面和js -->
+		<!-- 变动内容太多，所以重新部署档案管理模块内页面和js-->
+		<include name="WebContent/modules/dagl/"/>
+		
+		<!-- 模块内的java文件-->
+		<!-- 变动内容太多，所以重新部署档案管理模块内java-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/"/>
+		
+		
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		<include name="WebContent/modules/system/config/dictionary/dictionaryList.html"/>
+		<!--bootstrap table无数据时英文提示改中文-->
+        <include name="WebContent/static/core/bootstrap-table/locale/bootstrap-table-en-US.js"/>
+        <include name="WebContent/static/core/bootstrap-table/locale/bootstrap-table-en-US.min.js"/>
+        <include name="WebContent/static/core/bootstrap-table/bootstrap-table-locale-all.js"/>
+        <include name="WebContent/static/core/bootstrap-table/bootstrap-table-locale-all.min.js"/>
+        <include name="WebContent/static/core/bootstrap-table/bootstrap-table.js"/>
+        <include name="WebContent/modules/zhbg/hygl/meetingApply/js/bootstrap-table.min.js"/>
+        <include name="WebContent/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"/>
+        <include name="WebContent/static/core/bootstrap-table/bootstrap-table.min.js"/>
+		<!--bootstrap table关闭展开的子表（onCollapseRow）时触发的时间的添加-->
+		<include name="WebContent/static/js/common/tablelist.js"/>
+		<!-- 管理员的借阅记录固定列，兼容ie-->
+		<include name="WebContent/static/core/bootstrap-table-fixed-columns/"/>
+		<!-- 已办列表重新引了一遍-->
+		<include name="WebContent/modules/workflow/yibanList.html"/>
+		<!-- 引入<link rel="stylesheet" href="/static/core/layer/theme/default/layer.css">样式，解决点击整理编目下模块后，其他列表页面无法章程弹出页面问题-->
+		<include name="WebContent/moduleIndex.html"/>
+
+		<!-- 公共java-->
+		<!-- 2019-01-03编研管理添加公共附件方法-->
+		<include name="src/com/sinosoft/sinoep/modules/system/component/affix/"/>
+		<!-- 添加根据借阅日期获取应还日期方法-->
+		<include name="src/com/sinosoft/sinoep/modules/system/config/holidayset/controller/"/>
+		<include name="src/com/sinosoft/sinoep/modules/system/config/holidayset/service/"/>
+
+		<!--学习考核查询是否含有上报员方法的修改-->
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/constant/XXKHCommonConstants.java"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/testmanage/services/TestManageServiceImpl.java"/>
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

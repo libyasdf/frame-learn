@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理java_20190924"></property>
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+		<!--组合查询时，输入多个条件后，第二个及以下条件无效BUG修改-->
+		<!--档案的页数或者件数发送改变时，其相关联的信息没有随之发生变化-->
+		<!--单位预立库，录入人对应一个立卷单位时，档案第一层新增时，末尾序号不能自加1-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+		<!--文件管理，通过【批量修改文件类型】可以改变文件状态-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/services/"/>
+		<!--借阅记录（按档案）列表排序按照借阅日期排序-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/daly/borrow/services/"/>
+
+		<!--借阅记录按次，流水号列往前移动-->
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/recordPerList.html"/>
+		<!--文件管理-发文，归档页面 IE10 js报错-->
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendTidyRecode.html"/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

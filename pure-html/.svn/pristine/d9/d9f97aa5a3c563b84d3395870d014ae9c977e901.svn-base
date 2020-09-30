@@ -1,0 +1,10 @@
+{
+	"meetingName":"测试",
+	"content":"300",
+	"meetingPlace":"综合大楼顶层",
+	"manager":"谢周三",
+	"device":"投票器，音响，投影仪",
+	"joinDept":"情报科，档案科，人事科",
+	"remark":"这是一条很重要的备注"
+
+}

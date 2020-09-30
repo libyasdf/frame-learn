@@ -1,0 +1,543 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" import="java.util.*" pageEncoding="gbk"%>
+<%@page import="com.sinosoft.util.tool.ParamUtils"%>
+<%@page import="com.sinosoft.approval.outside.doublesoft.Constant"%>
+<%@page import="com.sinosoft.approval.common.util.PageUtil"%>
+<%@ page import="org.apache.struts.Globals"%>
+<jsp:directive.page import="com.sinosoft.approval.outside.doublesoft.po.XzspSrMatterMain"/>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+
+	String glbm = ParamUtils.getParameter(request, "glbm");
+	String id = ParamUtils.getParameter(request, "id");
+	String readOnlyFlg = "";
+	String userFlag    = ParamUtils.getSession(request.getSession(), "userFlag");
+	if(!"1".equals(userFlag)){
+		readOnlyFlg = "1";
+	}
+	if (PageUtil.getLockFlg(id, glbm)) readOnlyFlg = "1";
+	XzspSrMatterMain main = (XzspSrMatterMain)request.getAttribute("XzspSrMatterMain");
+	String subflag = main.getSubflag()==null?"1":main.getSubflag();
+%>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+	<title>申请企业经营情况</title>
+	<link rel="stylesheet" href="/jsp/themes/officword.css"/>
+	<script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="/js/form.js"></script>
+	<script type="text/javascript">
+	var allowedSpecialCharKeyCodes = [46,8,37,39,35,36,9];
+	var numberKeyCodes = [44, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105,229];
+	var commaKeyCode = [188];
+	var decimalKeyCode = [189,190,110];
+	/**
+	 *能输入数字和小数点
+	 */
+	function decimalsOnly(event) {
+		//alert(event.keyCode);
+	    var legalKeyCode =
+	        (!event.shiftKey  && !event.altKey)
+	            &&
+	        (jQuery.inArray(event.keyCode, allowedSpecialCharKeyCodes) >= 0
+	            ||
+	        jQuery.inArray(event.keyCode, numberKeyCodes) >= 0
+	            ||
+	        jQuery.inArray(event.keyCode, commaKeyCode) >= 0
+	            ||
+	        jQuery.inArray(event.keyCode, decimalKeyCode) >= 0
+				||
+			(event.ctrlKey && (event.keyCode==67 || event.keyCode==86)));
+	
+	
+	    if (legalKeyCode === false)
+	        event.preventDefault();
+	}
+    	//初期化
+    $(document).ready(function() {
+ 		var rof = '<%=readOnlyFlg %>';
+		var flag = '<%=subflag %>';
+  		var userFlag = '<%=userFlag %>';
+ 		if (rof != null && rof != '' && rof == '1' && (flag != '121'|| userFlag != '1') ) {
+ 			$("input[type='text'],textarea").attr("readonly", "readonly");
+		 	$("input[type='text']").removeAttr("onclick");
+		 	$("select,input[type='radio']").attr("disabled","true");
+ 			$("#_add").hide();
+ 		}
+ 		$("input[type='text']").live('keydown',decimalsOnly);
+ 		if(!$("#_add").is(":visible")){
+ 			$("input[type='text']").attr("readonly", "readonly");
+ 			$("textarea").attr("readonly", "readonly");
+ 			$("input[type='text']").removeAttr("onclick");
+	 		$("select").attr("disabled","true");
+	 		$("input[type='radio']").attr("disabled","true");
+ 		}
+    })
+	function _save() {
+		var sflg = false;
+		$("input[type='text']").each(function(){
+			if (isNaN($(this).val())) {
+				alert("数字格式不符！");
+				sflg = true;
+			}
+        }); 
+        if (sflg) return;
+		var frm = document.frm;
+		if(!autoCheckForm(frm)){
+		   return false;
+		}
+		
+		if(jsbl()){
+			frm.action = "/srqy/nqyrdCwqktableAction.do?method=save";
+			frm.submit();
+		}
+	}
+	//填写修改建议,必须填写上面两个变量mid,type
+	function _addSingleIdea(){
+		var mid = $("#id").val();
+		var type = "<%=glbm%>";//关联表名
+		_addIdea(mid,type)
+	}
+	function jsbl(){
+		//验证填了几种类型
+		var typeNum='';
+		//验证数据是否符合基本要求
+		var isUnCheck= true;
+		/*
+		$("input[type='text']").each(function(){
+			if($(this).attr("readonly")!=true){
+				if(parseFloat($(this).val())>parseFloat($("#cwQysrze").val())){
+					alert($(this).attr("CK_NAME")+"数值不能大于企业收入总额");
+					$(this).focus();
+					isUnCheck = false;
+					return false;
+				}
+			}
+		});
+		*/
+		if(!isUnCheck){
+			return false;
+		}
+		//验证税是否符合基本要求
+		if(parseFloat($("#cwQysdsjm").val())>parseFloat($("#cwQysdsyj").val())){
+			alert("企业所得税减免不能大于应缴！");
+			$("#cwQysdsjm").focus();
+			return false;
+		}
+		if(parseFloat($("#cwXxjsfwyysjm").val())>parseFloat($("#cwXxjsfwyysyj").val())){
+			alert("信息技术服务营业税（增值税）减免不能大于应缴！");
+			$("#cwXxjsfwyysjm").focus();
+			return false;
+		}
+		//是否有正确数据
+		var isHaveOk=false;
+		//企业收入总额
+		var cwQysrze = $("#cwQysrze").val();
+		//软件产品开发销售营业收入
+		var cwDqyrjcpkfxssr =  $("#cwDqyrjcpkfxssr").val();
+		//软件产品自主开发销售（营业）收入
+		var cwDqyrjcpzzkfxssr1 =  $("#cwDqyrjcpzzkfxssr1").val();
+		
+		//嵌入式软件产品开发销售（营业）收入
+		var cwDqyqrsrjsr =  $("#cwDqyqrsrjsr").val();
+		//软件产品自主开发销售（营业）收入
+		var cwDqyrjcpzzkfxssr2 =  $("#cwDqyrjcpzzkfxssr2").val();
+		
+		//信息系统集成产品开发销售（营业）收入
+		var cwDqyxxxtjcfwsr =  $("#cwDqyxxxtjcfwsr").val();
+		//软件产品自主开发销售（营业）收入
+		var cwDqyrjcpzzkfxssr3 =  $("#cwDqyrjcpzzkfxssr3").val();
+		
+		//验证数值正确性：
+		if(cwQysrze==''||isNaN(cwQysrze)||cwQysrze==0){
+			alert("企业收入总额数据不正确！");
+			$("#cwQysrze").focus();
+			return false;
+		}
+		//被除数数据验证赋值
+		if(cwDqyrjcpkfxssr==''||isNaN(cwDqyrjcpkfxssr)){
+			cwDqyrjcpkfxssr = 0;
+		}
+		if(cwDqyrjcpzzkfxssr1==''||isNaN(cwDqyrjcpzzkfxssr1)){
+			cwDqyrjcpzzkfxssr1 = 0;
+		}
+		
+		if(cwDqyqrsrjsr==''||isNaN(cwDqyqrsrjsr)){
+			cwDqyqrsrjsr = 0;
+		}
+		if(cwDqyrjcpzzkfxssr2==''||isNaN(cwDqyrjcpzzkfxssr2)){
+			cwDqyrjcpzzkfxssr2 = 0;
+		}
+		
+		if(cwDqyxxxtjcfwsr==''||isNaN(cwDqyxxxtjcfwsr)){
+			cwDqyxxxtjcfwsr = 0;
+		}
+		if(cwDqyrjcpzzkfxssr3==''||isNaN(cwDqyrjcpzzkfxssr3)){
+			cwDqyrjcpzzkfxssr3 = 0;
+		}
+		//比例计算和赋值
+		//cwDqyrjcpkfxssrbl,cwDqyrjcpzzkfxssrbl1软件产品
+		//填写0置空
+		if(cwDqyrjcpkfxssr==0||cwDqyrjcpkfxssr==0.00){
+			$("#cwDqyrjcpkfxssr").val('');
+		}else{
+			typeNum+="A";
+		}
+		if(cwDqyrjcpzzkfxssr1==0||cwDqyrjcpzzkfxssr1==0.00){
+			$("#cwDqyrjcpzzkfxssr1").val('');
+		}else{
+			if(typeNum.indexOf('A')==-1){
+				typeNum+="A";
+			}
+		}
+		if(cwDqyqrsrjsr==0||cwDqyqrsrjsr==0.00){
+			$("#cwDqyqrsrjsr").val('');
+		}else{
+			typeNum+="B";
+		}
+		if(cwDqyrjcpzzkfxssr2==0||cwDqyrjcpzzkfxssr2==0.00){
+			$("#cwDqyrjcpzzkfxssr2").val('');
+		}else{
+			if(typeNum.indexOf('B')==-1){
+				typeNum+="B";
+			}
+		}
+		if(cwDqyxxxtjcfwsr==0||cwDqyxxxtjcfwsr==0.00){
+			$("#cwDqyxxxtjcfwsr").val('');
+		}else{
+			typeNum+="C";
+		}
+		if(cwDqyrjcpzzkfxssr3==0||cwDqyrjcpzzkfxssr3==0.00){
+			$("#cwDqyrjcpzzkfxssr3").val('');
+		}else{
+			if(typeNum.indexOf('C')==-1){
+				typeNum+="C";
+			}
+		}
+		
+		var cwDqyrjcpkfxssrbl = (cwDqyrjcpkfxssr/cwQysrze*100).toFixed(2);
+			$("#cwDqyrjcpkfxssrbl").val(cwDqyrjcpkfxssrbl==0?'':cwDqyrjcpkfxssrbl);
+			$("#cwDqyrjcpzzkfxssrbl1").val((cwDqyrjcpzzkfxssr1/cwQysrze*100).toFixed(2)==0?'':(cwDqyrjcpzzkfxssr1/cwQysrze*100).toFixed(2));
+		//cwDqyqrsrjsrbl,cwDqyrjcpzzkfxssrbl2嵌入式软件产品
+		var cwDqyqrsrjsrbl = (cwDqyqrsrjsr/cwQysrze*100).toFixed(2);
+			$("#cwDqyqrsrjsrbl").val(cwDqyqrsrjsrbl==0?'':cwDqyqrsrjsrbl);
+			$("#cwDqyrjcpzzkfxssrbl2").val((cwDqyrjcpzzkfxssr2/cwQysrze*100).toFixed(2)==0?'':(cwDqyrjcpzzkfxssr2/cwQysrze*100).toFixed(2));
+		//cwDqyxxxtjcfwsrbl,cwDqyrjcpzzkfxssrbl3信息系统集成产品
+		var cwDqyxxxtjcfwsrbl = (cwDqyxxxtjcfwsr/cwQysrze*100).toFixed(2);
+			$("#cwDqyxxxtjcfwsrbl").val(cwDqyxxxtjcfwsrbl==0?'':cwDqyxxxtjcfwsrbl);
+			$("#cwDqyrjcpzzkfxssrbl3").val((cwDqyrjcpzzkfxssr3/cwQysrze*100).toFixed(2)==0?'':(cwDqyrjcpzzkfxssr3/cwQysrze*100).toFixed(2));
+			
+			
+		//判断填写几种类型
+		if(typeNum.length!=1){
+			alert("请选择一种软件业务情况填写！");
+			return false;
+		}else{
+			//判断三个比例是否符合要求
+			if(cwDqyrjcpkfxssrbl>=50){
+				isHaveOk = true;
+			}
+			if(cwDqyqrsrjsrbl>=40){
+				isHaveOk = true;
+			}
+			if(cwDqyxxxtjcfwsrbl>=40){
+				isHaveOk = true;
+			}
+			if(!isHaveOk){
+				alert("软件业务情况数据不符合申报要求，请仔细阅读注释！");
+			}
+			return isHaveOk;
+		}
+	}
+</script>
+<style type="text/css">
+	input[type='text']{text-align:center}
+</style>
+</head>
+<body>
+	<form name="frm" method="post" action="">
+		<input type="hidden" name="glbm" value="<%=glbm %>"/>
+		<input type="hidden" id="id" name="id" value="<%=id %>"/>
+		<input type="hidden" id="cwSid" name="cwSid" value="${NqyrdCwqktable.cwSid}" />
+		<input type="hidden" name="<%=org.apache.struts.taglib.html.Constants.TOKEN_KEY%>" value="<%=session.getAttribute(Globals.TRANSACTION_TOKEN_KEY)%>" />
+		<table  class="spbg" border="0">
+			<%if("2".equals(subflag)&&"".equals(userFlag)){ %>
+		    	<tr>
+					<td >
+						    <jsp:include page="/jsp/affix/fujian_list.jsp">
+							<jsp:param name="id" value="${XzspSrMatterMain.id}" />
+							<jsp:param name="sxbm" value="${XzspSrMatterMain.processCode}" />
+							<jsp:param name="subflag" value="${XzspSrMatterMain.subflag}" />
+							</jsp:include>
+					</td>
+				</tr>
+			<%} %>
+	    	<tr title="填写申请年度上一年度情况，例如2013年申请软件企业认定，填写2012年度数据。">
+	    		<td class="title" height="60px">
+	    			<div class="biaodan_titleleft" style="position: relative;margin-top:-1px">二、申请企业经营情况</div>
+	    		</td>
+    		</tr>
+	    	<tr>
+	    		<td align="right" style="padding-right:50px;" class="dw">
+	    			<font color="red">单位：万元、万美元</font>
+	    		</td>
+	    	</tr>
+	    	<!-- 申报书表单开始 -->
+	    	<tr>
+	    		<td align="center">
+	    		<table width="850px" border="0" class="spform" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="tdl" style="width: 12%" colspan="2" rowspan="2">总体情况</td>
+						<td class="stl" style="width: 11%" title="企业收入总额是指企业以货币形式和非货币形式从各种来源取得的收入。包括主营业务收入、其他业务收入、投资收益、营业外收入等。">企业收入总额 <font color="red">*</font></td>
+						<td class="stl" style="width: 11%" title="企业销售（营业）收入=主营业务收入+其他业务收入">企业销售<br>营业收入</td>
+						<td class="stl" style="width: 11%">资产总额</td>
+						<td class="stl" style="width: 11%">固定资产<br>原值</td>
+						<td class="stl" style="width: 11%"  title="根据资产负债表填写">固定资产<br>净值</td>
+						<td class="stl" style="width: 11%">利润总额</td>
+						<td class="stl" style="width: 11%" title="根据利润表填写">净利润</td>
+						<td class="stl" style="width: 11%" title="根据企业实际情况填写，或者根据海关统计数据填写">软件出口（万美元）</td>
+					</tr>
+					<tr style="height: 50px;">
+						<td  title="企业收入总额是指企业以货币形式和非货币形式从各种来源取得的收入。包括主营业务收入、其他业务收入、投资收益、营业外收入等。">
+							<input type="text" class="text" ctype="no" CK_TYPE="NotEmpty,Double,MaxLen_16" CK_NAME="企业收入总额"
+								value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwQysrze}"/>'
+							id="cwQysrze" name="cwQysrze" />
+						</td>
+						<td  title="企业销售（营业）收入=主营业务收入+其他业务收入">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="企业销售（营业）收入"
+								<c:if test="${empty NqyrdCwqktable.cwIqbxssr}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwIqbxssr}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwIqbxssr}"/>'</c:if>
+							id="cwIqbxssr" name="cwIqbxssr" />
+						</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="资产总额"
+								<c:if test="${empty NqyrdCwqktable.cwDqyzcze}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyzcze}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyzcze}"/>'</c:if>
+							id="cwDqyzcze" name="cwDqyzcze" />
+						</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="固定资产原值"
+								<c:if test="${empty NqyrdCwqktable.cwIgdzcyz}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwIgdzcyz}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwIgdzcyz}"/>'</c:if>
+							id="cwIgdzcyz" name="cwIgdzcyz" />
+						</td>
+						<td  title="根据资产负债表填写">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="固定资产净值"
+								<c:if test="${empty NqyrdCwqktable.cwIgdzcjz}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwIgdzcjz}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwIgdzcjz}"/>'</c:if>
+							id="cwIgdzcjz" name="cwIgdzcjz" />
+						</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="利润总额"
+								<c:if test="${empty NqyrdCwqktable.cwDqylrze}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqylrze}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqylrze}"/>'</c:if>
+							id="cwDqylrze" name="cwDqylrze" />
+						</td>
+						<td  title="根据利润表填写">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="净利润"
+								<c:if test="${empty NqyrdCwqktable.cwIjlr}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwIjlr}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwIjlr}"/>'</c:if>
+							id="cwIjlr" name="cwIjlr" />
+						</td>
+						<td  title="根据企业实际情况填写，或者根据海关统计数据填写">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="软件出口（万美元）"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjck}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjck}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjck}"/>'</c:if>
+							id="cwDqyrjck" name="cwDqyrjck" />
+						</td>
+					</tr>
+					<tr title="1、2、3项根据企业实际情况选择其中一项填写，如企业选择2或者3填写，需提供嵌入式软件产品登记证书或者计算机系统集成企业证书等有力的支撑材料。">
+						<td class="tdl" rowspan="3">软件业务<br>情况</td>
+						<td class="tdl" style="width: 3%">1</td>
+						<td class="stl">软件产品<br>开发销售<br>营业收入</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="软件产品开发销售（营业）收入"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpkfxssr}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpkfxssr}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpkfxssr}"/>'</c:if>
+							id="cwDqyrjcpkfxssr" name="cwDqyrjcpkfxssr" />
+						</td>
+						<td class="stl">占企业收入总额比例（%）</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="占企业收入总额比例（%）"  readonly="readonly"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpkfxssrbl}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpkfxssrbl}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpkfxssrbl}"/>'</c:if>
+							id="cwDqyrjcpkfxssrbl" name="cwDqyrjcpkfxssrbl" />
+						</td>
+						<td class="stl">软件产品自主开发销售（营业）收入</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="软件产品自主开发销售（营业）收入"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpzzkfxssr1}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpzzkfxssr1}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpzzkfxssr1}"/>'</c:if>
+							id="cwDqyrjcpzzkfxssr1" name="cwDqyrjcpzzkfxssr1" />
+						</td>
+						<td class="stl">占企业收入总额比例（%）</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="占企业收入总额比例（%）" readonly="readonly"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpzzkfxssrbl1}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpzzkfxssrbl1}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpzzkfxssrbl1}"/>'</c:if>
+							id="cwDqyrjcpzzkfxssrbl1" name="cwDqyrjcpzzkfxssrbl1" />
+						</td>
+					</tr>
+					<tr  title="1、2、3项根据企业实际情况选择其中一项填写，如企业选择2或者3填写，需提供嵌入式软件产品登记证书或者计算机系统集成企业证书等有力的支撑材料。">
+						<td class="tdl">2</td>
+						<td class="stl">嵌入式软件产品开发销售（营业）收入</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="嵌入式软件产品开发销售（营业）收入"
+								<c:if test="${empty NqyrdCwqktable.cwDqyqrsrjsr}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyqrsrjsr}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyqrsrjsr}"/>'</c:if>
+							id="cwDqyqrsrjsr" name="cwDqyqrsrjsr" />
+						</td>
+						<td class="stl">占企业收入总额比例（%）</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="占企业收入总额比例（%）" readonly="readonly"
+								<c:if test="${empty NqyrdCwqktable.cwDqyqrsrjsrbl}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyqrsrjsrbl}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyqrsrjsrbl}"/>'</c:if>
+							id="cwDqyqrsrjsrbl" name="cwDqyqrsrjsrbl" />
+						</td>
+						<td class="stl">软件产品自主开发销售（营业）收入</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="软件产品自主开发销售（营业）收入"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpzzkfxssr2}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpzzkfxssr2}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpzzkfxssr2}"/>'</c:if>
+							id="cwDqyrjcpzzkfxssr2" name="cwDqyrjcpzzkfxssr2" />
+						</td>
+						<td class="stl">占企业收入总额比例（%）</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="占企业收入总额比例（%）" readonly="readonly"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpzzkfxssrbl2}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpzzkfxssrbl2}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpzzkfxssrbl2}"/>'</c:if>
+							id="cwDqyrjcpzzkfxssrbl2" name="cwDqyrjcpzzkfxssrbl2" />
+						</td>
+					</tr>
+					<tr  title="1、2、3项根据企业实际情况选择其中一项填写，如企业选择2或者3填写，需提供嵌入式软件产品登记证书或者计算机系统集成企业证书等有力的支撑材料。">
+						<td class="tdl">3</td>
+						<td class="stl">信息系统集成产品开发销售（营业）收入</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="信息系统集成产品开发销售（营业）收入"
+								<c:if test="${empty NqyrdCwqktable.cwDqyxxxtjcfwsr}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyxxxtjcfwsr}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyxxxtjcfwsr}"/>'</c:if>
+							id="cwDqyxxxtjcfwsr" name="cwDqyxxxtjcfwsr" />
+						</td>
+						<td class="stl">占企业收入总额比例（%）</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="占企业收入总额比例（%）" readonly="readonly"
+								<c:if test="${empty NqyrdCwqktable.cwDqyxxxtjcfwsrbl}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyxxxtjcfwsrbl}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyxxxtjcfwsrbl}"/>'</c:if>
+							id="cwDqyxxxtjcfwsrbl" name="cwDqyxxxtjcfwsrbl" />
+						</td>
+						<td class="stl">软件产品自主开发销售（营业）收入</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="软件产品自主开发销售（营业）收入"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpzzkfxssr3}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpzzkfxssr3}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpzzkfxssr3}"/>'</c:if>
+							id="cwDqyrjcpzzkfxssr3" name="cwDqyrjcpzzkfxssr3" />
+						</td>
+						<td class="stl">占企业收入总额比例（%）</td>
+						<td>
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="占企业收入总额比例（%）" readonly="readonly"
+								<c:if test="${empty NqyrdCwqktable.cwDqyrjcpzzkfxssrbl3}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwDqyrjcpzzkfxssrbl3}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwDqyrjcpzzkfxssrbl3}"/>'</c:if>
+							id="cwDqyrjcpzzkfxssrbl3" name="cwDqyrjcpzzkfxssrbl3" />
+						</td>
+					</tr>
+				</table>
+				<table  width="850px" border="0" class="spform" cellpadding="0" cellspacing="0">
+					<tr style="height: 50px;">
+						<td class="stl" rowspan="3" width="12%">税收情况</td>
+						<td class="stl" colspan="2" title="按照公司审计报告，填写应缴所得税或应减免所得税">企业所得税</td>
+						<td class="stl" colspan="2" title="“软件产品增值税”中“应缴”额，包括自有软件产品和代销软件产品等所有软件产品收入应缴增值税额；“退税”额填写自有软件产品收入经税务登记备案后应退税额。">软件产品增值税</td>
+						<td class="stl" colspan="2" title="“营改增”后，“信息技术服务”收入按法定税率测算应缴和减免的税额。">信息技术服务营业税（增值税）</td>
+					</tr>
+					<tr >
+						<td class="stl"  title="按照公司审计报告，填写应缴所得税或应减免所得税">应缴</td>
+						<td class="stl"  title="按照公司审计报告，填写应缴所得税或应减免所得税">减免</td>
+						<td class="stl"  title="“软件产品增值税”中“应缴”额，包括自有软件产品和代销软件产品等所有软件产品收入应缴增值税额；“退税”额填写自有软件产品收入经税务登记备案后应退税额。">应缴</td>
+						<td class="stl"  title="“软件产品增值税”中“应缴”额，包括自有软件产品和代销软件产品等所有软件产品收入应缴增值税额；“退税”额填写自有软件产品收入经税务登记备案后应退税额。">退税</td>
+						<td class="stl"  title="“营改增”后，“信息技术服务”收入按法定税率测算应缴和减免的税额。">应缴</td>
+						<td class="stl"  title="“营改增”后，“信息技术服务”收入按法定税率测算应缴和减免的税额。">减免</td>
+					</tr>
+					<tr style="height: 50px;">
+						<td  title="按照公司审计报告，填写应缴所得税或应减免所得税">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="企业所得税应缴"
+								<c:if test="${empty NqyrdCwqktable.cwQysdsyj}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwQysdsyj}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwQysdsyj}"/>'</c:if>
+							 id="cwQysdsyj" name="cwQysdsyj" />
+						</td>
+						<td  title="按照公司审计报告，填写应缴所得税或应减免所得税">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="企业所得税减免"
+								<c:if test="${empty NqyrdCwqktable.cwQysdsjm}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwQysdsjm}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwQysdsjm}"/>'</c:if>
+							id="cwQysdsjm" name="cwQysdsjm" />
+						</td>
+						<td  title="“软件产品增值税”中“应缴”额，包括自有软件产品和代销软件产品等所有软件产品收入应缴增值税额；“退税”额填写自有软件产品收入经税务登记备案后应退税额。">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="软件产品增值税应缴"
+								<c:if test="${empty NqyrdCwqktable.cwRjcpzzsyj}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwRjcpzzsyj}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwRjcpzzsyj}"/>'</c:if>
+							id="cwRjcpzzsyj" name="cwRjcpzzsyj" />
+						</td>
+						<td  title="“软件产品增值税”中“应缴”额，包括自有软件产品和代销软件产品等所有软件产品收入应缴增值税额；“退税”额填写自有软件产品收入经税务登记备案后应退税额。">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="软件产品增值税退税"
+								<c:if test="${empty NqyrdCwqktable.cwRjcpzzsts}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwRjcpzzsts}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwRjcpzzsts}"/>'</c:if>
+							id="cwRjcpzzsts" name="cwRjcpzzsts" />
+						</td>
+						<td  title="“营改增”后，“信息技术服务”收入按法定税率测算应缴和减免的税额。">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="信息技术服务营业税（增值税）应缴"
+								<c:if test="${empty NqyrdCwqktable.cwXxjsfwyysyj}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwXxjsfwyysyj}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwXxjsfwyysyj}"/>'</c:if>
+							id="cwXxjsfwyysyj" name="cwXxjsfwyysyj" />
+						</td>
+						<td  title="“营改增”后，“信息技术服务”收入按法定税率测算应缴和减免的税额。">
+							<input type="text" class="text" ctype="no" CK_TYPE="Double,MaxLen_16" CK_NAME="信息技术服务营业税（增值税）减免"
+								<c:if test="${empty NqyrdCwqktable.cwXxjsfwyysjm}">value='<fmt:formatNumber pattern="0.00" value="0"/>'</c:if>
+					    		<c:if test="${not empty NqyrdCwqktable.cwXxjsfwyysjm}">value='<fmt:formatNumber pattern="0.00" value="${NqyrdCwqktable.cwXxjsfwyysjm}"/>'</c:if>
+							id="cwXxjsfwyysjm" name="cwXxjsfwyysjm" />
+						</td>
+					</tr>
+					<tr>
+						<td class="tdl" colspan="7">
+							<span>注：“软件业务情况”栏由企业自行选择1、2、3中的一项填写。若软件产品开发销售（营业）收入占企业收入总额比例≥50%，按“1”填写；嵌入式软件产品开发销售（营业）收入占企业收入总额比例≥40%，可按“2”填写；信息系统集成产品开发销售（营业）收入占企业收入总额比例≥40%，可按“3”填写。</span>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+   			<td height="50" valign="bottom" align="center" class="spbtm" >
+			<c:set value="${XzspSrMatterMain.subflag}" var="_subflag" scope="page"/>
+			<%
+				if(((String)session.getAttribute("userRole")).indexOf(Constant.role_ptyh)!=-1){
+					if(pageContext.getAttribute("_subflag")==null
+							||"".equals(pageContext.getAttribute("_subflag"))
+							||pageContext.getAttribute("_subflag").equals(Constant.INFO_SAVE)
+							||pageContext.getAttribute("_subflag").equals(Constant.INFO_CHECK_WRONG)
+							||pageContext.getAttribute("_subflag").equals(Constant.INFO_WINDOW_NOT_LEA_PASS)){
+			%>
+			<input type="button" name="_add" id="_add" class="btn btn-primary" value=" 保 存 " onclick="_save()">
+			<%}} %>
+   			</td>
+   		</tr>
+	</table>
+	<%	
+  		if(pageContext.getAttribute("_subflag")!=null&&!"".equals(pageContext.getAttribute("_subflag"))){
+  		if((((String)session.getAttribute("userRole")).indexOf(Constant.role_ptyh)!=-1 && pageContext.getAttribute("_subflag").equals(Constant.INFO_CHECK_WRONG))
+  				||((pageContext.getAttribute("_subflag").equals(Constant.INFO_CHECK)||pageContext.getAttribute("_subflag").equals(Constant.INFO_CHECK_WRONG)||pageContext.getAttribute("_subflag").equals(Constant.INFO_WAIT_SUBMIT))&&"".equals(userFlag))){
+	%>
+	<jsp:include page="/jsp/module/doublesoft/srqy/ideaList.jsp">
+		<jsp:param name="main_id" value="${XzspSrMatterMain.id}" />
+		<jsp:param name="type" value="<%= glbm%>" />
+		<jsp:param name="isShow" value="0" />
+		<jsp:param name="subflag" value="${XzspSrMatterMain.subflag}" />
+	</jsp:include>
+	<%}} %>
+	</form>
+	</body>
+<%
+String mess = request.getAttribute("mess")==null?"":(String)request.getAttribute("mess");
+if(!"".equals(mess)){
+	out.println("<Script>alert('"+mess+"');if(window.opener){window.opener.location.href = window.opener.location.href }</script>");
+}
+%>
+</html>

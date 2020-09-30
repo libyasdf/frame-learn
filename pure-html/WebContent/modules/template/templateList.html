@@ -1,0 +1,568 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../../static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 日期时间选择：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="time"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 日期范围：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="timeRange"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 姓名：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="xx"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 标题：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="textfield2"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 密级：</label>
+                            <div class="col-md-3">
+                                <select class="form-control">
+                                    <option>---请选择---</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label"> 数量：</label>
+                            <div class="col-md-3">
+                                <select class="form-control">
+                                    <option>---请选择---</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 标题：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="textfield2"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 密级：</label>
+                            <div class="col-md-7">
+                                <select class="form-control">
+                                    <option>---请选择---</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="MyLayer.layerOpenUrl({url:'/modules/template/templateEditForm.html',title:'新建流程提案'})">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新建提案流程
+                </button>
+                <button class="list_table_btn2"
+                        onclick="MyLayer.layerOpenUrl({url:'/modules/template/templateEditFormEcho.html?id=1',title:'带回显新建'})">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 带回显新建
+                </button>
+                <button class="list_table_btn2"
+                        onclick="openSelect()">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 选择人员
+                </button>
+                <button class="list_table_btn2"
+                        onclick="MyLayer.layerOpenUrl({url:'/modules/template/templateEditFormTab.html',title:'tab表单页面'})">
+                    <span class="glyphicon glyphicon-plus-sign"></span> tab表单页面
+                </button>
+                <button class="list_table_btn2" onclick="openX()" >
+                    <span class="glyphicon glyphicon-plus-sign"></span> 简单数据项
+                </button>
+                <button class="list_table_btn2" onclick="openY()" >
+                    <span class="glyphicon glyphicon-plus-sign"></span> 简单数据项2
+                </button>
+                <button class="list_table_btn2" onclick="openK()" >
+                    <span class="glyphicon glyphicon-plus-sign"></span> 多栏布局
+                </button>
+                <button class="list_table_btn2" onclick="openZ()" >
+                    <span class="glyphicon glyphicon-plus-sign"></span> 多栏布局 ifram
+                </button>
+                <button type="button" class="btn btn-default" 
+                        data-toggle="tooltip" 
+                        data-placement="bottom" 
+                        title="张三 二室管理员权限申请">
+                    悬浮查看
+                </button>
+                <button type="button" class="list_table_btn2"
+                    data-toggle="popover" 
+                    title="Popover title"
+                    data-placement="bottom"
+                    data-content="And here's some amazing content. It's very engaging. Right?">悬浮查看2
+                </button>
+                <!--<button type="button" class="btn btn-default" onclick="openDome()">20180502-Dome</button>-->
+                <button type="button" class="list_table_btn2" onclick="openDome2()">12306列表样式</button>
+                <button type="button" class="list_table_btn2" onclick="checkForm()" data-toggle="popover"
+                        data-placement="bottom"
+                        data-content="子表校验、组装数据为json方式一">子表V3.0</button>
+                <button type="button" class="list_table_btn2" onclick="checkForm1()"  data-toggle="popover"
+                        data-placement="bottom"
+                        data-content="子表校验、组装数据为json方式二">子表V3.0</button>
+                <button class="list_table_btn2"
+                        onclick="draft();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 导入
+                </button>
+                <button class="list_table_btn2" onclick="openM()" >
+                    <span class="glyphicon glyphicon-plus-sign"></span> 消息
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+        <p align="center">普通按钮样式</p>
+        <div class="col-md-12" align="center">
+            <div class="list_button_area">
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 起草
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-edit"></span> 修改
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-trash"></span> 删除
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> 保存
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-tasks"></span> 查看子表
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-search"></span> 查看
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-file"></span> 汇总
+                </button>
+            </div>
+        </div>
+        <p align="center">流程按钮样式</p>
+        <div class="col-md-12" align="center">
+            <div class="list_button_area">
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-list-alt"></span> 流程记录
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-book"></span> 查看正文
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-random"></span> 流程图
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-pencil"></span> 意见信息
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-send"></span> 发送
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-ok-sign"></span> 发布
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-ok"></span> 通过
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-remove"></span> 不通过
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-off"></span> 结束
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-ban-circle"></span> 撤办
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-repeat"></span> 重新启用
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-repeat"></span> 收回重办
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-send"></span> 分发
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-screenshot"></span> 盖章
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-send"></span> 上报
+                </button>
+            </div>
+        </div>
+        <p align="center">功能按钮样式</p>
+        <div class="col-md-12" align="center">
+            <div class="list_button_area">
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-print"></span> 打印
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-chevron-left"></span> 导入
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-chevron-right"></span> 导出
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-open"></span> 上传
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-save"></span> 下载
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-remove-circle"></span> 关闭
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-volume-up"></span> 提醒
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-ok-sign"></span> 发布
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-send"></span> 提交
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-earphone"></span> 催办
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-fire"></span> 销毁
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-repeat"></span> 撤销
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-retweet"></span> 移交
+                </button>
+                <button class="list_table_btn2">
+                    <span class="glyphicon glyphicon-play-circle"></span> 自动计算
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12" style="margin-top: 30px;">
+	<div class="form-group">
+		<div class="col-md-12">
+            <div>layer.msg信息框<span style="color: red">(前5个为常用)</span></div>
+			<div style="margin-bottom: 20px;margin-top: 5px;">
+				<button class="list_table_btn2" onclick="layer.msg('提示信息！')" >提示信息</button>
+				<button class="list_table_btn2" onclick="layer.msg('警告信息！',{icon:0})" >警告信息0</button>
+				<button class="list_table_btn2" onclick="layer.msg('保存成功！',{icon:1})" >成功信息1</button>
+				<button class="list_table_btn2" onclick="layer.msg('保存失败！',{icon:2})" >失败信息2</button>
+				<button class="list_table_btn2" onclick="layer.msg('问号提示！',{icon:3})" >提问信息3</button>
+				<button class="list_table_btn2" onclick="layer.msg('锁定信息！',{icon:4})" >锁定信息4</button>
+				<button class="list_table_btn2" onclick="layer.msg('哭脸信息！',{icon:5})" >哭脸信息5</button>
+				<button class="list_table_btn2" onclick="layer.msg('笑脸信息！',{icon:6})" >笑脸信息6</button>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-6">
+			<div>layer.confirm提示框<span style="color: red">（第一个为常用）</span></div>
+			<div style="margin-bottom: 20px;margin-top: 5px;">
+				<button class="list_table_btn2" onclick="layer.confirm('确认删除吗?',{icon:3,title:'删除'})" >删除确认框1</button>
+				<button class="list_table_btn2" onclick="layer.confirm('确认删除吗?',{icon:0,title:'警告'})" >删除确认框2</button>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div>layer.alert提示框</div>
+			<div style="margin-bottom: 20px;margin-top: 5px;">
+				<button class="list_table_btn2" onclick="layer.alert('删除失败！',{icon:0,title:'警告'})" >失败提示框</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="Loading hidden">
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+      <div class="rect5"></div>
+    </div>
+</div> -->
+
+
+
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '编号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+    }, {
+        field: 'jkrmc'
+        , title: '借款人名称'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'bz'
+        , title: '币种'
+        , width: '9%'
+        , sortable: true
+        , align: "center"
+    }, {
+        field: 'bt'
+        , title: '标题'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'ywlx'
+        , title: '业务类型'
+        , width: '10%'
+        , sortable: true
+        , align: "center"
+    }, {
+        field: 'zczlfl'
+        , title: '资产质量分类'
+        , sortable: true
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '18%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "add") {
+
+                } else if (opt[i] == "update") {
+                    html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(" + row.id + ")\'></i>"
+                } else if (opt[i] == "delete") {
+                    html += "<i class='glyphicon glyphicon-trash p-l-10' onclick=\'list.deleteFun(" + row.id + ")\'></i>"
+                }
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/mock/list.json",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.xname = $('#queryDiv input[name=\'textfield2\']').val();
+                params.xage = $('#queryDiv input[name=\'textfield2\']').val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+                    MyLayer.layerOpenUrl({url: '/modules/template/templateReadOnlyForm.html', title: '只读'});
+                });
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/template/templateEditForm.html?id=' + id,
+                title: "修改"
+            })
+        },
+        deleteFun: function (id) {
+            MyLayer.deleteOpt({
+                url: '/index.html?id=' + id,
+                tableId: 'right_table'
+            })
+        }
+    }
+
+    
+
+    //Loading.open();
+
+    setTimeout(function(){
+        Loading.clear();
+    },2000)
+
+    /**
+     * 打开人员选择
+     * @return {[type]} [description]
+     */
+    function openSelect(){
+        layer.open({
+            type: 2,
+            content: "/modules/template/selectUser.html",
+            area: ['770px', '551px'],
+            title: ['选择人员', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function openX(){
+        layer.open({
+            type: 2,
+            content: "/modules/template/form.html",
+            area: ['500px', '300px'],
+            title: ['表单', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function openDome() {
+        layer.open({
+            type: 2,
+            content: "/modules/template/Dome-20180502.html",
+            area:  ['1200px', '600px'],
+            title: ['表单', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function openDome2() {
+        layer.open({
+            type: 2,
+            content: "/modules/template/Dome2-20180502.html",
+            area:  ['1200px', '600px'],
+            title: ['表单', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function checkForm() {
+        layer.open({
+            type: 2,
+            content: "/modules/template/autoCheckForm.html",
+            area:  ['1200px', '600px'],
+            title: ['表单', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function checkForm1() {
+        layer.open({
+            type: 2,
+            content: "/modules/template/autoCheckForm1.html",
+            area:  ['1200px', '600px'],
+            title: ['表单', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function openY(){
+        layer.open({
+            type: 2,
+            content: "/modules/template/form2.html",
+            area: ['800px', '250px'],
+            title: ['Dome', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function openK(){
+        layer.open({
+            type: 2,
+            content: "/modules/template/multicolumn.html",
+            area: ['1200px', '600px'],
+            title: ['多栏操作', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function openZ(){
+        layer.open({
+            type: 2,
+            content: "/modules/template/ifram.html",
+            area: ['1200px', '600px'],
+            title: ['多栏操作', 'font-size:16px;font-weight:bold;']
+        })
+    }
+    function openM(){
+        layer.open({
+            type: 2,
+            content: "/modules/template/multicolumnIM.html",
+            area: ['900px', '400px'],
+            title: ['消息', 'font-size:16px;font-weight:bold;']
+        })
+    }
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+      $('[data-toggle="popover"]').popover({
+        trigger:"hover"
+      })
+    })
+</script>

@@ -1,0 +1,238 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 补签时间：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="timeRange"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 补签类型：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id=supplementSignType name="supplementSignType">
+                                    <option value="">---请选择---</option>
+                                    <option value="0">补签入</option>
+                                    <option value="1">补签出</option>
+                                    <option value="2">补全天</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label"> 申请人：</label>
+                            <div class="col-md-3">
+								<input class="form-control" type="text" id="creUserName"
+									name="creUserName" />
+							</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 单位：</label>
+                            <div class="col-md-3">
+								<input class="form-control" type="text" id="applicantUnitName"
+									name="applicantUnitName" />
+							</div>
+                            <label class="col-md-1 control-label"> 流程状态：</label>
+                            <div class="col-md-3">
+								<select class="form-control" id="subflag" name="subflag">
+									<option value="">--请选择--</option>
+									<option value="1">审批中</option>
+									<option value="6">通过</option>
+									<option value="7">未通过</option>
+									<option value="0">已撤办</option>
+								</select>
+							</div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	var workFlowName = "补签";
+	
+	//刷新方法，流程中需要回调
+	function refreshPage(){
+		TableInit.refTable("right_table");
+	}
+	
+	//清空查询条件
+	function clearAll(){
+		$("#title").val("");	//标题
+		$("#timeRange").val("");	//时间
+		$("#subflag").val("");		//流程状态
+	}
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '编号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+       	, formatter: function (value, row, index) {
+           	//计算序号，并存放业务ID，及已办事项ID
+           	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+               var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+               var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+               return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+           }
+    }, {
+        field: 'leaveTitle'
+        , title: '标题'
+        , width: '18%'
+        , align:"center"
+    }, {
+        field: 'creUserName'
+        , title: '申请人'
+        , width: '7%'
+        , align:"center"
+    }, {
+        field: 'applicantUnitName'
+        , title: '单位'
+        , width: '20%'
+        , align:"center"
+    }, {
+        field: 'supplementSignTime'
+        , title: '补签时间'
+        , width: '23%'
+        , align:"center"
+       	, formatter: function (value, row, index) {
+          		if(row.supplementSignType){
+          			if("0" == row.supplementSignType){
+          				if(row.supplementSignStartTime){
+          					return row.supplementSignStartTime;
+          				}
+          			}else if("1" == row.supplementSignType){
+          				if(row.supplementSignEndTime){
+          					return row.supplementSignEndTime;
+          				}
+          			}else if("2" == row.supplementSignType){
+          				if(row.supplementSignStartTime && !row.supplementSignEndTime){
+          					return row.supplementSignStartTime;
+          				}
+          				if(!row.supplementSignStartTime && row.supplementSignEndTime){
+          					return  row.supplementSignEndTime;
+          				}
+          				if(row.supplementSignStartTime && row.supplementSignEndTime){
+          					return row.supplementSignStartTime + " " + row.supplementSignEndTime;
+          				}
+          			}
+          		}
+          	}
+    }, {
+        field: 'supplementSignType'
+        , title: '补签类型'
+        , width: '7%'
+        , align:"center"
+        	, formatter: function(value, row, index){
+            	if(value == "0"){
+            		return "补签入";
+            	}else if(value == "1"){
+            		return "补签出";
+            	}else if(value == "2"){
+            		return "补全天";
+            	}
+            }
+    },{
+    	field: 'subflag'
+            , title: '审批状态'
+            , width: '7%'
+            , sortable: true
+            , align: "center"
+           	, formatter: function (value, row, index) {
+               	if(value == Config.subflag){
+               		return "审批中";
+               	}else if(value == Config.approvalflag){
+               		return "审批通过";
+               	}else if(value == Config.noApprovalflag){
+               		return "审批未通过";
+               	}else if(value == Config.removeflag){
+               		return "已撤办";
+               	}else if(value == Config.startflag){
+               		return "草稿";
+               	}
+            }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/kqgl/bq/getList",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.timeRange = $("#timeRange").val();
+                params.subflag = $("#subflag").val();
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+                	var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+					//流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/zhbg/kqgl/bq/bqReadOnlyForm.html?id='+id+"&workItemId="+workItemId+"&oper=VIEW", title: workFlowName});
+                });
+            }
+        });
+    });
+</script>

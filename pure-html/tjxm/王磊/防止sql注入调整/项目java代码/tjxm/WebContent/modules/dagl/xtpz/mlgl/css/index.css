@@ -1,0 +1,258 @@
+/* 主题内容 */
+.app {
+    width: 100%;
+    padding: 0px 30px;
+}
+
+.app::after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+/* 树 */
+.demoTree {
+    width: 200px;
+    height: 500px;
+    float: left;
+}
+
+/* 标签页组件容器 */
+.tab-component-container {
+    width: calc(100% - 230px);
+    margin-left: 20px;
+    float: left;
+}
+
+
+/* 标签容器 */
+.tab-container {
+    width: 100%;
+    height: 40px;
+}
+
+.tab-container::after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+/* 标签 */
+.tab-container .tab {
+    float: left;
+    background-color: #fff;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-left: none;
+    font-size: 18px;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    height: 100%;
+    line-height: 40px;
+}
+
+.tab-container .tab:hover {
+    background-color: #eee;
+}
+
+.tab-container .tab:active {
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+
+.tab-container .tab:first-child {
+    border-left: 1px solid #ccc;
+}
+
+/* 激活的标签 */
+.tab-container .tab-active {
+    border-bottom-color: #08c;
+    background-color: #08c;
+    color: white;
+}
+
+.tab-container .tab-active:hover {
+    background-color: #07b;
+}
+
+/* 下拉菜单 */
+.select-container {
+    float: right;
+}
+
+.select-container .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.select-container .dropdown-item {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    background-color: #fff;
+}
+
+.select-container .dropdown-item:hover {
+    background-color: #eee;
+}
+
+.select-container .dropdown-item:active {
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+
+/* 面板容器 */
+.tab-panel-container {
+    border: 1px solid #ccc;
+    margin-top: -1px;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+}
+/* 面板容器 */
+.tab-panel-container1 {
+    
+    margin-top: -1px;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+}
+
+/* 面板 */
+.tab-panel-container .tab-panel {
+    padding: 20px 10px;
+}
+
+/* 面板中的表格 */
+.tab-panel-container .tab-panel table {
+    display: block;
+    max-width: 100%;
+    overflow-x: hidden;
+    user-select: text !important;
+}
+
+.tab-panel-container .tab-panel table thead {
+    display: inline-block;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+
+.tab-panel-container .tab-panel table tbody {
+    max-height: 500px;
+    display: block;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.tab-panel-container .tab-panel th {
+    min-width: 200px;
+    text-align: center;
+    border-bottom: none !important;
+}
+
+.tab-panel-container .tab-panel td {
+    min-width: 200px;
+    max-width: 200px;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.tab-panel-container .tab-panel table tbody tr:first-child td {
+    border-top: none;
+}
+
+/* 选择框 */
+.tab-panel-container .tab-panel th:first-child {
+    min-width: 40px;
+    border-left: none;
+}
+
+.tab-panel-container .tab-panel td:first-child {
+    min-width: 40px;
+    border-left: none;
+}
+
+/* 选择框 */
+/* 
+.tab-panel-container .tab-panel th:last-child {
+    min-width: 70px;
+    border-right: none;
+} */
+
+/* .tab-panel-container .tab-panel td:last-child {
+    min-width: 70px;
+    border-right: none;
+} */
+
+.tab-panel-container .tab-panel table input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.tab-panel-container .tab-panel table .opreation {
+    cursor: pointer;
+    margin: 0 2px;
+}
+
+.fixed-table-header {
+    margin-right:0px !important;
+}
+.fixed-table-header table thead th:last-child {
+    padding-right:14px;
+}
+/*
+
+!* 设置滚动条样式 谷歌浏览器 *!
+.fixed-table-body::-webkit-scrollbar{
+    width:4px;
+    height:4px;
+}
+.fixed-table-body::-webkit-scrollbar-track{
+    background: #f6f6f6;
+    border-radius:2px;
+}
+.fixed-table-body::-webkit-scrollbar-thumb{
+    background: #aaa;
+    border-radius:2px;
+}
+.fixed-table-body::-webkit-scrollbar-thumb:hover{
+    background: #747474;
+}
+.fixed-table-body::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+}
+
+!* 滚动条样式 IE浏览器 *!
+.fixed-table-body{
+    scrollbar-arrow-color: #f4ae21; !**!!*三角箭头的颜色*!
+    scrollbar-face-color: #333; !**!!*立体滚动条的颜色*!
+    scrollbar-3dlight-color: #666; !**!!*立体滚动条亮边的颜色*!
+    scrollbar-highlight-color: #666; !**!!*滚动条空白部分的颜色*!
+    scrollbar-shadow-color: #999; !**!!*立体滚动条阴影的颜色*!
+    scrollbar-darkshadow-color: #666; !**!!*立体滚动条强阴影的颜色*!
+    scrollbar-track-color: #666; !**!!*立体滚动条背景颜色*!
+    scrollbar-base-color:#f8f8f8; !**!!*滚动条的基本颜色*!
+}*/
+
+
+/* 自定义新增模态框 */
+.addModal {
+    display: none;
+    padding:10px;
+}
+
+/* 自定义新增模态框 */
+.modal-body {
+    display: none;
+    padding:10px;
+}

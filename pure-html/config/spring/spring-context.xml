@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+        http://www.springframework.org/schema/data/repository http://www.springframework.org/schema/data/repository/spring-repository-1.5.xsd"
+		default-autowire="byName" default-lazy-init="false">
+
+	<!-- 自定义配置文件处理类，对数据库配置文件进行解密 -->
+	<bean id="propertyConfigurer" class="com.sinosoft.sinoep.common.configurer.EncryptablePropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:service.properties</value>
+                <value>classpath:configs/jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 加载配置文件  -->
+	<!--<context:property-placeholder location="classpath:service.properties,classpath:configs/jdbc.properties"/>-->
+	
+	<!-- 统一异常处理  -->
+	<bean id="exceptionHandler" class="com.sinosoft.sinoep.common.exception.SysExceptionHandler"/>
+	
+	<!-- 手动获取Bean -->
+	<bean class="com.sinosoft.sinoep.common.util.SpringBeanUtils" />
+	
+	<!-- 配置要扫描的包 -->
+	<context:component-scan base-package="com.sinosoft" 
+		name-generator="com.sinosoft.sinoep.common.annotation.AnnotationBeanNameGenerator"/>
+	<context:component-scan base-package="com.key" 
+		name-generator="com.sinosoft.sinoep.common.annotation.AnnotationBeanNameGenerator"/>
+	
+	 <!-- 基于Druid数据库链接池的数据源配置 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 基本属性driverClassName、 url、user、password -->
+		<property name="driverClassName" value="${jdbc.driver}" />
+		                            
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 配置初始化大小、最小、最大 -->
+		<!-- 通常来说，只需要修改initialSize、minIdle、maxActive -->
+		<property name="initialSize" value="2" />
+		<property name="minIdle" value="2" />
+		<property name="maxActive" value="30" />
+		<property name="testWhileIdle" value="true" />
+
+		<property name="validationQuery" value="select 1 from dual " />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="5000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="30000" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 解密密码必须要配置的项 -->
+		<!--  
+		<property name="filters" value="config" />
+		<property name="connectionProperties" value="config.decrypt=true" />
+		-->
+		<!--设置DB拦截器，拦截sql-->
+		<property name="filters" value="stat" />
+		<property name="proxyFilters">
+			<list>
+				<ref bean="dbFilter"></ref>
+			</list>
+		</property>
+	</bean>
+
+	<!--自定义sql拦截器-->
+	<bean id="dbFilter" class="com.sinosoft.sinoep.common.auditlog.filter.DBLogFilter"></bean>
+
+    <!-- JPA 实体管理器工厂 -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+		</property>
+		<!-- 实体扫描路径-->
+		<property name="packagesToScan" value="com.**.entity" />
+		<property name="jpaProperties" >
+			<props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <!-- <prop key="hibernate.hbm2ddl.auto">update</prop> -->
+            </props>
+		</property>
+	</bean> 
+	
+	<!-- 配置JPA事务管理器    基于注解 -->
+	<!-- transaction-manager指定使用哪个事务管理器-->
+	<tx:annotation-driven transaction-manager="jpaTransactionManager"/>
+	<bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean> 
+	
+	<!-- 配置Spring Data JPA扫描目录 Creating repository instances-->
+	<jpa:repositories base-package="com.**.dao"
+		transaction-manager-ref="jpaTransactionManager"
+		entity-manager-factory-ref="entityManagerFactory"
+		repository-impl-postfix="Impl"
+		factory-class="com.sinosoft.sinoep.common.jpa.repository.RepositoryFactoryBean"/>
+    
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean> 
+    
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+    <!-- 20180920 jys insert trasaction-->
+    <!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	<!-- 使用annotation定义事务 -->
+	
+	   
+
+	
+     <!--配置sessionfactory  -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="namingStrategy">
+			<bean class="org.hibernate.cfg.ImprovedNamingStrategy" />
+		</property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.jdbc.fetch_size">50</prop>  
+                <prop key="hibernate.jdbc.batch_size">25</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+            </props>
+        </property>
+        <!-- <property name="packagesToScan" value="com.sinosoft"/> -->
+        <property name="packagesToScan">	
+				<list>
+					<value>com.sinosoft</value>
+					<value>com.key</value>
+				</list>
+		</property>
+	</bean>
+ 
+	<!-- 配置Hibernate事务管理器 -->
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+      <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+     <!-- Spring AOP config 
+		  (* com.evan.crm.service.*.*(..))中几个通配符的含义：
+		  第一个 * —— 通配 任意返回值类型
+		  第二个 * —— 通配 任意模块下的service  cn.com.sinosoft.nfwjs.settlement.XXX.service
+		  第三个 * —— 通配 包cn.com.sinosoft.nfwjs.settlement.XXX.service 下的任意class
+		  第四个 * —— 通配 包cn.com.sinosoft.nfwjs.settlement.XXX.service下的任意class的任意方法
+		  第五个 .. —— 通配 方法可以有0个或多个参数
+		   -->
+     <aop:config>
+		<aop:pointcut id="businessService"
+			expression="execution(* com.sinosoft.*.*.service.*.*(..)) or execution(* com.**.service.*.*(..)) or (execution(* com.sinosoft.*.*.*.service.*.*(..)))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="businessService" />
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<!-- the transactional semantics... -->
+		<tx:attributes>
+			<!-- all methods starting with '*' are read-only -->
+			<tx:method name="*" propagation="SUPPORTS"/>
+			<!-- other methods use the default transaction settings (see below) -->
+			<!--<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="get*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="create*" propagation="REQUIRED" />
+			<tx:method name="*Update" propagation="REQUIRED" />
+			<tx:method name="*pay" propagation="REQUIRED" />-->
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 读入配置属性文件 -->
+	<!-- <context:annotation-config /> -->
+
+	<!-- 添加task任务扫描注解支持  定时器 -->
+	<task:annotation-driven />
+
+	<import resource="classpath:dubbo/dubbo-config.xml" />
+	<import resource="classpath:dubbo/dubbo-consumer.xml" /> 
+	<import resource="classpath:dubbo/dubbo-provider.xml" />
+
+	<!-- 导入redis服务配置文件 -->
+	<import resource="classpath:spring/spring-redis.xml" />
+
+</beans>

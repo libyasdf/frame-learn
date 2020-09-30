@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>企业中心</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+</head>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area" style="min-height: 300px">
+    <form class="form-horizontal" id="form">
+        <input type="hidden" id="textId"/>
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">查询项</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">姓名：</label>
+                    <div class="col-md-4">
+                    	<div class="input-group">
+                    	 	<input id="cruDeptId" name="cruDeptId" type="hidden"/>
+	                      	<input type="text" id="userName" unselectable="on" onclick="openSelectZtree({'id':'userId','name':'userName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})" class="form-control" >
+		                   	<input type="hidden" id="userId" name="userId" /><!-- 人员ID隐藏域 -->
+		                   	<span class="input-group-addon" onclick="openSelectZtree({'id':'userId','name':'userName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})">
+			                      <span class="glyphicon glyphicon-user"></span>
+			                  </span>
+		                  </div>
+                    </div>
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <div class="col-md-2" style="width:100%;text-align: center">
+                        <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table')" > 查&nbsp;&nbsp;询 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" onclick="clearAll()" > 重&nbsp;&nbsp;置 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div id="one">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="block_title">
+                                <span class="name">单位人员</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row m-t-15" style="margin-top: 15px;">
+                        <div class="col-md-12 p-f-60">
+                            <!--这里表格用的普通表格，要用bootstrap-table（参考列表页面）可以自行修改-->
+                            <table id="right_table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </form>
+</div>
+<!-- 按钮区 -->
+
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/url.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+
+<script type="text/javascript">
+  
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        ,btns:	['confirm']
+        , range: true
+        , type: 'month'
+    });
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+                return "<span >"+row.sequenceNum+"</span>";
+        }
+    }, {
+        field: 'deptName'
+        , title: '&nbsp;&nbsp;&nbsp;单&nbsp;位&nbsp;名&nbsp;称&nbsp;&nbsp;&nbsp;'
+        , width: '25%'
+        , align:"center"
+    }, {
+        field: 'name'
+        , title: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+        , width: '20%'
+        , align:"center"
+    }, 
+    {
+        field: 'bjcnt'
+        , title: '病假总次数'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 if(value=='0')
+                 	return '-'
+                 else 
+                     return value
+                 
+          }
+    },
+    {
+        field: 'sickDays'
+        , title: '病假天数'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 if(value=='0')
+                 	return '-'
+                 else 
+                     return value
+                 
+          }
+    },
+    /* {
+        field: 'sickLeaveLongTimeh'
+        , title: '病假小时数'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 if(value=='0')
+                 	return '-'
+                 else 
+                     return value
+                 
+          }
+    }, */
+    {
+        field: 'sjcnt'
+        , title: '事假总次数'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 if(value=='0')
+                 	return '-'
+                 else 
+                     return value
+                 
+          }
+    },
+    {
+        field: 'casualDays'
+        , title: '事假天数'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 if(value=='0')
+                 	return '-'
+                 else 
+                     return value
+                 
+          }
+    }
+   /*  ,{
+        field: 'casualLeaveLongTimeh'
+        , title: '事假小时数'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 if(value=='0')
+                 	return '-'
+                 else 
+                     return value
+                 
+          }
+    } */
+    
+    ,{
+        field: 'lateNum1'
+        , title: '迟到/次'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 if(value=='0')
+                 	return '-'
+                 else 
+                     return value
+                 
+          }
+    },{
+        field: 'earlyLeaveNum1'
+            , title: '早退/次'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+     },
+    {
+            field: 'noComeGoCnt1'
+                , title: '无出入记录/次'
+                , width: '10%'
+                , align:"center"
+                , formatter: function (value, row, index) {
+                         if(value=='0')
+                         	return '-'
+                         else 
+                             return value
+                         
+                  }
+     },
+     {
+         field: 'cccnt'
+             , title: '出差/次'
+             , width: '10%'
+             , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+  	},
+  /*   {
+        field: 'wccnt'
+            , title: '外出/次'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+     }, */
+    /*  {
+         field: 'bqcnt'
+             , title: '补签/次'
+             , width: '10%'
+             , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+      }, */
+    {
+        field: 'overTimed'
+            , title: '加班天数'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        }
+        ,{
+            field: 'overTimeh'
+            , title: '加班小时数'
+            , width: '10%'
+            , align:"center"
+           , formatter: function (value, row, index) {
+                    if(value=='0')
+                    	return '-'
+                    else 
+                        return value
+                    
+             }
+        }];
+
+
+   
+
+	$(function () {
+		var theRequest = GetRequest();
+		var deptid = regVlaue(theRequest.deptid);
+		/* var deptname = regVlaue(theRequest.deptname); */
+		var timeRange = regVlaue(theRequest.timeRange);
+		 $("#cruDeptId").val(deptid) 
+		
+		initTable(deptid,timeRange);
+  	})
+  	
+//初始化表格
+function initTable(deptid,timeRange){
+		
+		
+	    TableInit.init({
+            domId:"right_table",
+            pagination:true,
+            url:"/zhbg/kqgl/statistics/sectionlStats/getList",
+            //height:350,
+            columns:right_table_col,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            },
+            queryParams:function(params){
+            	 params.resId = $('#left_ul').find('a.active').attr("id");
+                params.deptid = deptid;
+                params.userids = $("#userId").val(); 
+                params.timeRange = timeRange;
+                params.from = "1";
+                return params;
+            },
+            readOnlyFn:function(){
+  
+            }
+        });
+}
+	
+function regVlaue(val){
+		if(!val){
+			val = "";
+		}
+		return val;
+}
+//点击查询
+function chaXun(id){
+	var options = $('#' + id).bootstrapTable('getOptions').queryParams
+	
+	
+	var opt = $('#' + id).bootstrapTable('getOptions').pageNumber = 1;
+    $('#' + id).bootstrapTable('refresh');
+}
+
+function clearAll(){
+	$("#userId").val("");
+	$("#userName").val("");
+}
+
+
+</script>
+
+</body>
+</html>

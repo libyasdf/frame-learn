@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\考勤管理_19.4.10"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		
+		<!-- 1bug32689考勤表的图标不显示, -->		
+		<include name="src/com/sinosoft/sinoep/user/util/UserUtil.java"/>
+		<include name="WebContent/static/css/zhbg/kqgl/**"/>
+		
+		<!-- 考勤管理员查看【查询统计】全局数据 -->
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/kqgl/statistics/**"/>
+		<include name="WebContent/modules/zhbg/kqgl/statistics/**"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/controller/AttendenceTableController.java"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceTableService.java"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceTableServiceImp.java"/>
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/attendenceTable.html"/>
+		
+		<!-- 会议管理：会务服务的待办不删除问题 -->
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/hygl/meetingServiceNotice/service/**"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/js/meetingApplyAdminForm.js"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/meetingRoomAdminEditForm.html"/>
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

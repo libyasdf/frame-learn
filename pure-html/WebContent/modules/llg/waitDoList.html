@@ -1,0 +1,168 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 日期范围：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="timeRange" id="timeRange"/>
+                            </div>
+                            <label class="col-md-2 control-label"> 标题：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="title" id="title"/>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询</button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary" onclick="clearAll();"> 重&nbsp;&nbsp;置</button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	
+	//刷新方法，流程中需要回调
+	function refreshPage(){
+		TableInit.refTable("right_table");
+	}
+	
+	//清空查询条件
+	function clearAll(){
+		$("#title").val("");	//标题
+		$("#timeRange").val("");	//时间
+	}
+    
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#timeRange', 
+        range: true
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '编号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+        	//计算序号，并存放业务ID，及已办事项ID
+        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-url='"+row.url+"' data-id='"+row.recordid+"' data-workFlowName='"+row.workFlowName+"' data-workflowid='"+row.workflowid+"' data-fileTypeId='"+row.fileTypeId+"' data-workitemid='"+row.workitemid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'workFlowName'
+        , title: '流程名称'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'title'
+        , title: '标题'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'receiveTime'
+        , title: '接收时间'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'username'
+        , title: '拟稿人'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'createTime'
+        , title: '拟稿时间'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'preUserName'
+        , title: '前一用户'
+        , width: '10%'
+        , align: "center"
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/workflow/daiblist",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+				//可以做一些校验
+                params.title = $("#title").val();
+                params.timeRange = $("#timeRange").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+					var url = $(this).parent().find("span[data-id]").attr("data-url");
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var workFlowName = $(this).parent().find("span[data-id]").attr("data-workFlowName");
+					var workFlowId = $(this).parent().find("span[data-id]").attr("data-workflowid");
+					var fileTypeId = $(this).parent().find("span[data-id]").attr("data-fileTypeId");
+					var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+					//流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: url + '?id='+id+"&workItemId="+workItemId+"&fileTypeId="+fileTypeId+"&workFlowId="+workFlowId+"&oper=EDIT", title: workFlowName});
+                });
+            }
+        });
+    });
+
+</script>

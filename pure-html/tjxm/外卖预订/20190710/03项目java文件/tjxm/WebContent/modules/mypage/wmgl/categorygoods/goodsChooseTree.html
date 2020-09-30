@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>企业中心</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="modal-body selectjs">
+    <div class="col-sm-6 ">
+        <div class="selectjs_block">
+            <div class="title_tab">
+                <ul class="nav nav-tabs">
+                    <li class="active" for="tree-obj">
+                        <a href="#" data-toggle="tab" class="">
+                            按商品选择
+                        </a>
+                    </li>
+                  
+                </ul>
+            </div>
+            <div class="main">
+                <div class="left_search_area">
+                     <div class="input-group">
+                         <input id="keyword" name="deptName" onkeydown="keyDown(event);" type="text" class="form-control"
+                               placeholder="快速搜索" data-deptname="" data-groupname="">
+                        <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span> 
+                    </div> 
+                </div> 
+                <div class="left_tree_area">
+                    <ul id="tree-obj" class="ztree"></ul>
+                    <ul id="group-obj" class="ztree hidden"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="selectjs_block" >
+            <div class="title" >已选择</div>
+            <div class="main" id="selectedDeptUser" >
+                <ul class="right_del_list" id="rightList" style="height: 100%;overflow-y: auto;">
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="modal-footer" style="text-align: center">
+    <button type="button" class="btn btn-primary  btn-blue  bigbtn" id="close">
+        确&nbsp;&nbsp;定
+    </button>
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+
+var theRequest = GetRequest();
+var deptUrl = theRequest.url;
+var takeOutId = theRequest.takeOutId;
+//var type = theRequest.type;
+//var isMulti = theRequest.isMulti;
+//var orgId = theRequest.resourceId;
+
+  var ztree = function(){
+	  var zNodes=[]
+	  var zTreeObj;
+	  var ZTreeChildrenNodes = [];
+	  var hiddenNodes = [];
+	  
+	  var setting = {
+			  check: {
+					enable: true
+				},
+			  edit: {
+		            drag: {
+		            	borderMax: 20,
+		                autoExpandTrigger: true,
+		                prev: true,
+		                inner: true,
+		                next: true
+		            },
+		            //enable: true,
+		            showRemoveBtn: false,
+		            showRenameBtn: false
+		        },
+		        data: {
+		            simpleData: {
+		            	 enable: true,
+		                 idKey: "id",
+		                 pIdKey: "pId",
+		                 rootPId: 0
+		            }
+		        },
+				 callback: {
+		             onCheck : function(event, treeId, treeNode){
+		            	 //取消
+		            	 if(treeNode && !treeNode.isParent && !treeNode.checked){
+		            		 return false;
+		            		 $("#rightList").find("li[data-id='"+treeNode.id +"']").remove()
+		            	 }
+		            	//选中
+		                 if(treeNode && !treeNode.isParent && treeNode.checked){
+		                	 var ppid="";
+		                	 var liStr;
+		                	 var parentNode = treeNode.getParentNode();
+		                	 if(parentNode){
+		                		 var ztree = $.fn.zTree.getZTreeObj("tree-obj");
+		                		
+		                		  liStr="<li  class='list-group-item' data-classSort='" + parentNode.categorySort + "' data-className='" + parentNode.name + "' data-price='" + treeNode.goodsPrice + "' data-valuationUnit='" + treeNode.valuationUnit + "' data-buyUnit='" + treeNode.buyUnit + "' data-ppid='" + parentNode.id + "'  data-id='" + treeNode.id +"' data-buyLimit='" + treeNode.buyLimit + "' data-buyNum='" + treeNode.buyNum + "' data-amountLimit='" + treeNode.amountLimit + "' data-goodsNum='" + treeNode.goodsNum + "' data-name='"+ treeNode.name +"'>"
+		                		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24'></span>"+treeNode.name+"</li>"
+		                	 }else{
+		                		 liStr="<li  class='list-group-item' data-classSort='" + parentNode.categorySort + "' data-className='" + parentNode.name + "' data-price='" + treeNode.goodsPrice + "' data-valuationUnit='" + treeNode.valuationUnit + "' data-buyUnit='" + treeNode.buyUnit + "' data-ppid='" + parentNode.id + "' data-id='" + treeNode.id +"' data-buyLimit='" + treeNode.buyLimit + "' data-buyNum='" + treeNode.buyNum + "' data-amountLimit='" + treeNode.amountLimit + "' data-goodsNum='" + treeNode.goodsNum + "' data-name='"+ treeNode.name +"'>"
+		                		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24'></span>"+treeNode.name+"</li>"
+		                	 }
+		                	
+		                	
+		                	 
+		                	 $("#rightList").append(liStr)
+			                	$("#rightList li img").click(function(){
+			                		var obj = $(this).parents('li');
+			                		var combination = $(obj).attr('data-combination')
+			                		
+			                		if(combination && combination=='1'){
+			                			layer.msg("请在套餐组合中解除该商品的绑定！", {icon : 1});
+			                			return;
+			                		}
+                    				var id = $(obj).attr('data-id')
+                    				$(obj).remove();
+                    				var ztree =  $.fn.zTree.getZTreeObj("tree-obj");
+                    				 var node = ztree.getNodeByParam("id",id,null);
+                    				 ztree.checkNode(node,false,true)
+			                	})
+		                		 
+		                 }
+		            	
+		                
+		                 if(treeNode && treeNode.isParent && treeNode.checked){
+		                	 //选中父节点
+		                	var childs= treeNode.children;
+		            		for(var i=0;i<childs.length;i++){
+		            			check(childs[i])
+		            		}
+		                 }
+		                 if(treeNode && treeNode.isParent && !treeNode.checked){
+		                	 //取消父节点
+		                	 uncheck(treeNode)
+		                 }
+		             }
+		          
+		         }
+			};
+	  
+	  //加载数据
+	  $.post(deptUrl, {},function(json){
+		  if ("1" == json.flag) {
+              for (var i = 0, length = json.data.length; i < length; i++) {
+                  if (json.data[i].pId=="0") {
+                      json.data[i].open = true;
+                  }
+              }
+             
+              var ztree = $.fn.zTree.init($("#tree-obj"), setting, json.data);
+              //隐藏门类中，没有商品的子节点
+				 var treeObj = $.fn.zTree.getZTreeObj("tree-obj");;
+				 var nodes = treeObj.getNodes();
+              	var hideNodes = [];
+              	for(var i=0; i<nodes.length;i++){
+              		console.info(nodes[i])
+              		 if(!nodes[i].isParent){//如果是一个商品节点，门类被删除，也需要给隐藏掉
+          				treeObj.hideNode(nodes[i]);
+          			}else{
+          				var childNodes = nodes[i].children;
+                      	for(var j=0;j<childNodes.length;j++){
+                      			if(childNodes[j].flg=='0' && !childNodes[j].isParent){
+                      				treeObj.hideNode(childNodes[j]);
+                      			}
+                      	}
+          			}
+              	
+              	}
+              	
+                echoData(zTreeObj);
+          }
+		  
+		  
+		 
+		  
+	  } );
+	  	
+      /**
+       * 过滤
+       * @return {[type]} [description]
+       */
+      var filter = function() {
+    	   var zTreeObj = $.fn.zTree.getZTreeObj("tree-obj");
+    	 //显示上次搜索后背隐藏的结点
+           zTreeObj.showNodes(hiddenNodes);
+
+           //查找不符合条件的叶子节点
+           function filterFunc(node) {
+               var _keywords = $("#keyword").val();
+               /* if (node.name.indexOf(_keywords) != -1) {
+                   return false;
+               }else{ */
+               if (node.isParent) {//如果是父节点，父节点下的子节点名称不包含模糊查询的名称隐藏，如果包含则不隐藏
+                   if (node.name.indexOf(_keywords) != -1) {
+                       getChildren(node);
+                       zTreeObj.expandNode(node, true, false);
+                       return false;
+                   } else {
+                       var childrenNodes = zTreeObj.getNodesByParamFuzzy("name", _keywords, node);
+                       if (childrenNodes.length == 0) {
+                           return true;
+                       } else {
+                           zTreeObj.expandNode(node, true, false);
+                           return false;
+                       }
+                   }
+               } else {
+                   if (node.name.indexOf(_keywords) != -1) {
+                       zTreeObj.expandNode(node, true, false);
+                       return false;
+                   } else {
+                       return true;
+                   }
+               }
+               //  }
+           };
+
+           function getChildren(oneNode) {
+               if (oneNode.isParent) {
+                   var ZTreeChildrenNodes1 = oneNode.children;
+                   ZTreeChildrenNodes = ZTreeChildrenNodes.concat(ZTreeChildrenNodes1);
+                   for (var obj in oneNode.children) {
+                       getChildren(oneNode.children[obj]);
+                   }
+               }
+           }
+
+           //获取不符合条件的叶子结点
+           hiddenNodes = zTreeObj.getNodesByFilter(filterFunc);
+			//alert(hiddenNodes.length)
+           //隐藏不符合条件的叶子结点
+           zTreeObj.hideNodes(hiddenNodes);
+           zTreeObj.showNodes(ZTreeChildrenNodes);
+           ZTreeChildrenNodes = [];
+      };
+	  
+	  return {
+		  filter:function(){
+              filter();
+          },
+          getZTreeObj:function(){
+              return zTreeObj;
+          }
+      }
+	  
+  }()
+
+  			/**
+             *
+             * 确定按钮事件
+             */
+            $("#close").bind('click', function () {
+            	 var status = window.parent.document.getElementById('status').value 
+            	
+            	var len=$("#rightList li").length
+            	 if(len<=0 && status=='1'){
+            		layer.msg("至少要保留一个商品！", {icon: 0});
+            		return;
+            	}else{ 
+            		var list=[];
+            		$("#rightList li").each(function(i){
+            			var map={};
+            			map.id =$(this).attr("id")
+            			map.categorySort= $(this).attr("data-classSort")
+            			map.goodsId =$(this).attr("data-id")
+            			map.goodsName = $(this).attr("data-name")
+            			map.classId = $(this).attr("data-ppid")
+            			map.goodsPrice = $(this).attr("data-price")
+            			map.valuationUnit = $(this).attr("data-valuationUnit")
+            			map.buyUnit = $(this).attr("data-buyUnit")
+            			map.className = $(this).attr("data-className")
+            			map.amountLimit = $(this).attr("data-amountLimit")
+            			map.buyLimit = $(this).attr("data-buyLimit")
+            			if($(this).attr("data-goodsNum")){
+            				map.goodsNum = $(this).attr("data-goodsNum")
+            			}else{
+            				map.goodsNum = "0";
+            			}
+            			
+            			 if($(this).attr("data-buyNum")){
+            				map.buyNum = $(this).attr("data-buyNum")
+            			}else{
+            				alert("kkkkkkkkkkkkkkkk")
+            				map.buyNum = "0";
+            			} 
+            			
+            			list.push(map)
+            		})
+            		var data = {};
+            		data.takeOutId = takeOutId;
+            		data.detil=JSON.stringify(list);
+            		
+            		 $.post("/mypage/wmgl/takeout/takeoutDetil/setDetilInfo", data,function(data){
+            			parent.putBackData(data)
+            		} ); 
+            	}
+            	
+            	
+            })
+            
+      //禁用已组合的套餐选中的节点
+    function Disabled1() {
+        var treeObj = $.fn.zTree.getZTreeObj("tree-obj");
+        var nodes = treeObj.getCheckedNodes();
+        for (var i = 0; i < nodes.length; i++) {
+            treeObj.setChkDisabled(nodes[i], true);
+        }
+    }
+
+            
+        //初始化节点数据    
+       function  echoData(zTreeObj) {
+	        var zTreeObj = $.fn.zTree.getZTreeObj("tree-obj")
+	  		var treeNodes = zTreeObj.getNodes();
+	 		 var nodes = zTreeObj.transformToArray(treeNodes);
+	 		 
+	 		
+		 	$.post("/mypage/wmgl/takeout/takeoutDetil/getDetil", {infoId:takeOutId  },function(data){
+		 		data=data.data;
+		 		console.info("..........................")
+		 		
+		 		for(var i=0;i<data.length;i++){
+		 			console.info(data[i])
+		 			for(var j=0;j<nodes.length;j++){
+		 				if(data[i].goodsId==nodes[j].id){
+							
+		 					var node = zTreeObj.getNodeByTId(nodes[j].tId);
+				            zTreeObj.checkNode(node,true,true);
+				            if(data[i].combination=='1'){
+								//禁用已组合的套餐选中的节点
+								var parentNode =nodes[j].getParentNode();
+								 zTreeObj.setChkDisabled(nodes[j], true);
+								 zTreeObj.setChkDisabled(parentNode, true);
+							}
+				           
+				            liStr="<li id='"+ data[i].id +"' class='list-group-item' data-combination='" + data[i].combination + "' data-goodsNum='" + data[i].goodsNum + "' data-buyLimit='" + data[i].buyLimit + "' data-buyNum='" + data[i].buyNum + "' data-amountLimit='" + data[i].amountLimit + "' data-classSort='" + data[i].categorySort + "' data-className='" + data[i].className + "' data-price='" + data[i].goodsPrice + "' data-valuationUnit='" + data[i].valuationUnit + "' data-buyUnit='" + data[i].buyUnit + "' data-ppid='" + data[i].classId + "'  data-id='" + data[i].goodsId +"' data-name='"+ data[i].goodsName +"'>"
+	                		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24'></span>"+data[i].goodsName+"</li>"
+				            //var liStr="<li id='"+ nodes[j].id +"' class='list-group-item' data-ppid='" + data[i].ppid + "' data-ico='"+ nodes[j].ico+ "' data-url='" + nodes[j].url + "' data-id='" + nodes[j].id +"' data-name='"+ nodes[j].name +"'>"
+	                		 //liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24' ></span>"+nodes[j].name+"</li>"
+	                		 $("#rightList").append(liStr)
+	                		 	 //给右边图标添加删除事件
+			                		 $("#rightList li img").click(function(){
+					                		var obj = $(this).parents('li');
+					                		var combination = $(obj).attr('data-combination')
+					                		
+					                		if(combination && combination=='1'){
+					                			layer.msg("请在套餐组合中解除该商品的绑定！", {icon : 1});
+					                			return;
+					                		}
+		                    				var id = $(obj).attr('data-id')
+		                    				$(obj).remove();
+		                    				var ztree = $.fn.zTree.getZTreeObj("tree-obj");
+		                    				 var node = ztree.getNodeByParam("id",id,null);
+		                    				 ztree.checkNode(node,false,true)
+			                		})
+		 				}
+		 			}
+		 		}
+		 		
+		 	} );
+		 	
+		 	
+		 	
+        }  
+  
+ 
+  
+  //选中某个节点及其子节点
+  function check(node){
+	 if(node.isParent){
+		 //alert("父节点")
+		 var childs= node.children;
+	 		for(var i=0;i<childs.length;i++){
+	 			check(childs[i])
+	 			
+	 		}
+	 }
+	 else  if(node.checked){
+			 var parentNode =node.getParentNode();
+					 var liStr="<li  class='list-group-item' data-classSort='" + parentNode.categorySort + "' data-className='" + parentNode.name  + "' data-price='" + node.goodsPrice + "' data-valuationUnit='" + node.valuationUnit + "' data-buyUnit='" + node.buyUnit + "'  data-ppid='" + parentNode.id + "' data-buyLimit='" + node.buyLimit + "' data-buyNum='" + node.buyNum + "' data-amountLimit='" + node.amountLimit + "' data-goodsNum='" + node.goodsNum + "' data-id='" + node.id +"' data-name='"+ node.name +"'>"
+		 		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24'></span>"+node.name+"</li>"
+		 		 $("#rightList").append(liStr)
+		 		 //给右边图标添加删除事件
+		 		 $("#rightList li img").click(function(){
+		         		var obj = $(this).parents('li');
+		 				var id = $(obj).attr('data-id')
+		 				var combination = $(obj).attr('data-combination')
+                		
+                		if(combination && combination=='1'){
+                			layer.msg("请在套餐组合中解除该商品的绑定！", {icon : 1});
+                			return;
+                		}
+		 				$(obj).remove();
+		 				var ztree =$.fn.zTree.getZTreeObj("tree-obj");
+		 				 var node = ztree.getNodeByParam("id",id,null);
+		 				ztree.checkNode(node,false,true)
+		 		})
+ 		 
+		}
+  }
+  
+  //取消某个节点及其父节点
+  function uncheck(treeNode){
+	  var childs= treeNode.children;
+ 	 for(var i=0;i<childs.length;i++){
+ 		 if(childs[i].isParent){
+ 			uncheck(childs[i])
+ 		 }else{
+ 			$("#rightList").find("li[data-id='"+childs[i].id +"']").remove()
+ 		 }
+ 		 
+ 	  }
+  }
+  
+
+
+  
+  $(function () {
+	  $("#search-bt").unbind('click').bind('click', function () {
+		  ztree.filter();
+		});
+	});
+  
+  
+  //快速查询中直接按回车
+  function keyDown(){
+      var ev = window.event || e;
+      //13是键盘上面固定的回车键
+      if (ev.keyCode == 13) {
+          //你要执行的方法
+          if($(".nav-tabs").find('.active').attr('for') == "tree-obj"){
+        	  ztree.filter();
+          }
+
+      }
+  }
+</script>
+</body>
+</html>

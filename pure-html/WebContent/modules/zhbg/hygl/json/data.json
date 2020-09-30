@@ -1,0 +1,53 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 14,
+    "rows": [
+      {
+        "meetingRoomId": "1222223354365465373",
+        "meetingRoomName": "多功能会议室",
+        "content": "20",
+        "equipment": "摄影",
+        "noneToTenState": "0",
+        "tenToElevenState": "0",
+        "elevenToTwelveState": "0",
+        "twelveToThirteenState": "0",
+        "thirteenToFourteenState": "0",
+        "fourteenToFifteenState": "0",
+        "fifteenToSixteenState": "2",
+        "sixteenToSeventeenState": "1",
+        "seventeenToEighteenState": "1"
+      },
+      {
+        "meetingRoomId": "8555",
+        "meetingRoomName": "多功能会议室",
+        "content": "20",
+        "equipment": "摄影",
+        "noneToTenState": "0",
+        "tenToElevenState": "0",
+        "elevenToTwelveState": "0",
+        "twelveToThirteenState": "0",
+        "thirteenToFourteenState": "0",
+        "fourteenToFifteenState": "0",
+        "fifteenToSixteenState": "2",
+        "sixteenToSeventeenState": "1",
+        "seventeenToEighteenState": "1"
+      },
+      {
+        "meetingRoomId": "65654",
+        "meetingRoomName": "多功能",
+        "content": "20",
+        "equipment": "摄影AAB",
+        "noneToTenState": "0",
+        "tenToElevenState": "0",
+        "elevenToTwelveState": "1",
+        "twelveToThirteenState": "0",
+        "thirteenToFourteenState": "0",
+        "fourteenToFifteenState": "0",
+        "fifteenToSixteenState": "2",
+        "sixteenToSeventeenState": "1",
+        "seventeenToEighteenState": "1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,466 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+    #right_table tbody tr a:hover{
+    	color:#2589C9;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                    	<div class="form-group">
+							<label class="col-md-2 control-label"> 会议标题：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="meetingName" name="meetingName"/>
+							</div>
+							<label class="col-md-2 control-label"> 日期：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" />
+							</div>
+						</div>
+                       <div class="form-group">
+							<label class="col-md-2 control-label"> 会议室名称：</label>
+							<div class="col-md-3">
+								<select class="form-control" name="meetingRoomId" id="meetingRoomId" onchange="change('meetingRoom')">
+								</select>
+							</div>
+							<label class="col-md-2 control-label"> 主办单位：</label>
+							<div class="col-md-3">
+								<div class="input-group">
+		                              <input type="text" id="hostDeptName" name="hostDeptName" unselectable="on" onclick="openSelectZtree({'id':'hostDeptId','name':'hostDeptName','isMulti':'1','type':'2','check':'',cancle:'','asyn':true,'level':'3','url':'/system/component/tree/deptTree','select':true})"
+		                                        class="form-control">
+		                              <input type="hidden" id="hostDeptId" name="hostDeptId" /><!-- 人员ID隐藏域 -->
+		                              <span class="input-group-addon" onclick="openSelectZtree({'id':'hostDeptId','name':'hostDeptName','isMulti':'1','type':'2','asyn':true,'level':'3','check':'',cancle:'','url':'/system/component/tree/deptTree','select':true})">
+		                                  <span class="glyphicon glyphicon-user"></span>
+		                              </span>
+	                              </div>
+							</div>
+						</div>
+                      
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  	<button type="button" class="btn btn-primary" onclick="clearAll()"
+                                            > 重&nbsp;&nbsp;置
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+    <div class="col-md-12">
+       
+            <table id="right_table"></table>
+        
+    </div>
+</div>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+        ,type: 'date'
+    });
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center",
+        formatter : function(value, row, index) {
+			//计算序号，并存放业务ID，及已办事项ID
+			var pageSize = $('#right_table').bootstrapTable(
+					'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table').bootstrapTable(
+					'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span data-attentionItem='" + row.attentionItem + "' data-id='"+row.ID+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+		}
+    }, {
+        field: 'applyTitle'
+        , title: '会议标题'
+        , width: '20%'
+        , align:"center"
+       	
+    }, {
+        field: 'meetingRoomName'
+        , title: '会议室名称'
+        , width: '10%'
+        , align:"center"
+      	,formatter: function (value, row, index){
+             	if(value==null||value==''){
+             		return "-";
+             	}else{
+             		var length = value.lengths
+     	  	   	      var val = '';
+     	  	   	      if(length>10){
+     	  	   	    	  val = value.substring(0,10)+"...";//
+     	  	   	      }else{
+     	  	   	    	  val = value;
+     	  	   	      }
+       	   	   		return  "<span title='"+value+"'data-content='" + value+"'>"+val+"</span>";
+             	}
+          }
+    },  
+    {
+        field: 'meetingStartTime'
+            , title: '开始时间'
+            , width: '12%'
+            , align:"center"
+         	,formatter: function (value, row, index){
+               	if(row.meetingTime){
+               		return row.meetingTime.substr(0,(row.meetingTime.length+1)/2-1);
+               	}
+            }
+     },
+     {
+            field: 'meetingEndTime'
+            , title: '结束时间'
+            , width: '12%'
+            , align:"center"
+           	,formatter: function (value, row, index){
+               	if(row.meetingTime){
+               		return row.meetingTime.substr((row.meetingTime.length+1)/2,row.meetingTime.length);
+               	}
+            }
+      }, 
+     {
+        field: 'hostDeptName'
+        , title: '主办单位'
+        , width: '10%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+        	return "<span host-dept-id = '"+row.hostDeptId+"'>"+value+"</span>";
+        }
+    }, { 
+        field: 'service'
+            , title: '服务保障情况'
+            , width: '5%'
+            , align:"center"
+           	,formatter: function (value, row, index){
+           		if(row.meetingServiceName==''){
+           			//return "无服务";
+           			return "-";
+           		}else{
+    	           	return "<span style='cursor:pointer;' title='点击查看反馈详情' onclick=\'list.serviceFun(\""+row.id+"\")\' apply-id = '"+row.id+"'><a href='#'>"+row.remark+"/"+row.status+"</a></span>";
+           		}
+            }
+        }, {
+        field: 'noticeId'
+        , title: '通知情况'
+        , width: '5%'
+        , align:"center"
+       	,visible:false
+      	,formatter: function (value, row, index){
+      		if(value==''||value==null){
+      			return "未发通知";
+      		}else{
+	          	return  "已发通知";
+      		}
+        }
+     },{
+        field: 'attend'
+        , title: '参会情况'
+        , width: '5%'
+        , align:"center"
+      	,formatter: function (value, row, index){
+      		if(row.noticeId==''||row.noticeId==null){
+      			return "未发通知";
+      		}else{
+	      		if(row.notFeedback=='0'){
+		          	return "<span style='cursor:pointer;' title='点击查看反馈详情' onclick=\'list.queryFun(\""+row.noticeId+"\",\""+row.fankuiType+"\")\' notice-id = '"+row.noticeId+"' not-feedback='"+row.notFeedback+"'><a>"+row.attendFeedbackNum+"/"+row.attendNum+"</a></span>";
+	      		}else{
+		          	return "<span style='cursor:pointer;' title='点击查看通知详情' onclick=\'list.readFun(\""+row.noticeId+"\")\' notice-id = '"+row.noticeId+"' not-feedback='"+row.notFeedback+"'><a>无需反馈</a></span>";
+
+	      			//return "无需反馈";
+	      		}
+      		}
+        }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            if(row.noticeStatus!='1'){
+                html += "<i style='cursor:pointer;' class='glyphicon glyphicon-plus-sign' onclick=\'list.editFun(\""+row.id+"\")\' title=\'编辑通知\'></i>&nbsp;&nbsp;";
+            }
+            var ids;
+	       	 if(row.meetingRoomId!=null){
+	           	ids = row.meetingRoomId.split(",");
+	       	 }
+	       	 if(row.meetingRoomId!=null && $.inArray( Config.multifunctionalMeetingRoomId,ids) != -1){
+	       		if(row.attendFeedbackNum>0){
+	       			html += "<i style='cursor:pointer;' class='glyphicon glyphicon-tasks' onclick=\'list.paiWei(\""+row.noticeId+"\",\""+row.fankuiType+"\",\""+row.publishState+"\",\""+row.attendFeedbackNum+"\",\""+row.attendNum+"\",\""+ index +"\")\' title=\'排座\'></i>&nbsp;&nbsp;"
+	            	if(row.publishState=='1'){
+		       			html += "<i style='cursor:pointer;' class='glyphicon glyphicon-edit' onclick=\'list.updateItem(\""+row.noticeId+"\",\""+row.fankuiType+"\",\""+row.publishState+"\",\""+index+"\",\""+row.seatNum+"\")\' title=\'修改会议注意事项\'></i>&nbsp;&nbsp;"
+
+	            	}
+	       		}
+	            	
+	       	 }
+	         return html;
+        } 
+    }];
+    $(document).ready(function (e) {
+    	var role = getcookie("rolesNo");
+    	if(role.indexOf("D101")!=-1){
+    		$("#dept").show();
+    	}
+    	//初始化查询项中的会议室选项
+    	$.ajax({
+			type : "get",
+			url : "/zhbg/hygl/basicSet/meetingRoom/getList",
+			success : function(json) {
+				if (json) {
+					var data = json.data.rows;
+					$("#meetingRoomId").append('<option value="">--请选择--</option>');
+		    		for(i in data){
+		    			$("#meetingRoomId").append('<option value="'+data[i].id+'">'+data[i].meetingRoomName+'</option>');
+		    		}
+				}
+			}
+		});
+    	//初始化查询项中会议类型的字典
+    	Dictionary.init({
+			position : "meetingType",
+			mark : "meeting_type",
+			type : "1",
+			name : "meetingType",
+			domType : "select"
+		});
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/hygl/notice/getNotifiedList",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.meeetingTitle=$("#meetingName").val();
+                params.timeRange=$("#timeRange").val();
+                params.meetingType=$("#meetingType").val();
+                params.meetingRoomId=$("#meetingRoomId").val();
+                params.hostDeptId=$("#hostDeptId").val();
+                params.flg="1";
+                return params;
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 endmeetingFeedbackListForm.html
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					//var resIds = $('#left_ul').find('a.active').attr("id");
+                    //MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingNotice/meetingNoticeReadOnlyForm.html?id='+id+ "&oper=VIEW&resId=" + resIds,title:'会议通知详情'});
+                });
+            }
+        });
+    });
+
+//    表格数据项的操作
+var _index;
+var list = {
+        editFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+           	 	url:'/modules/zhbg/hygl/meetingNotice/meetingApplyInfoForm.html?id='+id+"&resId="+resId,
+                title:"编辑会议通知信息",
+                width:"90%",
+                height:"90%"
+            })
+        },
+        paiWei:function(id,fankuiType,publishState,actualAttendDeptNum,shouldAttendDeptNum,index){
+        	//var attentionItem = $("#right_table tbody tr[data-index='"+index+"']").find("td:eq(0)").find("span").attr("data-attentionItem");
+        	if(actualAttendDeptNum==0){
+        		layer.msg("暂无可排座人员！", {
+        			icon : 0
+        		});
+        		return;
+        	}
+        	
+        	if(actualAttendDeptNum!=shouldAttendDeptNum){
+        		if(publishState!=1){
+        			var index= layer.confirm("还有未反馈人员部门，是否确定进行排座？", {
+        		        btn: ['确定', '取消']
+        		        // 按钮
+        		    }, function () {
+        		    	var resId = $('#left_ul').find('a.active').attr("id");
+        		    	if(publishState!="1"){
+        		    		publishState="0"
+        		    	}
+        	        	window.open('/modules/zhbg/hygl/meetingNotice/arrangeSeat/index.html?meetingNoticeId='+id+"&fankuiType="+fankuiType+"&publishState="+publishState);  
+        	        	 parent.layer.close(index);
+							
+        		    }, function () {
+        		    	return;
+        		    });
+        		}else{
+        			if(publishState!="1"){
+    		    		publishState="0"
+    		    	}
+    	        	window.open('/modules/zhbg/hygl/meetingNotice/arrangeSeat/index.html?meetingNoticeId='+id+"&fankuiType="+fankuiType+"&publishState="+publishState);  
+
+        		}
+        		
+        	}else{
+        		if(publishState!="1"){
+		    		publishState="0"
+		    	}
+        		var resId = $('#left_ul').find('a.active').attr("id");
+            	window.open('/modules/zhbg/hygl/meetingNotice/arrangeSeat/index.html?meetingNoticeId='+id+"&fankuiType="+fankuiType+"&publishState="+publishState);  
+        	}
+        	
+        },
+        deleteFun:function(id,creUserId,index){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	layer.confirm("确定要撤办吗？",function(){
+        		$.ajax({
+                    url: '/zhbg/hygl/meetingApply/updateFlag?id=' + id + "&resId=" + resId+"&subflag="+Config.removeflag
+                    , type: "GET"
+                    , dataType: "json"
+                    , success: function (result) {
+                    	var msg = "";
+                        if (result.flag === "1") {
+                            msg = '撤办成功！';
+                            if ($.trim(result.msg)) {
+                                msg = result.msg;
+                            }
+                            layer.msg(msg, {icon: 1});
+                            TableInit.refTable('right_table');
+                            var content = $('#right_table tbody ').find('tr[data-index="'+index+'"]').find('td:eq(1)').text();
+                            MessageUtil.sendMsg({
+                    			subject:"会议通知",		//消息主题
+                    			content:"申请的【"+content+"】会议已撤办，请重新申请！",		//消息内容
+                    			accepterId:	creUserId//接收人ID
+                    		});
+                        } else {
+                            msg = '撤办失败，请重试！';
+                            if ($.trim(result.msg)) {
+                                msg = result.msg;
+                            }
+                            layer.msg(msg, {icon: 2});
+                        }
+                    }
+        			,error:function(){
+        				
+        			}
+        		})
+        	})
+        },
+        queryFun:function(id,fankuiType){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:encodeURI('/modules/zhbg/hygl/meetingNotice/meetingFeedbackListForm.html?id='+id+ '&fankuiType='+fankuiType+'&oper=VIEW&resId=' + resId),
+                title:"会议通知反馈详情"
+            })
+        },
+        serviceFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+            	url: '/modules/zhbg/hygl/meetingServiceNoticeBack/meetingServiceNoticeBackEditForm.html?id='+id+"&oper=VIEW&resId=" + resId,
+            	title: "会务服务通知反馈详情"});
+        },
+        readFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:encodeURI('/modules/zhbg/hygl/meetingNotice/meetingNoticeReadOnlyForm.html?id='+id+'&oper=VIEW&resId='+resId),
+                title:"会议通知详情"
+            })
+        },
+        updateItem:function(noticeId,fankuiType,publishState,index,seatNum){
+        	debugger
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	var attentionItem = $("#right_table tbody tr[data-index='"+index+"']").find("td:eq(0)").find("span").attr("data-attentionItem");
+        	_index=layer.open({
+            	type: 2,
+	            content: '/modules/zhbg/hygl/meetingNotice/seatPrint/meetingAttentionItem.html?noticeId=' + noticeId+"&fankuiType=" + fankuiType + "&attentionItem=" + encodeURI(attentionItem),
+	            area: ['800px', '330px'],
+	            title: ['会议注意事项', 'font-size:16px;font-weight:bold;']
+    	     })
+        },
+        
+    }
+    function draft(){
+    	var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({
+        	url: '/modules/zhbg/hygl/meetingNotice/meetingRoomAdminEditForm.html?&oper=ADD&resId=' + resId,
+            tabfreshleId:'right_table',
+            title:"手工录入会议信息"
+        })
+    }
+
+    
+function putBackData1(){
+    //关闭窗口
+    layer.close(_index);
+    layer.msg("设置成功！", {
+		icon : 1
+	});
+	fresh()
+}
+
+ 
+    function fresh(){
+    	
+    	TableInit.refTable('right_table')
+    }
+    
+    function clearAll(){
+    	$("#meetingName").val("")
+    	$("#timeRange").val("")
+    	$("#meetingType").val("")
+    	$("#meetingRoomId").val("")
+    	$("#hostDeptName").val("")
+    	$("#hostDeptId").val("")
+    }
+
+</script>

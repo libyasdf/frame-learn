@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="App">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>跳节点</title>
+    <!-- Bootstrap -->
+    <!-- 没完全改完 -->
+	<link href="../plugins/bootstrap/bootstrap.css" rel="stylesheet">
+	<style type="text/css">
+		header, .content {
+			min-width: 1100px;
+		}
+		header {
+			background: rgba(0, 0, 0, 0) url("../image/flowstatus/bg_header.png") repeat-x scroll 0 0;
+			color: #fff;
+			font-family:  "微软雅黑","微软雅黑 Light";
+			height: 50px;
+			padding: 0 15px;
+		}
+		.logo {
+			float: left;
+			margin-right: 60px;
+			margin-top: 9px;
+		}
+		header a {
+			color: #fff;
+		}
+	</style>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			  <script src="../plugins/html5/html5shiv.min.js"></script>
+			  <script src="../plugins/html5/respond.js"></script>
+			  <script src="../plugins/html5/jquery.placeholder.js"></script>
+		<![endif]-->
+  </head>
+  <body ng-controller="bodyCtrl" style="height:500px">
+  <header style="background-color: #DDD !important">
+		<div class="col-md-6" style="margin-top: 10px">
+			警告！请不要选择会签过程节点、自动节点、自由节点、汇聚节点和子流程节点。</p>
+		</div>
+		<div class="col-md-6">
+			<div class="input-group" style="margin-top: 5px">
+				<input type="text" class="form-control" ng-model="nodeName" disabled>
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" ng-click="jump()">确定</button>
+				</span>
+			</div>
+		</div>
+	</header>
+  <div class="container-fluid" style="height:100%;">
+	<img id="entitynode1" style="display:none;" src="../image/flowstatus/entitynode1.png"/>
+	<img id="entitynode2" style="display:none;" src="../image/flowstatus/entitynode2.png"/>
+	<img id="entitynode3" style="display:none;" src="../image/flowstatus/entitynode3.png"/>
+	<img id="entitynode3" style="display:none;" src="../image/flowstatus/entitynode31.png"/>
+	<img id="entitynode3" style="display:none;" src="../image/flowstatus/entitynode32.png"/>
+	<img id="entitynode3" style="display:none;" src="../image/flowstatus/entitynode33.png"/>
+	<img id="subflownode1" style="display:none;" src="../image/flowstatus/subflownode1.png"/>
+	<img id="subflownode2" style="display:none;" src="../image/flowstatus/subflownode2.png"/>
+	<img id="subflownode3" style="display:none;" src="../image/flowstatus/subflownode3.png"/>
+	<img id="freenode1" style="display:none;" src="../image/flowstatus/freenode1.png"/>
+	<img id="freenode2" style="display:none;" src="../image/flowstatus/freenode2.png"/>
+	<img id="freenode3" style="display:none;" src="../image/flowstatus/freenode3.png"/>
+	<img id="autonode1" style="display:none;" src="../image/flowstatus/autonode1.png"/>
+	<img id="autonode2" style="display:none;" src="../image/flowstatus/autonode2.png"/>
+	<img id="autonode3" style="display:none;" src="../image/flowstatus/autonode3.png"/>
+	<img id="merage1" style="display:none;" src="../image/flowstatus/merage1.png"/>
+	<img id="merage2" style="display:none;" src="../image/flowstatus/merage2.png"/>
+	<img id="merage3" style="display:none;" src="../image/flowstatus/merage3.png"/>
+	<img id="start1" style="display:none;" src="../image/flowstatus/start1.png"/>
+	<img id="start2" style="display:none;" src="../image/flowstatus/start2.png"/>
+	<img id="start3" style="display:none;" src="../image/flowstatus/start3.png"/>
+	<img id="end1" style="display:none;" src="../image/flowstatus/end1.png"/>
+	<img id="end2" style="display:none;" src="../image/flowstatus/end2.png"/>
+	<img id="end3" style="display:none;" src="../image/flowstatus/end3.png"/>
+	<img id="example" style="display:none;" src="../image/flowstatus/example.png"/>
+	<div class="row" id="myDiv" style="height:100%;">
+		<canvas id="myCanvas"  ondragover="allowDrop(event)">
+			Your browser does not support the canvas element.
+		</canvas>
+	</div>
+  </div>
+  <div id="warnInfo" class="alert alert-info" style="display: none;" role="alert" ng-bind="warnInfo"></div>
+<script src="../plugins/jquery/jquery-1.11.2.min.js" type="text/javascript"></script>
+<script src="../../../plugins/angular/angular.js" type="text/javascript"></script> 
+<script src="../../../common/js/getrequest.js" type="text/javascript"></script>
+<script src="../plugins/lhgdialog/lhgdialog.min.js" type="text/javascript"></script>
+<script src="../js/jumpNode.js" type="text/javascript"></script>
+  </body>
+</html>

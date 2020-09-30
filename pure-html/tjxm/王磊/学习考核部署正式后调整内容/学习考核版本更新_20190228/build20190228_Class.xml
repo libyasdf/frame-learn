@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\学习考核20190107Class"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="fengchao"/>
+		</copy>
+	</target>
+	
+	
+	<fileset id="fengchao" dir="../../../../">
+			
+		<!-- 后台class-->
+		<!--优化资料保存和修改方法，添加授权部门字段 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/ziliao/"/>
+		<!--添加在线培训常量配置 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/constant/"/>
+		<!-- 资料门类树添加兼容在线培训处理逻辑-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/tree/services/"/>
+		<!-- 添加根据deptid获取总人数方法，在线培训查询添加参数-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/learntime/controller/"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/learntime/services/"/>
+		<!-- 查询个人考试列表（带分页，查询项）sql添加单引号-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/gradesearch/services/"/>
+		
+		<!--前台-->
+		<!-- 添加授权单位-->
+		<include name="WebContent/modules/zhbg/xxkh/lawData/lawDataEditForm.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/lawData/lawDataReadonlyForm.html"/>
+		<!-- 添加在线培训也需要同步节点到音视频系统-->
+		<include name="WebContent/modules/zhbg/xxkh/tree/dictionaryEditForm.html"/>
+		<!-- 学习列表刷新时添加授权条件：授权单位，给后台处理添加判断条件-->
+		<include name="WebContent/modules/zhbg/xxkh/lawLearning/lawDataForLearningList.html"/>
+		<!-- 在线培训需要有最少学习时间的查询项-->
+		<include name="WebContent/modules/zhbg/xxkh/learningTimeCount/deptLearningTimeList.html"/>
+		<!-- 资料学习时，页面成功弹出后再设置cookie，防止弹出页面被浏览器拦截，用户也不能再次打开该页面（除非重启浏览器，重新登录）-->
+		<include name="WebContent/modules/zhbg/xxkh/displayVideoAndPdf/"/>
+		<!-- 在线培训勾选节点时，根据条件显示部门或处室总人数-->
+		<include name="WebContent/modules/zhbg/xxkh/tree/js/learningTimeTypeTree.js"/>
+		<!-- 设置页面加载后调整最右侧滚动条高度-->
+		<include name="WebContent/modules/zhbg/xxkh/lawData/lawDataList.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/lawLearning/lawDataForLearningList.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/learningTimeCount/deptLearningTimeList.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/learningTimeCount/personLearningTimeList.html"/>
+		<!-- 1、人工评卷试卷标签页选中、未选中样式调整；2、试卷列表调整滚动条动态展示-->
+		<include name="WebContent/modules/zhbg/xxkh/gradePaper/css/style1.css"/>
+		<include name="WebContent/modules/zhbg/xxkh/gradePaper/answerSheets.html"/>
+		<!-- 个人管理-资料学习，添加视频2小时提示信息-->
+		<include name="WebContent/modules/zhbg/xxkh/lawLearning/lawDataReadonlyForm.html"/>
+		
+		
+		<!-- 公共文件-->
+		<!-- 查询条件允许有英文的.-->
+		<include name="WebContent/static/js/common/tablelist.js"/>
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/cqqx"/>
+			<copy todir="${export.dir.root}/cqqx" overwrite="true">
+				<fileset refid="fengchao"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,mqx">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

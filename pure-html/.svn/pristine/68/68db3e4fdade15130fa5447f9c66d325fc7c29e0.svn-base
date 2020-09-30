@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\会议管理_19.4.19"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		
+		<!-- 4.19正式打包 -->
+		<include name="WebContent/modules/zhbg/hygl/basicSet/meetingRoom/meetingRoomList.html"/>
+		<include name="WebContent/modules/zhbg/hygl/basicSet/meetingRoom/js/meetingRoomEdit.js"/>
+		<!-- 会务服务管理，会务服务人员设置为一人多岗，勾选相应会务服务发送，不可发送问题修改文件 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingApply/service/**"/>
+		
+		
+		
+		
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

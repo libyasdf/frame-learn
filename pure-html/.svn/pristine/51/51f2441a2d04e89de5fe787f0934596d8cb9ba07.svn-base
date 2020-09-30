@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\考勤管理_19.4.3"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/zbgl/dutyworkincept/services/DutyWorkInceptServiceImpl.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingServiceNotice/service/**"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/testmanage/services/*"/>
+		<!-- 修改发送不走流程待办 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingApply/service/**"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/arrangeSeat/services/**"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/common/HyglConstants.class"/>
+		<!-- 修改【工作计划和日志】的更多页面 -->
+		<include name="WebContent/modules/mypage/workPlan/myWorkPlanList.html"/>
+		
+		<!-- 会议通知修改校验 -->
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/js/meetingNoticeForm.js"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/js/validator.js"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/meetingNoticeEditForm.html"/>
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

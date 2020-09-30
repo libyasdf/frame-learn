@@ -1,0 +1,174 @@
+<style type="text/css">
+	.panel-controls{
+		position: absolute;
+		right: 40px;
+		top: 10px;
+	}
+	.panel-controls > i.showSelect{
+		font-size: 16px;
+		color: #acb1b8;
+		cursor: pointer;
+	}
+	label{
+		font-weight: normal;
+	}
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" >
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls " >
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+							<label class="col-md-1 control-label"> 日期范围：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" name="timeRange" />
+							</div>
+							<label class="col-md-1 control-label"> 状态：</label>
+							<div class="col-md-3">
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio1" name="state" value="" checked="checked"> 全部
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio2" name="state" value="0"> 草稿
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio3" name="state" value="1"> 已下单
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio4" name="state" value="1"> 已确认
+								</label>
+							</div>
+						</div>
+
+						<!--查询重置等按钮-->
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center">
+								<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+								</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"> 重&nbsp;&nbsp;置
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '编号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'riqi'
+        , title: '下单时间'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'shangpin'
+        , title: '商品'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'jine'
+        , title: '金额'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'dingdan'
+        , title: '订单'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'zhuangtai'
+        , title: '状态'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align: "center",
+        formatter:function(value,row,index){
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "update") {
+                    html += "<i class='glyphicon glyphicon-edit' title='编辑'></i>&nbsp;&nbsp;";
+                }else if(opt[i] == "delete"){
+                    html += "<i class='glyphicon glyphicon-trash' title='删除'></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mock/taskout/myorderList.json",
+            columns:right_table_col,
+            queryParams:function(params){
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                //取消事件冒泡 end
+                });
+            }
+        });
+    });
+
+
+
+
+</script>

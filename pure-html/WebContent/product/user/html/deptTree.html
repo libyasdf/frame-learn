@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>选择部门</title>
+<meta charset="UTF-8">
+<link href="../../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="../../../plugins/tree/css/zTreeStyle.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../plugins/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="../../../plugins/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="../../../plugins/tree/jquery-ztree-2.6.js"></script>
+<script type="text/javascript" src="../../../plugins/lhgdialog/lhgdialog.min.js"></script>
+<script type="text/javascript" src="../../../common/js/getrequest.js" ></script>
+<script type="text/javascript" src="../../../product/workflow/js/common/getCook.js"></script>
+<style>
+  .dept-container {
+	  width: 440px;
+	  margin:20px 20px 0px;
+  }
+
+	.dept-container .panel-heading {
+		background-color: #eaf4ff;
+	}
+
+	.margin-b-10 {
+		margin-bottom: 10px;
+	}
+
+	.margin-tb-10 {
+		margin-top: 10px!important;
+		margin-bottom: 10px!important;
+	}
+
+	.dept-container > .row > .col-xs-6 {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+	.clear {
+		clear: both;
+	}
+
+	.selected-dept-panel .panel-body{
+		padding: 0;
+	}
+	  .dept-container .selected-dept-user {
+		  margin-top: 15px;
+		  margin-bottom: 0;
+		  clear: both;
+		  height:313px;
+		  overflow-y:auto;
+	  }
+
+	.selected-dept-user .list-group {
+		margin-bottom:0!important;
+	}
+	
+	.selected-dept-user .list-group > .list-group-item:last-child {
+		border-bottom:none!important;
+	}
+	.dept-container .selected-dept-user .list-group-item{
+		padding: 5px 15px;
+		text-align: center;
+		border: none;
+		border-bottom: 1px solid #ddd!important;
+		border-top: 1px solid #ddd!important;
+	}
+
+  .dept-container .selected-dept-user .list-group-item:first-child {
+	  border-top-left-radius: 0;
+	  border-top-right-radius: 0;
+	  border-top:none!important;
+  }
+  
+ 
+  .dept-container .selected-dept-user .list-group-item:last-child {
+	  border-bottom-right-radius: 0;
+	  border-bottom-left-radius: 0;
+  }
+	.list-group-item.active {
+		background-color: #7CC5E5;
+	}
+</style>
+</head>
+<body>
+<div class="dept-container">
+	<div class="row">
+		<div class="col-xs-6" >
+			<div class="margin-b-10">
+					<div class="input-group">
+						<input type="text" class="form-control" name="deptName" placeholder="快速搜索" onkeydown="if(event.keyCode==13){searchNodes()};">
+						<span class="input-group-btn">
+        					<button class="btn btn-default" type="button" onclick="searchNodes()">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+      					</span>
+					</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					按部门选择
+					<span class="glyphicon glyphicon-minus pull-right" onclick="removeSelectedNodes()"></span>
+				</div>
+				<div class="panel-body" style="padding:0px;height:320px;overflow:auto">
+					<div id="deptTree" class="tree">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="panel panel-default selected-dept-panel">
+				<div class="panel-heading">按部门选择</div>
+				<div class="panel-body ">
+					<div class="selected-dept-user" id="selectedDeptUser">
+				
+					</div>
+					
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+var api = frameElement.api, W = api.opener;
+var userIdHidden = api.data.id1;
+var userNameHidden = api.data.id2;
+var deptUrl = api.data.url;
+var isMulti = api.data.isMulti;
+var type = api.data.type;
+var isInput = api.data.isInput;//是否支持手动输入过滤
+var treeNodes = [];
+var oldNodeMap = {};
+var setting = {
+		nameCol : "name",
+		isSimpleData : true,
+		treeNodeKey : "id",
+		treeNodeParentKey : "pid",
+		async:true,
+		asyncDataFilter: ajaxFataFilter,
+		asyncUrl:deptUrl,  //获取节点数据的URL地址
+		asyncParam:["id"],  //获取节点数据时，必须的数据名称，例如：id、name
+		asyncParamOther:{"type":'2',"orgId":getcookie("orgid")},
+		checkable:true,
+		checkStyle:'checkbox',
+		checkType :{ "Y": "s", "N": "ps"},//勾选 checkbox 对于父子节点的关联关系
+		callback : {
+			click: function(event, treeId, treeNode){
+				if(treeNode.parentNode == undefined){
+					treeNode.parentNode = null;
+				}
+			},
+			change: function (event, treeId, treeNode) {
+				//console.log(treeNode);
+				if(treeNode.nodeType=="dept"){
+					treeNode.checkedOld="checked";
+					var isOpen = treeNode.open;
+					if(treeNode.nodes){
+						var nodes=treeNode.nodes;
+						for(var i=0;i<nodes.length;i++){
+							var childNode=treeNode.nodes[i];
+							childNode.checkedOld="checked";
+						}
+					}
+				}else{
+					treeNode.checkedOld = "checked";
+				}
+				//var changeCheckedNodes=zTree.getChangeCheckedNodes();
+				var checkNodes = zTree.getCheckedNodes();
+				var noCheckNodes = zTree.getCheckedNodes(false)
+				appendCheckedDeptToRight(checkNodes,noCheckNodes);
+			},
+			collapse: function (event, treeId, treeNode) {
+				treeNode.nodes = null;
+				var ulid = treeNode.tId + "_ul";
+				$("#"+ulid).html("");
+			}
+		},
+			
+	};
+	
+
+function ajaxFataFilter(event, parentNode, childNodes) {
+	if(childNodes.length>0){
+		for (var i = 0; i < childNodes.length; i++) {
+			if(childNodes[i].isBranch=="true"){
+				 childNodes[i].isParent = true;
+			}
+			var id = childNodes[i].id;
+			var checkli = $(".list-group-item[data-id='"+id+"']");
+			if (checkli.attr("data-id") != undefined && checkli.attr("data-id") != "") {
+				childNodes[i].checked = true;
+			}
+		}
+	}
+	return childNodes;
+};
+
+function getUsersByDeptId(id,callback){
+	$('#selectedDeptUser ul[data-dept-id="undefind"]').remove();
+	$.ajax({
+	    async : false,  
+	    cache:false,  
+		type: 'Post',  
+		url:basePath + '/dept/getUserByDeptid',  
+		data:{"deptid":id,"status":"1"},    
+		dataType:"json",
+		success: function(datas) {
+			callback(datas);
+			
+		},  
+		error: function(request) {  
+			alert("error!");
+		}    
+	});
+}
+
+//取消勾选复选框 移除已选择人员
+function removeDeptUsers(id){
+	$('#selectedDeptUser ul[data-dept-id]').each(function(index,item){
+		var $this = $(item);
+		if(id == $this.attr('data-dept-id')){
+			$(this).remove();
+		}
+	});
+}
+
+//加载dialog的时候初始化部门树 
+function initTree(){
+	//获取部门  
+	$.ajax({
+	    async : false,  
+	    cache:false,  
+		type: 'Post',  
+		url:deptUrl,  
+		data:{"type":'2',"orgId":getcookie("orgid")},    
+		//dataType:"json",
+		success: function(datas) {
+			var zNodes=datas;
+			treeNodes = datas;
+			
+			for (var i=0;i<zNodes.length; i++) {
+				if(zNodes[i].isBranch==true||zNodes[i].isBranch=="true"){
+					zNodes[i].isParent=true;
+				}
+				zNodes[i].istop = true;
+			} 
+			zTree = $("#deptTree").zTree(setting, zNodes);
+			 //zTree1.expandAll(true); 
+			//隐藏域id
+			if(userIdHidden&&userNameHidden){
+				
+				var userIds = W.$('[name="'+userIdHidden+'"]').val();
+				var userNames = W.$('[name="'+userNameHidden+'"]').val();
+				if(userIds&&userNames){
+					var userIdsArr = userIds.split(',');
+					var userNamesArr = userNames.split(',');
+					var ulHtml = '<ul class="list-group" data-dept-id="undefind">';
+					for(var i=0;i<userIdsArr.length;i++){
+						ulHtml += '<li ondblclick="removeCheck(\''+userIdsArr[i]+'\')" class="list-group-item" data-id="'+userIdsArr[i]+'" data-name="'+userNamesArr[i]+'">'+userNamesArr[i]+'</li>';
+						for(var n=0;n<treeNodes.length;n++){
+							var treeNode = treeNodes[n];
+							if(userIdsArr[i] == treeNode.id){
+								treeNode.checked = true;
+								zTree.updateNode(treeNode, true);
+								break;
+							}
+						}
+					}
+					ulHtml += '</ul>';
+					$('#selectedDeptUser').empty().append(ulHtml);
+					
+				}
+				
+			}
+		},  
+		error: function(request) {  
+			alert("error!");
+		}    
+	});
+}
+
+
+//删除所有选中节点
+function removeSelectedNodes() {
+	zTree.checkAllNodes(false);
+	$("ul[data-dept-id='selectedDept']").empty();
+}
+
+
+function searchNodes() {
+	var nodeName = $('input[name="deptName"]').val().replace(/^\s+|\s+$/g,'');
+	//如果输入为空 则显示全部部门 
+	if(nodeName == ""){
+		delete setting.fontCss;//移除节点样式
+		setting.asyncDataFilter = ajaxFataFilter;
+		setting.async = true;
+		setting.asyncUrl = deptUrl;
+		setting.asyncParam = ["id"];
+		setting.asyncParamOther = {"type":'2',"orgId":getcookie("orgid")};
+		initTree();
+		return;
+	} 
+	$.ajax({
+		async : false,  
+	    cache:false,  
+		type: 'Post',  
+		url:basePath + '/dept/getDepartmentStaffByName',  
+		data:{"type":"dept","qName":nodeName},    
+		dataType:"json",
+		success: function(datas) {
+			var zNodes=datas;
+			for (var i=0;i<zNodes.length; i++) {
+				zNodes[i].id = zNodes[i].uuid;
+				zNodes[i].pid = zNodes[i].uupid;
+				zNodes[i].nodeType = zNodes[i].type;
+				if(zNodes[i].isBranch==true||zNodes[i].isBranch=="true"){
+					zNodes[i].isParent=true;
+				}
+				if (zNodes[i].pid == "0") {
+					zNodes[i].istop = true;
+				}
+			} 
+			delete setting.asyncDataFilter;
+			delete setting.async;
+			delete setting.asyncUrl;
+			delete setting.asyncParam;
+			delete setting.asyncParamOther;
+			zTree = $("#deptTree").zTree(setting,zNodes);
+		},  
+		error: function(request) {  
+			alert("error!");
+		}    	
+	})
+}
+
+
+
+
+function getParentNode(node,initNodes){
+	if(!node.parentNode) {
+		return;
+	}
+
+	if(node.parentNode){
+		var parentNode = node.parentNode;
+		var isExit = false;
+		//需要先遍历 初始化节点数组 如果已经存在该节点 则不追加到数组中
+		for(var j=0;j<initNodes.length;j++){
+			if(parentNode.id == initNodes[j].id){
+				isExit = true;
+				break;
+			}else{
+				isExit = false;
+				
+			}
+		}
+		if(!isExit){
+			initNodes.push({
+				id : parentNode.id,
+				pid : parentNode.pid,
+				nodeType : parentNode.nodeType,
+				isBranch : parentNode.isBranch,
+				name : parentNode.name
+			});
+		}
+		
+		getParentNode(parentNode,initNodes);
+	}
+}
+
+//选择部门添加到右侧
+var ulHtml = '<ul class="list-group" data-dept-id="selectedDept"></ul>';
+$('#selectedDeptUser').append(ulHtml);
+function appendCheckedDeptToRight(checkNodes,noCheckNodes){
+	var checkedLiHtml = "";
+	
+	for (var j = 0; j < noCheckNodes.length; j++) {
+		var nodeid = noCheckNodes[j].id;
+		var value = oldNodeMap[nodeid];
+		if (value != "" && value != null) {
+			delete oldNodeMap[nodeid]; 
+		}
+	}
+	
+	$.each(oldNodeMap,function(key,values){ 
+		checkedLiHtml += '<li ondblclick ="removeCheck(\''+key+'\')" class="list-group-item" data-id="'+key +'" data-name="'+values
+			+'" data-dept-id="">'+values+'</li>';
+	});  
+	
+	for (var i = 0; i < checkNodes.length; i++) {
+		var istop = checkNodes[i].istop != undefined && checkNodes[i].istop != "" && checkNodes[i].istop != true;
+		
+		if(checkNodes[i].id == "441"){
+			 istop = true;
+		}
+		
+		var value = oldNodeMap[checkNodes[i].id];
+		
+		if (!istop && (value == "" || value == null)) {
+			checkedLiHtml += '<li ondblclick="removeCheck(\''+checkNodes[i].id+'\')" class="list-group-item" data-id="'+[checkNodes[i].id]
+				+'" data-name="'+[checkNodes[i].name]+'" data-dept-id="'+[checkNodes[i].pid]+'">'
+				+[checkNodes[i].name]+'</li>'; 
+		}
+	}
+	$("#selectedDeptUser .list-group").html(checkedLiHtml);
+	
+
+}
+
+//判断右侧是否有选中节点
+function returnRightLiStatus(nodeId){
+	var len=$(".list-group-item").length;//获取右侧列表的长度 
+	var status=true;
+	for(var j=0;j<len;j++){
+		var thisLi=$(".list-group-item:eq("+j+")");
+		var id=$(thisLi).attr("data-id");
+	
+		if(id==nodeId){
+			status = false;
+		}
+	}
+	return status;
+}
+//判断右侧是否有未选中节点
+function returnNocheckedRightLiStatus(nodeId){
+	var len=$(".list-group-item").length;//获取右侧列表的长度 
+	for(var k=0;k<len;k++){
+		var thisLi=$(".list-group-item:eq("+k+")");
+		var id=$(thisLi).attr("data-id");
+		if(id==nodeId){
+			$(thisLi).remove(); 
+		}
+	}
+}
+
+function saveSelectedUsers(){
+	var idArr = [],nameArr = [];
+	var res = {};
+	var $selectedLi = $('#selectedDeptUser .list-group-item[data-id][data-name]');
+	if(isMulti == '1' && $selectedLi.length > 1){
+		alert('只能选择一个');
+		return;
+	}
+	
+	$selectedLi.each(function(index,item){
+		var $this = $(item);
+		idArr.push($this.attr('data-id'));
+		nameArr.push($this.attr('data-name'));
+	});
+	res.ids = idArr.join(',');
+	res.names = nameArr.join(',');
+	return res;
+}
+
+initTree();
+$(function () {
+	initOldIds();
+});
+
+function initOldIds(){
+	var len=$(".list-group-item").length;//获取右侧列表的长度 
+	for(var k=0;k<len;k++){
+		var thisLi=$(".list-group-item:eq("+k+")");
+		var id=$(thisLi).attr("data-id");
+		var name = $(thisLi).attr("data-name");
+		oldNodeMap[id] = name;
+	}
+}
+
+function removeCheck(id){
+	var thisLi=$(".list-group-item[data-id='"+id+"']");
+	$(thisLi).remove();
+	var node = zTree.getNodesByParam("id",id);
+	if (node[0] != undefined) {
+		var checkInputId = node[0].tId+"_check";
+		$("#"+checkInputId).attr("class","chk checkbox_false_full");
+	}
+}
+</script>
+</body>
+</html>

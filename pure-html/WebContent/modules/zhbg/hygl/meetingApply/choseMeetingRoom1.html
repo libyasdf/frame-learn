@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+
+</head>
+<style type="text/css">
+    html,
+    body {
+        height: 100%;
+    }
+
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls>i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+
+    /* 周日期css */
+    .input-group-addon1 {
+        background-color: #fff;
+        border: none;
+    }
+
+    .btn-both {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+    }
+
+    .leftbtn {
+        background: url("/static/images/worklog/left.png") no-repeat;
+    }
+
+    .leftbtn:hover {
+        background: url("/static/images/worklog/left-hover.png") no-repeat;
+    }
+
+    .rightbtn {
+        background: url("/static/images/worklog/right.png") no-repeat;
+    }
+
+    .rightbtn:hover {
+        background: url("/static/images/worklog/right-hover.png") no-repeat;
+    }
+
+    /* td被选中 */
+    .checkTd {
+        background-color: #66CCFF;
+    }
+
+    /* 内容 */
+    .formpage_area {
+        height: calc(100% - 80px);
+        overflow: auto;
+    }
+
+    /* 按钮样式 */
+    .form_btn_area {
+        position: fixed;
+        bottom: 0;
+        height: 50px;
+        line-height: 50px;
+        background: #c7c7c7;
+        width: 100%;
+        text-align: center;
+    }
+
+    .form_btn_area_btn2 {
+        margin-right: 20px;
+        width: 110px;
+        padding: 5px 15px;
+        line-height: 20px;
+        font-size: 15px;
+        color: #ffffff
+    }
+</style>
+
+<body class="formpage_bj">
+    <div class="container-fluid formpage_area">
+        <!--查询-->
+        <div class="row">
+            <form class="form-horizontal">
+
+                <input name="meetingroomId" id="meetingroomId" type="hidden" value="" /><!-- 会议室ID -->
+                <input name="meetingStartDate" id="meetingStartDate" type="hidden" value="" /><!-- 开始时间 -->
+                <input name="meetingStartTime" id="meetingStartTime" type="hidden" value="" /><!-- 开始时间上下午-->
+                <input type="hidden" id="meetingEndDate" name="meetingEndDate" value="" /><!-- 结束时间 -->
+                <input type="hidden" id="meetingEndTime" name="meetingEndTime" value="2"><!-- 结束时间上下午 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+
+                                <label class="col-md-4 control-label"> 日期：</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon input-group-addon1" onclick="lastWeek()">
+                                            <span id="leftImage" class="btn-both leftbtn"></span>
+                                        </span>
+                                        <input class="form-control" id="selectTime" readonly />
+                                        <span class="input-group-addon input-group-addon1" onclick="nextWeek()">
+                                            <span id="rightImage" class="btn-both rightbtn"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12">
+
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+    <!-- 按钮区 -->
+    <div class="form_btn_area">
+        <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="confirmChoise();">
+            确定
+        </button>
+    </div>
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/nodetpl.min.js"></script>
+    <script src="/static/core/laydate/laydate.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script src="/modules/zhbg/hygl/meetingApply/js/bootstrap-table.min.js"></script>
+    <!-- <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script> -->
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/js/common/mylayer.js"></script>
+    <script src="/static/js/common/tablelist.js"></script>
+
+    <script type="text/javascript" src="/common/js/dateutil.js"></script>
+    <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+    <!-- 获取cookie值 -->
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+    <!-- 流程相关 -->
+    <script type="text/javascript" src="/common/js/commonFunction.js"></script>
+    <!-- 获取cookie值 -->
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+    <!-- 页面获取参数 -->
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <!--合并单元格的js-->
+    <script type="text/javascript" src="/common/js/mergeTable.js"></script>
+    <script type="text/javascript">
+
+        function selectDate() {
+            //获取表头数据并添加到right_table_col
+            getByWeek();
+            //TableInit.refTable('right_table');
+            //销毁表
+            $('#right_table').bootstrapTable('destroy');
+            //重新加载表
+            TableInit.init({
+                height: 500,
+                domId: "right_table",
+                striped: false,//去除隔行变色
+                classes: 'table',//去除悬浮变色
+                pagination: false,	//不分页
+                url: "/zhbg/hygl/meetingApplyDetail/getlist",
+                columns: right_table_col,
+                queryParams: function (params) {
+                    //这里将各个查询项添加到要传递的参数中
+                    //可以做一些校验
+                    params.timeRange = $('#selectTime').val();
+                    return params;
+                },
+                readOnlyFn: function () {
+                    var mrIds = "";
+                    $('#right_table').find('tr').find('td:not(:eq(1),:eq(0))').each(function () {
+                        if ($(this).find("span[data-totalId]").attr("data-totalId") == $('#meetingroomId').val() + $('#meetingStartDate').val() + $('#meetingStartTime').val()) {
+                            $(this).addClass("checkTd");
+                            $(this).find("span[data-totalId]").empty();
+                            mrIds += $(this).find("span[data-mrId]").attr("data-mrId") + ",";
+                        } else if ($(this).find("span[data-totalId]").attr("data-totalId") == $('#meetingroomId').val() + $('#meetingEndDate').val() + $('#meetingEndTime').val()) {
+                            $(this).addClass("checkTd")
+                            $(this).find("span[data-totalId]").empty();
+                            mrIds += $(this).find("span[data-mrId]").attr("data-mrId") + ",";
+                        }
+
+                    });
+                    $('tr.readOnly').find('td:not(:eq(1),:eq(0))').unbind('click').bind('click', function (e) {
+                        //取消事件冒泡
+                        var evt = e ? e : window.event;
+                        if (evt.stopPropagation) {
+                            evt.stopPropagation();
+                        } else {
+                            evt.cancelBubble = true;
+                        }
+                        if ($(this).hasClass("checkTd")) {
+                            $(this).removeClass("checkTd");
+                            var mrId = $(this).find("span[data-mrId]").attr("data-mrId");
+                            var mrname = $(this).find("span[data-mrname]").attr("data-mrname");
+                            var meetingTime = $(this).find("span[data-meetingTime]").attr("data-meetingTime");
+                            var detailOne = $(this).find("span[data-detailOne]").attr("data-detailOne");
+                            mrIds = mrIds.replace(mrId + ",", "");
+                            //alert(mrIds);
+
+                        } else {
+                            $(this).addClass("checkTd");
+                            var mrId = $(this).find("span[data-mrId]").attr("data-mrId");
+                            var mrname = $(this).find("span[data-mrname]").attr("data-mrname");
+                            var meetingTime = $(this).find("span[data-meetingTime]").attr("data-meetingTime");
+                            var detailOne = $(this).find("span[data-detailOne]").attr("data-detailOne");
+                            mrIds += mrId + ",";
+                            if ($(".checkTd").length == 2) {
+                                //alert($(this).parent().index());
+                                var tochecklength1 = new Array(2);
+                                var tochecklength2 = new Array(2);
+                                $(".checkTd").each(function (i) {
+                                    tochecklength1[i] = $(this).index();
+                                    tochecklength2[i] = $(this).parent().index();
+                                });
+                                var arr2 = tochecklength1.sort(function (a, b) {
+                                    if (a > b) {
+                                        return 1;
+                                    } else if (a < b) {
+                                        return -1
+                                    } else {
+                                        return 0;
+                                    }
+                                });
+                                for (var i = 0; i < arr2.length; i++) {
+                                    if (arr2[i] + 1 < arr2[arr2.length - 1]) {
+                                        arr2.splice(i + 1, 0, arr2[i] + 1);
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (tochecklength2[0] == tochecklength2[1]) {
+                                    if ($(this).parent().index() % 2 != 0) {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            //alert($(this).parent().find('td:eq('+tochecklength1[i]+')').text());
+                                            if (i != 0 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().prev().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                $(this).removeClass("checkTd");
+                                                layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                mrIds = mrIds.replace(mrId + ",", "");
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            //$(this).parent().find('td:eq('+tochecklength1[i]+')')
+                                            if (i != tochecklength1.length - 1 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().next().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                $(this).removeClass("checkTd");
+                                                layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                mrIds = mrIds.replace(mrId + ",", "");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if ($(this).parent().index() % 2 != 0) {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            if ($(this).parent().prev().find('td:eq(' + tochecklength1[0] + ')').hasClass("checkTd")) {
+                                                if ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().prev().find('td:eq(' + tochecklength1[i] + ')').text()) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+
+                                            } else {
+                                                if (i != 0 && i != tochecklength1.length - 1 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().prev().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            if ($(this).parent().next().find('td:eq(' + tochecklength1[0] + ')').hasClass("checkTd")) {
+                                                if (i != 0 && i != tochecklength1.length - 1 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().next().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+
+                                            } else {
+                                                if ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().next().find('td:eq(' + tochecklength1[i] + ')').text()) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if ($(this).text()) {
+                                $(this).removeClass("checkTd");
+                                layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                mrIds = mrIds.replace(mrId + ",", "");
+                            }
+                            if (mrIds.indexOf(mrId) > 1) {
+                                $(this).removeClass("checkTd");
+                                layer.msg("只能选择一个会议室！", { icon: 0 });
+                                mrIds = mrIds.replace(mrId + ",", "");
+                            }
+                            if ($(".checkTd").length > 2) {
+                                $(this).removeClass("checkTd");
+                                layer.msg("只能选择一个结束时间！", { icon: 0 });
+                                mrIds = mrIds.replace(mrId + ",", "");
+
+                            }
+                        }
+
+                    });
+
+                    //合并单元格
+                    try {
+                        mergeTableRow("meetingroomName");
+                    } catch (e) { }
+                }
+            });
+
+
+        }
+
+        //上一周
+        function lastWeek() {
+            var selectTime = $("#selectTime").val()
+            var startDate = selectTime.substr(0, 10);
+            var endDate = selectTime.substr(13, 10);
+            startDate = getBeforeDate(startDate, 7)
+            endDate = getBeforeDate(endDate, 7)
+            selectTime = startDate + ' - ' + endDate;
+            $("#selectTime").val(selectTime);
+            //执行查询
+            selectDate()
+        }
+        //下一周
+        function nextWeek() {
+            var selectTime = $("#selectTime").val()
+            var startDate = selectTime.substr(0, 10);
+            var endDate = selectTime.substr(13, 10);
+            startDate = getBeforeDate(startDate, -7)
+            endDate = getBeforeDate(endDate, -7)
+            selectTime = startDate + ' - ' + endDate;
+            $("#selectTime").val(selectTime);
+            //执行查询
+            selectDate()
+        }
+
+        // data 日期  n 数字   return 日期的前n天
+        function getBeforeDate(date, n) {
+            var n = n;
+            var d = new Date(date);
+            var year = d.getFullYear();
+            var mon = d.getMonth() + 1;
+            var day = d.getDate();
+            if (day <= n) {
+                if (mon > 1) {
+                    mon = mon - 1;
+                } else {
+                    year = year - 1;
+                    mon = 12;
+                }
+            }
+            d.setDate(d.getDate() - n);
+            year = d.getFullYear();
+            mon = d.getMonth() + 1;
+            day = d.getDate();
+            s = year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day);
+            return s;
+        }
+
+        // 获取周一到周日的日期集合
+        function getByWeek() {
+            var dataTime = { "timeRange": $("#selectTime").val() };
+            console.log($("#selectTime").val());
+            httpRequest("get", "/zhbg/hygl/meetingApplyDetail/getDateByWeek", dataTime, function (data) {
+                if (data.flag == '1') {
+                    var dateList = data.dateList;
+                    console.log(dateList);
+                    right_table_col = [];
+                    right_table_col = [
+                        {
+                            field: 'meetingroomName'
+                            , title: '会议室'
+                            , width: '7.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {
+                                return "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'>" + (row.meetingroomName) + "</span>";
+                            }
+                        }, {
+                            field: 'meetingTime'
+                            , title: '日期'
+                            , width: '5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-meetingTime='" + row.meetingTime + "'>" + ("上午") + "</span>";
+                                } else if (value == "1") {
+                                    html = "<span data-meetingTime='" + row.meetingTime + "'>" + ("下午") + "</span>";
+                                }
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'detailOne'
+                            , title: '星期一<br>（' + dateList[0] + '）'
+                            , width: '12.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[0] + "'data-totalId='" + row.meetingroomId + dateList[0] + row.meetingTime + "'></span>";
+                                } else if (value == "1") {
+                                    return "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[0] + "'data-totalId='" + row.meetingroomId + dateList[0] + row.meetingTime + "'>" + ("预约中") + "</span>";
+                                } else if (value == "2") {
+                                    return "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[0] + "'data-totalId='" + row.meetingroomId + dateList[0] + row.meetingTime + "'>" + ("占用") + "</span>";
+                                }
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'detailTwo'
+                            , title: '星期二<br>（' + dateList[1] + '）'
+                            , width: '12.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[1] + "'data-totalId='" + row.meetingroomId + dateList[1] + row.meetingTime + "'></span>";
+                                } else if (value == "1") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[1] + "'data-totalId='" + row.meetingroomId + dateList[1] + row.meetingTime + "'>" + ("预约中") + "</span>";
+                                } else if (value == "2") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[1] + "'data-totalId='" + row.meetingroomId + dateList[1] + row.meetingTime + "'>" + ("占用") + "</span>";
+                                }
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'detailThree'
+                            , title: '星期三<br>（' + dateList[2] + '）'
+                            , width: '12.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[2] + "'data-totalId='" + row.meetingroomId + dateList[2] + row.meetingTime + "'></span>";
+                                } else if (value == "1") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[2] + "'data-totalId='" + row.meetingroomId + dateList[2] + row.meetingTime + "'>" + ("预约中") + "</span>";
+                                } else if (value == "2") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[2] + "'data-totalId='" + row.meetingroomId + dateList[2] + row.meetingTime + "'>" + ("占用") + "</span>";
+                                }
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'detailFour'
+                            , title: '星期四<br>（' + dateList[3] + '）'
+                            , width: '12.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[3] + "'data-totalId='" + row.meetingroomId + dateList[3] + row.meetingTime + "'></span>";
+                                } else if (value == "1") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[3] + "'data-totalId='" + row.meetingroomId + dateList[3] + row.meetingTime + "'>" + ("预约中") + "</span>";
+                                } else if (value == "2") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[3] + "'data-totalId='" + row.meetingroomId + dateList[3] + row.meetingTime + "'>" + ("占用") + "</span>";
+                                }
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'detailFive'
+                            , title: '星期五<br>（' + dateList[4] + '）'
+                            , width: '12.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[4] + "'data-totalId='" + row.meetingroomId + dateList[4] + row.meetingTime + "'></span>";
+                                } else if (value == "1") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[4] + "'data-totalId='" + row.meetingroomId + dateList[4] + row.meetingTime + "'>" + ("预约中") + "</span>";
+                                } else if (value == "2") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[4] + "'data-totalId='" + row.meetingroomId + dateList[4] + row.meetingTime + "'>" + ("占用") + "</span>";
+                                }
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'detailSix'
+                            , title: '星期六<br>（' + dateList[5] + '）'
+                            , width: '12.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[5] + "'data-totalId='" + row.meetingroomId + dateList[5] + row.meetingTime + "'></span>"
+                                } else if (value == "1") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[5] + "'data-totalId='" + row.meetingroomId + dateList[5] + row.meetingTime + "'>" + ("预约中") + "</span>"
+                                } else if (value == "2") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[5] + "'data-totalId='" + row.meetingroomId + dateList[5] + row.meetingTime + "'>" + ("占用") + "</span>"
+                                }
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'detailSeven'
+                            , title: '星期日<br>（' + dateList[6] + '）'
+                            , width: '12.5%'
+                            , align: "center"
+                            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                                var html = "";
+                                if (value == "0") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[6] + "'data-totalId='" + row.meetingroomId + dateList[6] + row.meetingTime + "'></span>"
+                                } else if (value == "1") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[6] + "'data-totalId='" + row.meetingroomId + dateList[6] + row.meetingTime + "'>" + ("占用") + "</span>"
+                                } else if (value == "2") {
+                                    html = "<span data-mrId='" + row.meetingroomId + "' data-mrname='" + row.meetingroomName + "'data-meetingTime='" + row.meetingTime + "'data-meetingPlace='" + row.meetingPlace + "' data-detailOne='" + dateList[6] + "'data-totalId='" + row.meetingroomId + dateList[6] + row.meetingTime + "'>" + ("占用") + "</span>"
+                                }
+                                return html;
+                            }
+                        }
+                    ];
+
+                }
+            })
+        }
+        //定义bootatrap-table数据列
+        var right_table_col = [];
+
+        $(document).ready(function (e) {
+            //获取日期
+            var datas = {};
+            httpRequest("get", "/zhbg/hygl/meetingApplyDetail/getWeek", datas, function (data) {
+                if (data.flag == '1') {
+                    var selectTime = data.startDate + ' - ' + data.endDate;
+                    $("#selectTime").val(selectTime);
+                }
+            })
+
+            //获取表头数据并添加到right_table_col
+            getByWeek();
+
+            //初始化表格
+            TableInit.init({
+                height: 500,
+                domId: "right_table",
+                striped: false,//去除隔行变色
+                classes: 'table',//去除悬浮变色
+                pagination: false,	//不分页
+                url: "/zhbg/hygl/meetingApplyDetail/getlist",
+                columns: right_table_col,
+                queryParams: function (params) {
+                    //这里将各个查询项添加到要传递的参数中
+                    //                可以做一些校验
+                    params.timeRange = $('#selectTime').val();
+                    return params;
+                },
+
+                readOnlyFn: function () {
+                    var mrIds = "";
+                    $('#right_table').find('tr').find('td:not(:eq(1),:eq(0))').each(function () {
+                        if ($(this).find("span[data-totalId]").attr("data-totalId") == $('#meetingroomId').val() + $('#meetingStartDate').val() + $('#meetingStartTime').val()) {
+                            $(this).addClass("checkTd");
+                            $(this).find("span[data-totalId]").empty();
+                            mrIds += $(this).find("span[data-mrId]").attr("data-mrId") + ",";
+                        } else if ($(this).find("span[data-totalId]").attr("data-totalId") == $('#meetingroomId').val() + $('#meetingEndDate').val() + $('#meetingEndTime').val()) {
+                            $(this).addClass("checkTd")
+                            $(this).find("span[data-totalId]").empty();
+                            mrIds += $(this).find("span[data-mrId]").attr("data-mrId") + ",";
+                        }
+
+                    });
+                    $('tr.readOnly').find('td:not(:eq(1),:eq(0))').unbind('click').bind('click', function (e) {
+                        //取消事件冒泡
+                        var evt = e ? e : window.event;
+                        if (evt.stopPropagation) {
+                            evt.stopPropagation();
+                        } else {
+                            evt.cancelBubble = true;
+                        }
+                        if ($(this).hasClass("checkTd")) {
+                            $(this).removeClass("checkTd");
+                            var mrId = $(this).find("span[data-mrId]").attr("data-mrId");
+                            var mrname = $(this).find("span[data-mrname]").attr("data-mrname");
+                            var meetingTime = $(this).find("span[data-meetingTime]").attr("data-meetingTime");
+                            var detailOne = $(this).find("span[data-detailOne]").attr("data-detailOne");
+                            mrIds = mrIds.replace(mrId + ",", "");
+                            //alert(mrIds);
+
+                        } else {
+                            $(this).addClass("checkTd");
+                            var mrId = $(this).find("span[data-mrId]").attr("data-mrId");
+                            var mrname = $(this).find("span[data-mrname]").attr("data-mrname");
+                            var meetingTime = $(this).find("span[data-meetingTime]").attr("data-meetingTime");
+                            var detailOne = $(this).find("span[data-detailOne]").attr("data-detailOne");
+                            mrIds += mrId + ",";
+                            if ($(".checkTd").length == 2) {
+                                //alert($(this).parent().index());
+                                var tochecklength1 = new Array(2);
+                                var tochecklength2 = new Array(2);
+                                $(".checkTd").each(function (i) {
+                                    tochecklength1[i] = $(this).index();
+                                    tochecklength2[i] = $(this).parent().index();
+                                });
+                                var arr2 = tochecklength1.sort(function (a, b) {
+                                    if (a > b) {
+                                        return 1;
+                                    } else if (a < b) {
+                                        return -1
+                                    } else {
+                                        return 0;
+                                    }
+                                });
+                                for (var i = 0; i < arr2.length; i++) {
+                                    if (arr2[i] + 1 < arr2[arr2.length - 1]) {
+                                        arr2.splice(i + 1, 0, arr2[i] + 1);
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (tochecklength2[0] == tochecklength2[1]) {
+                                    if ($(this).parent().index() % 2 != 0) {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            //alert($(this).parent().find('td:eq('+tochecklength1[i]+')').text());
+                                            if (i != 0 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().prev().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                $(this).removeClass("checkTd");
+                                                layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                mrIds = mrIds.replace(mrId + ",", "");
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            //$(this).parent().find('td:eq('+tochecklength1[i]+')')
+                                            if (i != tochecklength1.length - 1 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().next().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                $(this).removeClass("checkTd");
+                                                layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                mrIds = mrIds.replace(mrId + ",", "");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if ($(this).parent().index() % 2 != 0) {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            if ($(this).parent().prev().find('td:eq(' + tochecklength1[0] + ')').hasClass("checkTd")) {
+                                                if ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().prev().find('td:eq(' + tochecklength1[i] + ')').text()) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+
+                                            } else {
+                                                if (i != 0 && i != tochecklength1.length - 1 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().prev().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        for (var i = 0; i < tochecklength1.length; i++) {
+                                            if ($(this).parent().next().find('td:eq(' + tochecklength1[0] + ')').hasClass("checkTd")) {
+                                                if (i != 0 && i != tochecklength1.length - 1 && ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().next().find('td:eq(' + tochecklength1[i] + ')').text())) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+
+                                            } else {
+                                                if ($(this).parent().find('td:eq(' + tochecklength1[i] + ')').text() || $(this).parent().next().find('td:eq(' + tochecklength1[i] + ')').text()) {
+                                                    $(this).removeClass("checkTd");
+                                                    layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                                    mrIds = mrIds.replace(mrId + ",", "");
+                                                    break;
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if ($(this).text()) {
+                                $(this).removeClass("checkTd");
+                                layer.msg("此时间段已被占用，请选择其他时间！", { icon: 0 });
+                                mrIds = mrIds.replace(mrId + ",", "");
+                            }
+                            if (mrIds.indexOf(mrId) > 1) {
+                                $(this).removeClass("checkTd");
+                                layer.msg("只能选择一个会议室！", { icon: 0 });
+                                mrIds = mrIds.replace(mrId + ",", "");
+                            }
+                            if ($(".checkTd").length > 2) {
+                                $(this).removeClass("checkTd");
+                                layer.msg("只能选择一个结束时间！", { icon: 0 });
+                                mrIds = mrIds.replace(mrId + ",", "");
+
+                            }
+                        }
+
+                    });
+
+                    //合并单元格
+                    try {
+                        mergeTableRow("meetingroomName");
+                    } catch (e) { }
+                }
+            });
+        });
+
+        // 确认选择
+        function confirmChoise() {
+            var $choise = $('.checkTd');
+            var startTime = "";
+            var endTime = "";
+            var meetingRoom = "";
+            if ($choise[0]) {
+                var $start = $choise.eq(0);
+                var startRow = $start.parent().index();
+                var startCol = $start.index();
+
+                meetingRoom = $start.parent().find('td:eq(0) span').html();
+                startTime = convertInnerHTMLtoTip($('#right_table thead tr th:eq(' + startCol + ') .th-inner').html(), $start.parent().find('td:eq(1) span').html());
+            }
+            if ($choise[1]) {
+                var $end = $choise.eq(1);
+                var endRow = $end.parent().index();
+                var endCol = $end.index();
+
+                endTime = convertInnerHTMLtoTip($('#right_table thead tr th:eq(' + endCol + ') .th-inner').html(), $end.parent().find('td:eq(1) span').html());
+            }
+            var message = "会议室：" + meetingRoom + "<br>开始时间：" + startTime + "<br>结束时间：" + endTime;
+
+            layer.confirm(message, {
+                title: "选择确认",
+                btn: ['确定', '取消']
+            }, function (index) {
+                layer.close(index);
+                confirm();
+            }, function (index) {
+                layer.close(index);
+            });
+        }
+
+        // 将表格中的单元格内容拼接转化为时间字符串
+        function convertInnerHTMLtoTip(day, noon) {
+            return day.split('<br>（')[1].split('）')[0] + " " + day.split('<br>（')[0] + " " + noon;
+        }
+
+
+
+        function confirm() {
+            if ($(".checkTd").length == 1) {
+                $(".checkTd").each(function () {
+                    //alert($(this).find("span[data-detailOne]").attr("data-detailOne"));
+                    window.parent.$("#meetingStartDate").val($(this).find("span[data-detailOne]").attr("data-detailOne"));
+                    window.parent.$("#meetingEndDate").val($(this).find("span[data-detailOne]").attr("data-detailOne"));
+                    window.parent.$("#meetingroomId").val($(this).find("span[data-mrId]").attr("data-mrId"));
+                    window.parent.$("#meetingroomName").val($(this).find("span[data-mrname]").attr("data-mrname"));
+                    window.parent.$("#meetingEndTime").val($(this).find("span[data-meetingTime]").attr("data-meetingTime"));
+                    window.parent.$("#meetingStartTime").val($(this).find("span[data-meetingTime]").attr("data-meetingTime"));
+                    window.parent.$("#meetingPlace").val($(this).find("span[data-meetingPlace]").attr("data-meetingPlace"));
+                    if ($(this).find("span[data-meetingTime]").attr("data-meetingTime") == 0) {
+                        window.parent.$("#meetingEndTimeDis").val("上午");
+                        window.parent.$("#meetingStartTimeDis").val("上午");
+                    } else {
+                        window.parent.$("#meetingEndTimeDis").val("下午");
+                        window.parent.$("#meetingStartTimeDis").val("下午");
+                    }
+
+                });
+                parent.layer.closeAll();
+            } else {
+                var mrId = new Array($(".checkTd").length);
+                var mrname = new Array($(".checkTd").length);
+                var meetingPlace = new Array($(".checkTd").length);
+                var meetingTime = new Array($(".checkTd").length);
+                var detailOne = new Array($(".checkTd").length);
+                var meetingStartTime = new Array($(".checkTd").length);
+                var meetingEndTime = new Array($(".checkTd").length);
+                var meetingStartTimeDis = new Array($(".checkTd").length);
+                var meetingEndTimeDis = new Array($(".checkTd").length);
+                var html = new Array($(".checkTd").length);
+                $(".checkTd").each(function (i) {
+                    mrId[i] = $(this).find("span[data-mrId]").attr("data-mrId");
+                    mrname[i] = $(this).find("span[data-mrname]").attr("data-mrname");
+                    meetingTime[i] = $(this).find("span[data-meetingTime]").attr("data-meetingTime");
+                    detailOne[i] = $(this).find("span[data-detailOne]").attr("data-detailOne");
+                    meetingPlace[i] = $(this).find("span[data-meetingPlace]").attr("data-meetingPlace");
+
+                    //html[i] = $(this).html();
+                    //alert($(this).html())
+                    //alert(i+"==="+mrId[i]+ mrname[i]+meetingTime[i]+detailOne[i]);
+                });
+
+                if (detailOne[0] > detailOne[1]) {
+                    window.parent.$("#meetingStartDate").val(detailOne[1]);
+                    window.parent.$("#meetingEndDate").val(detailOne[0]);
+                    window.parent.$("#meetingroomId").val(mrId[0]);
+                    window.parent.$("#meetingroomName").val(mrname[0]);
+                    window.parent.$("#meetingPlace").val(meetingPlace[0]);
+                    window.parent.$("#meetingEndTime").val(meetingTime[0]);
+                    window.parent.$("#meetingStartTime").val(meetingTime[1]);
+                    if (meetingTime[0] == 0) {
+                        window.parent.$("#meetingEndTimeDis").val("上午");
+                    } else if (meetingTime[0] == 1) {
+                        window.parent.$("#meetingEndTimeDis").val("下午");
+                    }
+                    if (meetingTime[1] == 0) {
+                        window.parent.$("#meetingStartTimeDis").val("上午");
+                    } else if (meetingTime[1] == 1) {
+                        window.parent.$("#meetingStartTimeDis").val("下午");
+                    }
+                    parent.layer.closeAll();
+                } else if (detailOne[0] < detailOne[1]) {
+                    window.parent.$("#meetingStartDate").val(detailOne[0]);
+                    window.parent.$("#meetingEndDate").val(detailOne[1]);
+                    window.parent.$("#meetingroomId").val(mrId[0]);
+                    window.parent.$("#meetingroomName").val(mrname[0]);
+                    window.parent.$("#meetingPlace").val(meetingPlace[0]);
+                    window.parent.$("#meetingEndTime").val(meetingTime[1]);
+                    window.parent.$("#meetingStartTime").val(meetingTime[0]);
+                    if (meetingTime[1] == 0) {
+                        window.parent.$("#meetingEndTimeDis").val("上午");
+                    } else if (meetingTime[1] == 1) {
+                        window.parent.$("#meetingEndTimeDis").val("下午");
+                    }
+                    if (meetingTime[0] == 0) {
+                        window.parent.$("#meetingStartTimeDis").val("上午");
+                    } else if (meetingTime[0] == 1) {
+                        window.parent.$("#meetingStartTimeDis").val("下午");
+                    }
+                    parent.layer.closeAll();
+                } else if (detailOne[0] = detailOne[1]) {
+                    window.parent.$("#meetingStartDate").val(detailOne[0]);
+                    window.parent.$("#meetingEndDate").val(detailOne[0]);
+                    window.parent.$("#meetingroomId").val(mrId[0]);
+                    window.parent.$("#meetingroomName").val(mrname[0]);
+                    window.parent.$("#meetingPlace").val(meetingPlace[0]);
+                    window.parent.$("#meetingEndTime").val("1");
+                    window.parent.$("#meetingStartTime").val("0");
+                    window.parent.$("#meetingEndTimeDis").val("下午");
+                    window.parent.$("#meetingStartTimeDis").val("上午");
+                    parent.layer.closeAll();
+                }
+            }
+            //会议室校验
+            if (window.parent.$("#meetingroomName").val()) {
+                window.parent.$("#form").data('bootstrapValidator').updateStatus("meetingroomName", "notEmpty", null).validateField("meetingroomName");
+            }
+        }
+        $(function () {
+            // 初始化参数
+            var theRequest = GetRequest();
+            $("#meetingroomId").val(theRequest.meetingroomId ? theRequest.meetingroomId : "");
+            $("#meetingStartDate").val(theRequest.meetingStartDate ? theRequest.meetingStartDate : "");
+            $("#meetingStartTime").val(theRequest.meetingStartTime ? theRequest.meetingStartTime : "");
+            $("#meetingEndDate").val(theRequest.meetingEndDate ? theRequest.meetingEndDate : "");
+            $("#meetingEndTime").val(theRequest.meetingEndTime ? theRequest.meetingEndTime : "");
+            /* alert($('#meetingroomId').val()+
+            $('#meetingStartDate').val()+
+            $('#meetingStartTime').val()+
+            $('#meetingEndDate').val()+
+            $('#meetingEndTime').val()); */
+        });
+    </script>
+</body>
+
+</html>

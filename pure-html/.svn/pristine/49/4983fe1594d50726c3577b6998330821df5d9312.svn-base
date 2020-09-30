@@ -1,0 +1,191 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    .vertify-details2 {
+        height: 100%;
+        width: 100%;
+        border: 0px solid gray;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-details2" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 变更日期：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="timeRange"/>
+                                </div>
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="reset();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="changeDzz()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 变更
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript">
+
+    laydate.render({
+        elem: '#timeRange', //指定元素
+        range: true
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '4%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span recordId='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'originalName'
+        , title: '迁移党组织'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'originalUpName'
+        , title: '迁移上级党组织'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'targetName'
+        , title: '目标党组织'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'changeDate'
+        , title: '变更日期'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'reason'
+        , title: '变更原因'
+        , width: '30%'
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var val = value;
+            if(value){
+                if(value.length>30){
+                    val = val.substring(0,31)+"...";
+                }
+                return "<span title='"+value+"'>" + val + "</span>";
+            }
+        }
+    }];
+
+    $(document).ready(function (e) {
+
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/djgl/ddjs/dzz/dzzbg/getList",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.timeRange = $('#timeRange').val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[recordId]").attr("recordId");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    MyLayer.layerOpenUrl({url: '/modules/dwgl/dzz/dzzbg/dzzbgReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读"});
+                });
+            }
+        })
+    });
+
+    function changeDzz(){
+        MyLayer.layerOpenUrl({
+            url: '/modules/dwgl/dzz/dzzbg/zzbgTree.html',
+            width: "1100px",
+            height: "600px",
+            title: "变更"
+        })
+    }
+
+    //刷新方法
+    function refreshPage(){
+        TableInit.refTable("right_table");
+    }
+
+</script>

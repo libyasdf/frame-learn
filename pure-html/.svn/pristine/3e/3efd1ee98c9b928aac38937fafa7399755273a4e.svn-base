@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+
+<title>综合管理信息化系统</title>
+<link rel="stylesheet"
+	href="/static/core/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+<link href="/static/css/common/style.css" rel="stylesheet" />
+<link href="/static/css/common/form-public.css" rel="stylesheet" />
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet"
+	href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+<link rel="stylesheet" href="/static/font/iconfont.css">
+<style type="text/css">
+    #progress{
+        width:500px;
+        height:20px;
+        border:1px solid rgb(59,164,212);
+        background-color: rgb(241,241,241);
+        
+        overflow: hidden;
+    }
+    #bar{
+        width:0%;
+        height:100%;
+        background-color: rgb(59,164,212);
+        font-size:1.1em;
+       	/*color:red;*/
+       	vertical-align:middle;
+        font-weight:bold;
+        text-align: center !important;
+        line-height: 20px;
+    }
+    .classdiv{
+	     border-radius: 10px !important;
+	     overflow: hidden !important;
+	     height:20px !important;
+    }
+</style>
+</head>
+
+<body class="formpage_bj">
+	<div class="container-fluid formpage_area">
+		<!--最外层tab-->
+		<div class="modal-body selectjs">
+			<div class="selectjs_block" style="height: auto;">
+				<div class="main" style="height: auto;">
+					<!--tab的主体部分-->
+					<div id="formpage1" class="active">
+						<!--<div class="container-fluid formpage_area">-->
+						<form class="form-horizontal" id="form">
+							<input type="hidden" name="id" id="id" /> 
+							<input name="opertation" id="opertation" type="hidden" value="" />
+							<!-- 操作方法 -->
+							<input name="resId" id="resId" type="hidden" value="">
+							<input name="type" id="type" type="hidden" value="">
+							<input name="nodeId" id="nodeId" type="hidden" value="">
+							<!-- 基本信息 -->
+							<div class="row">
+								<div class="col-md-12 ">
+									<div class="block_title">
+										<span class="name">资料基本信息：</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row m-t-15">
+								<div class="col-md-12">
+									<div class="form-group">
+										<div class="rowGroup">
+											<label for="" class="col-md-2 control-label"><b style="color: red;">* </b>资料名称：</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control" id="dataName" name="dataName" placeholder="资料名称">
+											</div>
+										</div>
+										<label for="" class="col-md-2 control-label">共享时间：</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="shareTime" name="shareTime" placeholder="共享时间">
+										</div>
+									</div>
+									<div class="form-group">
+									<label for="" class="col-md-2 control-label">最少学习时长：<br>（小时）</label>
+										<div class="col-md-4">
+											<input onkeyup="if(isNaN(value)){this.value=''}" onafterpaste="if(isNaN(value)){this.value=''}" type="text" class="form-control" id="minimumLearningTime" name="minimumLearningTime" placeholder="最少学习时长">
+										</div>
+										<label for="" class="col-md-2 control-label">最晚学习日期：</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="latestStudyDate" name="latestStudyDate" placeholder="最晚学习日期">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="" class="col-md-2 control-label">是否必学：</label>
+										<div class="col-md-4">
+											<label class="radio-inline">
+												<input type="radio" id="isWillLearn1" name="isWillLearn" value="1"> 是
+											</label> 
+											<label class="radio-inline">
+												<input type="radio" id="isWillLearn0" name="isWillLearn" value="0" checked> 否
+											</label>
+										</div>
+										<label for="" class="col-md-2 control-label">是否可用：</label>
+										<div class="col-md-4">
+											<label class="radio-inline">
+												<input type="radio" id="subflag1" name="subflag" value="1" checked> 是
+											</label> 
+											<label class="radio-inline">
+												<input type="radio" id="subflag0" name="subflag" value="0"> 否
+											</label>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="rowGroup">
+											<label for="" class="col-md-2 control-label">内容：</label>
+											<div class="col-md-10">
+												<textarea name="context" id="context" class="form-control"
+													rows="3"></textarea>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="rowGroup">
+											<label for="" class="col-md-2 control-label">备注：</label>
+											<div class="col-md-10">
+												<textarea name="remark" id="remark" class="form-control"
+													rows="3"></textarea>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="" class="col-md-2 control-label">视频资料
+										<span class="glyphicon glyphicon-exclamation-sign userTitle" data-toggle="tooltip" data-placement="bottom" title="这里只能上传视频文件"></span>
+										：</label>
+										<div class="col-md-10">
+											<span class="btn btn-primary fileinput-button">
+												<i class="glyphicon glyphicon-plus"></i> <span>选择文件...</span>
+												<input id="video" type="file" accept="video/*" multiple onchange="getUrlAndUpload('video','videos');">
+											</span>
+											<!--上传文件显示  -->
+											<div class="files row">
+												<div id="videos" class="col-md-12 p-f-60"></div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="" class="col-md-2 control-label">附件
+										<span class="glyphicon glyphicon-exclamation-sign userTitle" data-toggle="tooltip" data-placement="bottom" title="这里只能上传word、txt、excel、pdf"></span>
+										：</label>
+										<div class="col-md-10">
+											<span class="btn btn-primary fileinput-button">
+												<i class="glyphicon glyphicon-plus"></i> <span>选择文件...</span>
+												<input id="pdf" type="file" multiple onchange="getUrlAndUpload('pdf','pdfs');">
+											</span>
+											<div class="files row">
+												<div id="pdfs" class="col-md-12 p-f-60"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- 基本信息结束 -->
+						</form>
+						<!--页面提醒-->
+		                <p class="bg-info" style="margin-top: 20px;word-break:normal;white-space:pre-warp;word-wrapL:break-word;">
+		                    	提示： 1.在【视频资料】和【附件】上传文件后，系统会对文件进行转码，转码完成后才能浏览。如提示未转码完成，请稍后再试。<br>
+		                    		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.上传excel时需将内容大于一页的sheet(工作表)调整为一页显示，否则会将超出部分转成新的一页进行展示。
+		                </p>
+						<!--查询重置等按钮-->
+						<div class="form-group"></div>
+						<!--查询重置等按钮 end-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="form_btn_area" style="text-align: center;">
+		<button id="save" class="btn btn-primary form_btn_area_btn2" onclick="saveForm();">
+			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存
+		</button>
+		<button id="preserveBtn" class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();">
+			<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>关闭
+		</button>
+	</div>
+
+	<!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/js/common/url.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<script src="/static/core/laydate/laydate.js"></script>
+	<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+	<!--文件上传js-->
+	<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+	<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+	<script src="/static/js/common/myfilupload.js"></script>
+	<!--文件上传js end-->
+	<!-- <script src="/static/js/template/form.js"></script> -->
+	<script src="/modules/zhbg/xxkh/lawData/js/lawDataEditForm.js"></script>
+	<!--文件校验-->
+	<script src="/modules/zhbg/xxkh/lawData/js/lawDataValidator.js"></script>
+	<!-- 数据回显 -->
+	<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+	<script type="text/javascript" src="/modules/zhbg/xxkh/displayVideoAndPdf/js/displayVideoAndPdf.js"></script>
+	<!-- 音视频系统ip -->
+	<script type="text/javascript" src="/common/js/config.js"></script>
+	<script type="text/javascript">
+		//共享截止日期
+		laydate.render({
+			elem : '#shareTime',
+			type : 'date'
+
+		//range : true// 时间范围
+		});
+		//最晚学习日期
+		laydate.render({
+			elem : '#latestStudyDate',
+			type : 'date'
+
+		//range : true// 时间范围
+		});
+		//关闭当前窗口
+		function closeIfram() {
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	</script>
+</body>
+</html>

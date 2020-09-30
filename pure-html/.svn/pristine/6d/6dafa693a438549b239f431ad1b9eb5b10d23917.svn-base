@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>综合管理信息化系统</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/common/workDataPlan.css">
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="/static/css/gateway/reset.css">
+    <link rel="stylesheet" href="/static/font/iconfont-gateway/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common/navigation.css">
+
+    <!-- <link rel="stylesheet" href="/static/css/gateway/index.css"> -->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/core/iconfont/iconfont.css">
+
+    <style type="text/css">
+        .form-control {
+            border-radius: 0;
+            height: 100%;
+            border-left:0;
+            border-bottom:0;
+            border-right: 0;
+        }
+        .carousel {
+            width: 100%;
+            height: auto;
+            position: relative;
+            z-index: 10;
+        } 
+
+        .carousel__container {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            padding:7px 10px;
+            width: 215px;
+            font-size: 0px;
+            line-height:normal !important;
+            box-sizing: border-box;
+        }
+
+        .carousel__indicators {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 2px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .carousel__indicators__item {
+            display: inline-block;
+            width: 25px;
+            height: 5px;
+            background: #999;
+            margin-top: 42px;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .carousel__active {
+            background: #eee;
+        }
+
+        .carousel__arrow--left {
+            position: absolute;
+            z-index: 10;
+            top: 15px;
+            left: 10px;
+        }
+
+        .carousel__arrow--right {
+            position: absolute;
+            z-index: 9;
+            top: 15px;
+            right: 10px;
+        }
+        .Example_Item{
+            position: absolute;
+            left: 13px;
+        }
+        .More_Ttem {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: -1px;
+            padding:7px 9px 10px 9px;
+            line-height: 26px;
+            border: 1px solid #d5dadd;
+            background: #ffffff;
+        }
+        .carousel__item {
+            display: inline-block;
+            width: 97.5px;
+            height: 26px;
+            float:left;
+            font-size: 14px;
+            text-align: left;
+        }
+        .carousel__item a {
+            margin-left:0 !important;
+        }
+        .carousel__btn {
+            position: relative;
+            font-size: 12px;
+            top:30px;
+            padding-top: 5px;
+            height: 20px;
+            margin:auto;
+            cursor: pointer;
+            display: block;
+            color: #999;
+            text-align: center;
+            background: #eeeeee;
+            border-bottom-right-radius:4px;
+        }
+        #right {
+            box-sizing: border-box;
+            width: 100%;
+            padding-left: 0px;
+            padding-right: 0px;
+            margin-top: 115px;
+        }
+
+        span.xuanzhong {
+            display: block;
+            position: absolute;
+            background: url(/static/images/ico-xuanzhong.png) no-repeat;
+            width: 16px;
+            height: 16px;
+            right: 2px;
+            top: 2px;
+        }
+
+        .completed-plan {
+            background: url("static/images/main/completedPlan.png") center 100% no-repeat;
+            cursor: pointer;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .unfinished-plan {
+            cursor: pointer;
+            background: url("static/images/main/unfinishedplan.png") center 100% no-repeat;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+		.mix-plan {
+            cursor: pointer;
+            background: url("static/images/main/mixPlan.png") center 100% no-repeat;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+        .today {
+            font-weight: 600;
+            font-family: "黑体";
+            color: #3dbaf0;
+        }
+
+        #today {
+            width: 60px;
+            height: 26px;
+            line-height: 26px;
+            font-size: 12px;
+            border: 1px solid #0dae78;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #0dae78;
+        }
+
+        .gr_rili_block_select .selector {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: #3dbaf0;
+            border: none;
+            outline: none;
+            color: white;
+            height: 34px;
+            line-height: 34px;
+        }
+
+        .gr_rili_block_select .selector option {
+            background-color: #fff;
+            color: #404040;
+            border: none;
+            outline: none;
+        }
+
+        .gr_rili_block_select .selector::-ms-expand {
+            color: #fff;
+            font-size: 12px;
+            background: #3dbaf0;
+            border: none;
+            outline: none;
+        }
+        /*工作计划和日志共有样式*/
+.hasLog,
+.hasPlan,
+.hasPlanLog{
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+}
+
+
+/*有工作日志*/
+
+.hasLog{
+	background-color: #3dbaf0;
+	border-radius: 30px;
+	color: #fff !important;
+}
+
+/*有工作计划*/
+
+.hasPlan{
+	background-color: #eee;
+	border-radius: 30px;
+	position: relative;
+}
+
+/*工作计划是未完成的工作日志,用红点表示*/
+
+.redOfPlan{
+	width: 8px;
+	height: 8px;
+	border-radius: 4px;
+	background-color: #f05e5e;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+/*有工作计划和日志*/
+
+.hasPlanLog{
+	background-color: #3dbaf0;
+	border-radius: 30px;
+	color: #fff !important;
+	position: relative;
+}
+
+    .itemTab .gr_block_info_tab_ul li {
+        width: 120px;
+        padding: 0;
+        text-align: center;
+        border-bottom: none;
+    }
+    .gr_block_info_tab_ul li {
+        float: left;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 18px;
+        height: 38px;
+        line-height: 38px;
+        color: #999;
+    }
+    .gr_block_info_tab_ul li.active {
+        font-weight: bold;
+        color: #0073aa;
+        border-bottom:2px solid #0073aa;
+    }
+    .itemTab .gr_block_info_tab_ul .bottom_line {
+        display: block;
+        position: absolute;
+        left: 0px;
+        top: 36px;
+        width: 120px;
+        height: 0px;
+        border-bottom: 2px solid #0073aa;
+        transition: left 0.2s ease-in-out 0s;
+        -webkit-transition: left 0.2s ease-in-out 0s;
+        -moz-transition: left 0.2s ease-in-out 0s;
+        -o-transition: left 0.2s ease-in-out 0s;
+    }
+        .gr_index_block_gj_ul li {
+            cursor:pointer;
+        }
+        .iconStyle {
+            font-size: 30px;
+            color: #428bca;
+        }
+        .xiu-icon,.ban-icon {
+        	position: absolute;
+		    top: 0px;
+		    right: 0px;
+		    font-size: 12px;
+		    transform: scale(0.8);
+		    color: red;
+		    border: 1px solid red;
+		    border-radius: 50%;
+		    height: 18px;
+		    width: 18px;
+		    line-height: 17px;
+		    text-align: center;
+        }
+        .ban-icon {
+        	color:blue;
+         	border: 1px solid blue;
+        }
+        .gr_index_block_main .navigation li {
+            width: 162px;
+        }
+        .itemTab .gr_block_info_tab_ul .remindWorkFlow {
+            width: 150px;
+        }
+        #xxtx-container .gr_block_info_tab_ul .bottom_line {
+            width: 150px;
+        }
+        .gr_index_block_ul li .date {
+            width: auto;
+        }
+        .gr_index_block_title .st_date {
+         width: 215px;
+        }
+        #xxtx-container .gr_index_block_gw_ul li {
+            background: url('/static/images/ico_xinxi.png') 5px center no-repeat;
+        }
+    </style>
+</head>
+
+<body style="background: #effaff">
+    <!-- 顶部容器 -->
+    <div id="header">
+        <div class="head">
+            <!--<div class="logo">
+                <img src="/static/images/head_logo.png" />
+            </div>-->
+            <div class="user" id="user" style="top: 14px; font-size: 14px;">
+                <a href="javascript:void(0);" class="userbox" title="点击切换部门">
+                    <!--<img id="userImg" src="/static/images/login_user.png" width="40" height="40" alt="" style="border-radius:50%;" />-->
+                    <span id="userInfo"></span>
+                </a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href='/gateway/index.html'>
+                    <span class="header-right-icon icon-info"></span>
+                    信息门户
+                </a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    当前在线&nbsp;
+                <span id='userSize'></span>&nbsp;人&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="#" onclick="getMoreMsg(); return false;"  style="position: relative;">
+                    <span class="header-right-icon icon-tip" style="display: none;">
+                        <span class="icon-tip-text">0</span>
+                    </span>
+                    <span class="header-right-icon icon-msg"></span>
+                    消息
+                </a>&nbsp;&nbsp;|&nbsp;
+                <a href='javascript:void(0);' id="btnNewVersion">
+                    切换新版本
+                </a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="javascript:void(0);" id="logout">
+                    <span class="header-right-icon icon-exit"></span>
+                    注销
+                </a>&nbsp;
+            </div>
+        </div>
+        <!-- 一级导航开始 -->
+        <div class="nav">
+            <span style="display:none" class="glyphicon glyphicon-chevron-left pull-left" onclick="navMoveleft()"></span>
+            <div>
+                <ul id="top_nav">
+
+                </ul>
+            </div>
+            <span style="display:none" class="glyphicon glyphicon-chevron-right pull-right" onclick="navMoveRight()"></span>
+        </div>
+        <!-- 一级导航结束 -->
+        <script type="text/javascript">
+            //获取滚动条偏移
+            function getScrleft() {
+                return $(".nav div").scrollLeft();
+            }
+
+            //获取滚动条可以滚动的宽度
+            function getTargetScroll() {
+                var liCount = $("#top_nav").children("li").size(); //li个数
+                var liWidths = 0, lrBorder = 31;
+                //递归导航栏li元素，获取总宽度
+                $("#top_nav").children("li").each(function () {
+                    liWidths += $(this).width();
+                })
+                liWidths += (liCount * lrBorder);
+                //获取窗口宽度
+                var winWidth = window.innerWidth;
+                //li总宽度减去窗口的宽度。即得到滚动条需要滚动的长度
+                var targetScroll = liWidths - winWidth;
+                return targetScroll + 100;
+            }
+
+            //判断是否需要显示左移按钮
+            function isShowMoveLeft() {
+                var scrleft = getScrleft();
+                if (scrleft > 0)
+                    return true;
+                else
+                    return false;
+            }
+
+            //判断是否需要显示右移按钮
+            function isShowMoveRight() {
+                var targetScroll = getTargetScroll();
+                //目前滚动条已经滚动的长度
+                var scrleft = getScrleft();
+                if (!isNaN(targetScroll) && (scrleft < targetScroll)) {
+                    return true;
+                } else
+                    return false;
+            }
+            //导航栏左移、右移按钮切换
+            function navSwitch() {
+                //$(".glyphicon-chevron-right").hide();
+                //$(".glyphicon-chevron-left").hide();
+                if (isShowMoveRight()) {
+                    $(".glyphicon-chevron-right").show();
+                } else
+                    $(".glyphicon-chevron-right").hide();
+                if (isShowMoveLeft())
+                    $(".glyphicon-chevron-left").show();
+                else
+                    $(".glyphicon-chevron-left").hide();
+            }
+
+            //点击左移按钮功能
+            function navMoveleft() {
+                var divWidth = window.innerWidth * 0.8;
+                var scrleft = getScrleft();
+                var targetScroll = getTargetScroll();
+                if (isShowMoveLeft) {
+                    $(".nav div").animate({ scrollLeft: (scrleft - divWidth) }, 500);
+                    if ((scrleft - divWidth) <= 0)
+                        $(".glyphicon-chevron-left").hide();
+                    if ((scrleft - divWidth) < targetScroll)
+                        $(".glyphicon-chevron-right").show();
+                    else
+                        $(".glyphicon-chevron-right").hide();
+                } else
+                    $(".glyphicon-chevron-left").hide();
+            }
+            //点击右移按钮功能
+            function navMoveRight() {
+                //根据窗口宽度，*0.8作为每次滚动的宽度
+                var divWidth = window.innerWidth * 0.8;
+                //目前滚动条已经滚动的长度
+                var scrleft = getScrleft();
+                var targetScroll = getTargetScroll();
+                if (isShowMoveRight) {
+                    $(".nav div").animate({ "scrollLeft": scrleft + divWidth }, 500); //若目前的滚动条的长度小于 最终需要滚动的长度，则向左拉动滚动条，拉动的距离为一个li的宽度和它的左外空的距离。
+                    scrleft += divWidth;
+                    if (scrleft > 0)
+                        $(".glyphicon-chevron-left").show();
+                    else
+                        $(".glyphicon-chevron-left").hide();
+                    if (scrleft >= targetScroll) {
+                        $(".glyphicon-chevron-right").hide();
+                    } else
+                        $(".glyphicon-chevron-right").show();
+                } else {
+                    $(".glyphicon-chevron-right").hide();
+                }
+            }
+            /**
+            function navMoveRight(){ 
+                var licount = $("#top_nav").children("li").size(); //li个数
+                var perwidth = 100;//每个li的宽度和左控的和
+                var liwidths = licount * perwidth; //所有li的总宽度
+                var divWidth = window.innerWidth * 0.8;
+                var targetScrol = liwidths - window.innerWidth;//li总宽度减去外层div的宽度。即得到滚动条需要滚动的长度
+                var scrleft = $(".nav div").scrollLeft();//目前滚动条的滚动长度
+                if(!isNaN(targetScrol) && (scrleft < targetScrol)){
+                    $(".nav div").animate({"scrollLeft":scrleft+divWidth},500); //若目前的滚动条的长度小于 最终需要滚动的长度，则向左拉动滚动条，拉动的距离为一个li的宽度和它的左外空的距离。
+                    $(".glyphicon-chevron-left").show();
+                    if((scrleft+divWidth) >= targetScrol){
+                        $(".glyphicon-chevron-right").hide();
+                    }		
+                }else{
+                    $(".glyphicon-chevron-right").hide();
+                }
+                console.log("navMoveRight licount:" + licount);
+                console.log("navMoveRight liwidths:" + liwidths);
+                console.log("navMoveRight divWidth:" + divWidth);
+                console.log("navMoveRight targetScrol:" + targetScrol);
+                console.log("navMoveRight scrleft:" + scrleft);
+            }*/
+            /**
+            * 顶部导航初始函数
+            * @return {[type]} [description]
+            */
+            var headerInit = function () {
+                var init = function () {
+                    //loadUserInfo();
+                    loadData();
+                    $("#top_nav").on("mouseover", "li.dropdown", function () {
+                        $(this).css("position", "static")
+                        $(this).find(".dropdown-menu").css("left", $(this).position().left)
+                    })
+                };
+
+				/**
+				 * 加载第一级导航树
+				 * @return {[type]} [description]
+				 */
+                var loadData = function () {
+                    $.getJSON('/recourse/top', function (json) {
+                        console.log("在家导航栏", json);
+                        var html = [];
+                        var data = null;
+                        // json.flag为 1 时数据正常返回
+                        if (json.flag === '1') {
+                            data = json.data;
+                            for (var i = 0; i < data.length; i++) {
+                                // 从url中获取id并根据id确定选中
+                                var id = "";
+                                try {
+                                    id = Url.prototype.parse(window.location.href).query.id;
+                                } catch (e) { }
+                                if (data[i].url == "/main.html") {
+                                    id = data[i].id;
+                                }
+                                if (data[i].childrenList && data[i].childrenList.length > 0 /*&& data[i].url !== "/moduleIndex.html"*/) {
+                                    html.push('<li class="dropdown" >');
+                                    if (data[i].memo == "blank"){
+                                        html.push('<a href="javascript:;" target="_blank" id=' + data[i].id + ' data-toggle="dropdown" class="dropdown-toggle">');
+                                    }else{
+                                        html.push('<a href="javascript:;" id=' + data[i].id + ' data-toggle="dropdown" class="dropdown-toggle">');
+                                    }
+                                    html.push(data[i].name);
+                                    html.push('<span class="caret"></span>');
+                                    html.push('<ul class="dropdown-menu">');
+                                    //循环填充二级菜单
+                                    var childrenList = data[i].childrenList;
+                                    for (var j = 0; j < childrenList.length; j++) {
+                                        if (childrenList[j].id === id) {
+                                            html.push('<li class="active" >');
+                                        } else {
+                                            html.push('<li>');
+                                        }
+                                        html.push('<a href=' + childrenList[j].url + '?id=' + childrenList[j].id + ' id=' + childrenList[j].id + '>'
+                                            + childrenList[j].name + '</a>');
+                                        html.push('</li>');
+                                    }
+                                    html.push('</ul>');
+                                    html.push('</a>');
+                                    html.push('</li>');
+                                } else {
+                                    if (data[i].id === id) {
+                                        html.push('<li class="active" >');
+                                    } else {
+                                        html.push('<li>');
+                                    }
+                                    if(data[i].memo == "blank"){
+                                        html.push('<a target="_blank" href=' + data[i].url + '?id=' + data[i].id + ' id=' + data[i].id + '>' + data[i].name + '</a>');
+                                    }else{
+                                        html.push('<a href=' + data[i].url + '?id=' + data[i].id + ' id=' + data[i].id + '>' + data[i].name + '</a>');
+                                    }
+                                    html.push('</li>');
+                                }
+                            }
+                            $('#top_nav').empty().append(html.join(''));
+                            //控制导航栏左右切换按钮的显示与否
+                            navSwitch();
+                            //给top菜单添加悬浮展开事件 start
+                            $('#header .dropdown').mouseover(function () {
+                                $(this).addClass('open');
+                            });
+                            $('#header .dropdown').mouseout(function () {
+                                $(this).removeClass('open');
+                            });
+                        }
+                    });
+                }
+
+                return {
+                    init: function () {
+                        init();
+                    }
+                }
+            }();
+        </script>
+    </div>
+    <!-- 右边内容区域-->
+    <div id="right">
+        <div class="container gr_index_container">
+            <div class="row cleacymkclassrfix">
+                <div class="col-md-3 column gr_index_column">
+                    <div class="gr_index_block gr_index_user" style="height: 300px;">
+                        <div class="gr_index_user_left">
+                            <div class="gr_top">
+                                <span id="date_time"></span><br>
+                                <span class="date" id="date_date"></span>
+                            </div>
+                            <div class="gr_down">
+                                <span id="date_week"></span>
+                            </div>
+                            <div class="gr_email">
+                                <a href="https://222.12.102.17:450" target="_blank">
+                                    <p class="gr_emial_title">已读邮件</p>
+                                    <p class="gr_emial_value"  id="readNum">0</p>
+                                </a>
+                            </div>
+                            <div class="gr_read_email">
+                                <a href="https://222.12.102.17:450" target="_blank">
+                                    <p class="gr_emial_title">未读邮件</p>
+                                    <p class="gr_emial_value" id="unreadNum">0</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="gr_index_user_right">
+                            <div class="gr_top">
+                                <p class="gr_user_box"><img src="" alt="" class="gr_user_img" id="userImg"></p>
+                                <span class="name" id="userName"></span><br>
+                                <span id="userDept"></span>
+                            </div>
+                            <div class="carousel">
+                                <div class="gr_down carousel__container">
+                                    <!-- <span class="glyphicon glyphicon-chevron-left carousel__arrow--left" style='display: none'></span>
+                                    <span class="glyphicon glyphicon-chevron-right carousel__arrow--right" style='display: none'></span> -->
+                                    <div class="Example_Item">
+                                        <div class="carousel__item" style="display: inline-block">
+                                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                                            <a href="javascript:void(0);" onclick="myKqAttendance();" style="margin-left: 5px;">打卡记录</a>&nbsp;&nbsp;&nbsp;&nbsp;|
+                                        </div>
+                                        <div class="carousel__item" style="display: inline-block">
+                                            <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+                                            <a href="javascript:void(0);" onclick="mySalary();" style="margin-left: 5px;">我的工资</a>&nbsp;&nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="More_Ttem">
+                                        <div class="carousel__item">
+                                            <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+                                            <a href="javascript:void(0);" onclick="openWaitdoList();">我的待办</a>
+                                        </div>
+                                        <div class="carousel__item">
+                                            <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+                                            <a href="javascript:void(0);" onclick="openYibanList();">我的已办</a>
+                                        </div>
+                                        <div class="carousel__item">
+                                            <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+                                            <a href="javascript:void(0);" onclick="myRecord();">我的履历</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <ul class="carousel__indicators" style="display:none">
+                                    <li class="carousel__indicators__item carousel__active"></li>
+                                    <li class="carousel__indicators__item"></li>
+                                    <li class="carousel__indicators__item"></li>
+                                    <li class="carousel__indicators__item"></li>
+                                </ul> -->
+                                <span class="glyphicon glyphicon-chevron-down carousel__btn" aria-hidden="true"></span>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <!--<div class="gr_index_block" style="height: 135px;">-->
+                        <!--<div class="gr_index_block_title">-->
+                            <!--<span class="more">-->
+                                <!--&lt;!&ndash; <a href="#">更多&gt;</a> &ndash;&gt;</span><span class="name">我的邮箱</span>-->
+                        <!--</div>-->
+                        <!--<div class="gr_index_block_main">-->
+                            <!--<div class="gr_index_mail_div" style="border-right: 1px solid #eaeaea;">-->
+                                <!--<img class="mail_ico" src="/static/images/ico_mail1.png" />-->
+                                <!--<div class="mail_main">-->
+                                    <!--<a href="https://222.12.102.17:450" target="_blank"><span id="unreadNum" class="num red"></span><br>未读邮件</a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="gr_index_mail_div">-->
+                                <!--<img class="mail_ico" src="/static/images/ico_mail2.png" />-->
+                                <!--<div class="mail_main">-->
+                                    <!--<a href="https://222.12.102.17:450"><span id="readNum" class="num"></span><br>已读邮件</a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="gr_index_block" style="height: 365px;">
+                        <div class="gr_index_block_title">
+                            <span class="more"><a href="javascript:;" onclick="showMoreYydh();">更多&gt;</a></span><span class="name">应用导航</span>
+                        </div>
+                        <div class="gr_index_block_main">
+                            <ul class="navigation" >
+                                <li><a href="是打发" target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/Management.png"></div><span class="fontColor_blue">公文管理</span></a></li><li><a href="放水电费" target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/Red.png"></div><span class="fontColor_blue">反倒是</span></a></li><li><a href="http://218.240.159.110:8088/bugfree/index.php" target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/Management.png"></div><span class="fontColor_blue">bugfre</span></a></li><li><a href="https://jiaotong.baidu.com/" target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/redMap.png"></div><span class="fontColor_blue">A1</span></a></li><li><a href="胜多负少" target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/navigation-Safe.png"></div><span class="fontColor_blue">测试</span></a></li><li><a href="fgdfgfdgfdgfdgdfg " target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/financialEquipment.png"></div><span class="fontColor_blue">cmy1</span></a></li><li><a href="放到刚梵蒂冈地方广泛地刚梵蒂冈的风格" target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/networkSafe.png"></div><span class="fontColor_blue">没内容</span></a></li><li><a href="费所发生的" target="view_window"><div class="imgBox"><img src="/static/images/yydh/new/redSearch.png"></div><span class="fontColor_blue">测试124</span></a></li></ul>
+                        </div>
+                    </div>
+                    <!--<div class="gr_index_block" style="height: 300px;">-->
+                        <!--<div class="gr_index_block_title">-->
+                            <!--<span class="more"><a href="/gateway/index.html" target="_blank">更多&gt;</a></span><span-->
+                                <!--class="name">信息发布提醒</span>-->
+                        <!--</div>-->
+                        <!--<div class="gr_index_block_main">-->
+                            <!--<ul class="gr_index_block_gw_ul" id="infoNotice">-->
+                                <!--&lt;!&ndash; <li class="clearfix">-->
+									<!--<a href="#" class="fl">关于系统在线办公平台公文标题关于系统在线办公平台公文标题</a>-->
+									<!--<span class="date fr">2018-21-23</span>-->
+								<!--</li> &ndash;&gt;-->
+                            <!--</ul>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="gr_index_block" style="height: 300px;">
+                        <div class="gr_index_block_title" style="cursor:pointer">
+                            <ul class="gr_block_title_tab_ul nav-tabs">
+                                <!-- <li class="active" for="formpage2">工作日志</li> -->
+                                <li style="font-weight: bold; color: #1d3951;"for="formpage1">工作计划和日志</li>
+                            </ul><!-- <span id="wklog" class="more" onclick="moreWorkLog()"><a>更多&gt;</a></span> -->
+                            <span id="wkplan" class="more" onclick="moreWorkPlan()"><a>更多&gt;</a></span>
+
+                        </div>
+                        <div class="gr_index_block_main main" style="padding: 0;">
+                            <div class="gr_index_rili" id="formpage1">
+                                <div class="gr_rili_block_select">
+                                    <span><a id="lt1">&lt;</a></span>
+                                    <span>
+                                        <select id="year" class="selector"></select>
+                                    </span>
+                                    <span><a id="gt1">&gt;</a></span>
+                                    <span><a id="lt2">&lt;</a></span>
+                                    <span>
+                                        <select id="month" class="selector">
+                                            <option value="1月">1月</option>
+                                            <option value="2月">2月</option>
+                                            <option value="3月">3月</option>
+                                            <option value="4月">4月</option>
+                                            <option value="5月">5月</option>
+                                            <option value="6月">6月</option>
+                                            <option value="7月">7月</option>
+                                            <option value="8月">8月</option>
+                                            <option value="9月">9月</option>
+                                            <option value="10月">10月</option>
+                                            <option value="11月">11月</option>
+                                            <option value="12月">12月</option>
+                                        </select>
+                                    </span>
+                                    <span><a id="gt2">&gt;</a></span>
+                                    <span><button id="today">今天</button></span>
+                                </div>
+
+
+                                <div class="gr_rili_main">
+                                    <table class="gr_rili_table" width="100%" border="0" cellspacing="0" id="table"
+                                        cellpadding="0">
+                                        <tbody id="workplantb">
+                                            <tr class="shen table_title" align="center">
+												<td width="14%">一</td>
+												<td width="14%">二</td>
+												<td width="14%">三</td>
+												<td width="14%">四</td>
+												<td width="14%">五</td>
+												<td width="15%">六</td>
+                                                <td width="15%">日</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- <div id="
+                            " class="gr_index_rili hidden">
+								<div class="gr_rili_block_select">
+									<a href="#">今天</a> 2018年7月 <a href="#">&lt;</a> <a href="#">&gt;</a>
+								</div>
+								<div class="gr_rili_main" style="height: 210px;">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0"
+										class="gr_rili_table">
+										<tbody>
+											<tr class="shen table_title">
+												<td width="14%">日</td>
+												<td width="15%">一</td>
+												<td width="14%">二</td>
+												<td width="14%">三</td>
+												<td width="14%">四</td>
+												<td width="14%">五</td>
+												<td width="15%">六</td>
+											</tr>
+											<tr>
+												<td><span class="none">27</span></td>
+												<td><span class="none">28</span></td>
+												<td><span class="none">29</span></td>
+												<td><span class="none">30</span></td>
+												<td>1</td>
+												<td>2</td>
+												<td>3</td>
+											</tr>
+											<tr class="shen">
+												<td>4</td>
+												<td>5</td>
+												<td>6</td>
+												<td>7</td>
+												<td>8</td>
+												<td>9</td>
+												<td>0</td>
+											</tr>
+											<tr>
+												<td>11</td>
+												<td>12</td>
+												<td>13</td>
+												<td>14</td>
+												<td><span class="taday">15</span></td>
+												<td>16</td>
+												<td>17</td>
+											</tr>
+											<tr class="shen">
+												<td>18</td>
+												<td>19</td>
+												<td>20</td>
+												<td>21</td>
+												<td>22</td>
+												<td>23</td>
+												<td>24</td>
+											</tr>
+											<tr>
+												<td>25</td>
+												<td>26</td>
+												<td>27</td>
+												<td>28</td>
+												<td>29</td>
+												<td>30</td>
+												<td>31</td>
+											</tr>
+											<tr class="shen">
+												<td><span class="none">1</span></td>
+												<td><span class="none">2</span></td>
+												<td><span class="none">3</span></td>
+												<td><span class="none">4</span></td>
+												<td><span class="none">5</span></td>
+												<td><span class="none">6</span></td>
+												<td><span class="none">7</span></td>
+											</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</div> -->
+                           <!--  <div id="formpage2" class="gr_index_rili active">
+                                <div class="gr_rili_block_datelogo">
+                                    <div class="form-inline clearfix">
+                                        <input type="text" name="content" class="fl" id="content" placeholder="日志内容">
+                                        <div class="gr_Btn_categories fr">
+                                            <div class="selectbox selectbox_leibie">
+                                                <select id="logType" name="logType">
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="fr" style="width: 1px; height:16px; background-color: #999; margin: 4px 0 0 10px;"></div>
+                                        <div class="fr">
+                                            <i class="iconfont icon-calendar" id="dateLog1"></i>
+                                        </div>
+                                        <input name="dateLog" id="dateLog" type="hidden">
+                                    </div>
+                                    <a href="#">今天</a> 2018年8月 <a href="#">&lt;</a> <a href="#">&gt;</a>
+                                </div>
+                                <div class="gr_rili_main gr_worklog_content" id="workLogData">
+                                    <div id="workLogInfo" style="text-align:center;display:none;">暂无日志信息！</div>
+                                    <ul class="gr_worklog_list" id="workLogList">
+
+                                    </ul>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 column gr_index_column itemTab">
+                    <div class="gr_index_block" style="height: 300px;">
+                        <div class="gr_index_block_title" style="position:relative">
+                            <span class="more"><a href="#" onclick="getMoreyYibanDaiban();">更多&gt;</a></span>
+                            <div class="gr_block_title_tab">
+                                <ul class="gr_block_title_tab_ul">
+                                    <li style="cursor: pointer;" id="db" class="workflow active">待办事项</li>
+                                    <li style="cursor: pointer;" id="yb" class="workflow">已办事项</li>
+                                    <li class="bottom_line"></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="gr_index_block_main" id="daiban">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_index_block_main_list_table">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="gr_index_block_main" id="yiban" style="display: none;">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_index_block_main_list_table">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--后改-->
+                    <div class="gr_index_block" id="xxtx-container" style="height: 365px;">
+                        <div class="gr_index_block_title" style="position:relative">
+                            <span class="more"><a href="#" onclick="getMoreyRemind();">更多&gt;</a></span>
+                            <div class="gr_block_title_tab">
+                                <ul class="gr_block_info_tab_ul">
+                                    <li style="cursor: pointer;" id="remind_data" class="remindWorkFlow active">通知公告提醒</li>
+                                    <li style="cursor: pointer;" id="db_remind" class="remindWorkFlow">信息发布提醒</li>
+                                    <li style="cursor: pointer;" id="yb_remind" class="remindWorkFlow">音视频发布提醒</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="gr_index_block_main" id="tabOne" >
+                            <div class="gr_index_block_main">
+                                <ul class="gr_index_block_ul" id="tabOne_data">
+                                    <li><span class="date">2019-10-09 19:32</span><img src="/static/images/ico_xinxi.png">&nbsp;&nbsp;<a href="javascript:void(0);" >【综合管理信息化系统】会务服务通知</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="gr_index_block_main"  style="display: none;" id="tabTwo">
+                            <div class="gr_index_block_main">
+                                <ul class="gr_index_block_ul" id="tabTwo_data"></ul>
+                            </div>
+                        </div>
+                        <div class="gr_index_block_main"  style="display: none;" id="tabThree">
+                            <div class="gr_index_block_main">
+                                <ul class="gr_index_block_ul" id="tabThree_data"></ul>
+                            </div>
+                        </div>
+                    </div aside>
+                    <!--<div class="gr_index_block" style="height: 300px;">-->
+                        <!--<div class="gr_index_block_title">-->
+                            <!--<span class="more"><a href="javascript:;" onclick="showMoreYydh();">更多&gt;</a></span><span-->
+                                <!--class="name">应用导航</span>-->
+                        <!--</div>-->
+                        <!--<ul class="navigation" id="yydh">-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                    <div class="gr_index_block" style="height: 300px;" id="info-container">
+                        <div class="gr_index_block_title" style="position:relative">
+                            <span class="more"><a href="#" onclick="getMoreyDYyue();">更多&gt;</a></span>
+                            <div class="gr_block_title_tab">
+                                <ul class="gr_block_info_tab_ul">
+                                    <li style="cursor: pointer;" id="info_data" class="infoWorkFlow active">系统消息</li>
+                                    <li style="cursor: pointer;" id="db_info" class="infoWorkFlow">业务消息</li>
+                                    <!--<li style="cursor: pointer;" id="yb_info" class="infoWorkFlow">已阅消息</li>-->
+                                    <li class="bottom_line"></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="gr_index_block_main" id="infoData">
+                            <div class="gr_index_block_main">
+                                <div class="gr_index_block_yellow_ts">
+                                    您有 <span class="num" id="msgNum"></span> 个新消息
+                                </div>
+                                <ul class="gr_index_block_ul" id="msgList">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="gr_index_block_main" id="daiyue" style="display: none;">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_index_block_main_list_table">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="gr_index_block_main" id="yiyue" style="display: none;">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_index_block_main_list_table">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--<div class="gr_index_block" style="height: 300px;">
+                        <div class="gr_index_block_title">
+                            <span class="more"><a href="javascript:void(0);" onclick="getMoreMsg();">更多&gt;</a></span><span
+                                class="name">消息提醒</span>
+                        </div>
+                        <div class="gr_index_block_main">
+                            <div class="gr_index_block_yellow_ts">
+                                您有 <span class="num" id="msgNum"></span> 个新消息
+                            </div>
+                            <ul class="gr_index_block_ul" id="msgList">
+                            </ul>
+                        </div>
+                    </div>-->
+
+
+                </div>
+                <div class="col-md-3 column gr_index_column cymkclass">
+                    <div class="gr_index_block" style="height: 300px;">
+                        <div class="gr_index_block_title">
+                            <a class="peizhi" href="javascript:void(0);">
+                                <span class="glyphicon glyphicon-th-list" onclick="openResource();" aria-hidden="true"></span>
+                            </a>
+                            <span class="name">常用模块</span>
+                            <!--onclick="openSelectZtree({'resourceId':Config.oftenModelId})"-->
+                        </div>
+                        <div id="box" style="">
+                            <div class="gr_index_block_main" id="cymkli_main" style="">
+                                <ul class="modulesBox clearfix" id="cymkli">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gr_index_block" style="height: 365px;">
+                        <div class="gr_index_block_title">
+                            <span class="more"><a href="javascript:;" onclick="showMoreCygj();">更多&gt;</a></span><span
+                                class="name">常用工具</span>
+                        </div>
+                        <div class="gr_index_block_main">
+                            <ul class="gr_index_block_gj_ul" id="cygj">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="gr_index_block" style="height: 300px;">
+                        <div class="gr_index_block_title">
+                            <div class="st_date">
+                                <a href="javascript:void(0);" onclick="getPreDat()">&lt;</a><input name="menuDate" id="menuDate"
+                                    type="hidden" value="" /> <span id="diningMenuDate"></span><a href="javascript:void(0);"
+                                    onclick="getNextDat()">&gt;</a>
+                            </div>
+                            <span class="name">食堂食谱</span>
+                        </div>
+                        <div class="gr_index_block_main" style="height:85%;">
+                            <div class="st_title_tab">
+                                <ul class="st_nav nav-pills" id="dinnerMenu" style="cursor:pointer">
+                                    <li id="fuli" class="active"><a>早餐</a></li>
+                                    <li id="tese"><a>午餐</a></li>
+                                    <!-- <li id="erlou"><a>二楼面食</a></li>
+									<li id="waimai"><a>晚外卖</a></li> -->
+                                </ul>
+                                <button type="button" class="btn btn-primary" id="orderingMeals" onclick="orderingMeals()">外卖预定</button>
+                            </div>
+                            <div class="gr_index_block_main" style="padding: 0; height:85%;overflow: auto;">
+                                <div id="dinnerpage1" class="gr_index_rili active">
+                                    <div class="st_main" id="fuliqu"></div>
+                                </div>
+                                <div id="dinnerpage2" class="gr_index_rili active" style="height: 95%">
+                                    <div class="st_main" style="height: 100%" id="tesequ"></div>
+                                </div>
+                                <!-- <div id="dinnerpage3" class="gr_index_rili active">
+									<div class="st_main" id="erlouqu"></div>
+								</div>
+								<div id="dinnerpage4" class="gr_index_rili active">
+									<div class="st_main" id="waimaiqu"></div>
+								</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="footer clr bottomTitle">综合管理信息化系统</div>
+    </div>
+    <script src="/common/js/dateutil.js"></script>
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/laydate/laydate.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script src="/static/core/nodetpl.min.js"></script>
+    <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/js/common/mylayer.js"></script>
+    <script src="/static/js/common/tablelist.js"></script>
+    <script src="/static/js/common/url.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+
+    <!-- 引入自己的js -->
+    <script src="/common/js/index.js"></script>
+    <script src="/common/js/main.js"></script>
+    <script src="/common/js/config.js"></script>
+    <script src="/common/js/commonFunction.js"></script>
+
+    <script src="/message/js/notityMessage.js"></script>
+    <!-- 应用导航and常用工具js -->
+    <script src="/common/js/applicationAndUtillink.js"></script>
+    <!-- 常用模块js -->
+    <script type="text/javascript" src="/modules/mypage/oftenModel/js/resourceTree.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $.ajax({
+                'url' : '/bbkzVersionController/getVersion',
+                'type':'POST',
+                'dataType':'json',
+                'data' : {
+                    //条件
+                }
+            }).done(function( data, textStatus, jqXHR ) {
+                if(!data){data=[];}
+                if(data.statusCode&&data.statusCode!=200){
+                    layer.msg(data.stateDescribe, { icon: 2 });
+                    return;
+                }else{
+                    if(data.valueDescribe){
+                        data=data.valueDescribe;
+                    }
+                    $(".bottomTitle").append("&nbsp;&nbsp;版本："+data);
+                }
+                $(".bottomTitle").append("&nbsp;&nbsp;服务热线&nbsp;:"+Config.servicePhone);
+            })
+
+
+
+
+            headerInit.init();
+            $(window).resize(function () {
+                navSwitch();
+            });
+            InitMyInfoPanel();  // 初始化我的信息面板事件
+            InitItemTab(); // 初始化事项面板
+            InitInfoTab(); // 初始化消息面板
+            InitRemindTab(); // 初始化信息提醒面板
+        });
+
+        $(function () {
+            // tab页切换
+            $('.nav-tabs > li').unbind('click').bind('click', function () {
+                var id = $(this).attr('for');
+                /* if (id == "formpage2") {
+                    $("#wklog").css("display", "inline-block");
+                    $("#wkplan").css("display", "none");
+                } else if (id == "formpage1") {
+                    $("#wklog").css("display", "none");
+                    $("#wkplan").css("display", "inline-block");
+                } */
+                $(this).addClass('active').siblings('li').removeClass('active');
+                $('.main').children().addClass('hidden');
+                $('#' + id).removeClass('hidden');
+            })
+
+            //加载应用导航
+            showDaohang("yydh",12);
+
+            //加载常用工具
+            showUtillink("cygj",12);
+
+        })
+
+        /**
+         * 常用模块
+         */
+        function openResource(){
+            MyLayer.layerOpenUrl({
+                url: "/modules/mypage/oftenModel/synResourceList.html",
+                title: "常用模块",
+                cancel: function () {
+                    parent.loadOftenModel();
+                }
+            });
+
+        }
+
+    </script>
+    <script type="text/javascript">
+        
+    </script>
+</body>
+
+</html>

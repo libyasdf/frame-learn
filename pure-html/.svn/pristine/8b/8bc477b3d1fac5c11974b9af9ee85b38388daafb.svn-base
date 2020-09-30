@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理全部java_20181129"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+			
+		<!--模块内页面和js -->
+		<include name="WebContent/modules/dagl/"/>
+		
+		<!-- 模块内java文件-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/"/>
+		
+		<!-- 公共js,直接替换即可-->
+		<include name="WebContent/static/js/common/tablelist.js"/>
+		<include name="WebContent/common/html/notion/notion.js"/>
+		<!-- <include name="WebContent/common/js/config.js"/>
+		最后边增加如下代码
+		/**
+	     * 档案管理》文电管理》sys_template表中文件模板的id
+	     */
+		fileModelId:"4028d083670bfade01670bfadeef0000"
+		-->
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

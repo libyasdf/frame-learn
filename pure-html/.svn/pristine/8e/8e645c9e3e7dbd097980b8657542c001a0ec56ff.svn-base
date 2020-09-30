@@ -1,0 +1,1 @@
+ALTER TABLE wmgl_take_out_info  ADD  name VARCHAR2(50 CHAR)

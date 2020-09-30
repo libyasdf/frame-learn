@@ -1,0 +1,705 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row" >
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;" id="queryDiv">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 文件标题：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="title"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 发文单位：</label>
+                            <div class="col-md-3">
+                                 <input class="form-control" type="text" name="fileDept"/>
+                            </div>
+                             <label class="col-md-1 control-label"> 密级：</label>
+                            <div class="col-md-3">
+                                <select id="sel" class="form-control" name="securityClass">
+                                	<option value="">---请选择---</option>
+                        		</select>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                         	<label class="col-md-1 control-label"> 文件类型：</label>
+                            <div class="col-md-3">
+                                <select id="type" class="form-control" name="type">
+                                	<option value="">---请选择---</option>
+                        		</select>
+                            </div>
+                            <label class="col-md-1 control-label"> 文件状态：</label>
+                            <div class="col-md-3">
+                                <select id="state" class="form-control" name="state">
+                                	<option value="">---请选择---</option>
+                        		</select>
+                            </div>
+                            <label class="col-md-1 control-label"> 成文日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="createdDate" id="timeRange"/>
+                            </div>
+                         </div>
+                        <div class="form-group">
+                            <div class="col-md-2" style="width:100%;text-align: center">
+                                <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table')" > 查&nbsp;&nbsp;询 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary"  > 重&nbsp;&nbsp;置 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+       
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="list.addFun();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+                <button class="list_table_btn2"
+                        onclick="importData();">
+                    <span class="glyphicon glyphicon-chevron-left"></span> 导入数据
+                </button>
+                   <button class="list_table_btn2"
+                        onclick="templateDwon();">
+                    <span class="glyphicon glyphicon-download-alt"></span> 发文模板
+                </button>
+                <a class='glyphicon glyphicon-download-alt' id="templateDwon" hidden> 发文模板</a>
+                <button class="list_table_btn2"
+                        onclick="tidyRecode();">
+                    <span class="glyphicon glyphicon-send"></span> 归档
+                </button>
+                <button class="list_table_btn2"
+                        onclick="list.dayin();">
+                    <span class="glyphicon glyphicon-print"></span> 发文登记表打印
+                </button>
+                <button class="list_table_btn2"
+                        onclick="list.dayinDestory();">
+                    <span class="glyphicon glyphicon-print"></span> 文件销毁登记表打印
+                </button>
+                <button class="list_table_btn2"
+                        onclick="list.batchUpdate();">
+                    <span class="glyphicon glyphicon-edit"></span> 批量修改文件类型
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/zhbg/xxkh/tree/js/dictionaryTypeTree.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 页面常量配置config.js -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript">
+	var num2 = 1;
+	//收文模板的id
+	var templateId = Config.fileModelId;
+	//用来接收数据字典的值
+	var securityClassMap = {};
+	var typeMap = {};
+	var stateMap = {};
+	var selectData = [];
+	var selectId = [];
+	//接收参数
+	var parameter ;
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+        ,format:'yyyyMMdd'
+    });
+
+
+  //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+			title : "",
+			width : '3%',
+			align : "center",
+			checkbox : "true",
+			/* formatter : function(value, row, index) {
+				 if ("待归档".indexOf(stateMap[row.state])==-1){
+					 return {
+			             disabled :true ,//设置是否可用
+			     		};
+				 }else{
+					 if($.inArray(row.id,selectId)!= -1){
+						 console.log(selectId);
+						 return {
+				             checked : true,
+				     		};
+					 }
+				 }
+			         
+			} */
+		},{
+    	 	title: 'id'
+   	        , width: '5%'
+   	        , order: "desc"
+   	        , align: "center"
+   	        , visible:false
+    	},{
+    	 	title: '序号'
+ 	        , width: '5%'
+ 	        , order: "desc"
+ 	        , align: "center"
+ 	        , formatter: function (value, row, index) {
+ 	        	//计算序号，并存放业务ID，及已办事项ID
+ 	        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+ 	            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+ 	            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+ 	            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+ 	        }
+ 	    },{
+	        field: 'title'
+	        , title: '文件标题'
+	        , width: '15%'
+	        , align:"center"
+	        , formatter: function (value, row, index) {
+	            	if(value!=null){
+	            		var length = value.length
+	    	  	   	      var val = '';
+	    	  	   	      if(length>12){
+	    	  	   	    	  val = value.substring(0,12)+"...";
+	    	  	   	      }else{
+	    	  	   	    	  val = value;
+	    	  	   	      }
+	      	   	   		return  "<span title='"+value+"'>"+val+"</span>";
+	            	}else{
+	            		return "";
+	            	}
+	            }
+	    }, {
+	        field: 'fileNum'
+	        , title: '文号'
+	        , width: '5%'
+	        , sortable: false
+	        , align:"center"
+	        , visible:false
+	    },{
+	        field: 'pageNum'
+            , title: '页数'
+            , width: '5%'
+            , sortable: true
+            , align:"center"
+            , visible:false
+	    },{
+	        field: 'fileDept'
+	        , title: '发文单位'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+	        , visible:true
+	    },{
+	        field: 'securityClass'
+	        , title: '密级'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+        	/* ,formatter: function (value, row, index) {
+        		if(value==null){
+        			value = "-";
+        		}else{
+	            	value = securityClassMap[value];
+        		}
+                return "<span data-id='"+row.id+"'>"+value+"</span>";
+            } */
+	    },{
+	        field: 'createdDate'
+	        , title: '成文日期'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+        	, visible:true
+	    },{
+	        field: 'fileTime'
+	        , title: '发文日期'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+        	, visible:false
+	    },{
+	        field: 'type'
+	        , title: '文件类型'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+        	, visible:true
+	       	,formatter: function (value, row, index) {
+	       		if(value==null){
+        			value = "-";
+        		}else{
+	            	value = typeMap[value];
+        		}
+                return "<span data-id='"+row.id+"'>"+value+"</span>";
+            }
+	    },{
+	        field: 'state'
+	        , title: '文件状态'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+	        , visible:true
+	       	,formatter: function (value, row, index) {
+	       		if(value==null){
+        			value = "-";
+        		}else{
+	            	value = stateMap[value];
+        		}
+                return "<span data-id='"+row.id+"'>"+value+"</span>";
+            }
+	    },{
+	        field: 'cz'
+	        , title: '操作'
+	        , width: '10%'
+	        , align:"center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var html = "";
+            //文电管理文件状态保存值：01：待归档、02：已推送至档案管理员 、03：已退回待处置、04：已归档、05：已推送至档案录入人
+            if(row.state!="02" && row.state!="04" && row.state!="05"){
+                   html +="<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                   html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>"
+           	   }
+	            return html;
+	        }
+	    }];
+
+  
+    $(document).ready(function (e) {
+    	 //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        
+      	//获取url中的参数
+    	var url = $("#left_ul").find("a.active").attr("url");
+    	var resId = $("#left_ul").find("a.active").attr("id");
+    	parameter = new GetParameter(url);
+       
+    	//获取数据字典
+    	Dictionary.init({
+    		mark:"04",
+    		type:'1',
+    		position:"sel",
+    		domType:"select", 
+   		 	hasSelect:true});
+    	Dictionary.init({
+    		mark:"dagl_fileType",
+    		type:'1',
+    		position:"type",
+    		domType:"select", 
+   		 	hasSelect:true});
+    	Dictionary.init({
+    		mark:"dagl_fileStatus",
+    		type:'1',
+    		position:"state",
+    		domType:"select", 
+   		 	hasSelect:true});
+    	securityClassMap = Dictionary.getNameAndCode({
+    		mark:"04",
+    		type:'1'
+    	});
+    	typeMap = Dictionary.getNameAndCode({
+    		mark:"dagl_fileType",
+    		type:'1'
+    	});
+    	stateMap = Dictionary.getNameAndCode({
+    		mark:"dagl_fileStatus",
+    		type:'1'
+    	});
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            //height:680,
+            url:"/dagl/wdgl/sendFile/getList",
+            columns:right_table_col,
+            pageList: "[10,25,50,100]",
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+				params.resId = $('#left_ul').find('a.active').attr("id");
+                params.title = $('#queryDiv input[name=\'title\']').val();
+                params.fileDept = $('#queryDiv input[name=\'fileDept\']').val();
+                if($('#sel').val()!=""){
+                  	 params.securityClass = $('#sel option:selected').text();
+                   }
+                params.type = $('#type').val();
+                params.state = $('#state').val();
+                params.timeRange = $('#timeRange').val();
+                //params.pageSize = 25;
+                return params;
+            },
+            readOnlyFn:function(){
+            	setReadOnly();
+                //$(".fixed-table-pagination").hide();
+            },
+            onCheck : function(row,$element) {
+				//selectData.push(row);
+				//selectId.push(row.id);
+				//console.log("选择数据的长度："+selectData.length);
+				//console.log("选择数据的id数组长度："+selectId.length);
+			},
+			onUncheck : function(row,$element) {
+				/* for(var i in selectData){
+					if(row.id==selectData[i].id){
+						selectData.splice(i,1);
+					}
+				}
+				for(var i in selectId){
+					if(row.id==selectId[i]){
+						selectId.splice(i,1);
+					}
+				} */
+				//console.log("选择数据的长度："+selectData.length);
+				//console.log("选择数据的id数组长度："+selectId.length);
+			},
+        });
+    	/* $('.fixed-table-header').unbind('scroll');
+        $('.fixed-table-body').bind('scroll', function() {
+    		if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight-1) {
+    			console.log(1);
+    			num2++;
+    			appendData(num2);
+    		}
+    	}); */
+    	
+    });
+
+    function appendData(data){
+    	var params = {
+    			title :$('#queryDiv input[name=\'title\']').val(),
+                fileDept : $('#queryDiv input[name=\'fileDept\']').val(),
+                securityClass : $('#sel').val(),
+                type : $('#type').val(),
+                state : $('#state').val(),
+   				pageNumber:data,
+   				pageSize:25
+    	};
+    	console.log(2);
+    	console.log(params);
+    	//分页追加数据
+		 $.ajax({
+	   		url:"/dagl/wdgl/sendFile/getList?rdm="+Math.random(),
+	   		data:params,
+	   		success:function(json){
+	   			if (json.flag == '1') {
+	   				if(json.data.rows.length==0){
+	   					layer.msg("已经是最后了！", {icon: 0});
+	   				}else{
+		   				$("#right_table").bootstrapTable("append",json.data.rows);
+		   				$(".fixed-table-pagination ").hide();
+		   				setReadOnly();
+	   				}
+	   			}else {
+	   				
+	   			}
+	   		}
+   		});  
+    }
+
+    function choseReadio(){
+        if($("input[name=chose]:checked").val() == "2"){
+            $("#num").css("display","block");
+        }else{
+            $("#num").css("display","none");
+        }
+    }
+
+//    表格数据项的操作
+    var list = {
+		addFun:function(){
+			var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:'/modules/dagl/wdgl/sendFile/wdglSendEditForm.html?resId='+resId,
+                title:"新增发文信息",
+                width:"90%",
+                height:"90%"
+            })
+		},
+        editFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:'/modules/dagl/wdgl/sendFile/wdglSendEditForm.html?id='+id+"&resId="+resId,
+                title:"修改发文信息",
+                width:"90%",
+                height:"90%"
+            })
+        },
+        deleteFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url:'/dagl/wdgl/sendFile/delete?id='+id+"&resId="+resId,
+                tableId:'right_table',
+            })
+        },
+        dayin:function(){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            layer.confirm("<div style='text-align: center'><input name='chose' onclick='choseReadio()' type='radio' checked value='1'> 新打&nbsp;&nbsp;&nbsp;&nbsp;<input onclick='choseReadio()' name='chose' type='radio' value='2'> 套打</div><div id='num' style='text-align: center;display: none'>起始行：<input style='width: 50px' name='num'></div>",{
+                btn: ['确定', '取消']
+                // 按钮
+            },function(index){
+                var ids="";
+                var idArray = $('#right_table').bootstrapTable('getAllSelections');
+                for(var i=0;i<idArray.length;i++){
+                    ids = ids+idArray[i].id+",";
+                }
+                var resId = $('#left_ul').find('a.active').attr("id");
+                var title = $('#queryDiv input[name=title]').val();
+                var fileDept = $('#queryDiv input[name=fileDept]').val();
+                var securityClass = $('#sel').val();
+                var type = $('#type').val();
+                var state = $('#state').val();
+                var timeRange = $('#timeRange').val();
+                var chose = $("input[name=chose]:checked").val();
+                var num = $("input[name=num]").val();
+                MyLayer.layerOpenUrl({
+                    url:'/modules/dagl/wdgl/sendFile/receiveAndSend.html?resId=' + resId + '&title=' + title + '&fileDept=' + fileDept + '&securityClass=' + securityClass + '&type=' + type + '&state=' + state + '&timeRange=' + timeRange + '&ids=' +ids + '&chose=' + chose + '&num=' + num,
+                    title:"发文打印",
+                    width:"90%",
+                    height:"90%"
+                })
+                layer.close(index);
+            }, function () {
+            });
+        },
+        dayinDestory:function(){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            layer.confirm("<div style='text-align: center'>&nbsp;&nbsp;年份：&nbsp;&nbsp;<input style='width: 100px'  name='destoryTime' id='destoryTime' type='text'> </div>",{
+                btn: ['确定', '取消']
+                // 按钮
+            },function(index){
+                var resId = $('#left_ul').find('a.active').attr("id");
+                var year = $("#destoryTime").val();
+                MyLayer.layerOpenUrl({
+                    url:'/modules/dagl/wdgl/sendFile/destory.html?resId=' + resId + '&year=' + year,
+                    title:"销毁登记表打印",
+                    width:"90%",
+                    height:"90%"
+                })
+                layer.close(index);
+            }, function () {
+
+            });
+            getDestoryTime();
+        },
+        batchUpdate:function(){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	var selectData = getSelectData();
+        	var ids = "";
+        	for(var i in selectData){
+        		ids += selectData[i].id+",";
+        	}
+        	if(selectData.length==0){
+        		layer.confirm("系统将根据当前查询条件批量修改文件类型，确定要修改吗？",function(){
+        			var params = {};
+        			params.resId = $('#left_ul').find('a.active').attr("id");
+                    params.title = $('#queryDiv input[name=\'title\']').val();
+                    params.fileDept = $('#queryDiv input[name=\'fileDept\']').val();
+                    if($('#sel').val()!=""){
+                   	 params.securityClass = $('#sel option:selected').text();
+                    }
+                    params.type = $('#type').val();
+                    params.state = $('#state').val();
+                    params.timeRange = $('#timeRange').val();
+        			batchUpdateQueryData(params);
+        		})
+        	}else{
+        		batchUpdateSelectData(ids);
+        	}
+        	
+        }
+    }
+  //下载模板
+    function templateDwon(){
+    	var resId = $('#left_ul').find('a.active').attr("id");
+        document.getElementById("templateDwon").href="/system/component/template/download?templateId="+templateId+"&resId="+resId;
+        document.getElementById("templateDwon").click();
+	}
+
+
+	//导入数据
+	function importData(){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/dagl/wdgl/sendFile/wdglSendlImportFileFrom.html?resId='+resId,title:'导入',width:'50%',height:'50%'});
+	}
+	
+	//归档
+	function tidyRecode(){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		var data = getSelectData();
+		if(data.length==0){
+			layer.msg("请选择数据后再归档！", {icon: 0});
+		}else{
+			for(var i=0;i<data.length;i++){
+				//判断用户所选数据是否可以做归档，目前只可以归档【文件状态】为【待归档】的数据。
+				if(data[i].state != "01"){
+					layer.msg("请选择【文件状态】为【待归档】的数据！", {icon: 0});
+					return false;
+				}
+                if(data[i].type != "01"){
+                    layer.msg("请选择【文件类型】为【需归档】的数据！", {icon: 0});
+                    return false;
+                }
+			}
+			MyLayer.layerOpenUrl({url:'/modules/dagl/wdgl/sendFile/wdglSendTidyRecode.html?name='+parameter.sourceName+'&resId='+resId,title:'归档',width:'80%',height:'80%'});
+		}
+	}
+	
+	//获取选中的数据
+	function getSelectData(){
+		 var selectData = $("#right_table").bootstrapTable("getSelections");
+		 return selectData;
+	}
+	
+	//打开只读页面
+	function setReadOnly(){
+		$('#right_table tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");
+        $('#right_table tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//            取消事件冒泡
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {
+                evt.stopPropagation();
+            }else {
+                evt.cancelBubble = true;
+            }
+//            取消事件冒泡 end
+			var id = $(this).parent().find("span[data-id]").attr("data-id");
+			var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({url:'/modules/dagl/wdgl/sendFile/wdglSendReadOnlyForm.html?id='+id+"&resId="+resId,title:'发文基本信息',width:'90%',height:'90%'});
+        });
+        $('#right_table tr.readOnly').find('td:eq(0)').unbind('click');
+        $('#right_table tr.readOnly').find('td:eq(2)').bind('mouseover', function (e) {
+      		 var txt = $(this).find("span[data-content]").attr("data-content");
+                   $(this).attr("title",txt) 
+	         		 
+        });
+	}
+	//刷新表格
+	function refTable(){
+		//selectData.length=0;
+		//selectId.length=0;
+		TableInit.refTable("right_table");
+        num2 = 1;
+	}
+
+    function getDestoryTime(){
+        laydate.render({
+            elem: '#destoryTime' //指定元素
+            ,type: 'year'
+            ,showBottom :false
+            ,change: function(value, date, endDate){
+                $("#destoryTime").val(value);
+                if($(".layui-laydate").length){
+                    $(".layui-laydate").remove();
+                }
+            }
+        });
+    }
+  //批量修改勾选的数据
+	function batchUpdateSelectData(ids){
+		layer.confirm("<div style='height:100px'>&nbsp;&nbsp;<b style='color: red;'>*</b> 文件类型：&nbsp;&nbsp;<select id='type2' name='type2' onchange='hideCheck();'><option value=''>---请选择---</option><option value='01'>需归档</option><option value='02'>留存</option><option value='03'>销毁</option></select><div id='check' style='color:#a94442;display:none;font-size:12px;padding-left:97px'>文件类型不能为空！</div></div>",{
+            btn: ['确定', '取消']
+            // 按钮
+        },function(index){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	console.log($("#type2").val())
+        	if($("#type2").val()==""||$("#type2").val()==null){
+        		$("#check").show();
+        	}else{
+	            var resId = $('#left_ul').find('a.active').attr("id");
+	            $.ajax({
+	        		type: "POST",
+	        		url:"/dagl/wdgl/sendFile/batchUpdateSelectData",
+	        		data:{"ids":ids,"updateType":$("#type2").val(),"resId":resId},
+	        		success:function(json){
+	        			if (json.flag == '1') {
+	        				layer.msg("修改成功！", {icon: 1});
+	        				parent.TableInit.refTable('right_table');
+	        			}else {
+	        				layer.msg("修改失败！", {icon: 2});
+	        			}
+	        		}
+	        	}); 
+	            layer.close(index);
+        	}
+        }, function () {
+
+        });
+	}
+	//按照条件查询数据后批量修改
+	function batchUpdateQueryData(params){
+		layer.confirm("<div style='height:100px'>&nbsp;&nbsp;<b style='color: red;'>*</b> 文件类型：&nbsp;&nbsp;<select id='type2'  name='type2' onchange='hideCheck();'><option value=''>---请选择---</option><option value='01'>需归档</option><option value='02'>留存</option><option value='03'>销毁</option></select><div id='check' style='color:#a94442;display:none;font-size:12px;padding-left:97px'>文件类型不能为空！</div></div>",{
+            btn: ['确定', '取消']
+            // 按钮
+        },function(index){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            params.updateType = $("#type2").val();
+        	if($("#type2").val()==""||$("#type2").val()==null){
+        		$("#check").show();
+        	}else{
+	            $.ajax({
+	        		type: "POST",
+	        		url:"/dagl/wdgl/sendFile/batchUpdateQueryData",
+	        		data:params,
+	        		success:function(json){
+	        			if (json.flag == '1') {
+	        				layer.msg("修改成功！", {icon: 1});
+	        				parent.TableInit.refTable('right_table');
+	        			}else {
+	        				layer.msg("修改失败！", {icon: 2});
+	        			}
+	        		},
+	        		error:function(){
+	        		}
+	        	});
+	            layer.close(index);
+        	}
+        }, function () {
+
+        });
+	}
+	
+	function hideCheck(){
+		if($("#type2").val()!=""){
+			$("#check").hide();
+		}else{
+			$("#check").show();
+		}
+	}
+</script>

@@ -1,0 +1,81 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 4,
+    "rows": [
+      {
+        "id": 1,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "张三",
+        "riqi": "2019-04-08 13:00",
+        "zhuangtai":"草稿",
+        "dingdan": "DD1234534534534342",
+        "totalPrices":23,
+        "shangpin":"肘子",
+        "shuliang":"1",
+        "shuliang1":"1斤",
+        "danjia" : "30元/斤",
+        "isUse":"1",
+        "jine": "30",
+        "isSoldOut":"0",
+        "zhuangtai": "草稿",
+        "cz": "update,delete"
+      },
+      {
+        "id": 1,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "张三",
+         "totalPrices":28,
+        "riqi": "2019-04-08 14:00",
+        "shangpin":"羊肉",
+        "shuliang":"2",
+        "shuliang1":"24斤",
+        "isUse":"1",
+        "danjia" : "50元/斤",
+        "jine": "1",
+        "isSoldOut":"1",
+        "dingdan": "DD1234534534534343",
+        "zhuangtai": "已下单",
+        "cz": ""
+      },
+      {
+        "id": 2,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "李四",
+          "totalPrices":32,
+        "riqi": "2019-03-26 12:00",
+        "shangpin":"鱼",
+        "shuliang":"1",
+         "shuliang1":"12条",
+         "isUse":"0",
+        "danjia" : "14元/斤",
+        "jine": "50",
+        "isSoldOut":"1",
+        "dingdan": "DD1234534534534344",
+        "zhuangtai": "已确认",
+        "cz": ""
+      },
+      {
+        "id": 3,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "王五",
+         "totalPrices":24,
+        "riqi": "2019-03-26 12:00",
+        "shangpin":"馒头",
+        "shuliang":"3",
+         "shuliang1":"10份",
+         "isUse":"1",
+        "danjia" : "0.5元/个",
+        "jine": "30",
+        "isSoldOut":"1",
+        "dingdan": "DD1234534534534345",
+        "zhuangtai": "已确认",
+        "cz": ""
+      }
+    ]
+  }
+}

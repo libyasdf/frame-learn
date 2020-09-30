@@ -1,0 +1,29 @@
+{
+	"name":"张三",
+	"sex":"男",
+	"nation":"汉",
+	"birth":"1966-10-23",
+	"remark":"这是一条很重要的备注,看到了吗？",
+	"isPrivacy":"是",
+	"ourPeopleNum":"3人",
+	"peerPeopleNum":"5人",
+	"table":{
+		"type":"table",
+		"data":[{
+			"name":"小明",
+			"age":"18",
+			"id":"1",
+			"addr":"北京市昌平区回龙观"
+		},{
+			"name":"小红",
+			"age":"18",
+			"id":"2",
+			"addr":"北京市昌平区回龙观"
+		},{
+			"name":"小天",
+			"age":"19",
+			"id":"3",
+			"addr":"北京市昌平区回龙观"
+		}]
+	}
+}

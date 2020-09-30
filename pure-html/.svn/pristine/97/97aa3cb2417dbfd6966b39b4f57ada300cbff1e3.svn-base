@@ -1,0 +1,216 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" id="form">
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls ">
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						 <div class="form-group">
+                        	<label class="col-md-2 control-label"> 单位：</label>
+							<div class="col-md-3">
+								 <input  class="form-control" name="name" id="name">
+							</div>
+                            <label class="col-md-2 control-label"> 姓名：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="goOutTime" />
+                            </div>
+                        </div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="col-md-12" style="text-align: center">
+									<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table1')">
+										查&nbsp;&nbsp;询</button>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<button type="button" class="btn btn-primary"
+										onclick="clearAll();">
+										重&nbsp;&nbsp;置</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			<!--bootstrap-table表格-->
+			<table id="right_table1"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$("#subflag").val(Config.startflag)
+	Dictionary.init({mark:'overTimeType',type:'1',position:"overTimeType",domType:"select",name:"overTimeType"});
+	//参考：http://www.layui.com/laydate/
+	//绑定日期输入input
+	laydate.render({
+		elem : '#time' //指定元素
+	});
+	//日期范围
+	laydate.render({
+		elem : '#timeRange',
+		range : true
+	});
+	
+	//起草
+	function draft(){
+		  var resId = $('#left_ul').find('a.active').attr("id");
+		  MyLayer.layerOpenUrl({url:'/modules/zhbg/kqgl/overTime/overTimeEditForm.html?oper=NEW&resId=' + resId,title:'起草加班信息'})
+	}
+	//定义bootatrap-table数据列
+	//    sortable：开启列排序，其他参考API
+	var right_table_col = [
+			{
+				field : 'id',
+				title : '编号',
+				width : '10%',
+				order : "desc",
+				align : "center",
+				formatter : function(value, row, index) {
+					//计算序号，并存放业务ID，及已办事项ID
+					var pageSize = $('#right_table1').bootstrapTable(
+							'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+					var pageNumber = $('#right_table1').bootstrapTable(
+							'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+					var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+					return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"
+							+ orderNum + "</span>";
+				}
+			},
+			{
+				field : 'applicantUnitName',
+				title : '部门',
+				width : '35%',
+				align : "center"
+			},
+			{
+				field : 'creUserName',
+				title : '姓名',
+				width : '30%',
+				align : "center"
+			},
+			{
+				field : 'overTimeDate',
+				title : '年假天数',
+				width : '25%',
+				align : "center"
+			}];
+
+	$(document)
+			.ready(
+					function(e) {
+						//初始化表格
+						TableInit
+								.init({
+									domId : "right_table1",
+									url : "/mock/zhbg/kqgl/tj/deptList2.json",
+									columns : right_table_col,
+									queryParams : function(params) {
+										//这里将各个查询项添加到要传递的参数中
+										//                可以做一些校验
+										params.overTimeType = $("#overTimeType").val();
+										params.timeRange = $("#timeRange")
+												.val();
+										params.subflag = Config.startflag;
+										//params.subflag = $("#subflag").val();
+										return params;
+									},
+									readOnlyFn : function() {
+										$('tr.readOnly')
+												.find('td:not(:last)')
+												.unbind('click')
+												.bind(
+														'click',
+														function(e) {
+															//                    取消事件冒泡
+															var evt = e ? e
+																	: window.event;
+															if (evt.stopPropagation) {
+																evt
+																		.stopPropagation();
+															} else {
+																evt.cancelBubble = true;
+															}
+															//取消事件冒泡 end
+															var id = $(this)
+																	.parent()
+																	.find(
+																			"span[data-id]")
+																	.attr(
+																			"data-id");
+															var resId = $('#left_ul').find('a.active').attr("id");
+															//var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+															//                    取消事件冒泡 end
+															//MyLayer.layerOpenUrl({url : '/modules/zhbg/kqgl/overTime/overTimeReadOnlyForm.html?id='+ id+ "&oper=READ",title : '只读'});
+															 MyLayer.layerOpenUrl({url: '/modules/zhbg/kqgl/overTime/overTimeReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读页"});
+														});
+									}
+								});
+					});
+
+	//    表格数据项的操作
+	var list = {
+		editFun : function(id) {
+			 var resId = $('#left_ul').find('a.active').attr("id");
+			MyLayer.layerOpenUrl({
+				url : '/modules/zhbg/kqgl/overTime/overTimeEditForm.html?id='
+						+ id + "&oper=EDIT&resId=" + resId,
+				title : "修改"
+			})
+		},
+		deleteFun : function(id) {
+			var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+            	url: '/zhbg/kqgl/overTime/deleteoverTime?id=' + id + "&resId=" + resId,
+                tableId:'right_table1'
+            })
+		},
+		readFun : function(id) {
+			MyLayer.layerOpenUrl({
+				url : '/modules/zhbg/kqgl/overTime/overTimeEditForm.html?id='
+						+ id + "&oper=EDIT",
+				title : "修改"
+			})
+			
+		},
+	}
+	/**
+	 * 导出按钮的事件
+	 */
+	function exportDate() {
+		alert("djdjj")
+		$('#form').attr('action','/zhbg/kqgl/overTime/export');
+		$('#form').attr('method','get');
+		$("#form").submit();
+	};
+	 //清空查询条件
+	function clearAll(){
+		$("#timeRange").val("");
+    	$("#overTimeType").val("");
+	}
+</script>

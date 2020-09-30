@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+    
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+    	<input name="resId" id="resId" type="hidden" value="">
+		<!-- 流程字段-->
+		<input name="pid" id="pid" type="hidden" value=""/><!-- 工作项ID -->
+		<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+		<!-- 流程字段结束 -->
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                <label for="" class="col-md-2 control-label"> 计划类型：</label>
+						<div class="col-md-4">
+							<label class="radio-inline"> <input type="radio"
+								id="inlineRadio2" name="isFinish" checked value="0">
+								计划
+							</label> <label class="radio-inline"> <input type="radio"
+								id="inlineRadio1" name="isFinish" value="1">
+								日志
+							</label>
+						</div>
+                       <label for="" class="col-md-2 control-label"> <b style="color: red;">*</b> 日期：</label>
+                    <div class="col-md-10">
+                        <input type="text" name="datePlan" class="form-control" id="datePlan" onchange="dateChange(this)" placeholder="">
+                        <input type="hidden" name="flag" id="flag">
+                    </div>
+                	</div>
+                	<div class="form-group">
+                    <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 内容：</label>
+                    <div class="col-md-10">
+                        <textarea name="content" id="content" class="form-control" rows="6"></textarea>
+                    </div>
+                     <label for="" class="col-md-2 control-label"> <b style="color: red;">*</b> 类别：</label>
+                    <div class="col-md-10">
+                        <select  id="logType" name="logType"  class="form-control"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 正序表格，末行添加 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">会务服务项目及联系人</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12 p-f-60">
+               <!-- 功能按钮区域-->
+               <div style='margin-bottom: 3px'>
+                   <button class="list_table_btn2 addTR" type="button" id='addId'>
+                       <span class="glyphicon glyphicon-plus-sign"></span> 添加
+                   </button>
+                   <button class="list_table_btn2 allDelete" type="button" id="deleteId">
+                       <span class="glyphicon glyphicon-remove"></span> 删除
+                   </button>
+               </div>
+               <div class="table__scrollable-y">
+                   <div class="table__header-wrapper">
+                        <table class="table  table-hover  table-striped m-b-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%"  class="text-center">
+                                        <input type="checkbox" id="checkboxSuccess" value="option1">
+                                    </th>
+                                    <th style="width: 5%"  class="text-center">
+                                        序号
+                                    </th>
+                                    <th style="width: 10%" data-field="sex" class="text-center">
+                                     	<span class="required"><b style="color: red;">*</b></span>
+                                       会务服务项目
+                                    </th>
+                                    <th style="width: 15%"  class="text-center">
+                                        <span class="required"><b style="color: red;">*</b></span>
+                                        负责人
+                                    </th>
+                                    <th style="width: 15%" data-field="age" class="text-center">
+                                    	<span class="required"><b style="color: red;">*</b></span>
+                                        负责人联系方式
+                                    </th>
+                                     
+                                </tr>
+                            </thead>
+                        </table>
+                   </div>
+                   <div class="table_body-wrapper">
+                       <table class="table table-hover table-bordered table-striped table-reset js-disk-row" id="otherPeople" style="border: 0px">
+                            <tbody>
+                            </tbody> 
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </form>
+   
+</div>
+ <!-- 按钮区 -->
+	<div class="form_btn_area" style="text-align: center;">
+		<button id="save" class="btn btn-primary form_btn_area_btn2"
+			onclick="saveData();">
+			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+			保存
+		</button>
+	</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/jquery-serializejson/jquery.serializejson.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/core/nodetpl.min.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-util.js"></script>
+<script type="text/javascript" src="/static/core/layer/layer.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 引入自己模块功能的js -->
+<script type="text/javascript" src="js/meetingServiceEdit.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="js/meetingServiceValidator.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+
+
+<script name="main" type="text/template">
+    <?for(var i = 0; i < @data.length; i++) {?>
+    <tr id="<?=@data[i].id?>">
+        <td class="text-center" style="width: 5%">
+            <input type="checkbox" name="checkboxName" value="option1">
+        </td>
+        <td class="text-center" name="numName" style="width: 5%"><?=(i+1)?></td>
+		<td class="text-center" style="width: 10%">
+            <input type="text"  name="meetingService" class="form-control" value="<?=@data[i].meetingService?>" CK_type="required,max" max="10" CK_info="会务服务项" >
+        </td>
+        <td class="text-center" style="width: 15%">
+			<div class="input-group">
+		    	<input type="hidden" name="meetingServiceId" value="<?=@data[i].id?>"/>
+		        <input type="text" id="responsibleUserName<?=(i+1)?>" onchange="getIfHwPerson(<?=(i+1)?>);" name="responsibleUserName" value="<?=@data[i].responsibleUserName?>" unselectable="on" onclick="openSelectZtree({'id':'responsibleUserId<?=(i+1)?>','name':'responsibleUserName<?=(i+1)?>','isMulti':'1','type':'1','asyn':false,'deptId':'<?=@data[i].responsibleUserDeptId?>','url':'/system/component/tree/deptAndUserTree'})"  class="form-control" CK_type="required"  CK_info="负责人" >
+		        <input type="hidden" class="userName" id="responsibleUserId<?=(i+1)?>" name="responsibleUserId" value="<?=@data[i].responsibleUserId?>" /><!-- 人员ID隐藏域 -->
+		        <span class="input-group-addon" onclick="openSelectZtree({'id':'responsibleUserId<?=(i+1)?>','name':'responsibleUserName<?=(i+1)?>','isMulti':'1','type':'1','asyn':false,'deptId':'<?=@data[i].responsibleUserDeptId?>','url':'/system/component/tree/deptAndUserTree'})">
+		        	<span class="glyphicon glyphicon-user"></span>
+		        </span>
+		    </div>
+        </td>
+		<td class="text-center" style="width: 15%">
+        	<input  type="text" name="responsibleUserTelephone" class="form-control" value="<?=@data[i].responsibleUserTelephone?>" CK_type="required,phone,max" max="11" CK_info="联系方式" >
+        </td>
+    </tr>
+  <?}?>
+</script>
+<script type="text/javascript">
+
+   var subTableLineNum = $("#otherPeople").find("tr").length;
+
+    // 保存按钮事件
+    function saveData(){
+    	var serviceDeptName = $("#serviceDeptName").val(); 
+		if(serviceDeptName == undefined || serviceDeptName == "" || serviceDeptName == null){
+			layer.msg('请先选择会务服务单位',{icon:0});
+		}else{
+			//校验服务服务不能重复
+			var json = uniqCheck();
+			if(json.valid){
+				var checkResult = aotoCheckForm.check($("#otherPeople").find("tr").find("input,select,textarea").not(':hidden'));
+			    //校验
+			    if(checkResult){
+			    	getFormData2();
+			    } 
+			}else{
+				layer.msg("会务服务单位不能重复",{icon:0});
+			}
+			
+		}
+       
+    }
+
+    //将主子表数据封装为json格式
+    function getFormData2(){
+        var datas = JSON.stringify(getData());
+        $.ajax({
+    		type: "POST",
+    		url:"/zhbg/hygl/basicSet/meetingService/saveForm",
+    		data:datas,
+    		dataType: 'json',
+    		contentType:"application/json",
+    		success:function(result){
+    			 if(result){
+            		 if(result.flag == "1"){
+            			// 修改页面不允许修改服务单位
+         				$("#serviceDeptName").attr("onclick","");
+         				$("#serviceDeptName").attr("readonly","readonly");
+         				$(".input-group-addon").attr("onclick","");
+            			 console.log(result);
+            			  var data = result.data.meetingServiceList;
+            			  $("#pid").val(result.data.pid);
+            			 layer.msg("保存成功！", {icon: 1});
+            			 parent.TableInit.refTable('right_table');
+            			 //循环加载子表
+            			 showTable(data); 
+    	             }
+            	 }
+    		}
+    	});
+    }
+    
+    // 处理子表数据
+    function getData(){
+    	var deviceInfo = {
+    		resId : $('#resId').val(),
+    		pid : $('[name="pid"]').val(),//会务服务单位主键id
+    		serviceDeptId : $('[name="serviceDeptId"]').val(),//会务服务单位id
+    		serviceDeptName : $('[name="serviceDeptName"]').val(),//会务服务单位name
+            meetingServiceList : new Array()//子表1信息
+        };//需要提交到后台的数据
+
+		//遍历页面中子表1信息 形成 subTableList
+		var $subTableRows = $('#otherPeople').find("tr");//所有子表信息行
+		$subTableRows.each(function (i,index) {
+		    var disk = {
+		    	meetingServiceId : $(index).find('[name="meetingServiceId"]').val(),
+		    	responsibleUserId : $(index).find('[name="responsibleUserId"]').val(),
+		    	responsibleUserName : $(index).find('[name="responsibleUserName"]').val(),
+		    	responsibleUserTelephone : $(index).find('[name="responsibleUserTelephone"]').val(),
+		    	meetingService : $(index).find('[name="meetingService"]').val()
+		    }
+		    deviceInfo.meetingServiceList.push(disk);
+		});
+		//以下输出对象deviceInfo 就是完整的请求报文
+		return deviceInfo;
+    }
+   
+</script>
+</body>
+</html>

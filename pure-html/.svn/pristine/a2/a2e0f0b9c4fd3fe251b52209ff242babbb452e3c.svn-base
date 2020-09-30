@@ -1,0 +1,873 @@
+/*设置整体的背景为白色*/
+
+body {
+	background-color: #fff;
+}
+
+
+/*头部的背景图*/
+
+.head {
+	background-image: url(../../images/gateway/head-bg.jpg);
+	background-size: cover;
+}
+
+
+/*隐藏样式*/
+
+.hide {
+	display: none;
+}
+
+
+/*内部内容通用尺寸*/
+
+.inner {
+	width: 1200px;
+	margin: 0 auto;
+}
+
+
+/*清除a链接的默认样式并重新进行设置*/
+
+.inner>li>a {
+	color: #fff;
+	text-decoration: none;
+}
+
+
+/*a链接悬浮效果*/
+
+.inner>li>a:hover {
+	text-decoration: none;
+}
+
+
+/*用户操作头部,包含用户头像,退出,个人门户等信息*/
+
+.headerTop {
+	height: 45px;
+	line-height: 45px;
+	font-size: 14px;
+	color: #fff;
+	background: rgba(0, 0, 0, 0.2);
+}
+
+
+/*设置a链接的样式*/
+
+.headerTop a {
+	color: #fff;
+	float: right;
+	text-decoration: none;
+}
+
+
+/*设置a链接悬浮效果*/
+
+.headerTop a:hover {
+	color: #ff480a;
+}
+
+
+/*用户信息*/
+
+.headerTop .userbox {
+	position: relative;
+}
+
+
+/*用户头像*/
+
+.headerTop .userbox img {
+	position: absolute;
+	left: -30px;
+	top: 5px;
+}
+
+
+/*logo网站名称*/
+
+.loginBox {
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+
+
+/*设置login里面的内容垂直居中*/
+
+.loginBox .inner {
+	height: 76px;
+	line-height: 76px;
+}
+
+
+/*设置logo图像大小和位置*/
+
+.loginBox .logo {
+	float: left;
+	width: 60px;
+	margin-right: 6px;
+	margin-top: 6px;
+}
+
+
+/*设置网站名称大小颜色等信息*/
+
+.loginBox .title {
+	color: #fff;
+	float: left;
+	font-size: 36px;
+	line-height: 76px;
+}
+
+
+/*头部搜索*/
+
+.searchBoxAll {
+	padding-top: 18px;
+}
+
+.loginBox .searchBox {
+	color: #fff;
+	float: right;
+}
+
+
+/*头部搜索--输入框*/
+
+.searchBox input {
+	border: none;
+	height: 40px;
+	width: 170px;
+	padding-left: 10px;
+	background-color: rgba(255, 255, 255, 0.2)
+}
+
+
+/*头部搜索--下拉选框*/
+
+.select-menu {
+	cursor: pointer;
+	width: 102px;
+	height: 32px;
+	float: right;
+}
+
+.select-menu-ul {
+	margin-top: 50px;
+	list-style: none;
+	opacity: 0;
+	display: none;
+	width: 100px;
+	text-align: left;
+	border: 1px solid #ddd;
+	background: #fff;
+	position: absolute;
+	z-index: 100;
+}
+
+.select-menu-ul li {
+	padding: 2% 0 2% 5%;
+	padding-left: 15px;
+	line-height: 28px;
+	font-size: 14px;
+	font-weight: normal;
+}
+
+.select-menu-ul li:hover {
+	background: #f2f2f2;
+}
+
+.select-menu-div {
+	position: relative;
+	height: 40px;
+	line-height: 40px;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.select-this {
+	background: #1E90FF;
+	color: #fff;
+}
+
+.select-this:hover {
+	background: #1E90FF!important;
+}
+
+.select-menu-div i {
+	margin-right: 5px;
+	position: absolute;
+	right: 0;
+	top: 13px;
+	color: #fff;
+}
+
+.select-menu-input {
+	color: #fff;
+	margin-left: 15px;
+	border: 0;
+	width: 80px;
+	height: 40px;
+	cursor: pointer;
+	user-select: none;
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.select-menu-i {
+	transform: rotate(180deg);
+}
+
+.select-menu-div i {
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+
+/*头部搜索--搜索按钮*/
+
+.searchBox button {
+	background-color: #ff480a;
+	height: 40px;
+	line-height: 40px;
+	width: 64px;
+	border: none;
+}
+
+
+/*导航栏*/
+
+.nav {
+	position: relative;
+	background-color: #058edc;
+}
+
+
+/*导航栏--设置单个导航样式*/
+.nav li {
+	float: left;
+	width: 14.28%;
+	height: 60px;
+	line-height: 60px;
+	color: #fff;
+	font-size: 18px;
+	padding: 0 8px;
+	cursor: pointer;
+	text-align: center;
+}
+
+
+
+/*单个导航选中效果*/
+
+.nav-active {
+	background-color: #03b6d7 !important;
+}
+
+
+/*设置单个导航对应图标样式*/
+
+.nav li i {
+	font-size: 22px;
+	line-height: 65px;
+	margin-right: 6px;
+	vertical-align: middle;
+}
+
+
+/*bannerNews 图片新闻*/
+
+.bannerNews {
+	margin-top: 12px;
+}
+
+.bannerImg {
+	float: left;
+	position: absolute;
+}
+
+.swiper-container {
+	width: 750px;
+}
+
+.swiper-slide img {
+	width: 750px;
+	height: 448px;
+}
+
+.bannerNews .swiper-container .swiper-pagination-bullets {
+	width: 48px;
+	float: right;
+	left: auto;
+	top: auto;
+	right: 10px;
+	bottom: 10px;
+}
+
+.bannerNews .swiper-container .swiper-pagination-bullets .swiper-pagination-bullet {
+	margin: 0 4px;
+	outline: none;
+}
+
+.banner-bottom {
+	height: 40px;
+	background-color: rgba(4, 4, 4, .2);
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 55;
+}
+
+.banner-bottom .banner-title {
+	color: white;
+	line-height: 40px;
+	margin-left: 25px;
+}
+
+.bannerNewsLeft {
+	float: left;
+	margin-left: 17px;
+}
+
+.bannerNewsLeft .inforItem li {}
+
+.Topnews {
+	margin-left: -17px;
+}
+
+.Topnews:before {
+	content: "";
+	position: absolute;
+	height: 0 !important;
+	width: 0 !important;
+}
+
+.Topnum {
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	text-align: center;
+	float: left;
+	background-color: #fe4709;
+	color: #fff;
+	margin-right: 10px;
+	margin-top: 5px;
+}
+
+.Topnews .Toptitle {
+	width: 250px !important;
+	height: 37px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.Topnews .Toptitle a {
+	color: #333;
+}
+
+.Topnews .Toptitle a:hover {
+	cursor: pointer;
+	color: #2464B2;
+	text-decoration: underline;
+}
+
+.bannerNews .inforItem {
+	width: 430px;
+	height: 370px;
+	float: none;
+}
+
+.bannerNews .inforItem li p:first-child {
+	width: 280px;
+}
+
+.bannerFooterImg {
+	margin-top: 15px;
+}
+
+
+/*新闻图片列表*/
+
+.newsImgList {
+	margin-top: 16px;
+}
+
+.newsImgList li {
+	width: 390px;
+	height: 200px;
+	float: left;
+	border: 1px solid #efefef;
+}
+
+.newsImgList li img {
+	width: 100%;
+}
+
+.newsImgList li+li {
+	margin-left: 13px;
+}
+
+
+/* 新闻文字列表 */
+
+.newsList {
+	margin-top: 15px;
+}
+
+.newsList ul+ul {
+	margin-left: 10px;
+}
+
+.inforItem {
+	float: left;
+	width: 393px;
+	min-height: 285px;
+	border: 1px solid #efefef;
+	padding-bottom: 10px;
+}
+
+.inforItem li {
+	color: #333;
+	font-size: 15px;
+	line-height: 37px;
+	padding: 0 15px 0 30px;
+	position: relative;
+}
+
+.inforItem li:before {
+	content: "";
+	position: absolute;
+	height: 5px;
+	width: 5px;
+	background-color: #2967ba;
+	left: 10px;
+	top: 15px;
+}
+
+.inforItem li p:first-child {
+	width: 250px;
+	height: 37px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.inforItem li p:first-child a {
+	color: #333;
+}
+
+.inforItem li p:first-child a:hover {
+	cursor: pointer;
+	color: #2464B2;
+	text-decoration: underline;
+}
+
+.inforItem li p:last-child {
+	float: right;
+}
+
+.inforTitle {
+	background-color: #eeeeee;
+	color: #333;
+	line-height: 42px;
+	font-size: 16px;
+	padding: 0 15px;
+	font-weight: bold;
+	position: relative;
+	margin-bottom: 10px;
+}
+
+.inforTitle i {
+	font-weight: normal;
+}
+
+.inforTitle a {
+	font-weight: normal;
+}
+
+.inforTitle:before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 42px;
+	width: 4px;
+	background-color: #fe4709;
+}
+
+.inforTitle a {
+	float: right;
+	color: #393939;
+	font-size: 14px;
+}
+
+.inforTitle i {
+	font-size: 20px;
+	vertical-align: middle;
+	margin-right: 6px;
+}
+
+/*有tab切换的title*/
+
+.inforItem1 .inforTitle{
+	padding-left: 0;
+}
+
+.inforTitle1:before {
+	display: none;
+}
+
+.inforTitle1 .inforTitleitem{
+	padding: 0 15px;
+}
+
+/*当前选中窗口效果*/
+.inforTitle1 .active{
+	border-bottom: 3px solid #fe4709;
+	background-color: #ddd;
+}
+
+
+/*底部声明文件*/
+
+footer {
+	margin: 30px 0;
+	text-align: center;
+}
+
+footer a {
+	color: #333;
+	font-size: 14px;
+}
+
+footer a:hover {
+	color: red;
+	text-decoration: underline;
+}
+
+
+/*二级列表页样式*/
+
+
+/*主内容区域*/
+
+.container {
+	width: 1200px;
+	padding: 20px 0 20px 0;
+	margin: 0 auto;
+	position: relative;
+}
+
+
+/*左侧导航列表*/
+
+.container .navigationList {
+	position: absolute;
+	top: 20px;
+	left: 0;
+	width: 260px;
+	border: 1px solid #d9d9d9;
+}
+
+
+/*左侧导航列表标题*/
+
+.navigationList h3 {
+	height: 48px;
+	line-height: 48px;
+	background-color: #0275b5;
+	font-size: 18px;
+	color: #fff;
+	margin: 0;
+	padding-left: 20px;
+}
+
+
+/*左侧导航列表标题图标设置*/
+
+.navigationList h3 i {
+	font-size: 18px;
+}
+
+.navigationList>ul {
+	padding: 15px 15px 5px 15px;
+	margin-bottom: 0;
+}
+
+
+/*左侧导航列表一级列表项设置*/
+
+.navigationList>ul>li {
+	border: 1px solid #d9d9d9;
+	background-color: #fefefe;
+	margin-bottom: 10px;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+}
+
+.navigationList h4 {
+	padding: 10px 0 10px 20px;
+	line-height: 24px;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0;
+}
+
+
+/*一级列表项内部的内容设置*/
+
+.navigationList>ul>li>ul {
+	display: none;
+	padding: 10px 0 10px 0;
+}
+
+
+/*左侧导航列表二级列表项设置*/
+
+.navigationList>ul>li>ul>li {
+	font-size: 12px;
+	line-height: 32px;
+	padding-left: 40px;
+}
+
+
+/*左侧导航列表二级列表项选中效果*/
+
+.navigationList>ul>li>ul .active {
+	color: #0275b5;
+	font-weight: bold;
+	background-color: #eee;
+}
+
+
+/*右侧区域*/
+
+.container-right {
+	padding-left: 280px;
+}
+
+
+/*提示信息设置*/
+
+.container-right .hintInformation {
+	height: 24px;
+	line-height: 24px;
+	font-size: 12px;
+	margin-bottom: 6px;
+}
+
+
+/*设置提示信息a链接的样式*/
+
+.hintInformation a {
+	color: #333;
+}
+
+
+/*设置提示信息a链接的悬浮效果*/
+
+.hintInformation a:hover {
+	color: #048fdb;
+}
+
+
+/*信息列表标题设置*/
+
+.container-right h2 {
+	height: 32px;
+	line-height: 32px;
+	font-size: 18px;
+	border-left: 10px solid #fe4709;
+	padding-left: 10px;
+	background-color: #eee;
+}
+
+
+/*列表内容项标题设置*/
+
+.item-list h5 {
+	height: 32px;
+	line-height: 32px;
+	margin-top: 10px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.item-list h5 span:first-child {
+	margin-left: 30px;
+}
+
+
+/*列表内容项*/
+
+.item-list li {
+	color: #333;
+	font-size: 15px;
+	line-height: 37px;
+	padding-left: 30px;
+	position: relative;
+}
+
+
+/*设置内容项前面的小蓝点显示*/
+
+.item-list li:before {
+	content: "";
+	position: absolute;
+	height: 5px;
+	width: 5px;
+	background-color: #2967ba;
+	left: 10px;
+	top: 15px;
+}
+
+
+/*限制列表项中标题的显示字数,超过字数是显示省略号*/
+
+.item-list li p:first-child {
+	width: 700px;
+	height: 37px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.item-list li p:first-child a {
+	color: #333;
+}
+
+
+/*设置列表项中标题的悬浮效果移入时显示小手,文字变为并带有下划线*/
+
+.item-list li p:first-child a:hover {
+	cursor: pointer;
+	color: #2464B2;
+	text-decoration: underline;
+}
+
+
+/*设置点击量和日期对应的内容向右浮动,在页面中显示*/
+
+.item-list li p:nth-child(2),
+.item-list li p:last-child {
+	float: right;
+}
+
+
+/*设置当前标题的日期显示效果*/
+
+.item-list .itemData {
+	width: 100px;
+	text-align: center;
+}
+
+
+/*设置当前辩题的点击量显示效果*/
+
+.item-list .clicksNum {
+	width: 80px;
+	color: red;
+	text-align: center;
+}
+
+
+/*三级详情页页面样式*/
+
+
+/*设置文章标题*/
+
+.article h3 {
+	text-align: center;
+	font-weight: bold;
+}
+
+
+/*设置文章的详细内容,包括文章的日期和来源等信息*/
+
+.article .article-datails {
+	text-align: right;
+	font-size: 12px;
+	color: #999;
+	margin: 20px 0 10px 0;
+	padding-right: 30px;
+}
+
+
+/*设置文章的正文*/
+
+.article .article-con {
+	padding: 15px;
+	line-height: 28px;
+}
+
+
+/*设置文章正文的段落格式*/
+
+.article .article-con p {
+	font-size: 16px;
+	text-indent: 2em;
+	margin-bottom: 15px;
+}
+
+/*新闻详情页(整篇无左侧导航)*/
+.container .mesCon{
+	padding: 0 30px;
+}
+
+.mesCon .article-source{
+	margin-right: 15px;
+}
+
+.mesCon .article .article-head{
+	text-align: center;
+	font-weight: bold;
+	font-size: 28px;
+	line-height: 48px;
+	padding-top: 15px;
+}
+
+.mesCon .article .article-datails{
+	font-size: 14px;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 15px;
+}
+
+.mesCon .article .article-datails div:nth-child(1){
+	padding-left: 45px;
+}
+
+.mesCon .article  .article-source{
+	color: #333;
+}
+
+
+/* 更多导航 */
+.nav .moreNav  {
+	display: none;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 60px;
+	background: #eeeeee;
+	box-shadow: 1px 1px 10px #cccccc;
+	z-index: 10;
+}
+.nav .moreNav li {
+	background: none;
+	border-bottom: 1px solid #cccccc;
+}
+.nav .moreNav>li>a {
+	color: #333;
+}
+.nav .moreNav li:hover {
+	background: rgb(5,142,220);
+}
+.nav .moreNav li:hover a {
+	color: #ffffff;
+}

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\20190506.java"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	
+	<fileset id="maqiuxia" dir="../../../">
+
+
+		<!--档案管理    后台 start-->
+
+		<!--编研管理汇总失败-->
+			<include name="src/com/sinosoft/sinoep/modules/dagl/bygl/controller/StudyingController.java"/>
+		<!--数据对照目标表把顶级节点的名称加上，好区分是哪个门类的表；例如：科技档案（请勿删除）- 第三层-->
+			<include name="src/com/sinosoft/sinoep/modules/dagl/xtpz/datacontrast/services/"/>
+		<!--归档数据不显示-->
+			<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/services/"/>
+		<!--SQL注入，变量未绑定-->
+			<include name="src/com/sinosoft/sinoep/modules/dagl/daly/borrow/services/"/>
+		<!--档案第一层顺序调整优化-->
+		<!--归档库，档案调整，子表数据，和游离的数据不需要根据创建人和立卷单位过滤-->
+			<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/controller/BmglController.java"/>
+			<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+
+		<!--SQL盲注问题-->
+			<include name="src/com/sinosoft/sinoep/modules/dagl/xtpz/categorymanage/services/"/>
+
+		<!--档案管理    后台 end-->
+
+
+
+
+
+
+		<!--档案管理    前台 strat-->
+		<!--归档库，操作列【档案调整】显示代码-->
+		<include name="WebContent/modules/dagl/bmgl/indexForAdmin.html"/>
+		<!--修改不需要判断重复，因为档号不可修改-->
+		<!--q2特殊回填案卷级档号为 全宗号+类别号-->
+		<!--档案第一层顺序调整的优化-->
+		<include name="WebContent/modules/dagl/bmgl/js/"/>
+		<!--档案调整优化，调入：追加数据到最后一位，自动点击确认调整按钮，调整档号，（如果有滚动条的话）并滚动到底部。调出，自动点击确认调整，调整档号-->
+		<include name="WebContent/modules/dagl/bmgl/adjust.html"/>
+		<include name="WebContent/modules/dagl/bmgl/firstLevelDataList.html"/>
+		<!--当前登录人的单位归档库无数据的时候页面卡死，优化！-->
+		<include name="WebContent/modules/dagl/daly/shoppingtrolley/js/shoppingtrolley.js"/>
+
+		<!--档案管理    前台 end-->
+
+
+
+
+
+
+		<!--学习考核    后台 strat-->
+		<!--SQL盲注的修改-->
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/learntime/services/"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/tree/dao/"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/grade/services/"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/gradesearch/services/"/>
+
+		<!--
+
+		-->
+		<!--学习考核    后台 end-->
+
+
+
+
+
+
+		<!--学习考核    前台 strat-->
+
+		<!--学习考核    前台 end-->
+
+
+
+
+
+
+		<!--值班管理    后台 strat-->
+		<!--SQL盲注-->
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/zbgl/dutytable/services/"/>
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/zbgl/dutyworkincept/services/"/>
+		<!--
+
+
+		-->
+
+		<!--值班管理    后台 end-->
+
+
+
+
+
+
+		<!--值班管理    前台 strat-->
+		<!--普网专网电话长度限制1-20个数字-->
+		<include name="WebContent/modules/zhbg/zbgl/dutytable/zbbRl.html"/>
+		<!--安保值班工作通知，反馈后，消息的更多页面，显示undefined-->
+		<include name="WebContent/modules/zhbg/zbgl/dutyworkincept/abtzjsEditForm.html"/>
+		<!--值班管理    前台 end-->
+
+	</fileset>
+	
+	<target name="all">
+		<mkdir dir="${export.dir.root}/cqqx"/>
+		<copy todir="${export.dir.root}/cqqx" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	<!--删除上次导出文件-->
+	<target name="deleteOldFile" >  
+	    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+	       <fileset dir="${export.dir.root}">
+	           <include name="**/*"/>
+	       </fileset>
+	    </delete>
+	</target> 
+
+	<target name="default" depends="deleteOldFile,mqx">
+        <exec executable="cmd" failonerror="false">  
+            <arg line='/c explorer "${export.dir.root}\"' />  
+        </exec>
+	</target>	
+</project>

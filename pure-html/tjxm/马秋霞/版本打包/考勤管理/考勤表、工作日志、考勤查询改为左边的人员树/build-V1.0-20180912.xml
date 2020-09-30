@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\5.22"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	
+	<fileset id="maqiuxia" dir="../../../../../">
+		       <!-- java文件 -->
+			
+				<!--综合办公——》考勤管理_》考勤表（及考勤查询左边树） -->
+				<include name="WebContent/modules/zhbg/kqgl/kqcx/**"/>
+		        <include name="WebContent/modules/zhbg/kqgl/statistics/**"/>
+				<include name="WebContent/static/css/zhbg/kqgl/iconfont/iconfont.css"/>
+		 		<include name="src/com/sinosoft/sinoep/modules/zhbg/kqgl/**"/>
+	             <!--综合办公——》工作日志-->
+				<include name="src/com/sinosoft/sinoep/modules/mypage/worklog/**"/>
+			     <include name="WebContent/modules/mypage/worklog/**"/>
+				
+		
+	          	<!-- class文件 -->
+		        <!--公共的类 -->
+				<!--综合办公——》考勤管理 -->
+		       <include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/**"/>
+		       <!--综合办公——》工作日志-->
+			  <include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/mypage/worklog/**"/>
+					
+		
+		
+
+
+				
+				
+				
+		
+	</fileset>
+	
+	<target name="all">
+		<mkdir dir="${export.dir.root}/cqqx"/>
+		<copy todir="${export.dir.root}/cqqx" overwrite="true">
+			<fileset refid="mqx"/>
+		</copy>
+	</target>
+	<!--删除上次导出文件-->
+	<target name="deleteOldFile" >  
+	    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+	       <fileset dir="${export.dir.root}">
+	           <include name="**/*"/>
+	       </fileset>
+	    </delete>
+	</target> 
+
+	<target name="default" depends="deleteOldFile,mqx">
+        <exec executable="cmd" failonerror="false">  
+            <arg line='/c explorer "${export.dir.root}\"' />  
+        </exec>
+	</target>	
+</project>

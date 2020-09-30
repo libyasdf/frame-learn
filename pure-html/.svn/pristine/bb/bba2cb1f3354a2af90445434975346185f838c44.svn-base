@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\考勤管理_19.3.13"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		<!-- 天津和本地代码不一致，后重新全部打包考勤管理，但是其中包括把【请假事由】、【迟到早退原因】改为可选项的内容页打包进去，
+		本次打包字典项和数据字典页面修改的内容 -->	
+		
+		 <!--模块页面-->
+		<!--请假管理中的【请假事由】改为可选择项,目前是最新的-->
+		<include name="WebContent/modules/zhbg/kqgl/qj/js/qjEditForm.js"/>
+		<include name="WebContent/modules/zhbg/kqgl/qj/qjEditForm.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/qj/qjReadOnlyForm.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/qj/js/validator.js"/>
+	     <!--模块Class文件-->
+	 	<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/qj/entity/KqglLeaveInfo.class"/>
+	 	<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/qj/service/KqglLeaveInfoServiceImpl.class"/>
+	     <!--公共页面-->
+	
+	     <!--公共Class文件-->
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

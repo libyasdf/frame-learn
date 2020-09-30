@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>企业中心</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+
+<style type="text/css">
+    span{ white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;text-align:left}
+</style>
+
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+        <input type="hidden" id="textId"/>
+        <input type="hidden" id="id"/>
+        <input type="hidden" id="opertation"/>
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">通知信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 值班标题：</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="name" name="title" placeholder="值班标题">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"><b style="color: red;"></b> 安保时间：</label>
+                    <div class="col-md-4">
+                        <input type="text" name="yxq" class="form-control" id="timeRange" placeholder="安保时间">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 通知内容： </label>
+                    <div class="col-md-10"> 
+                        <textarea  id="noticeText" name="noticeText" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">备注： </label>
+                    <div class="col-md-10">
+                        <textarea name="remark" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">附件： </label>
+                    <div class="col-md-10">
+			            <!--文件上传-->
+				        <span class="btn btn-primary fileinput-button">
+			                <i class="glyphicon glyphicon-plus"></i>
+			                <span>选择文件...</span>
+			                <input id="fileupload" type="file" name="files[]" multiple>
+			            </span>
+			            <div class="files row">
+					        <div id="files" class="col-md-10">
+					        </div>
+					    </div>
+                  	</div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">通知处室： </label>
+                    <div class="col-md-10">
+                             <input type="text" id="unitName" name="unitName" unselectable="on" onclick="openSelectZtree({'id':'unitId','name':'unitName','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'})" class="form-control" >
+                             <input type="hidden" id="unitId" name="unitId" /><!-- 单位ID隐藏域 -->
+                        </div>
+                </div>
+                <!--文件上传end-->
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </form>
+</div>
+
+<!-- 按钮区 -->
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="commitForm();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+    <button id="sendFLow" class="btn btn-primary form_btn_area_btn2" onclick="layer.confirm('确认发布吗?',{icon:3,title:'发布'},function(){commitFlow();" ><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> 发布</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/url.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 引入自己模块功能的js -->
+<!-- 数据校验 -->
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<!--文件上传js-->
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--文件上传js end-->
+<!-- <script src="/static/js/zhbg/zbgl/zbapform.js"></script> -->
+<!-- 发送消息js -->
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+<!--回显js-->
+<script src="/static/js/common/editFormEcho.js"></script>
+<script type="text/javascript">
+	//通过url传参时获取传参
+	var url = new Url();
+	var _parse = url.parse(window.location.href);
+	var id = null;
+	try {
+	    id = _parse.query.id;
+	    //判断是新建还是修改，修改才需要数据回显
+	    if(id!= null && id!=""){
+		    EditFormEcho.echo({
+		    	domId: "textId" //ID回显存储的隐藏域ID
+		        , recordId: id//业务ID
+		        , url: "/zhbg/zbgl/dutywork/edit"
+		        , fileParams: {viewParams: {docId: id}}//上传文件的传参，如果没有就不用写
+		    });
+		    $("#opertation").val("EDIT");
+		    $("#id").val(id);
+		    iniFileUpload();
+	    }else{
+	    	$("#opertation").val("NEW");
+	    }
+	} catch (err) {
+	}
+</script>
+<script type="text/javascript">
+	$(function(){
+		$('#form').bootstrapValidator({
+	        message: 'This value is not valid',
+	        group:".form-group",
+	        feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	            title: {
+	            	trigger:"change",
+	                validators: {
+	                    notEmpty: {
+	                        message: '值班标题不能为空！'
+	                    }
+	                }
+	            },
+	            noticeText: {
+	            	trigger:"change", //监听onchange事件
+	                validators: {
+	                    notEmpty: {
+	                        message: '值班内容不能为空！'
+	                    }
+	                }
+	            }
+	        },
+	        submitHandler: function (validator, form, submitButton) {
+	        	alert('submit');
+	        }
+	    });
+		iniFileUpload();
+		$.ajax({
+			url:"/zhbg/zbgl/config/queryOne",
+			type:"get",
+			dataType:"json",
+			success:function(result){
+				if(result.data.rows!=null &&result.data.rows!=""){
+					var unitId = result.data.rows[0].unitId.split(",");
+					var unitName = result.data.rows[0].unitName.split(",");
+					for(var i=0;i<unitId.length;i++){
+						var sp = '<label class="checkbox-inline"><input type="checkbox" id="inlineCheckbox1" name="displayDept" value="'+unitId[i]+'" checked="checked"> '+unitName[i].trim()+'</label>';
+						$("#bm").append(sp);
+					}
+				}
+			}
+		})
+	})
+    //绑定日期输入input
+    laydate.render({
+        elem: '#birth' //指定元素
+    });
+    laydate.render({
+        elem: '#yxq' //指定元素
+        , range: true
+    });
+    //新增通知信息保存
+    function commitForm(){
+    	$("#form").bootstrapValidator('validate'); 
+	    	if ($("#form").data('bootstrapValidator').isValid()){
+	    	var params = getParams();
+	    	var theRequest = GetRequest();
+	    	var id = theRequest.id;
+	    	var url = "/zhbg/zbgl/dutywork/save";
+	    	if(id!=null){
+	    		params.id = id;
+	    	}
+	    	$.post(url,params,function(data){
+	    		if(data.flag==1){
+				   	$("#id").val(data.data.id);
+					iniFileUpload();
+					MyFileUpload.saveDocIdToAffix({docId:data.data.id,fileListId: "files"});
+					parent.TableInit.refTable('right_table');
+					layer.msg('保存成功！',{icon:1});
+	 		   }else{
+	 			  layer.msg('保存失败！',{icon:2});
+	 		   }
+	    	}); 
+    	}
+    }
+  	//发布通知
+  	function commitFlow(){
+  		var url = "/zhbg/zbgl/dutywork/send";
+  		var params = getParams();
+  		var deptNames = $('#unitName').val().split(",");
+  		var deptIds = $('#unitId').val().split(",");
+  		params.deptIds = JSON.stringify(deptIds);
+  		params.deptNames = JSON.stringify(deptNames);
+  		var para = {"deptIds":JSON.stringify(deptIds),"deptNames":JSON.stringify(deptNames)};
+  		$.ajax({
+  			url:"/zhbg/zbgl/dutywork/hasReportUser",
+  			data:para,
+			dataType:"json",
+  			async:false,
+  			success:function(data){
+  				if(data.flag=="1"){
+  					var userIds = data.data;
+  					for(var i in ids){
+  						MessageUtil.sendMsg({
+  							senderId:Config.sysId,	//系统ID
+  							subject:$('#name').val(),		//消息主题
+  							content:$('#name').val(),		//消息内容
+  							accepterId:userIds[i].userId,	//接收人ID
+  							status:"0",		//0未读；1已读
+  							type:"3"		//3站内消息
+  						});
+  					}
+  			    	var id = $("#id").val();
+  			    	if(id!=null){
+  			    		params.id = id;
+  			    	}
+  			    	$.ajax({
+  			  			url:url,
+  			  			data:params,
+  			  			type:"post",
+  						dataType:"json",
+  			  			async:false,
+  			  			success:function(data){
+  			  				if(data.flag=="1"){
+  			  					layer.msg('发布成功！',{icon:1});
+  			  					parent.TableInit.refTable('right_table');
+  			  					MyLayer.closeOpen();
+  			  				}
+  			  			}
+  			  		});
+  				}else{
+  					var names = data.deptNames.split(",");
+  					layer.alert(names+'等部门没有配置值班表上报员，请及时与相关处室联系，配置后再发布！',{icon:0,title:'警告'})
+  				}
+  			}
+  		});
+  		
+  	}
+  	//获取保存的信息
+    function getParams(){
+    	var params = {title:$('#name').val(),noticeText:$('textarea[name="noticeText"]').val()};
+    	if($('#yxq').val()!= ""){
+    		params.yxq = $('#yxq').val();
+    	}
+    	if($('textarea[name="remark"]').val()!= ""){
+    		params.remark = $('textarea[name="remark"]').val();
+    	}
+   		params.isSecurity = "0";
+    	return params;
+    }
+	//初始化文件上传
+	function iniFileUpload(){
+		//初始化文件上传
+	    MyFileUpload.init({
+			viewParams: {"tableId":$("#id").val(),"tableName":"zbgl_duty_notice"},
+			editOrView:$("#opertation").val(),
+	        maxFileSize:5*1024*1024 //5M
+	    });
+	}
+</script>
+</body>
+</html>

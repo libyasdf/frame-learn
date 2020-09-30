@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link href="/static/core/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <!--固定表头所需css-->
+    <link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/form-public.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+
+    <script src="/static/js/common/url.js" type="text/javascript"></script>
+</head>
+
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" autocomplete="off">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;" onclick="resetView();">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;" id="queryDiv">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                        	<label class="col-md-2 control-label"> 题名：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" id="mainTitle" name="mainTitle"/>
+                            </div>
+                            <label class="col-md-2 control-label"> 档号：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" id="dangHao" name="dangHao"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 录入人：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" id="luRuRen" name="luRuRen"/>
+                            </div>
+                            <label class="col-md-2 control-label"> 立卷单位：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" id="liJuanDanWei" name="liJuanDanWei"/>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <div class="col-md-12">
+
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--行内编辑所需js-->
+<script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script type="text/javascript" src="/static/core/lhgdialog/lhgcore.lhgdialog.min.js?self=true&skin=iblack"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<!-- 发送消息js -->
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+<script type="text/javascript" src="/common/js/index.js"></script>
+<script type="text/javascript">
+
+    //清空查询条件
+    function clearAll(){
+        $("#creUserName").val("");	//催还人
+        $("#borrowUserName").val("");	//被催还人
+    }
+
+    var theRequest = GetRequest();
+    var all = theRequest.all;
+    var tableName = theRequest.tableName;
+    var selectIds = theRequest.selectIds;
+    var categoryCode = theRequest.categoryCode;
+    var ranking = theRequest.ranking;
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '5%'
+        , sortable: false
+        , order: "desc"
+        , align:"center"
+        ,formatter: function (value, row, index) {  //直接定义function,return就是html代码
+        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+	        var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+	        var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+	        return "<span data-id='"+row.recid+"' >"+orderNum+"</span>";    
+        }
+    },{
+        field: 'maintitle'
+        , title: '题名'
+        , width: '30%'
+        , align:"center"
+       	, formatter: function (value, row, index) {
+            	if(value!=null){
+            		var length = value.length
+    	  	   	      var val = '';
+    	  	   	      if(length>25){
+    	  	   	    	  val = value.substring(0,25)+"...";
+    	  	   	      }else{
+    	  	   	    	  val = value;
+    	  	   	      }
+      	   	   		return  "<span title='"+value+"'>"+val+"</span>";
+            	}else{
+            		return "";
+            	}
+            }
+    },{
+        field: 'dangHao'
+        , title: '档号'
+        , sortable: true
+        , width: '25%'
+        , align:"center"
+    },{
+        field: 'liJuanDanWei'
+        , title: '立卷单位'
+        , width: '17%'
+       	, sortable: true
+        , align:"center"
+       },{
+           field: 'creUserName'
+          , title: '录入人'
+          , width: '15%'
+         	, sortable: true
+          , align:"center"
+         },{
+       field: 'cz'
+       , title: '操作'
+       , width: '8%'
+       , align:"center"
+       , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+           var opt = value.split(",");
+           var html = "";
+           for (var i = 0; i < opt.length; i++) {
+              if(opt[i] == "update") {
+           	   html +="<i title='顺序调整' style='cursor:pointer' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\""+row.recid+"\",\""+row.tableName+"\",\""+row.creUserId+"\",\""+row.liJuanDanWei+"\")\'></i>&nbsp;&nbsp;"
+              }
+           }
+           return html;
+       }
+	 }];
+
+    $(document).ready(function (e) {
+    	//搜索按钮
+		$(document).keyup(function(e) {
+			var key = e.which;
+			if (key == 13) {
+				TableInit.refTable('right_table');
+			}
+		});
+    	
+    	//获取参数中的表名
+    	console.log(all+"@@@"+tableName);
+    	//初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/dagl/bmgl/getFirstLevelData",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.tableName = tableName;
+                params.selectIds = selectIds;
+                params.all = all;
+                params.liJuanDanWei = $("#liJuanDanWei").val();
+                params.luRuRen = $("#luRuRen").val();
+                params.mainTitle = $("#mainTitle").val();
+                params.dangHao = $("#dangHao").val();
+                return params;
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，
+                return {
+                    css: {"text-align":"center","cursor":"default"}
+                };
+            }
+        });
+    });
+
+  	//表格数据项的操作
+    var list = {
+        editFun:function(recid,tableName,creUserId,liJuanDanWei){
+            console.log("获取到的数据为："+recid+"-"+tableName+"-"+creUserId+"-"+liJuanDanWei);
+            MyLayer.layerOpenUrl({
+                url:'/modules/dagl/bmgl/adjustFirstLevelForm.html?tableName='+tableName+'&recid='+recid+"&all="+all+"&ranking="+ranking+"&categoryCode="+categoryCode,
+                title:"顺序调整",
+                width:"50%",
+                height:"65%"
+            })
+        }
+    }
+    
+    /**
+     * 清空查询项
+     */
+   function clearAll() {
+   	$("div#queryDiv").find("input").val("");
+   
+  }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理java_20191107"></property>
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+
+		<!--修改的内容有：
+		1.档案检索：应根据当前人的立卷单位过滤
+		2.虚拟分类切换清空勾选
+		3.借阅的所有子表都需要展示页数和密级
+		4.传统借阅只读无页数和密级
+		5.立卷单位、密级、页数可为空
+		6.单位预立库的虚拟分类与归档库保持一致；（单位预立库年份只展示今年和去年）
+		7.导入的数据同步立卷单位的key值
+		-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/controller/"/>
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/dao/"/>
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+
+		<include name="WebContent/modules/dagl/bmgl/js/indexDangAnFind.js"/>
+		<include name="WebContent/modules/dagl/bmgl/index.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/js/onLineLoanEdit.js"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/js/traditionalRegisterEdit.js"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/onLineLoanEditForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/recordList.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/recordPerReadOnlyForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/returnBorrowList.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterEditForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterReadOnlyForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowrecord/borrowRecordList.html"/>
+		<include name="WebContent/modules/dagl/daly/shoppingtrolley/js/"/>
+		<include name="WebContent/modules/dagl/tree/js/"/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

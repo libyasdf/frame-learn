@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\9.11"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	
+	<fileset id="liyingjei" dir="../../../../../">
+			
+		<!--模块页面-->
+		<include name="src/com/sinosoft/sinoep/modules/video/**"/>
+		<include name="WebContent/modules/video/**"/>
+		<include name="WebContent/common/js/config.js"/>
+		
+		
+		<!--模块Java文件-->
+		<include name="WebContent/modules/system/component/groupTree/**"/>
+		
+		<!--公共页面和js-->
+		<!--首页打卡记录点击无反应-->
+	    <include name="WebContent/main.htm"/>
+		<!--12.25补充文件：图片上传js-->	
+	    <include name="WebContent/plugins/bootstrap-fileinput/**"/>
+		
+		
+		<!--公共Class文件-->
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

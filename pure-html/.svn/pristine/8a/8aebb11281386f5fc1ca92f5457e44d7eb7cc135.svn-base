@@ -1,0 +1,263 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 申请日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="creTime" id="creTime"/>
+                            </div>
+
+                            <label class="col-md-1 control-label"> 借阅单位：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="borrowUserName" id="borrowUnitName"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 借阅人：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="borrowUserName" id="borrowUserName"/>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <!--新增等按钮-->
+        <div id="toolbar" class="col-md-12">
+
+
+            <div class="list_button_area">
+                <button class="list_table_btn2" onclick="confirm()">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 登记借阅
+                </button>
+                <button class="list_table_btn2" onclick="search()">
+                    <span class="glyphicon glyphicon-search"></span> 档案检索
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#creTime' //指定元素
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber = $('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='" + row.id + "' >" + orderNum + "</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'creTime'
+        , title: '申请日期'
+        , width: '15%'
+        , sortable: true
+        , align: "center"
+    }/*, {
+        field: 'borrowDate'
+        , title: '借阅日期'
+        , width: '15%'
+        , sortable: true
+        , align: "center"
+    }, {
+        field: 'shouldReturnDate'
+        , title: '应还日期'
+        , width: '15%'
+        , sortable: true
+        , align: "center"
+    }*/, {
+        field: 'borrowUserName'
+        , title: '借阅人'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'borrowUnitName'
+        , title: '借阅单位'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'approveUserName'
+        , title: '审批人'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            if (null == row.shouldReturnDate) {
+                html += "<i  class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\",\"" + row.month + "\")\' title=\"修改\"></i>&nbsp;&nbsp;"
+                html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/dagl/daly/borrow/traditionalOrOnLineList",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.creTime = $("#creTime").val();
+                params.usePurpose = $("#usePurpose").val();
+                params.borrowUserName = $('#borrowUserName').val();
+                params.borrowUnitName = $('#borrowUnitName').val();
+                params.type = 'traditional';
+                return params;
+            },
+            readOnlyFn: function (row) {
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({
+                        url: '/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterReadOnlyForm.html?id=' + id + "&oper=VIEW&resId=" + resId,
+                        title: "登记借阅详情"
+                    });
+                });
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id, year_month) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            layer.open({
+                type: 2,
+                content: '/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterEditForm.html?id=' + id + '&oper=EDIT&resId=' + resId,
+                area: ['90%', '97%'],
+                offset: '20px',
+                title: ['登记借阅修改', 'font-size:16px;font-weight:bold;'],
+                resize: true,
+                maxmin: true,
+                success: function (layero, index) {
+                },
+                end: function () {
+                }
+            });
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/dagl/daly/borrow/deleteDaglBorrow?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    };
+
+    function keyLogin() {
+        if (event.keyCode == 13)  //回车键的键值为13
+            TableInit.refTable('right_table');
+    }
+
+    function search() {
+        // layer.msg("档案检索");
+        var resId = $('#left_ul').find('a.active').attr("id");
+        layer.open({
+            type: 2,
+            content: '/modules/dagl/bmgl/indexDangAnFind.html?type=search',
+            area: ['90%', '97%'],
+            offset: '20px',
+            title: ['档案检索', 'font-size:16px;font-weight:bold;'],
+            resize: true,
+            maxmin: true,
+            success: function (layero, index) {
+            },
+            end: function () {
+            }
+        });
+    }
+
+    function confirm() {
+        // 获取资源id
+        var resId = $('#left_ul').find('a.active').attr("id");
+        layer.open({
+            type: 2,
+            content: '/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterEditForm.html?oper=NEW&resId=' + resId,
+            area: ['90%', '97%'],
+            offset: '20px',
+            title: ['登记借阅起草', 'font-size:16px;font-weight:bold;'],
+            resize: true,
+            maxmin: true,
+            success: function (layero, index) {
+            },
+            end: function () {
+            }
+        });
+    }
+
+</script>

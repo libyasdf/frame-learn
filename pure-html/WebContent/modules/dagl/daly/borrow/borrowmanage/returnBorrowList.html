@@ -1,0 +1,665 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<!--固定表头所需css-->
+<link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;" onclick="resetView();">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 借阅日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control"  type="text" name="borrowDate" id="borrowDate"/>
+                            </div>
+
+                            <label class="col-md-1 control-label"> 借阅状态：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="borrowStatus" name="borrowStatus">
+                                    <option value="">-请选择-</option>
+                                    <option value="1">未归还</option>
+                                    <option value="2">部分归还</option>
+                                    <option value="3">逾期</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label"> 借阅人：</label>
+                            <div class="col-md-3">
+                                <input class="form-control"  type="text" name="borrowUserName" id="borrowUserName"/>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <!--新增等按钮-->
+        <div id="toolbar" class="col-md-12">
+
+
+            <!--<div class="list_button_area">
+                <button class="list_table_btn2" onclick="renew()" rel="drevil"
+                        data-container="body" data-toggle="popover" data-placement="bottom"
+                        data-content="可续借单次借阅中未还的档案">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 续借
+                </button>
+                <button class="list_table_btn2" onclick="borrowAgain()" rel="drevil"
+                        data-container="body" data-toggle="popover" data-placement="bottom"
+                        data-content="可重借同一立卷单位已还的档案">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 重借
+                </button>
+            </div>-->
+        </div>
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<!--这里是单独引用的自己的js，因为应用公用的js固定表头会出现问题-->
+<!--<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>-->
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript">
+
+    var expandRowIndex = [];//存放展开的的index,用于刷新是展开
+    var lockData = [];//用于存放暂时不归还的档案id
+
+    $("[data-toggle='popover']").popover();
+
+
+    $("[rel=drevil]").popover({
+        trigger:'manual',
+        //placement : 'bottom', //placement of the popover. also can use top, bottom, left or right
+        //天title : '<div style="text-align:center; color:red; text-decoration:underline; font-size:14px;"> Muah ha ha</div>', //this is the top title bar of the popover. add some basic css
+        html: 'true', //needed to show html of course
+        //content : '<div id="popOverBox"><img src="http://www.hd-report.com/wp-content/uploads/2008/08/mr-evil.jpg" width="251" height="201" /></div>', //this is the content of the html box. add the image here or anything you want really.
+        animation: false
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide")
+            }
+        }, 300);
+    });
+
+
+    laydate.render({
+        elem: '#borrowDate'
+        , range: true
+    });
+
+    var selectData = new Array();//存放选中的数据
+    var selectId = [];//存放选中的id,用于回显
+    var selectBorrowId = [];
+
+    var date = new Date();
+    function DateToStringFomatter(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+    };
+
+    var today = DateToStringFomatter(date);
+
+    Dictionary.init({position:"usePurpose",mark:"dagl_usePurpose",type:"1",name:"usePurpose",domType:"select"});
+   // Dictionary.init({position:"borrowStatus",mark:"dagl_borrowStatus",type:"1",name:"borrowStatus",domType:"select"});
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            return "<span data-id='"+row.id+"' >"+(index+1)+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'borrowUserName'
+        , title: '借阅人'
+        , width: '15%'
+        , align:"center"
+    }, {
+        field: 'borrowDate'
+        , title: '借阅日期'
+        , width: '15%'
+        , align:"center"
+    }, {
+        field: 'shouldReturnDate'
+        , title: '应还日期'
+        , width: '15%'
+        , align:"center"
+    }, {
+        field: 'borrowStatus'
+        , title: '借阅状态'
+        , width: '10%'
+        , align:"center"
+        ,formatter:function(value,row,index){
+            if(today > row.shouldReturnDate){
+                return "<span style='color: red;'>逾期</span>"
+            }else if(value==="1"){
+                return "未归还";
+            }else if(value==="2"){
+                return "部分归还";
+            }else if("3" == value){
+                return "已归还";
+            }else{
+                return "-";
+            }
+        }
+    }, {
+        field: 'approveUserName'
+        , title: '审批人'
+        , width: '15%'
+        , align:"center"
+    }, {
+        field: 'handleUserName'
+        , title: '经办人'
+        , width: '15%'
+        , align:"center"
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+                html += "<i  class='fa fa-sign-in' onclick='returnThisBorrow(\""+row.id+"\")' title=\"一键归还\" style='cursor:pointer;'></i>&nbsp;&nbsp;"
+            return html;
+        }
+    }];
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col_s = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        //, order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            return "<span data-id='"+row.id+"' >"+(index+1)+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'borrowId'
+        , title: '借阅id'
+        , width: '5%'
+        //, order: "desc"
+        , align:"center",
+        visible: false
+    }, {
+        field: 'categoryName'
+        , title: '门类'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>9){
+                    val = value.substring(0,6)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'archiveNo'
+        , title: '档号'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>15){
+                    val = value.substring(0,12)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'basefolderUnit'
+        , title: '立卷单位'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'mainTitle'
+        , title: '题名'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>8){
+                    val = value.substring(0,7)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'borrowDate'
+        , title: '借阅日期'
+        , width: '8%'
+        , align:"center"
+    }, {
+        field: 'shouldReturnDate'
+        , title: '应还日期'
+        , width: '8%'
+        , align:"center"
+    }, {
+        field: 'returnDate'
+        , title: '归还日期'
+        , width: '8%'
+        , align:"center"
+    }, {
+        field: 'borrowStatus'
+        , title: '借阅状态'
+        , width: '5%'
+        , align:"center"
+        ,formatter:function(value,row,index){
+            if(null == row.returnDate && today <= row.shouldReturnDate){
+                return "未归还";
+            }else if(null == row.returnDate && today > row.shouldReturnDate){
+                return "逾期未还";
+            }else if(row.returnDate <= row.shouldReturnDate){
+                return "按时还";
+            }else if(row.returnDate > row.shouldReturnDate){
+                return "逾期还";
+            }
+        }
+    },{
+        field: 'isReminder'
+        , title: '催还状态'
+        , width: '5%'
+        , align:"center"
+        ,visible: false
+    }, {
+        field: 'securityClass'
+        , title: '密级'
+        , width: '5%'
+        , align:"center"
+    }, {
+        field: 'pageNum'
+        , title: '页数'
+        , width: '5%'
+        , align:"center"
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            if(null == row.returnDate ){//未归还
+                html += "<i  class='fa fa-sign-in' onclick=\'returnBorrow(\"" + row.id+"\")\' title=\"归还\" style='cursor:pointer;'></i>&nbsp;&nbsp;"
+            }
+            if(null == row.returnDate && today > row.shouldReturnDate){//逾期未还
+                html += "<i  class='glyphicon glyphicon-earphone' onclick=\'Reminder(\"" + row.id + "\",\"" + row.mainTitle + "\")\' title=\"催还\" style='cursor:pointer;'></i>&nbsp;&nbsp;"
+            }
+            if(null == row.returnDate && "1" == row.isReminder){
+                html += "<i  class='glyphicon glyphicon-list-alt' onclick=\'ReminderList(\"" + row.id + "\",\"" + row.mainTitle + "\")\' title=\"催还记录\" style='cursor:pointer;'></i>&nbsp;&nbsp;"
+            }
+
+            if(lockData.indexOf(row.id)==-1 && null == row.returnDate){
+                //锁定本次不归还
+                html += "<i  class='fa fa-unlock' id='"+row.id+"_lock' onclick=\'lockReturn(\"" + row.id + "\",\"" + row.mainTitle + "\")\' title=\"锁定本次不归还\" style='cursor:pointer;'></i>"
+                //解除锁定本次不归还
+                html += "<i  class='glyphicon glyphicon-lock' id='"+row.id+"_relieveLock' onclick=\'relieveLockReturn(\"" + row.id + "\",\"" + row.mainTitle + "\")\' title=\"解除锁定本次不归还\" style='cursor:pointer; display: none;' ></i>&nbsp;&nbsp;"
+            }else if(null == row.returnDate){
+                //锁定本次不归还
+                html += "<i  class='fa fa-unlock' id='"+row.id+"_lock' onclick=\'lockReturn(\"" + row.id + "\",\"" + row.mainTitle + "\")\' title=\"锁定本次不归还\" style='cursor:pointer; display: none;'></i>"
+                //解除锁定本次不归还
+                html += "<i  class='glyphicon glyphicon-lock' id='"+row.id+"_relieveLock' onclick=\'relieveLockReturn(\"" + row.id + "\",\"" + row.mainTitle + "\")\' title=\"解除锁定本次不归还\" style='cursor:pointer;'></i>&nbsp;&nbsp;"
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/dagl/daly/borrow/getShouldReturnBorrowList",
+            columns:right_table_col,
+            detailView: true,//父子表
+            height:500,
+            pagination:false,	//不分页
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.borrowDate = $("#borrowDate").val();
+                params.usePurpose = $('#usePurpose').val();
+                params.borrowStatus = $('#borrowStatus').val();
+                params.borrowUserName = $('#borrowUserName').val();
+                return params;
+            },
+            readOnlyFn: function (row) {
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+                });
+                expandRow();
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            //注册加载子表的事件。注意下这里的三个参数！
+            onExpandRow: function (index, row, $detail) {
+                //存放展开的坐标
+                var indexOfId = expandRowIndex.indexOf(index);
+                if (indexOfId == -1) {
+                    //不包含放入；
+                    expandRowIndex.push(index);
+                }
+
+                var borrowId = row.id;
+                var cur_table = $detail.html('<table></table>').find('table');
+                $(cur_table).bootstrapTable({
+                    url: '/dagl/daly/borrow/getFileList',
+                    method: 'get',
+                    queryParams: function(params){
+                        //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                        params.resId = $('#left_ul').find('a.active').attr("id");
+                        params.id = borrowId;
+                        return params;
+                    },
+                    checkboxHeader:true,
+                    detailView: false,//父子表
+                    pagination:false,	//不分页
+                    columns: right_table_col_s
+                    ,
+                    readOnlyFn: function (row) {
+                    }
+                });
+            },
+            onCollapseRow:function(index, row){
+                //去除展开的坐标
+                var indexOfId = expandRowIndex.indexOf(index);
+                if (indexOfId > -1) {
+                    expandRowIndex.splice(indexOfId, 1);
+                }
+            }
+        });
+    });
+
+    //展开查询项列表不对齐
+    function resetView(){
+        $("#right_table").bootstrapTable('resetView');
+    }
+
+    function keyLogin(){
+        if (event.keyCode==13)  //回车键的键值为13
+            TableInit.refTable('right_table');
+    }
+
+    //一键归还
+    function returnThisBorrow(id){
+
+        layer.confirm('确定归还本次借阅中未锁定档案吗？',
+            {
+                icon:3
+                ,title:'确认信息'
+                ,btn: ['确定','取消'] //按钮
+                ,btn1:function(e){
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/dagl/daly/borrow/returnThisBorrow",
+                        // contentType: "application/json",
+                        data: {id:id,lockData:lockData.join(',')},
+                        dataType: 'JSON',
+                        async: false,
+                        success: function (json) {
+                            layer.close(e);
+                            if(json.flag =="1"){
+                                layer.msg("一键归还成功！", {icon: 1});
+                                TableInit.refTable('right_table');
+                                expandRowIndex=[];
+                            }else{
+                                layer.msg("一键归还失败！", {icon: 0});
+                                TableInit.refTable('right_table');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("一键归还失败！", {icon: 2});
+                        }
+                    });
+                },btn2:function(e){
+                    //取消
+                    layer.close(e);
+                }
+            });
+
+    }
+    //单个归还
+    function returnBorrow(id){
+
+        layer.confirm('确定归还本档案吗？',
+            {
+                icon:3
+                ,title:'确认信息'
+                ,btn: ['确定','取消'] //按钮
+                ,btn1:function(e){
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/dagl/daly/borrow/returnOneBorrow",
+                        // contentType: "application/json",
+                        data: {id:id},
+                        dataType: "json",
+                        async: false,
+                        success: function (json) {
+                            layer.close(e);
+
+                            if(json.flag =="1"){
+                                layer.msg("归还成功！", {icon: 1});
+                                TableInit.refTable('right_table');
+                                if(json.num =="1"){
+                                    //清空展开的数组中数据
+                                    expandRowIndex=[];
+                                }
+                            }else{
+                                layer.msg("归还失败！", {icon: 0});
+                                TableInit.refTable('right_table');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("归还失败！", {icon: 2});
+                        }
+                    });
+                },btn2:function(e){
+                    //取消
+                    layer.close(e);
+                }
+            });
+
+    }
+
+    //催还
+    function Reminder(id,mainTitle){
+        layer.confirm('确定催还吗？',
+            {
+                icon:3
+                ,title:'确认信息'
+                ,btn: ['确定','取消'] //按钮
+                ,btn1:function(e){
+
+                    layer.prompt({
+                            title:"编辑催还内容",
+                            formType:2,
+                            value:"您所借阅的【"+mainTitle+"】已经超过了应还日期，请及时归还！",
+                            maxlength:100},
+                        function(val,index){
+                            layer.close(index);
+                            $.ajax({
+                                type: "POST",
+                                url: "/dagl/daly/borrow/returnPress",
+                                // contentType: "application/json",
+                                data: {id:id,pressContent:val},
+                                dataType: "json",
+                                async: false,
+                                success: function (json) {
+                                    layer.close(e);
+                                    if(json.flag =="1"){
+                                        layer.msg("催还成功！", {icon: 1});
+                                    }else{
+                                        layer.msg("催还失败！", {icon: 0});
+                                    }
+                                    TableInit.refTable('right_table');
+                                },
+                                error: function () {
+                                    layer.msg("催还失败！", {icon: 2});
+                                }
+                            });
+                        })
+                },btn2:function(e){
+                    //取消
+                    layer.close(e);
+                }
+            });
+    }
+
+    //借阅记录列表
+    function ReminderList(id,mainTitle){
+
+        var resId = $('#left_ul').find('a.active').attr("id");
+
+        var url = "/modules/dagl/daly/borrow/borrowmanage/pressRecordList.html?borrowId="+id+"&resId="+resId;
+        var title = "【"+mainTitle+"】的催还记录";
+        layer.open({
+            type: 2,
+            shadeClose: true,
+            content: url,
+            area: ['90%', '90%'],
+            title: [title, 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 默认展开的列
+     * @Date 2019/3/5 10:05
+     **/
+    function expandRow(){
+        for(var i=0;i<expandRowIndex.length;i++){
+            $("#right_table").bootstrapTable('expandRow', expandRowIndex[i]);
+            //$table.bootstrapTable('collapseRow', 1)
+        }
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 锁定本次不归还，初始化都有这个按钮，点击锁定，然后把id放到全局变量
+     * @Date 2019/11/6 9:33
+     * @Param
+     * @return
+     **/
+    function lockReturn(id){
+        //点击锁定之后，显示解除锁定按钮
+        document.getElementById(id+"_lock").style.display="none";//设置EleId标签隐藏
+        document.getElementById(id+"_relieveLock").style.display="inline";//设置EleId标签显示
+        //添加id到全局变量
+        //删除id
+        var indexOfId = lockData.indexOf(id);
+        if (indexOfId == -1) {
+            //不包含则新增
+            lockData.push(id);
+        }
+        console.log("添加锁定之后的id"+lockData);
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 解除本次不归还，只有锁定之后才会出现这个按钮，点击移除全局变量的id
+     * @Date 2019/11/6 9:34
+     * @Param
+     * @return
+     **/
+    function relieveLockReturn(id){
+        //点击解除锁定之后，显示锁定按钮
+        document.getElementById(id+"_lock").style.display="inline";//设置EleId标签隐藏
+        document.getElementById(id+"_relieveLock").style.display="none";//设置EleId标签显示
+        //移除id到全局变量
+        //删除id
+        var indexOfId = lockData.indexOf(id);
+        if (indexOfId > -1) {
+            //包含，则去除
+            lockData.splice(indexOfId, 1);
+        }
+        console.log("解除锁定之后的id"+lockData);
+    }
+
+</script>

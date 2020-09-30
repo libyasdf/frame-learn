@@ -1,0 +1,46 @@
+/* layer 顶部header条 */
+.layui-layer-title {
+    color: #ffffff !important;
+    background-color: rgb(58,132,210) !important;
+}
+
+/* 小标题 */
+.block_title .name{
+    border-bottom: 0px solid  rgb(58,132,210);
+    line-height: 37px;
+    background: none;
+}
+/* 修改底部按钮 */
+.form_btn_area_btn2 {
+    background-color: rgb(58,132,210) !important;
+}
+/* 修改右侧菜单 */
+.gw_form_right_btn_area li a {
+    color: rgb(58,132,210);
+}
+
+/* 按钮样式 */
+.btn-primary:nth-child(1),.btn-primary:nth-child(1):active {
+    color: #fff;
+    background-color: rgb(34, 160, 245);
+    border:0;
+    border-radius: 4px;
+}
+.btn-primary:nth-child(2),.btn-primary:nth-child(2):active {
+    color: #000;
+    border: 1px solid #ccc;
+    background: #ffffff;
+}
+.selectjs .selectjs_block .title_tab .nav .active a{
+    background: rgb(34, 160, 245);
+}
+/* 分页样式 */
+.pagination > .active > a {
+    background: rgb(34, 160, 245);
+}
+/* 按钮鼠标悬浮效果 */
+.list_table_btn2:hover {
+    color: #000000;
+    background: none;
+    border-color:rgb(34, 160, 245);
+}

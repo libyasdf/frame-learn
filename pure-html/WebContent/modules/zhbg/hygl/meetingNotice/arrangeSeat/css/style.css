@@ -1,0 +1,652 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    width: 1600px;
+    height: 100%;
+    background-color: #fff;
+    overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+@media screen and (max-width: 1599px) {
+    html {
+        overflow: visible;
+    }
+    body {
+        overflow-x: scroll;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    body {
+        width: 100%;
+    }
+}
+
+/* 隐藏滚动条 */
+
+.hide-scroll {
+    width: calc(100% + 17px);
+    height: 100%;
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 模拟1600*900的容器 */
+
+.st {
+    width: 1600px;
+    height: 900px;
+    background-color: #fff;
+    margin: 0 auto;
+}
+
+/* 主题界面 */
+
+.seating-main {
+    width: 90%;
+    height: 800px;
+    float: left;
+}
+
+/* 头部 */
+
+.seating-title {
+    width: 80%;
+    height: 125px;
+    margin: 40px auto 0 auto;
+}
+
+/* 主席台 */
+
+.seating-title-content {
+    width: 100%;
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    color: #666;
+    background-color: #f2f2f2;
+    outline: 2px dashed #999;
+    box-shadow: 5px 5px 10px 1px #dadada;
+}
+
+/* 图标示例 */
+
+.seating-title-icons {
+    width: 100%;
+    height: 70px;
+    line-height: 80px;
+    text-align: center;
+}
+
+.seating-title-icons img {
+    width: 28px;
+    height: 28px;
+    margin-top: -8px;
+}
+
+.seating-title-icons span {
+    font-family: "Arial Negreta", "Arial Normal", "Arial";
+    font-size: 16px;
+    font-weight: 700;
+    color: #666;
+    margin: 0 40px 0 10px;
+}
+
+/* 座位 */
+
+.seating-seats {
+    width: 100%;
+    height: 635px;
+}
+
+/* 座位画布 */
+
+.seat-canvas {
+    height: 585px;
+    float: left;
+}
+
+/* 左侧座位序号 */
+
+.seating-seatnumber-side {
+    width: 50px;
+    height: 585px;
+    float: left;
+    margin-left: 40px;
+}
+
+/* 左侧座位画布 */
+
+.seating-canvas-left {
+    outline: 2px dashed #ccc;
+    margin-left: 10px;
+}
+
+/* 过道 */
+
+.seating-seats-aisle {
+    width: 80px;
+    height: 200px;
+    margin-top: 192.5px;
+    float: left;
+}
+
+.seating-seats-aisle p {
+    width: 60px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 16px;
+    font-family: "Arial Negreta", "Arial Normal", "Arial";
+    font-weight: 700;
+    color: #666;
+    margin-top: 38px;
+}
+
+.aisle-left {
+    text-align: right;
+    padding-right: 20px;
+}
+
+.aisle-right {
+    text-align: left;
+    padding-left: 20px;
+}
+
+/* 中间座位画布 */
+
+.seating-canvas-center {
+    /* width: 480px; */
+    /* outline: 1px solid blue; */
+}
+
+/* 右侧座位画布 */
+
+.seating-canvas-right {
+    outline: 2px dashed #ccc;
+}
+
+/* 底部座位序号 */
+
+.seating-seatnumber-bottom {
+    width: 100%;
+    height: 50px;
+    float: left;
+}
+
+/* 操作列 */
+
+.seating-menu {
+    width: 10%;
+    height: 800px;
+    float: left;
+    text-align: center;
+}
+
+/* 操作列头部 */
+
+.seating-menu-title {
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+    margin-top: 70px;
+    text-align: left;
+}
+
+.seating-menu-title img {
+    margin: 0 5px 0 15px;
+}
+
+.seating-menu-title span {
+    font-size: 16px;
+}
+
+/* 发布框 */
+
+.seating-menu-publish {
+    width: 100%;
+    height: 40px;
+    margin-top: 30px;
+}
+
+.seating-menu-publish button {
+    display: none;
+    color: #fff;
+    width: 130px;
+    height: 40px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: #f00;
+    line-height: 38px;
+}
+
+.seating-menu-publish button:hover {
+    background-color: #e00;
+}
+
+.seating-menu-publish button:active {
+    padding-top: 2px;
+}
+
+/* 操作按钮 */
+
+.seating-menu-content {
+    width: 100%;
+    height: 70%;
+    margin-top: 30px;
+    outline: 1px dashed #ccc;
+    padding-top: 10px;
+}
+
+.seating-menu-content button {
+    display: none;
+    margin-top: 20px;
+    color: #fff;
+    width: 130px;
+    height: 40px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.seating-menu-content button:active {
+    padding-top: 2px;
+}
+
+.seating-menu-content button:nth-child(1) {
+    background-color: #09f;
+}
+
+.seating-menu-content button:nth-child(2) {
+    background-color: #f93;
+}
+
+.seating-menu-content button:nth-child(3) {
+    background-color: #0c6;
+}
+
+.seating-menu-content button:nth-child(4) {
+    background-color: #f66;
+}
+
+.seating-menu-content button:nth-child(5) {
+    background-color: #aaa;
+}
+
+.seating-menu-content button:nth-child(1):hover {
+    background-color: #08e;
+}
+
+.seating-menu-content button:nth-child(2):hover {
+    background-color: #e82;
+}
+
+.seating-menu-content button:nth-child(3):hover {
+    background-color: #0b5;
+}
+
+.seating-menu-content button:nth-child(4):hover {
+    background-color: #e55;
+}
+
+.seating-menu-content button:nth-child(5):hover {
+    background-color: #999;
+}
+
+/* 底部信息栏 */
+
+.seating-info {
+    width: 100%;
+    height: 100px;
+    clear: left;
+    overflow: hidden;
+}
+
+/* 已选座位信息容器 */
+
+.selected-box {
+    width: 1500px;
+    height: 80%;
+    line-height: 40px;
+    outline: 1px dashed #ccc;
+    margin: 20px 0 0 100px;
+    padding: 0 20px;
+    overflow-y: auto;
+}
+
+/* 已选信息 */
+
+.selected {
+    margin-left: 10px;
+}
+
+/* 手动排序模态框 */
+
+.modal-dialog-manual {
+    width: 1500px;
+    height: 700px;
+}
+
+/* 手动排序模态框内容部分 */
+
+.modal-content-manual {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+    background-image: url(../images//index_bj.jpg);
+    background-repeat: repeat;
+}
+
+.modal-content-manual .close {
+    margin: 8px 10px 0 0;
+}
+
+/* 手动排序面板 */
+
+.manual-sort-panel {
+    width: 90%;
+    height: 600px;
+    margin: 30px 5% 0 5%;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+/* 手动排序头部 */
+
+.manual-sort-header {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    line-height: 20px;
+    padding: 15px;
+}
+
+.manual-sort-header span {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* 手动排序左侧 */
+
+.manual-sort-left {
+    width: 650px;
+    height: 500px;
+    border: 1px solid #ccc;
+    margin: 10px 8px 0 15px;
+    float: left;
+    overflow-y: auto;
+}
+
+/* 已选择的作为按钮 */
+
+.ms-selected {
+    width: 180px;
+    height: 80px;
+    padding: 5px;
+    line-height: 35px;
+    margin: 15px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    float: left;
+    border: 2px solid #333;
+}
+
+/*.ms-selected:hover {*/
+    /*background-color: #eee;*/
+/*}*/
+
+.ms-selected span {
+    color: inherit;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ms-selected span:nth-child(1) {
+    color: inherit;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.left-arranged {
+    background: #09c;
+    color: white;
+    border-color: #09c;
+}
+
+.left-arranged:hover {
+    background: #08d;
+}
+
+/* 手动排序右侧 */
+
+.manual-sort-right {
+    width: 650px;
+    height: 500px;
+    border: 1px solid #ccc;
+    margin: 10px 0 0 8px;
+    float: left;
+}
+
+/* 查询项 */
+
+.ms-search {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 10px;
+    background-color: #ddd;
+    line-height: 40px;
+}
+
+.ms-search input[type=checkbox] {
+    margin: 10px;
+}
+
+.ms-search span {
+    margin-right: 10px;
+}
+
+/* 员工列表 */
+
+.ms-worker-list {
+    width: calc(100% - 4px);
+    margin-left: 2px;
+    height: 60px;
+    background-color: #f5f5f5;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.ms-worker-list::before {
+    display: block;
+    width: 5px;
+    height: 60px;
+    background-color: #08c;
+    content: "";
+    float: left;
+    transition: all .2s ease-in 0s;
+    margin-right: 15px;
+}
+
+.ms-worker-list:hover::before {
+    /* width: 15px; */
+}
+
+.ms-worker-list::after {
+    clear: left;
+    display: none;
+}
+
+.ms-worker-list div {
+    float: left;
+}
+
+/* 员工列表中部 */
+
+.mswl-center {
+    height: 100%;
+    line-height: 60px;
+    text-align: center;
+}
+
+.mswl-center h3 {
+    width: 200px;
+    float: left;
+    margin-left: 30px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.mswl-center p {
+    width: 200px;
+    float: left;
+    margin-left: 30px;
+}
+
+.attendees-list {
+    height: 440px;
+    overflow-y: auto;
+}
+
+/* 员工列表座位号 */
+
+.mswl-end {
+    width: 150px;
+    height: 100%;
+    line-height: 60px;
+    text-align: center;
+}
+
+.mswl-end span {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* 选中员工列表 */
+
+.right-selected {
+}
+
+.right-selected::before {
+    width: 20px;
+    margin-right: 0;
+}
+
+/* 选中已选列表 */
+
+.left-selected {
+    border-color: #08c !important;
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+/* 手动排序按钮栏 */
+
+.manual-sort-bottom {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-color: #c7c7c7;
+    clear: left;
+	margin-top: 20px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.manual-sort-bottom button {
+    width: 100px;
+    margin-right: 10px;
+}
+
+/* 提示信息模态框 */
+
+.modal-dialog-tip {
+    margin-top: 200px;
+}
+
+.modal-dialog-tip .modal-header {
+    border: none;
+    background-color: #f2f2f2;
+    color: #999;
+    font-weight: 700;
+}
+
+.modal-dialog-tip .modal-body {
+    font-size: 18px;
+    height: 50px;
+    line-height: 40px;
+}
+
+.modal-dialog-tip .modal-footer {
+    border: none;
+    text-align: center;
+}
+
+.bg-danger {
+    background-color: #f2dede !important;
+}
+
+.text-danger {
+    color: #a94442 !important;
+}
+
+.info-tip {
+    border: 2px solid #ccc;
+    position: absolute;
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.info-tip p {
+    margin: 0;
+}
+
+.seating-menu-content .disabled {
+    background-color: #ccc !important;
+    margin-top: 20px;
+    color: #fff;
+    width: 130px;
+    line-height: 30px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.seating-menu-publish .disabled {
+    color: #fff;
+    width: 130px;
+    height: 40px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: #ccc;
+    line-height: 30px;
+}
+
+
+.move {
+    background-color: #FFEFD5;
+}

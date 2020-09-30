@@ -1,0 +1,296 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 日期范围：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="timeRange" id="timeRange"/>
+                            </div>
+                            <label class="col-md-2 control-label"> 标题：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="title" id="title"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 职务：</label>
+                            <div class="col-md-4">
+                                <select class="form-control" name="position" id="position">
+                            	</select>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="draft();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新建
+                </button>
+                <button class="list_table_btn2"
+                        onclick="updateLog();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 查看更新日志
+                </button>
+                <button class="list_table_btn2"
+                        onclick="importInfo();">
+                    <span class="glyphicon glyphicon-chevron-left"></span> 导入
+                </button>
+                <button class="list_table_btn2"
+                        onclick="treeDemo();">
+                    <span class="glyphicon glyphicon-chevron-left"></span> treeDemo
+                </button>
+                <button class="list_table_btn2"
+                        onclick="treeDemo1();">
+                    <span class="glyphicon glyphicon-chevron-left"></span> treeDemo1
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript">
+
+	//起草
+	function draft(){
+	    // 获取资源id
+        var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/llg/taskPlanEditFormNew.html?oper=NEW&resId=' + resId,title:'起草'})
+	}
+	
+	var _index;
+	function importInfo() {
+        var resId = $('#left_ul').find('a.active').attr("id");
+       // MyLayer.layerOpenUrl({url:'/modules/template/importFileForm.html?importUrl=/taskplan/importInfo&resId=' + resId,title:'导入',width: "55%", height: "55%"});
+        layer.open({
+	        type: 2,
+	        content: '/modules/template/importFileForm.html?importUrl=/taskplan/importInfo&resId=' + resId,
+	        area: ['55%', '55%'],
+	        title: "导入",
+	        success:function(layero, index){
+	        	_index=index;
+	        }
+	    })
+	
+	}
+	//查看更新日志
+	function updateLog(){
+        var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/llg/updateLog.html?resId=' + resId,title:'更新日志'})
+	}
+
+    function treeDemo(){
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({url:'/modules/llg/treeDemo.html?resId=' + resId,title:'treeDemo'})
+    }
+
+    function treeDemo1(){
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({url:'/modules/llg/treeDemo1.html?resId=' + resId,title:'treeDemo'})
+    }
+
+	//清空查询条件
+	function clearAll(){
+		$("#title").val("");	//标题
+		$("#timeRange").val("");	//时间
+	}
+	
+	//刷新方法，流程中需要回调
+	function refreshPage(){
+		TableInit.refTable("right_table");
+	}
+    
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    var today = '2019-06-04';
+    var mark = {};
+    mark[today] = '今天';
+    laydate.render({
+        elem: '#timeRange', 
+        // range: true,
+        mark:mark
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '编号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+        	//计算序号，并存放业务ID，及已办事项ID
+        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'title'
+        , title: '标题'
+        , width: '30%'
+        , align: "center"
+    }, {
+        field: 'zhubDeptNm'
+        , title: '主办单位'
+        , width: '10%'
+        , sortable: true
+        , align: "center"
+    }, {
+        field: 'zhubPersonNm'
+        , title: '主办人'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'subflag'
+        , title: '审批状态'
+        , width: '10%'
+        , sortable: true
+        , align: "center"
+       	, formatter: function (value, row, index) {
+           	if(value == Config.subflag){
+           		return "审批中";
+           	}else if(value == Config.approvalflag){
+           		return "审批通过";
+           	}else if(value == Config.noApprovalflag){
+           		return "审批未通过";
+           	}else if(value == Config.removeflag){
+           		return "已撤办";
+           	}else if(value == Config.startflag){
+           		return "草稿";
+           	}
+        }
+    } , {
+        field: 'cz'
+        , title: '操作'
+        , width: '18%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "add") {
+
+                } else if (opt[i] == "update") {
+                    html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                } else if (opt[i] == "delete") {
+                    html += "<i class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+                }
+            }
+            return html;
+        }
+    } ];
+
+    $(document).ready(function (e) {
+    	userLevel.init({type:"1",position:"position"});
+    	var rest = userLevel.getNameAndLevel({type:"1"});
+    	console.log(rest);
+    	console.log(rest['6']);
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/taskplan/getlist",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.title = $("#title").val();
+                params.timeRange = $("#timeRange").val();
+                params.subflag = Config.startflag;
+                return params;
+            },
+            readOnlyFn: function () {
+            	$('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+            	$('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+					var resId = $('#left_ul').find('a.active').attr("id");
+					//流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/llg/taskPlanReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读页"});
+                });
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+        	MyLayer.layerOpenUrl({
+                url: '/modules/llg/taskPlanEditFormNew.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title: "修改"
+            }) 
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/taskplan/deletePlan?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+    
+    //关闭导入窗口
+    function putBackData(msg){
+      //关闭窗口
+      layer.close(_index);
+      layer.msg(msg.msg, {icon: 1});
+  }
+</script>

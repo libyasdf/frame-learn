@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+</head>
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+    .msg{
+    	margin-top: 30px;
+    	margin-left:15px;
+    	margin-right:15px
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="msg">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 主题：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="subject" id="subject"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 消息内容：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="content" id="content"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 状态：</label>
+                            <div class="col-md-3">
+                            	<label class="radio-inline">
+		                            <input type="radio" id="inlineRadio" name="status" value="" checked="checked"> 全部
+		                        </label>
+                                <label class="radio-inline">
+		                            <input type="radio" id="inlineRadio1" name="status" value="1"> 已读
+		                        </label>
+		                        <label class="radio-inline">
+		                            <input type="radio" id="inlineRadio2" name="status" value="0"> 未读
+		                        </label>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label class="col-md-1 control-label"> 日期范围：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="timeRange" id="timeRange"/>
+                            </div>
+                        </div> -->
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('msg_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="msg_table"></table>
+        </div>
+    </div>
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+
+<script type="text/javascript" src="/common/js/dateutil.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+<script type="text/javascript">
+
+	//清空查询条件
+	function clearAll(){
+		$("#subject").val("");	//标题
+		$("#content").val("");	//标题
+		$("#inlineRadio").prop("checked",'checked'); 	//状态
+		//$("#timeRange").val("");	//时间
+	}
+	
+	//参考：http://www.layui.com/laydate/
+	//日期范围
+	/* laydate.render({
+	    elem: '#timeRange', 
+	    range: true
+	}); */
+
+	//定义bootatrap-table数据列
+	//sortable：开启列排序，其他参考API
+	var msg_table_col = [{
+	    title: '序号'
+	    , width: '5%'
+	    , order: "desc"
+	    , align: "center"
+	    , formatter: function (value, row, index) {
+	    	//计算序号，并存放业务ID，及已办事项ID
+            var html = "";
+	    	var pageSize=$('#msg_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+	        var pageNumber=$('#msg_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+	        var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            html += "<span data-status='"+row.status+"' data-url='"+row.msgUrl+"' data-id='"+row.id+"'";
+            html += " data-sendTime='"+new Date(row.sendTime).Format('yyyy-MM-dd hh:mm')+"'";
+            html += " data-content='"+row.content+"'";
+            html += " data-subject='"+row.subject+"'";
+            html += " data-senderId='"+row.senderId+"'";
+            html += ">"+orderNum+"</span>";
+            return html;
+	    }
+	}, {
+	    field: 'subject'
+	    , title: '主题'
+	    , width: '15%'
+	    , align: "center"
+	}, {
+	    field: 'content'
+	    , title: '消息内容'
+	    , width: '30%'
+	    , align: "center"
+	}, {
+	    field: 'sendTime'
+	    , title: '发送时间'
+	    , width: '10%'
+	    , align: "center"
+	    , formatter: function (value, row, index) {
+	    	return new Date(value).Format("yyyy-MM-dd hh:mm");
+	    }
+	}, {
+	    field: 'status'
+	    , title: '状态'
+	    , width: '10%'
+	    , align: "center"
+	    , formatter: function(value, row, index){
+	    	if(value == "1"){
+	    		return "已读";
+	    	}else{
+	    		return "未读";
+	    	}
+	    }
+	}];
+	
+	$(document).ready(function (e) {
+	    //初始化表格
+	    TableInit.init({
+	        domId: "msg_table",
+	        url: "/notity/list",
+	        columns: msg_table_col,
+	        queryParams: function (params) {
+	            //这里将各个查询项添加到要传递的参数中
+	            params.subject = $("#subject").val().trim();	//标题
+	            params.content = $("#content").val().trim();
+	            params.status = $(":radio:checked[name=status]").val();
+	            //params.timeRange = $("#timeRange").val();
+	            return params;
+	        },
+	        readOnlyFn: function () {
+	        	$('tr.readOnly').find('td').unbind('click').bind('click', function (e) {
+					//取消事件冒泡
+	                var evt = e ? e : window.event;
+	                if (evt.stopPropagation) {
+	                    evt.stopPropagation();
+	                } else {
+	                    evt.cancelBubble = true;
+	                }
+					//取消事件冒泡 end
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var msgUrl = $(this).parent().find("span[data-id]").attr("data-url");
+					var status = $(this).parent().find("span[data-id]").attr("data-status");
+                    var sendTime = $(this).parent().find("span[data-id]").attr("data-sendTime");
+                    var content = $(this).parent().find("span[data-id]").attr("data-content");
+                    var subject = $(this).parent().find("span[data-id]").attr("data-subject");
+                    var senderId = $(this).parent().find("span[data-id]").attr("data-senderId");
+					console.log(msgUrl);
+					//查询非流程待办状态
+                    MyLayer.layerOpenUrl({
+                        id: "openMsg",
+                        url: "/message/msgContent.html",
+                        title: "【" + senderId + "】" + '消息',
+                        width: "800px",
+                        height: "300px",
+                        success: function (layero, index) {
+                            // 通过iframe 操作
+                            var iframeId = $("#openMsg").find('iframe').attr('id');
+                            var obj = $(window.frames["" + iframeId + ""].document);
+
+                            $(obj).find('#msgId').val(id);
+                            $(obj).find('#msgUrl').val(msgUrl);
+                            $(obj).find('#sendTimeIn').val(sendTime);
+                            $(obj).find('#contentIn').val(content);
+                            $(obj).find('#subjectIn').val(subject);
+                            // 调用数据回显方法
+                            document.getElementById(iframeId).contentWindow.init();
+                            //修改消息状态,并刷新消息
+                            editStatus(status,id);
+                        }
+                    });
+	            });
+	        }
+	    });
+	});
+	
+	/**
+	 *	修改消息状态
+	 */
+	function editStatus(status,id){
+		//修改消息状态
+      	if(status == "0"){
+      		MessageUtil.editStatus({id:id,success:function(){
+      			//刷新消息列表
+    			TableInit.refTable('msg_table');
+      		}});
+      	}
+	}
+	
+	/**
+	 * 根据待办ID查询待办状态
+	 */
+	function getWaitNoflow(workItemId){
+		var status = "0";
+		$.ajax({
+			url: "/system/waitdo/getWaitdoById",
+			data:{"id":workItemId},
+			dataType:"json",
+			async:false,
+			success: function(json){
+				console.log(json);
+				if(json.flag == "1" && json.data){
+                    status = "1";
+				}else if(!json.data){
+					status = "-1";
+				}
+			},
+			error:function(){}
+		})
+        console.log("status>>>",status);
+		return status;
+	}
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+	"flag": "1",
+	"data": {
+		"total": 300,
+		"rows": [
+			{
+				"id": "1",
+				"dwmc": "信息处",
+				"dwlsgx":"直辖市",
+				"dwsx":"机关",
+				"zgzgs":"50",
+				"35syxzgzgs":"24",
+				"zgzgzgqjnrys":"14"
+			},{
+				"id": "2",
+				"dwmc": "研究室",
+				"dwlsgx":"直辖市",
+				"dwsx":"机关",
+				"zgzgs":"50",
+				"35syxzgzgs":"24",
+				"zgzgzgqjnrys":"14"
+			},{
+				"id": "3",
+				"dwmc": "秘书机要处",
+				"dwlsgx":"直辖市",
+				"dwsx":"机关",
+				"zgzgs":"50",
+				"35syxzgzgs":"24",
+				"zgzgzgqjnrys":"14"
+			}
+
+		]
+	}
+}

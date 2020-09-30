@@ -1,0 +1,200 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+</style>
+<link rel="stylesheet" type="text/css"
+	href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+	href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+	href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="vertify-panel vertify-tree x-unselectable"
+			role="presentation" id="tree">
+			<div class="inner">
+				<ul id="treeDemo" class="ztree" style="margin-top: 10px; height: 640px; overflow: auto;">
+				</ul>
+			</div>
+		</div>
+		<!--查询-->
+		<form class="form-horizontal">
+			<div class="col-md-12" style="width: 84%">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls ">
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<!--查询项输入框选择框等开始-->
+						<div class="form-group">
+							<label class="col-md-2 control-label"> 学习时间：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" name="timeRange"/>
+							</div>
+						</div>
+						<!--查询项输入框选择框等结束-->
+
+						<!--查询重置等按钮-->
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center">
+							<button type="button" class="btn btn-primary"
+									onclick="searchLearnTime()">
+									查&nbsp;&nbsp;询</button>
+							
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-primary"
+									onclick="cleanAll()">
+									重&nbsp;&nbsp;置</button>
+							</div>
+						</div>
+						<!--查询重置等按钮 end-->
+
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+		<div class="col-md-12" style="width: 84%">
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+	
+</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/url.js" type="text/javascript"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/zhbg/xxkh/tree/js/learningTimeTypeTree.js"></script>
+<script type="text/javascript">
+	//参考：http://www.layui.com/laydate/
+	//绑定日期输入input
+	//日期范围
+	laydate.render({
+		elem : '#timeRange',
+		range : true
+	});
+
+	//定义bootatrap-table数据列
+	//    sortable：开启列排序，其他参考API
+	var right_table_col = [
+	   {
+		field : 'id',
+		title : '序号',
+		width : '10%',
+		align : "center",
+		formatter : function(value, row, index) {
+			return "<span recordId='"+row.id+"'>" + (index + 1) + "</span>";//计算序号
+		}
+	   },
+	   {
+		field : 'learnTimeH',
+		title : '学习时长（小时）',
+		width : '45%',
+		align : "center"
+	   }];
+
+	$(document).ready(function(e) {
+		var url = $("#left_ul").find("a.active").attr("url");
+		var resId = $("#left_ul").find("a.active").attr("id");
+		parameter = new GetParameter(url);
+		typeTree.init({
+			from:'personal',
+			treeType : parameter.treeType
+		});
+		//var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+		var listUrl = "/zhbg/xxkh/learntime/learningTimeList?type="+parameter.treeType+"&resId="+resId;
+		//初始化表格  
+		TableInit.init({
+				domId : "right_table",
+				url : listUrl,
+				columns : right_table_col,
+				//pagination : true, //不分页
+				queryParams : function(params) { 
+					//这里将各个查询项添加到要传递的参数中
+					params.timeRange=$("#timeRange").val();
+					params.nodeIds=getCheckedNodes();
+					return params;
+				},
+				readOnlyFn : function() {
+					$('tr.readOnly').attr("title","点击查看详情");
+					$('tr.readOnly').find('td').unbind('click').bind('click',function(e) {
+						//取消事件冒泡
+						var evt = e ? e: window.event;
+						if (evt.stopPropagation) {
+							evt.stopPropagation();
+						} else {
+							evt.cancelBubble = true;
+						}
+						//取消事件冒泡 end
+					//	var id = $(this).parent().find("span[recordId]").attr("recordId");
+					    var nodeIds=getCheckedNodes();
+						MyLayer.layerOpenUrl({
+									url : '/modules/zhbg/xxkh/learningTimeCount/deptLearningTimeDetail.html?resId='+resId+"&nodeIds="+nodeIds+"&from=personal&timeRange="+$("#timeRange").val(),
+									title : '资料学习明细',
+									width : '90%',
+									height : '85%'
+						});
+				});
+					}
+				});
+		});
+	function cleanAll(){
+		$("#timeRange").val("");
+	}
+	
+	function getCheckedNodes(){
+		var checkedNodes = $.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes();
+		var nodeIds="";
+		if(checkedNodes.length>0 && checkedNodes!=""){
+			for(var i=0;i<checkedNodes.length;i++){
+				//节点类型时资料
+				if(checkedNodes[i].type=='1'){
+					nodeIds+=checkedNodes[i].id;
+					nodeIds+=",";
+				}
+			}
+		}
+		if(nodeIds!=""){
+			nodeIds=nodeIds.substring(0,nodeIds.length-1);
+		}
+		return nodeIds;
+	}
+	
+	function searchLearnTime(){
+		var checkedNodes = $.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes();
+		if(checkedNodes.length==0){
+			layer.msg('请先选择左侧资料类型', {icon : 0});
+			return false;
+		  }
+		TableInit.refTable('right_table');
+	}
+
+</script>

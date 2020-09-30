@@ -1,0 +1,309 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" id="form">
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls ">
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+                         	 <label class="col-md-2 control-label"> 申请人：</label>
+                            <div class="col-md-3">
+                            	<input id="cruDeptId" name="cruDeptId" type="hidden"/>
+	                         	<input type="text" id="userName" unselectable="on" onclick="openSelectZtree({'id':'userId','name':'userName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})" class="form-control" >
+		                          <input type="hidden" id="userId" name="userId" /><!-- 人员ID隐藏域 -->
+                            
+                            </div>
+                            <label class="col-md-2 control-label"> 加班日期：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" name="timeRange"/>
+							</div>
+                        </div>
+						<div class="form-group">
+							
+							<label class="col-md-2 control-label"> 流程状态：</label>
+							<div class="col-md-3">
+								 <select id="subflag" name="subflag" class="form-control" ></select>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="col-md-12" style="text-align: center">
+									<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table1')">
+										查&nbsp;&nbsp;询</button>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<button type="button" class="btn btn-primary"
+										onclick="clearAll();">
+										重&nbsp;&nbsp;置</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			 <div class="list_button_area">
+                 <button class="list_table_btn2"
+                        onclick="exportDate()">
+                    <span class="glyphicon glyphicon-chevron-right"></span> 导出
+                </button> 
+            </div> 
+			<!--bootstrap-table表格-->
+			<table id="right_table1"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script>
+<script type="text/javascript">
+	$("#cruDeptId").val(getcookie("deptid"))
+	 Dictionary.init({mark:'kqcx_lczt',type:'1',position:"subflag",domType:"select",name:"subflag"});
+	Dictionary.init({mark:'overTimeType',type:'1',position:"overTimeType",domType:"select",name:"overTimeType"});
+	//参考：http://www.layui.com/laydate/
+	//绑定日期输入input
+	laydate.render({
+		elem : '#time' //指定元素
+	});
+	//日期范围
+	laydate.render({
+		elem : '#timeRange',
+		range : true
+	});
+	
+	//起草
+	function draft(){
+		  var resId = $('#left_ul').find('a.active').attr("id");
+		  MyLayer.layerOpenUrl({url:'/modules/zhbg/kqgl/overTime/overTimeEditForm.html?oper=NEW&resId=' + resId,title:'起草加班信息'})
+	}
+	//定义bootatrap-table数据列
+	//    sortable：开启列排序，其他参考API
+	var right_table_col = [
+{
+	field : 'id',
+	title : '序号',
+	width : '5%',
+	order : "desc",
+	align : "center",
+	formatter : function(value, row, index) {
+		//计算序号，并存放业务ID，及已办事项ID
+		var pageSize = $('#right_table1').bootstrapTable(
+				'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+		var pageNumber = $('#right_table1').bootstrapTable(
+				'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+		var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+		return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"
+				+ orderNum + "</span>";
+	}
+},
+{
+	field : 'applicationUnitName',
+	title : '申请单位',
+	width : '10%',
+	align : "center"
+},
+{
+	field : 'creUserName',
+	title : '申请人',
+	width : '10%',
+	align : "center"
+},
+
+{
+	field : 'overTimeDate',
+	title : '加班日期',
+	width : '10%',
+	align : "center"
+},
+{
+	field : 'startStopTime',
+	title : '加班时间',
+	width : '13%',
+	align : "center",
+},
+{
+	field : 'overTimeType',
+	title : '加班类型',
+	width : '8%',
+	align : "center",
+	formatter : function(value, row, index) {
+		 if (value == "0") {
+			return "按天";
+		} else if (value == "1") {
+			return "按小时";
+		}
+		 return ""
+	}
+},
+
+ {
+	field : 'longTime',
+	title : '加班时长',
+	width : '7%',
+	order : "desc",
+	align : "center",
+	
+},{
+        field: 'subflag'
+        , title: '流程状态'
+        , width: '8%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+	        	if(value == Config.subflag){
+	           		return "审批中";
+	           	}else if(value == Config.approvalflag){
+	           		return "审批通过";
+	           	}else if(value == Config.noApprovalflag){
+	           		return "审批不通过";
+	           	}else if(value == Config.removeflag){
+	           		return "撤办";
+	           	}else if(value == Config.startflag){
+	           		return "草稿";
+	           	}
+           }
+    }
+];
+
+	$(document)
+			.ready(
+					function(e) {
+						//初始化表格
+						TableInit
+								.init({
+									domId : "right_table1",
+									url : "/zhbg/kqgl/overTimeQuery/getlistBootHql",
+									columns : right_table_col,
+									queryParams : function(params) {
+										var resId = $('#left_ul').find('a.active').attr("id");
+										//这里将各个查询项添加到要传递的参数中
+										//                可以做一些校验
+										params.timeRange = $("#timeRange").val();
+										params.userId = $("#userId").val();
+						                params.subflag = $("#subflag").val();
+										return params;
+									},
+									readOnlyFn : function() {
+										$('tr.readOnly')
+												.find('td:not(:last)')
+												.unbind('click')
+												.bind(
+														'click',
+														function(e) {
+															//                    取消事件冒泡
+															var evt = e ? e
+																	: window.event;
+															if (evt.stopPropagation) {
+																evt
+																		.stopPropagation();
+															} else {
+																evt.cancelBubble = true;
+															}
+															//取消事件冒泡 end
+															var id = $(this)
+																	.parent()
+																	.find(
+																			"span[data-id]")
+																	.attr(
+																			"data-id");
+															var resId = $('#left_ul').find('a.active').attr("id");
+															//var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+															//                    取消事件冒泡 end
+															//MyLayer.layerOpenUrl({url : '/modules/zhbg/kqgl/overTime/overTimeReadOnlyForm.html?id='+ id+ "&oper=READ",title : '只读'});
+															 MyLayer.layerOpenUrl({url: '/modules/zhbg/kqgl/overTime/overTimeReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读详情"});
+														});
+									}
+								});
+					});
+
+	//    表格数据项的操作
+	var list = {
+		editFun : function(id) {
+			 var resId = $('#left_ul').find('a.active').attr("id");
+			MyLayer.layerOpenUrl({
+				url : '/modules/zhbg/kqgl/overTime/overTimeEditForm.html?id='
+						+ id + "&oper=EDIT&resId=" + resId,
+				title : "修改"
+			})
+		},
+		deleteFun : function(id) {
+			var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+            	url: '/zhbg/kqgl/overTime/deleteoverTime?id=' + id + "&resId=" + resId,
+                tableId:'right_table1'
+            })
+		},
+		readFun : function(id) {
+			MyLayer.layerOpenUrl({
+				url : '/modules/zhbg/kqgl/overTime/overTimeEditForm.html?id='
+						+ id + "&oper=EDIT",
+				title : "修改"
+			})
+			
+		},
+	}
+	/**
+	 * 导出按钮的事件
+	 */
+	 function exportDate () {
+	    	layer.confirm("是否导出查询的所有信息？", function(e) {
+	    		layer.close(e);
+		    		$.ajax({
+						url : "/zhbg/kqgl/overTime/getCnt",
+						data : {
+							userId: $("#userId").val(),
+		    				subflag:$("#subflag").val(),
+		    				timeRange : $("#timeRange").val() //时间
+							 
+						},
+						type : "post",
+						success : function(data){
+							if( data.cnt > 0){ //0 查询有数据， 可导出
+								$('#form').attr('action','/zhbg/kqgl/overTime/export');
+								$('#form').attr('method','get');
+								$("#form").submit();
+							}else{
+								layer.msg('暂无可导出信息！',{icon:0}); //没有数据时弹出提示信息
+							}
+						}
+					})
+	    	})
+	    	   
+	    };
+	 //清空查询条件
+	function clearAll(){
+		$("#timeRange").val("");
+		$("#subflag").val("");
+		$("#userName").val("");
+		$("#userId").val("");
+	}
+</script>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <div id="positionNameDiv" style="display: none;"></div>
+    <form class="form-horizontal" id="form">
+    	<input type="hidden" id="contentId" name="contentId"><!-- 信息ID -->
+    	<input type="hidden" id="resId" name="resId"><!-- 资源ID -->
+        <input type="hidden" id="subflag" name="subflag" value="">
+        <input type="hidden" id="level" name="level" value="">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">指定部门</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">通知部门：</label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                        	<input type="hidden" id="deptId" name="deptId" /><!-- 部门ID隐藏域 -->
+                        	<input type="text" id="deptName" unselectable="on" name="deptName" onclick="openTree();" class="form-control">
+                        	<span class="input-group-addon" style="cursor: pointer;"
+                        		onclick="openTree();">
+                            	<span class="glyphicon glyphicon-user" title="选择部门"></span>
+                        	</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">指定群组</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">群组：</label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <input type="hidden" id="sysUserId" name="sysUserId" /><!-- 通知人ID隐藏域 -->
+                            <input type="hidden" id="sysGrupId" name="sysGrupId" /><!-- 人群ID隐藏域 -->
+                            <input type="hidden" id="sysGrupName" name="sysGrupName" /><!-- 人群名称隐藏域 -->
+                            <input type="text" id="sysUserName" unselectable="on" name="sysUserName" onclick="openNoticeZtree();" class="form-control">
+                            <input type="hidden" id="sysDeptId" name="sysDeptId" /><!-- 人群ID隐藏域 -->
+                            <span class="input-group-addon" style="cursor: pointer;"
+                                  onclick="openNoticeZtree();">
+                            	<span class="glyphicon glyphicon-user" title="选择群组"></span>
+                        	</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">指定职务权限</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="hidden" id="positionDeptId" name="positionDeptId" value="">
+                    <label for="" class="col-md-2 control-label">职务权限：</label>
+                    <div class="col-md-10" id="positionName" name="positionName">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 正序表格，末行添加 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">指定部门下的职务权限</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12 p-f-60">
+               <!-- 功能按钮区域-->
+               <div style='margin-bottom: 3px'>
+                   <button class="list_table_btn2 addTR" type="button" id='addId'>
+                       <span class="glyphicon glyphicon-plus-sign"></span> 添加
+                   </button>
+                   <button class="list_table_btn2 allDelete" type="button" id="deleteId">
+                       <span class="glyphicon glyphicon-remove"></span> 删除
+                   </button>
+               </div>
+               <div class="table__scrollable-y">
+                   <div class="table__header-wrapper">
+                        <table class="table table-hover table-striped m-b-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%"  class="text-center">
+                                        <input type="checkbox" id="checkboxSuccess" value="option1">
+                                    </th>
+                                    <th style="width: 8%" class="text-center">
+										 编号
+                                    </th>
+                                    <th style="width: 27%" data-field="deptName" class="text-center">
+										<span class="required" style="color: red;">*</span>
+										部门
+                                    </th>
+                                    <th style="width: 60%" data-field="positionName" class="text-center">
+										<span class="required" style="color: red;">*</span>
+										职务权限
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                   </div>
+                   <div class="table_body-wrapper">
+                       <table class="table table-hover table-striped table-reset js-disk-row" id="otherPeople" style="border: 0px">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+	<div class="form_btn_area" style="text-align: center;">
+	    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="saveData();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+	    <button class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+	</div>
+<script type="text/javascript" src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/static/core/jquery-serializejson/jquery.serializejson.js"></script>
+<script type="text/javascript" src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/core/nodetpl.min.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-util.js"></script>
+<script type="text/javascript" src="/static/core/layer/layer.js"></script>
+
+<script type="text/javascript" src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/modules/system/component/groupTree/js/groupUserTree.js"></script>
+<script type="text/javascript" src="/modules/system/component/groupTree/js/noticeUserTree.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/modules/wenjuan/authority/js/deptAuthorityInfo.js"></script>
+<script name="main" type="text/template">
+    <?for(var i = 0; i < @data.length; i++) {?>
+    <tr>
+        <td class="text-center" style="width: 5%">
+            <input type="checkbox" name="checkboxName" value="option1">
+			<input type="hidden" name="id" value="<?=@data[i].id ?>">
+        </td>
+        <td class="text-center" name="numName" style="width: 8%"><?=(i+1)?></td>
+        <td class="text-center" style="width: 27%">
+			<div class="input-group">
+				<input type="hidden" id="deptId<?=(i+1)?>" value="<?=@data[i].deptId ?>" name="deptId" /><!-- 部门ID隐藏域 -->
+				<input type="text" id="deptName<?=(i+1)?>" unselectable="on" value="<?=@data[i].deptName ?>" name="deptName"
+					onclick="openDeptTree('<?=(i+1)?>');" class="form-control">
+                <span class="input-group-addon" style="cursor: pointer;"
+                      onclick="openDeptTree('<?=(i+1)?>');">
+                <span class="glyphicon glyphicon-user" title="选择部门"></span>
+                </span>
+            </div>
+        </td>
+        <td class="text-center" style="width: 60%">
+            <div class="col-md-10 positionName">
+            </div>
+        </td>
+    </tr>
+  <?}?>
+</script>
+<script type="text/javascript">
+    scrollTop.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+﻿--1.更改Q2的关联关系
+
+--查询Q2的关联关系，适当调整内部门类code是否为Q2
+select s.*
+  from tables_relation s
+ start with s.m_table_name = 'q2'
+connect by prior s.s_table_name = s.m_table_name
+ order by rownum asc;
+
+--根据门类code去修改关联关系为archive_no
+ update tables_relation t set t.m_col_name='archive_no',t.s_col_name='archive_no' where t.m_table_name='q2';

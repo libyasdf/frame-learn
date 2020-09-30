@@ -1,0 +1,192 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+
+                            <label class="col-md-1 control-label"> 日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="timeRange"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 会议名称：</label>
+                            <div class="col-md-3">
+                               <input class="form-control" type="text" id="holdDept" />
+                            </div>
+                            <label class="col-md-1 control-label"> 会议室：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="meetingRoom" name="meetingRoom" >
+                                  <!--   <option>---请选择---</option>
+                                    <option>第一会议室</option>
+                                    <option>第二会议室</option> -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 重&nbsp;&nbsp;置
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+            <!--<div class="list_button_area">-->
+                <!--<button class="list_table_btn2"-->
+                        <!--onclick="MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingSignIn/meetingSignInList.html',title:''})">-->
+                    <!--<span class="glyphicon glyphicon-plus-sign"></span>-->
+                <!--</button>-->
+            <!--</div>-->
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+Dictionary.init({position:"meetingRoom",mark:"meeting_room",type:"1",name:"meetingRoom",domType:"select"});
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center"
+    }, {
+        field: 'dw'
+        , title: '会议名称'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'hys'
+        , title: '会议室'
+        , width: '9%'
+        , sortable: true
+        , align:"center"
+    },{
+        field: 'chcs'
+        , title: '应到人数'
+        , width: '10%'
+        , sortable: true
+        , align:"center"
+    },{
+        field: 'khcs'
+        , title: '实到人数'
+        , width: '10%'
+        , sortable: true
+        , align:"center"
+    }
+//        {
+//        field: 'cz'
+//        , title: '操作'
+//        , width: '18%'
+//        , align:"center"
+//        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+//            var opt = value.split(",");
+//            var html = "";
+//            for (var i = 0; i < opt.length; i++) {
+//                if (opt[i] == "add") {
+//
+//                } else if (opt[i] == "update") {
+//                    html +="<i class='icon iconfont icon-edit' onclick=\'list.editFun("+row.id+")\'></i>&nbsp;&nbsp;"
+//                } else if (opt[i] == "delete") {
+//                    html += "<i class='icon iconfont icon-delete' onclick=\'list.deleteFun("+row.id+")\'></i>"
+//                }
+//            }
+//            return html;
+//        }
+//    }
+    ];
+    
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mock/zhbg/hygl/meetingSignIn/meetingsSignInList.json",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.directorName = $('#queryDiv input[name=\'meetingRoom\']').val();
+                params.mailName = $('#queryDiv input[name=\'rangeTime\']').val();
+                params.status = $('#queryDiv input[name=\'meetingName\']').val();
+                params.status = $('#queryDiv input[name=\'applyDept\']').val();
+                return params;
+            },
+            readOnlyFn:function(){
+//                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+////                    取消事件冒泡
+//                    var evt = e ? e : window.event;
+//                    if (evt.stopPropagation) {
+//                        evt.stopPropagation();
+//                    }else {
+//                        evt.cancelBubble = true;
+//                    }
+////                    取消事件冒泡 end
+//                    MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingSignIn/meetingSignInList.html',title:'签到'});
+//                });
+            }
+        });
+    });
+
+//    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'modules/ldztc/jzztc/sendMailEditForm.html?id='+id,
+                title:"修改"
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'../index.html?id=' + id,
+                tableId:'right_table'
+            })
+        }
+    }
+
+</script>

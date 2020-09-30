@@ -1,0 +1,74 @@
+.vertify-panel {
+	font-size: 12px;
+	line-height: 25px;
+	float: left;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	text-align: left;
+}
+
+.vertify-panel p {
+	margin: 12px 0;
+}
+
+.vertify-tree,
+.vertify-details {
+	height: 100%;
+	width: 83%;
+	border: 0px solid gray;
+}
+
+.vertify-tree {
+	height: 100%;
+	width:  16%;
+	overflow: auto;	
+}
+
+.vertify-statistics p {
+	margin-left: 10px;
+	padding-left: 25px;
+	background-position: 5px center;
+}
+
+.vertify-statistics .num {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #CF0000;
+}
+
+.panel-center {
+	height: 100%;
+	widht:100%;
+	clear: both;
+}
+
+.x-unselectable {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: ignore;
+}
+
+/*******************tree**********/
+.vertify-tree ul {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.vertify-tree li ul {
+	margin-left: 15px;
+}
+
+/****/
+	#treeDemo{
+		padding-top:0px;
+	}
+	.folderBar{
+		padding-left:15px;
+		padding-top:5px;
+	}
+
+ul{ list-style:none;padding:0px;}

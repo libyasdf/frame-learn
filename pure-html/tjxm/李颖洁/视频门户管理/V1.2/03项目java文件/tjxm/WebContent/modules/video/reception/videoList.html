@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>视频列表</title>
+		<link rel="stylesheet" type="text/css" href="/modules/video/reception/css/bootstrap.css">
+		<link href="/modules/video/reception/css/style.css" rel="stylesheet">
+		<link href="/modules/video/reception/css/videoList.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="ysp-header">
+			<div class="logocon clearFloat">
+				<img src="images/logo-ysp.png" class="fl" />
+				<div class="fl searchBox">
+					<input type="text" name="" id="searchText" value="" />
+					<input type="button" id="search" onclick="search('1')" value="搜索" />
+				</div>
+				<div class="userBox fr">
+					<img id="userImg" src="/static/images/login_user.png" width="40" height="40" alt="" style="border-radius:50%;"  />
+					<span id="userInfo" class="userInfo"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/main.html" >个人门户</a>&nbsp;&nbsp;|
+					<a href="#" onclick="logout()">注销</a>&nbsp;&nbsp;
+				</div>
+				<span class="history fr" id="history"><img src="images/lishi.png" />&nbsp;&nbsp;观看历史</span>
+			</div>
+		</div>
+		<span class="nav-line"></span>
+		<div class="ysp-nav">
+			<span class="glyphicon glyphicon-chevron-left nav-btn-left" style="display:none"></span>
+			<ul class="ysp-navList clearFloat" id="columns">
+				<li class="fl" onclick="nav('1')">首页</li>
+			</ul>
+			<span class="glyphicon glyphicon-chevron-right nav-btn-right" style="display:none"></span>
+		</div>
+		<div class="ysp-con">
+			<p class="title" id="title"></p>
+			<div class="yspList clearFloat" >
+				<ul class="yspList-right clearFloat" id="uls">
+
+				</ul>
+			</div>
+			<!-- 分页 -->
+			<div id="pageBox" class="pageBox"></div>
+		</div>
+		<div class="ysp-footer">
+			
+		</div>
+		<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+		<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+		<script src="/static/core/layer/layer.js"></script>
+		<script src="/modules/video/reception/js/jquery.pagination.min.js"></script>
+		<!--<script src="/modules/video/reception/js/displayVideo.js"></script>-->
+		<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+		<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+		<script src="/common/js/config.js"></script>
+		<script type="text/javascript">
+	
+			var columnId;
+			var columnName;
+			var flag;
+			$(document).ready(function(){
+				//获取用户头像
+				$.ajax({
+					type: 'get',
+					url: '/user/getUserImg',
+					dataType: "json",
+					success: function(data) {
+						if (data.flag) {
+							$("#userImg").prop("src",data.path);
+						} else {
+							$("#userImg").prop("src","/static/images/login_user.png");
+						}
+					},
+					error: function() {
+						$("#userImg").prop("src","/static/images/login_user.png");
+					}
+				});
+				$("#userInfo").text(getcookie("usernm"))
+				//alert(getcookie("usernm"))
+				var theRequest = GetRequest();
+				columnId = theRequest.columnId;
+				columnName = theRequest.columnName;
+				flag = theRequest.flag
+				if(flag=='1'){
+					//点击搜索跳转过来
+					$("#searchText").val(columnName)
+				}
+				loadHistory("0");
+				$.post("/video/background/column/getHomePageColumns", {},function(data){
+     //设置导航栏标题
+                    for(var i=0;i<data.length;i++){
+                        if(data[i].id==columnId){
+                            columnName=data[i].columnName;
+                            //$("#title").text(data[i].columnName)
+                            str = "<li class='fl checked' id='" + data[i].id + "'  onclick='nav(\""+data[i].id+"\")'>" + data[i].columnName + "</li>";
+                        }else{
+                            str = "<li class='fl' id='" + data[i].id + "'  onclick='nav(\""+data[i].id+"\")'>" + data[i].columnName + "</li>";
+                        }
+
+                        $("#columns").append(str)
+                        str=""
+                    }
+                    isShowNavBtn()  // 初始化菜单左右按钮滚动按钮
+
+                })
+				 loadData(columnId,flag,columnName)
+				
+			})
+			
+			//加载内容数据
+			function loadData(columnId,flag,columnName){
+				if(flag=="1"){
+					//点击的是搜索
+					$("#columns li").removeClass('checked')
+				}
+				//视频门户首页导航栏上的栏目
+				var str;
+				var columnName;
+				 //历史记录
+                //loadHistory("0");
+				
+					//设置页面显示数据
+					var lis;
+					var total;
+					$.post("/video/content/getHomePageContent", { columnId: columnId, pageNumber: 1,pageSize:12,flag:flag,columnName:columnName },function(data){
+						console.info(data)
+						 $("#uls").empty();
+						var data1 = data.data.pageData.data.rows;
+						 total = data.data.pageData.data.total;
+						 if(total!=0 && flag!='1'){
+							 //$("#title").text(columnName)
+						 }
+						 var pageNumber = data.data.pageData.pageNumber;
+						 var pageSize = data.data.pageData.pageSize;
+						 var totalPage = data.data.totalPage
+						 
+						 
+						for(var i=0;i<data1.length;i++){
+							lis="<li class='fl' onclick='display(\""+data1[i].id+"\",\""+data1[i].uuid+"\",\""+data1[i].fileName+"\",\""+data1[i].title+"\",\""+data1[i].videoId+"\")' ><div class='imgBox'><img src='" + data1[i].imgPath + "' /></div><div class='articleTitle'><h4>" + data1[i].title + "</h4><div class='bofangliang'>播放量<span id='" + data1[i].id + "'>" + data1[i].playTimes + "</span></div></div></li>"
+							//alert(lis)
+							$("#uls").append(lis)
+						}
+                        // 显示当前菜单
+                        displayCurrentMenu();
+						 //alert(totalPage)
+						$("#pageBox").pagination({
+							currentPage: pageNumber,
+							totalPage: totalPage,
+							isShow: true,
+							count: pageSize,
+							homePageText: "首页",
+							endPageText: "尾页",
+							prevPageText: "上一页",
+							nextPageText: "下一页",
+							callback: function(current,a,b,c,d) {
+								$.post("/video/content/getHomePageContent", { columnId: columnId, pageNumber: current,pageSize:12,flag:flag,columnName:columnName },function(data){
+									var data1 = data.data.pageData.data.rows;
+									 $("#uls").empty();
+									for(var i=0;i<data1.length;i++){
+										lis="<li class='fl' onclick='display(\""+data1[i].id+"\",\""+data1[i].uuid+"\",\""+data1[i].fileName+"\",\""+data1[i].title+"\",\""+data1[i].videoId+"\")' ><div class='imgBox'><img src='" + data1[i].imgPath + "' /></div><div class='articleTitle'><h4>" + data1[i].title + "</h4><div class='bofangliang'>播放量<span id='" + data1[i].id + "'>" + data1[i].playTimes + "</span></div></div></li>"
+										$("#uls").append(lis)
+									}
+								} );
+								
+							}
+						});
+					} );
+				
+			}
+			//导航栏点击切换效果
+			function nav(columnId){
+				$("#columns li").removeClass('checked')
+				$("#columns li[id='"+columnId+"']").addClass('checked')
+				//$(this).addClass('checked');
+				//$(this).siblings('li').removeClass('checked');
+				//alert($(this).siblings('li').length)
+				if(columnId!='1'){
+					loadData(columnId,"","")
+					//window.location="/modules/video/reception/videoList.html?columnId="+columnId
+				}else{
+					window.location="/modules/video/reception/videoHomePage.html"
+				}
+				
+			}
+			
+			//添加历史查看记录
+			function addHistory(id){
+				$.post("/video/background/historyRecord/save", { contentId: id},function(){
+					
+				} );
+			}
+			//注销
+			function logout(){
+				document.location.href = Config.sso_logout_url+"?gotoURL="+path;
+			}
+			//搜索
+			function search(flag){
+				if($("#searchText").val()){
+					 loadData("",flag,$("#searchText").val())
+					//window.location="/modules/video/reception/videoList.html?columnName="+$("#searchText").val()+"&flag="+flag
+				}else{
+					//alert("2")
+					layer.msg("请输入搜索内容！", {icon: 0});
+				}
+				
+			}
+
+
+			// 加载历史记录
+            function loadHistory(flag) {
+                //console.info("历史记录")
+                var historyStrs;
+                $.post("/video/background/historyRecord/getLastestHistoryRecord", {}, function (data) {
+                    //console.info(data)
+
+                    var data = data.data
+                    if (data.length > 0) {
+                        $("#historyList").empty();
+                        if (flag == "0") {
+                            $("#history").append("<ul class='history-list' id='historyList'></ul>")
+                        }
+                        for (var i = 0; i < data.length; i++) {
+                            historyStrs = "<li onclick='intoIndex(\"" + data[i].contentId + "\",\"" + data[i].videoId + "\",\"" + data[i].fileName + "\",\"" + data[i].contentTitle + "\",\"" + data[i].uuid + "\")'><p>" + data[i].contentTitle + ":" + data[i].fileName + "</p></li>"
+                            $("#historyList").append(historyStrs)
+                        }
+                        $("#history").append("<span class='history-triangle glyphicon glyphicon-triangle-top'></span>")
+                        $("#historyList").find("li").each( function() {
+                            $(this).mouseenter(function() {
+                                $(this).css({
+                                    backgroundColor:'#0073aa',
+                                    color:'#ffffff'
+                                });
+                            } );
+                            $(this).mouseleave(function() {
+                                $(this).css({
+                                    backgroundColor:'#ffffff',
+                                    color:'#000000'
+                                });
+                            } );
+                        } );
+                    }
+
+
+
+                });
+            }
+        	//播放
+			function display(id,uuid,fileName,title,videoId){
+				
+				displayFile(id,uuid,fileName,title,videoId);
+			}
+			function displayFile(id,fileUuid,fileFullName,title,videoId){
+				//alert(videoId)
+				//判断当前用户是否可以再打开一个页面结束
+					var getVideoUrl = Config.hBServerIp+"/api/v1/load_balancer/vod_play_url?AccessToken="+Config.AccessToken
+						+"&OriginalFileUuid="+fileUuid+"&ServiceType=vod_http&FileExtName=.mp4";
+				
+					$.ajax({
+						type:"GET",
+						url:getVideoUrl,
+						async: true,
+						//dataType:"json",
+						contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+						success:function(data){
+							/* //当前电脑不存在学习页面
+							if(isRecord == "1"){
+								setCookie("isLearning","isLearning");
+							} */
+							
+							
+							
+							//获取播放地址并转码
+							var videoUrl = encodeURIComponent(data[0].Url);
+							//window.open("/modules/video/reception/displayVideoAndPdf/playVideo.html?videoUrl="+videoUrl+"&infoId="+id+"&infoName="+encodeURIComponent(title)+"&fileFullName="+encodeURIComponent(fileFullName));
+							window.open("/modules/video/playVideo/index.html?videoUrl="+videoUrl+"&infoId="+id+"&infoName="+encodeURIComponent(title)+"&videoId="+videoId+"&fileFullName="+encodeURIComponent(fileFullName));
+							//window.location="/modules/video/playVideo/index.html?videoUrl="+videoUrl+"&infoId="+id+"&infoName="+encodeURIComponent(title)+"&videoId="+videoId+"&fileFullName="+encodeURIComponent(fileFullName)
+						},
+						error:function(data){
+							layer.msg("视频还未转码成功，稍后再试！", {icon: 0});
+						}
+					});
+
+			}
+			
+			function intoIndex(contentId,videoId,fileName,contentTitle,uuid){
+				//判断当前用户是否可以再打开一个页面结束
+				var getVideoUrl = Config.hBServerIp+"/api/v1/load_balancer/vod_play_url?AccessToken="+Config.AccessToken
+					+"&OriginalFileUuid="+uuid+"&ServiceType=vod_http&FileExtName=.mp4";
+
+				$.ajax({
+					type:"GET",
+					url:getVideoUrl,
+					async: true,
+					//dataType:"json",
+					contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+					success:function(data){
+						//获取播放地址并转码
+						var videoUrl = encodeURIComponent(data[0].Url);
+						//window.open("/modules/video/playVideo/index.html?videoUrl="+videoUrl+"&infoId="+id+"&infoName="+encodeURIComponent(title)+"&videoId="+videoId+"&fileFullName="+encodeURIComponent(fileFullName));
+					        window.open("/modules/video/playVideo/index.html?videoUrl="+videoUrl+"&infoId="+contentId+"&infoName="+encodeURIComponent(contentTitle)+"&videoId="+videoId+"&fileFullName="+encodeURIComponent(fileName));
+						//window.location="/modules/video/playVideo/index.html?videoUrl="+videoUrl+"&infoId="+contentId+"&infoName="+encodeURIComponent(contentTitle)+"&videoId="+videoId+"&fileFullName="+encodeURIComponent(fileName);
+					},
+					error:function(data){
+						layer.msg("视频还未转码成功，稍后再试！", {icon: 0});
+					}
+				});
+			}
+
+            /* 在菜单中显示当前菜单 */
+            function displayCurrentMenu(){
+                var Ul_Wrapper =  $('.ysp-nav').width();
+                var Ul_X = $('#columns')[0].offsetLeft;
+                var activeMenu = $('#columns').find('.checked');
+                var activeMenu_X = activeMenu[0].offsetLeft;
+                // console.log(activeMenu_X,Ul_X,Ul_Wrapper,Math.abs(Ul_X)+Ul_Wrapper);
+                var ul_Left = '';
+                console.log(activeMenu_X,Ul_X,Ul_X+Ul_Wrapper)
+
+				if(activeMenu_X > Ul_X && activeMenu_X < Ul_X+Ul_Wrapper ){
+				    console.log('在当前页')
+				}else{
+				    console.log('未在当前页')
+
+                     $('#columns').css('left', -activeMenu_X)
+				}
+            }
+
+            /* 初始化菜单左右滚动按钮 */
+            function isShowNavBtn(){
+                var Ul_Wrapper =  $('.ysp-nav').width();
+                var Ul_Width = $('#columns').width();
+                console.error(Ul_Width,Ul_Wrapper)
+                if(Ul_Width <= Ul_Wrapper) {
+                    $('.nav-btn-left,.nav-btn-right').hide();
+                }else{
+                    $('.nav-btn-right').click(function(){
+                        clearTimeout(NavScroll.scrollTimer)  // 清除上个定时器
+                        // 开启一个定时器 防止连续多次点击
+                        NavScroll.scrollTimer = setTimeout(function(){
+                            NavScroll.navScroll('left')
+                        },500)
+                    })
+                    $('.nav-btn-left').click(function(){
+                        clearTimeout(NavScroll.scrollTimer)  // 清除上个定时器
+                        // 开启一个定时器 防止连续多次点击
+                        NavScroll.scrollTimer = setTimeout(function(){
+                            NavScroll.navScroll('right')
+                        },500)
+                    })
+
+                    // 鼠标移入显示切换菜单按钮
+                    $('.ysp-nav').mouseenter(function(){
+                        $('.nav-btn-left,.nav-btn-right').show()
+                    })
+                    // 鼠标移出隐藏切换菜单按钮
+                    $('.ysp-nav').mouseleave(function(){
+                        $('.nav-btn-left,.nav-btn-right').hide()
+                    })
+                }
+            }
+
+            // 导航滚动对象
+            var NavScroll = {
+                scrollTimer:'',  // 定时器
+                navScroll:function(direction){   // 点击左右按钮滚动方法   direction的值应为left或者right
+                    var Ul_Left =  $('.ysp-navList').position().left;
+                    var Ul_Wrapper =  $('.ysp-nav').width();
+                    var Li_width = $('.ysp-navList').children('li').outerWidth();
+                    var Ul_Width = $('#columns').width();
+                    var Ul_X =  $('#columns')[0].offsetLeft;
+                    // console.log(Ul_Left,Ul_Wrapper,Ul_Width)
+                    // console.log(Ul_Width - Math.abs(Ul_Left),Ul_Wrapper)
+
+                    if(direction=='left'){
+                        if(Ul_Width < Ul_Wrapper || Ul_Width - Math.abs(Ul_Left) < Ul_Wrapper) return;
+                        if(Ul_Left > 0 || Math.abs(Ul_Left) < Ul_Wrapper) $('.ysp-navList').css('left',Ul_Left-(Ul_Wrapper-Li_width*2))
+                    }else if(direction=='right'){
+                        console.log(Ul_X)
+                        if(Math.abs(Ul_X) < Ul_Wrapper && Math.abs(Ul_X)<10 ) return;
+                        if(Ul_Left < 0) $('.ysp-navList').css('left',Ul_Left+(Ul_Wrapper-Li_width*2))
+                    }
+                }
+
+            }
+		</script>
+	</body>
+</html>

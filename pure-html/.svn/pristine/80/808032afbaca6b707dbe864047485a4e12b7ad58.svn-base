@@ -1,0 +1,11 @@
+update FLOW_WFLEVE set MEMO='副科长起草',BUTTONS='ghgl14,ghgl37' where WFLEVEID='2e9ef9009e3843c0b578aceb935b7644' and WORKFLOWID='fd8130ce3f604957b3eda7115e104384';
+
+update FLOW_WFLEVE set MEMO='正科长起草/审批',BUTTONS='ghgl06,ghgl07,ghgl14,ghgl37' where WFLEVEID='10e1c051cc18465db65a86ed61c55d24' and WORKFLOWID='fd8130ce3f604957b3eda7115e104384';
+
+update FLOW_WFLEVE set MEMO='处领导审批',BUTTONS='ghgl06,ghgl07,ghgl14,ghgl37' where WFLEVEID='baed11d6cff64db994392cf48de932d3' and WORKFLOWID='fd8130ce3f604957b3eda7115e104384';
+
+update FLOW_WFLEVE set MEMO='一般涉密人员（科）起草',BUTTONS='ghgl14,ghgl37' where WFLEVEID='cffe75f704c641348cdbcd4c3088d318' and WORKFLOWID='fd8130ce3f604957b3eda7115e104384';
+
+update FLOW_WFLEVE set MEMO='科领导审批',BUTTONS='ghgl06,ghgl07,ghgl14,ghgl37' where WFLEVEID='216a2c52065340bab2d6488cfcaee2d2' and WORKFLOWID='fd8130ce3f604957b3eda7115e104384';
+
+update FLOW_WFLEVE set MEMO='一般涉密人员（处）起草',BUTTONS='ghgl14,ghgl37' where WFLEVEID='758074e7dacc463e936b7828b1ac8856' and WORKFLOWID='fd8130ce3f604957b3eda7115e104384';

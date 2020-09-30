@@ -1,0 +1,10 @@
+{
+	"flag":"1",
+	"data":[{
+		"url":"#",
+		"name":"审批列表",
+		"style":"/static/images/ico_listsearch.png",
+		"url":"/modules/llg/waitDoList.html",
+		"id":"001001"
+	}]
+}

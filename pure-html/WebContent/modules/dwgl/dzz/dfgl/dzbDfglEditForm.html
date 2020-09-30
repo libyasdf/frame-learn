@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<form class="form-horizontal" id="form">
+    <!-- resId -->
+    <input name="resId" id="resId" type="hidden" value="">
+    <input name="partyId" id="partyId" type="hidden" value="">
+    <input name="id" id="id" type="hidden" value="">
+    <input name="partyOrganizationId" id="partyOrganizationId" type="hidden" value="">
+    <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 党组织：</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" value="" readonly id="partyOrganizationName" name="partyOrganizationName" >
+                        </div>
+                    </div>
+                    <div class="rowGroup" id="totalSumVal">
+                        <label for="" class="col-md-2 control-label"> <b style="color: red;">*</b> 本月实缴党费总额(元) ：</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control"  value="" readonly id="totalSum" name="totalSum">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 年份：</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" value="" id="annual" name="annual">
+                        </div>
+                    </div>
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 月份：</label>
+                        <div class="col-md-4">
+                            <select class="form-control" onchange="myFunction()" id="monthval" name="monthval">
+                                <option value="1">1月</option>
+                                <option value="2">2月</option>
+                                <option value="3" >3月</option>
+                                <option value="4">4月</option>
+                                <option value="5">5月</option>
+                                <option value="6">6月</option>
+                                <option value="7">7月</option>
+                                <option value="8">8月</option>
+                                <option value="9">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12" id="right_table">
+                <!--bootstrap-table表格-->
+               <div class="table1" style="width: 33%; float:left">
+                   <table id="right_table1"></table>
+               </div>
+                <div class="table2" style="width: 33%; float:left">
+                   <table id="right_table2"></table>
+               </div>
+                <div class="table3"style="width: 33%; float:left">
+                   <table id="right_table3"></table>
+               </div>
+
+               <!-- <th style="width: 33%" ><table id="right_table1"></table></th>
+                        <th style="width: 33%"><table id="right_table2"></table></th>
+                        <th style="width: 33%"><table id="right_table3"></table></th>-->
+
+
+                <!--     <table id ="" border="1">
+                         <tr>
+                             <td>季度</td>
+                             <td>月份</td>
+                             <td>形式</td>
+                             <td>主要内容</td>
+                         </tr>
+                     </table>-->
+                <br/>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </div>
+</form>
+
+
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="commitSave();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/jquery-serializejson/jquery.serializejson.min.js"></script>
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--文件上传js end-->
+<!-- <script src="/static/js/template/form.js"></script> -->
+<!--引入自己js-->
+<script src="/modules/dwgl/dzz/dfgl/js/dzbdfglEditForm.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="/modules/llg/js/taskPlanValidator.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#annual'
+        ,type: 'year'
+        ,done: function(value, date, endDate){
+            $("#annual").val(value);
+            TableInit.refTable('right_table1');
+            TableInit.refTable('right_table2');
+            TableInit.refTable('right_table3');
+            $('#totalSumVal').load();
+        }
+    });
+
+
+    var right_table_col1 = [
+        {
+            field: 'partyName'
+            , title: '党员姓名'
+            , width: '15%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+            var val = value;
+            if(value!=null&&value.length>3){
+                val = val.substring(0,3)+"...";
+            }
+            if(value==null){
+                val="-";
+            }
+            return "<span title='"+value+"' value='"+value+"'>" + val + "</span>";
+        }
+
+        }, {
+            field: 'approvedMonthPartyfee'
+            , title: '核定交纳金额'
+            , width: '5%'
+            , align: "center"
+        }, {
+            field: 'currentPaymentAmount'
+            , title: '实际交纳金额'
+            , width: '5%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                return "<input type=\"text\" class=\"form-control\" value=\""+value+"\"  id=\"currentPaymentAmount\" name=\"currentPaymentAmount\" >";
+
+                }
+            /* },  {
+             field: 'primaryCoverage'
+             , title: '主要内容'
+             , width: '25%'
+             , align: "center"
+             , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+             return "<textarea class=\"form-control\"  rows=\"3\" name=\"primaryCoverage\" maxlength=\"3990\" onchange=\"this.value=this.value.substring(0, 3990)\" onkeydown=\"this.value=this.value.substring(0, 3990)\" onkeyup=\"this.value=this.value.substring(0, 3990)\"  >"+value+"</textarea>";
+             }*/
+        }
+];
+    var right_table_col2 = [
+        {
+            field: 'partyName'
+            , title: '党员姓名'
+            , width: '15%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+            var val = value;
+            if(value!=null&&value.length>3){
+                val = val.substring(0,3)+"...";
+            }
+            if(value==null){
+                val="-";
+            }
+            return "<span title='"+value+"'>" + val + "</span>";
+        }
+        }, {
+            field: 'approvedMonthPartyfee'
+            , title: '核定交纳金额'
+            , width: '5%'
+            , align: "center"
+        }, {
+            field: 'currentPaymentAmount'
+            , title: '实际交纳金额'
+            , width: '5%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                return "<input type=\"text\" class=\"form-control\" value=\""+value+"\"  id=\"currentPaymentAmount\" name=\"currentPaymentAmount\" >";
+            }
+            /* },  {
+             field: 'primaryCoverage'
+             , title: '主要内容'
+             , width: '25%'
+             , align: "center"
+             , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+             return "<textarea class=\"form-control\"  rows=\"3\" name=\"primaryCoverage\" maxlength=\"3990\" onchange=\"this.value=this.value.substring(0, 3990)\" onkeydown=\"this.value=this.value.substring(0, 3990)\" onkeyup=\"this.value=this.value.substring(0, 3990)\"  >"+value+"</textarea>";
+             }*/
+        }
+    ];
+
+    var right_table_col3 = [
+        {
+            field: 'partyName'
+            , title: '党员姓名'
+            , width: '15%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+            var val = value;
+            if(value!=null&&value.length>3){
+                val = val.substring(0,3)+"...";
+            }
+            if(value==null){
+                val="-";
+            }
+            return "<span title='"+value+"'>" + val + "</span>";
+        }
+        }, {
+            field: 'approvedMonthPartyfee'
+            , title: '核定交纳金额'
+            , width: '5%'
+            , align: "center"
+        }, {
+            field: 'currentPaymentAmount'
+            , title: '实际交纳金额'
+            , width: '5%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                return "<input type=\"text\" class=\"form-control\" value=\""+value+"\"  id=\"currentPaymentAmount\" name=\"currentPaymentAmount\" >";
+            }
+            /* },  {
+             field: 'primaryCoverage'
+             , title: '主要内容'
+             , width: '25%'
+             , align: "center"
+             , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+             return "<textarea class=\"form-control\"  rows=\"3\" name=\"primaryCoverage\" maxlength=\"3990\" onchange=\"this.value=this.value.substring(0, 3990)\" onkeydown=\"this.value=this.value.substring(0, 3990)\" onkeyup=\"this.value=this.value.substring(0, 3990)\"  >"+value+"</textarea>";
+             }*/
+        }
+    ];
+    $(document).ready(function (e) {
+
+        //初始化表格
+        TableInit.init({
+            domId: "right_table1",
+            url: "/djgl/ddjs/dzz/dfgl/list",
+            pagination: false,	//不分页
+            striped:false,
+            columns: right_table_col1,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为箭头
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":""}
+                };
+            },
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.id=$.trim($("#partyOrganizationId").val())
+                params.year = $.trim($("#annual").val());
+                params.month = $.trim($("#monthval").val());
+                params.opertation = "Add";
+                params.pageNumber = 1;
+                return params;
+            },
+            responseHandler:function (res) {//参数sidePagination为server时，该方法必须返回total和rows
+                if (res.flag === '1'){
+                    $("#totalSum").val(res.data.totalSum) ;
+                    return {
+                        "total":res.data.total
+                        ,"rows":res.data.rows
+                    }
+                }else {
+                    layer.msg("加载列表发生错误!", {icon: 0});
+                }
+                return {};
+            }
+        })
+        //初始化表格
+        TableInit.init({
+            domId: "right_table2",
+            url: "/djgl/ddjs/dzz/dfgl/list",
+            pagination: false,	//不分页
+            striped:false,
+            columns: right_table_col2,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为箭头
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":""}
+                };
+            },
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.id=$.trim($("#partyOrganizationId").val())
+                params.year = $.trim($("#annual").val());
+                params.month = $.trim($("#monthval").val());
+                params.opertation = "Add";
+                params.pageNumber = 2;
+                return params;
+            },
+            responseHandler:function (res) {//参数sidePagination为server时，该方法必须返回total和rows
+                if (res.flag === '1'){
+                    $("#totalSum").val(res.data.totalSum) ;
+                    return {
+                        "total":res.data.total
+                        ,"rows":res.data.rows
+                    }
+                }else {
+                    layer.msg("加载列表发生错误!", {icon: 0});
+                }
+                return {};
+            }
+        })
+
+        //初始化表格
+        TableInit.init({
+            domId: "right_table3",
+            url: "/djgl/ddjs/dzz/dfgl/list",
+            pagination: false,	//不分页
+            striped:false,
+            columns: right_table_col3,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为箭头
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":""}
+                };
+            },
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.id=$.trim($("#partyOrganizationId").val())
+                params.year = $.trim($("#annual").val());
+                params.month = $.trim($("#monthval").val());
+                params.opertation = "Add";
+                params.pageNumber = 3;
+                return params;
+            },
+            responseHandler:function (res) {//参数sidePagination为server时，该方法必须返回total和rows
+                if (res.flag === '1'){
+                    $("#totalSum").val(res.data.totalSum) ;
+                    return {
+                        "total":res.data.total
+                        ,"rows":res.data.rows
+                    }
+                }else {
+                    layer.msg("加载列表发生错误!", {icon: 0});
+                }
+                return {};
+            }
+        })
+    });
+    function myFunction(){
+        TableInit.refTable('right_table1');
+        TableInit.refTable('right_table2');
+        TableInit.refTable('right_table3');
+        $('#totalSumVal').load();
+    }
+
+</script>
+
+</body>
+</html>

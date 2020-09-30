@@ -1,0 +1,184 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<!--<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">-->
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-details" >
+            <form class="form-horizontal" id="form1">
+            <div class="col-md-12 ">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 群组名称：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="sysGrupName" id="sysGrupName"/>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                </button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-15">
+                <div class="col-md-12">
+                    <div class="list_button_area">
+                        <button type="button" class="list_table_btn2" onclick="draft()">
+                            <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                        </button>
+                        <!--<button type="button" class="list_table_btn2" onclick="layer.msg('导出成功！', {icon: 1})">
+                            <span class="glyphicon glyphicon-plus-sign"></span> 导出
+                        </button>-->
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <!--bootstrap-table表格-->
+                    <table id="right_table"></table>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript">
+    // 刷新列表
+    function refreshPage() {
+        $("#right_table").bootstrapTable("refresh");
+    }
+
+    //清空查询条件
+    function clearAll() {
+        $("#sysGrupName").val("");	//群组名称
+    }
+
+    //起草
+    function draft(){
+        // 获取资源id
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({url:'/modules/wenjuan/content/diaowen-design/surveyGrupEditForm.html?oper=NEW&resId=' + resId,title:'新增通知群组'});
+    }
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    },{
+        field: 'sysGrupName'
+        , title: '群组标题'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'cz',
+        title: '操作'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            html += "<i class='glyphicon glyphicon-edit'  title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'> </i>&nbsp;&nbsp;"
+            html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            return html;
+        }
+    }];
+    var resId = $('#left_ul').find('a.active').attr("id");
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/survey/surveyDesign/getSurveyGrupList",
+            pagination:true,	//分页
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = resId;
+                params.sysGrupName = $("#sysGrupName").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/system/notice/noticeGrupReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "查看通知群组成员"});
+                });
+            }
+        });
+    });
+    //表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            debugger;
+            MyLayer.layerOpenUrl({
+                url: '/modules/wenjuan/content/diaowen-design/surveyGrupEditForm.html?id='+id+'&oper=EDIT&resId='+resId,
+                title: "修改通知群组"
+            })
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/system/noticeGrup/delete?noticeId=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+</script>

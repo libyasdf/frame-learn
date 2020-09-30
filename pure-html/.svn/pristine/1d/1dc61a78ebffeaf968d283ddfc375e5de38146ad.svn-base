@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+
+<title></title>
+<link rel="stylesheet"
+	href="/static/core/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
+<link href="/static/css/common/style.css" rel="stylesheet" />
+<link href="/static/css/common/form-public.css" rel="stylesheet" />
+<link rel="stylesheet"
+	href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+<link rel="stylesheet" href="/static/font/iconfont.css">
+<style type="text/css">
+	span{ white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;text-align:left}
+</style>
+</head>
+<body class="formpage_bj">
+	<div class="container-fluid formpage_area">
+		<form class="form-horizontal" id="form">
+			<!-- resId -->
+        	<input name="resId" id="resId" type="hidden" value="">
+			<!-- 流程字段-->
+			<input name="id" id="id" type="hidden" value="" />
+			<!-- 工作项ID -->
+			<input name="opertation" id="opertation" type="hidden" value="" />
+			<!-- 操作方法 -->
+			<!-- 流程字段结束 -->
+			<!-- 基本信息 -->
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">会务服务单位信息</span>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label"> 会务服务单位：</label>
+						<div class="col-md-4 form-view">
+							<span id="serviceDeptName" name="serviceDeptName"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">备注：</label>
+						<div class="col-md-10 form-view">
+							<span id="remark" name="remark"></span>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<!-- 基本信息结束 -->
+
+		</form>
+
+	</div>
+	<!-- 按钮区 -->
+	<div class="form_btn_area" style="text-align: center;">
+   	<button id="preserveBtn" class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>关闭</button>
+	</div>
+	<!-- 按钮区结束 -->
+
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script
+		src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script
+		src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+	<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+	<script src="/static/core/laydate/laydate.js"></script>
+	<!-- 流程相关 -->
+	<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+	<!-- 获取cookie值 -->
+	<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<!-- 引入自己模块功能的js -->
+	<script type="text/javascript" src="js/serviceDeptEdit.js"></script>
+	<!-- 数据渲染 -->
+	<script src="/static/js/common/displayData.js"></script>
+</body>
+</html>

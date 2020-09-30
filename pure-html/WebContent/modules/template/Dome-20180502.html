@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/table.css">
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+        <!-- 流程字段结束 -->
+        <!-- 倒序表格，首行添加 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">倒序表格，首行添加</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12 p-f-60">
+               <!-- 功能按钮区域-->
+               <div style='margin-bottom: 3px'>
+                   <!--<button type="button" class="btn btn-default" id='addId'>添加</button>
+                   <button type="button" class="btn btn-default" id="deleteId">删除</button>-->
+                   <button class="list_table_btn2 addTR" type="button" id='addId'>
+                       <span class="glyphicon glyphicon-plus-sign"></span> 添加
+                   </button>
+                   <button class="list_table_btn2 allDelete" type="button" id="deleteId">
+                       <span class="glyphicon glyphicon-remove"></span> 删除
+                   </button>
+               </div>
+               <div class="table__scrollable-y">
+                   <div class="table__header-wrapper">
+                        <table class="table  table-hover table-striped m-b-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%"  class="text-center">
+                                        <input type="checkbox" id="checkboxSuccess" value="option1">
+                                    </th>
+                                    <th style="width: 8%"  class="text-center">
+                                        编号
+                                    </th>
+                                    <th style="width: 15%"  class="text-center">
+                                        <span class="required">*</span>
+                                        姓名
+                                    </th>
+                                    <th style="width: 15%" data-field="age" class="text-center">
+                                        年龄
+                                    </th>
+                                     <th style="width: 15%" data-field="sex" class="text-center">
+                                        性别
+                                    </th>
+                                    <th >
+                                        地址
+                                        <span class="glyphicon glyphicon-exclamation-sign userTitle"
+                                                data-toggle="tooltip" 
+                                                data-placement="bottom" 
+                                                title="张三 二室管理员权限申请">
+                                        </span>
+                                    </th>
+                                    <th style="width: 10%"  class="text-center">
+                                        操作
+                                    </th>
+                                    <th style='width:17px;'></th>
+                                </tr>
+                            </thead>
+                        </table>
+                   </div>
+                   <div class="table_body-wrapper">
+                       <table class="table table-hover table-striped table-reset" id="otherPeople" style="border: 0px">
+                            <tbody>
+                                <tr class="no-records-found">
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                                <tr class="no-records-found">
+                                    <td class="text-center">2</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                                <tr class="no-records-found">
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                                <tr class="no-records-found">
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center">
+                                        <input type="checkbox" name="checkboxName" value="option1">
+                                    </td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                 <!-- 功能说明区域-->
+                <p class="bg-info" style="margin-top: 20px;">
+                    简单的 HTML 表格由 table 元素以及一个或多个 tr、th 或 td 元素组成。
+                </p>
+            </div>
+        </div>
+
+        <!-- 正序表格，末行添加 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">正序表格，末行添加</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12 p-f-60">
+                <!-- 功能按钮区域-->
+                <div style='margin-bottom: 3px'>
+                    <!--<button type="button" class="btn btn-default" id='addId'>添加</button>
+                    <button type="button" class="btn btn-default" id="deleteId">删除</button>-->
+                    <button class="list_table_btn2 addTR" type="button" id='addId1'>
+                        <span class="glyphicon glyphicon-plus-sign"></span> 添加
+                    </button>
+                    <button class="list_table_btn2 allDelete" type="button" id="deleteId1">
+                        <span class="glyphicon glyphicon-remove"></span> 删除
+                    </button>
+                </div>
+                <div class="table__scrollable-y">
+                    <div class="table__header-wrapper">
+                        <table class="table  table-hover table-striped m-b-0">
+                            <thead>
+                            <tr>
+                                <th style="width: 10%"  class="text-center">
+                                    <input type="checkbox" id="checkboxSuccess1" value="option1">
+                                </th>
+                                <th style="width: 8%"  class="text-center">
+                                    编号
+                                </th>
+                                <th style="width: 15%"  class="text-center">
+                                    <span class="required">*</span>
+                                    姓名
+                                </th>
+                                <th style="width: 15%" data-field="age" class="text-center">
+                                    年龄
+                                </th>
+                                <th style="width: 15%" data-field="sex" class="text-center">
+                                    性别
+                                </th>
+                                <th >
+                                    地址
+                                    <span class="glyphicon glyphicon-exclamation-sign userTitle"
+                                          data-toggle="tooltip"
+                                          data-placement="bottom"
+                                          title="张三 二室管理员权限申请">
+                                        </span>
+                                </th>
+                                <th style="width: 10%"  class="text-center">
+                                    操作
+                                </th>
+                                <th style='width:17px;'></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="table_body-wrapper">
+                        <table class="table table-hover table-borderd" id="otherPeople1" style="border: 0px">
+                            <tbody>
+                            <tr class="no-records-found">
+                                <td class="text-center">1</td>
+                                <td class="text-center">张三</td>
+                                <td class="text-center">18</td>
+                                <td>北京大兴龙天桥西34号</td>
+                                <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                            </tr>
+                            <tr class="no-records-found">
+                                <td class="text-center">2</td>
+                                <td class="text-center">张三</td>
+                                <td class="text-center">18</td>
+                                <td>北京大兴龙天桥西34号</td>
+                                <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                            </tr>
+                            <tr class="no-records-found">
+                                <td class="text-center">3</td>
+                                <td class="text-center">张三</td>
+                                <td class="text-center">18</td>
+                                <td>北京大兴龙天桥西34号</td>
+                                <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                            </tr>
+                            <tr class="no-records-found">
+                                <td class="text-center">4</td>
+                                <td class="text-center">张三</td>
+                                <td class="text-center">18</td>
+                                <td>北京大兴龙天桥西34号</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="checkboxName" value="option1">
+                                </td>
+                                <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- 功能说明区域-->
+                <p class="bg-info" style="margin-top: 20px;">
+                    简单的 HTML 表格由 table 元素以及一个或多个 tr、th 或 td 元素组成。
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/core/nodetpl.min.js"></script>
+<script type="text/javascript" src="../../common/js/jquery-util.js"></script>
+<script name="main" type="text/template">
+    <?for(var i = @data.length - 1; i >= 0; i--) {?>
+    <tr>
+        <td class="text-center" style="width: 10%">
+            <input type="checkbox" name="checkboxName" value="option1">
+        </td>
+        <td class="text-center" name="numName" style="width: 8%"><?=(i+1)?></td>
+        <td class="text-center" style="width: 15%">
+            <select name="names" class="form-control">
+            <? for(var j=0; j< @data[i].names.length; j++) {?>
+                if (@data[i].name == @data[i].names[j].id) {
+                    <option selected><?=@data[i].names[j].name?></option>
+                } else {
+                    <option><?=@data[i].names[j].name?></option>
+                }
+            <?}?>
+            </select>
+        </td>
+        <td class="text-center" style="width: 15%">
+            <input type="text" class="form-control" placeholder="输入年纪" value="<?=@data[i].age?>">
+        </td>
+        <td class="text-center" style="width: 15%">
+            <label class="radio-inline" style="position: relative;">
+              <input type="radio" name="inlineRadioOptions" value="option1"> 男
+            </label>
+            <label class="radio-inline" style="position: relative;">
+              <input type="radio" name="inlineRadioOptions" value="option2"> 女
+            </label>
+        </td>
+        <td class="text-center">
+            <textarea class="form-control" ><?=@data[i].addr?></textarea>
+        </td>
+        <td class="text-center" style="width: 10%">
+            <span class="glyphicon glyphicon glyphicon-ok" onclick="saveData()"></span>
+        </td>
+    </tr>
+  <?}?>
+</script>
+<script name="main1" type="text/template">
+    <?for(var i = 0; i < @data.length; i++) {?>
+    <tr>
+        <td class="text-center" style="width: 10%">
+            <input type="checkbox" name="checkboxName1" value="option1">
+        </td>
+        <td class="text-center" name="numName" style="width: 8%"><?=(i+1)?></td>
+        <td class="text-center" style="width: 15%">
+            <select name="names" class="form-control">
+                <? for(var j=0; j< @data[i].names.length; j++) {?>
+                if (@data[i].name == @data[i].names[j].id) {
+                <option selected><?=@data[i].names[j].name?></option>
+                } else {
+                <option><?=@data[i].names[j].name?></option>
+                }
+                <?}?>
+            </select>
+        </td>
+        <td class="text-center" style="width: 15%">
+            <input type="text" class="form-control" placeholder="输入年纪" value="<?=@data[i].age?>">
+        </td>
+        <td class="text-center" style="width: 15%">
+            <label class="radio-inline" style="position: relative;">
+                <input type="radio" name="inlineRadioOptions" value="option1"> 男
+            </label>
+            <label class="radio-inline" style="position: relative;">
+                <input type="radio" name="inlineRadioOptions" value="option2"> 女
+            </label>
+        </td>
+        <td class="text-center">
+            <textarea class="form-control" ><?=@data[i].addr?></textarea>
+        </td>
+        <td class="text-center" style="width: 10%">
+            <span class="glyphicon glyphicon glyphicon-ok" onclick="saveData()"></span>
+        </td>
+    </tr>
+    <?}?>
+</script>
+<script type="text/javascript">
+    $(document).ready(function($) {
+        // 消息提示
+        $('[data-toggle="tooltip"]').tooltip()
+
+        // 模拟数据
+        var data = [{
+            names: [{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '002',
+            age: '18',
+            addr: '北京大兴龙天桥西34号'
+        },{
+            names: [{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '002',
+            age: '18',
+            addr: '北京大兴龙天桥西34号'
+        },{
+            names: [{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '002',
+            age: '18',
+            addr: '北京大兴龙天桥西34号'
+        },{
+            names: [{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '002',
+            age: '18',
+            addr: '北京大兴龙天桥西34号'
+        },{
+            names: [{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '002',
+            age: '18',
+            addr: '北京大兴龙天桥西34号'
+        },{
+            names: [{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '002',
+            age: '18',
+            addr: '北京大兴龙天桥西34号'
+        }]
+        var html = $('[name=main]').html();
+        nodetpl.render(html, {data:data}, function(html) {
+            $('#otherPeople').find('tbody').empty().append(html);
+            // 全选
+            var check = new CheckAll('checkboxSuccess','checkboxName');
+            // 动态增加
+            new AddTr({
+                'tableId': 'otherPeople',
+                'addId':'addId',
+                'deleteId':'deleteId',
+                'numName':'numName',
+                'bottom': 'false',
+                'isNumber': 'true',
+                'numAsc': 'desc'
+            })
+        });
+
+        var html1 = $('[name=main1]').html();
+        nodetpl.render(html1, {data:data}, function(html1) {
+            console.log(html1);
+            $('#otherPeople1').find('tbody').empty().append(html1);
+            // 全选
+            var check = new CheckAll('checkboxSuccess1','checkboxName1');
+            // 动态增加
+            new AddTr({
+                'tableId': 'otherPeople1',
+                'addId':'addId1',
+                'deleteId':'deleteId1',
+                'numName':'numName',
+                'bottom': 'true',
+                'isNumber': 'true',
+                'numAsc': 'asc'
+            })
+        });
+    });
+
+    // 保存按钮事件
+    function saveData(){
+        alert('保存成功')
+    }
+</script>
+</script>
+</body>
+</html>

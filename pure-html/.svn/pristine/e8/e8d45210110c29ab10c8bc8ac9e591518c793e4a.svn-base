@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="E:\导出项目文件\学习考核新需求class_20181015"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../">
+			
+		<!--模块内页面和js -->
+		<!-- 李颖洁：学习考核多套试卷考试修改页面和js -->
+		<include name="WebContent/modules/zhbg/xxkh/testManage/js/ksglEditForm.js"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/js/testpaperupload.js"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/js/ksglEditFormEcho.js"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ifram.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ksglEditForm.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ksglReadOnlyForm.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ksglList.html"/>
+		<!-- 李颖洁：选择人员后可以删除人员操作放开（天津环境中不能删除人员），先不放开此功能 -->
+		<!--<include name="WebContent/modules/zhbg/xxkh/testManage/ksglDelPerson.html"/>-->
+		<!-- 李颖洁：个人管理成绩查询-多套试卷修改页面 -->
+		<include name="WebContent/modules/zhbg/xxkh/testResult/personTestResultList.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testResult/paperList.html"/>
+		
+		<!-- 模块内class文件-->
+		<!-- 李颖洁：学习考核多套试卷考试修改后端代码-->
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\controller\TestManageController.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\entity\XxkhTestInfo.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\entity\XxkhTestPaper.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\entity\XxkhUserPaper.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\services\TestManageService.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\services\TestManageServiceImpl.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\gradesearch\controller\GradesearchController.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\gradesearch\services\GradesearchService.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\gradesearch\services\GradesearchServiceImpl.class"/>
+		
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		<!-- 李颖洁:学习考核多套试卷考试修改公共的js，目前是最新的 -->
+		<include name="WebContent/static/js/common/tablelist.js"/>
+		
+		<!-- 公共class-->
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

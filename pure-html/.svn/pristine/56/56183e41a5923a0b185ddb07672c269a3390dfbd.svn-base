@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>选择节点</title>
+		<link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="/product/workflow/css/formAndWorkflow.css" rel="stylesheet">
+		<link rel="stylesheet" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+		
+	</head>
+	<style type="text/css">
+		li{
+			list-style-type: none;
+		}
+		
+		.ztree li a{
+			line-height: 20px;
+		}
+		ul{
+			padding: 5px 10px 10px 10px;
+		}
+		
+		.no-box-bor {
+			border:none!important;
+			box-shadow:none!important;
+			border-radius:0px!important;
+		}
+	</style>
+	<body>
+		<div class=" modal-pt width820 " style="height:100%;">
+			<div class="" style="height:100%;">
+				<div class="modal-content no-box-bor" style="height:100%;">
+					<div class="modal-body" style="height:100%;">
+						<input type="hidden" id="workitemid" name="workitemid"/>
+						<input type="hidden" id="wfleveId" name="wfleveId"/>
+						<input type="hidden" id="nodeid" name="nodeid" />
+						<table width="100%" border="0" style="height:100%;">
+							<tbody id="deptArea" style="">
+								<tr style='height:45px;'>
+									<td style='width:40%;border-right:1px solid #ddd'>
+										<div class='title03'>待选节点</div>
+									</td>
+									<td style="border-right:1px solid #ddd">
+										<div class='title03'>待选人员</div>
+									</td>
+								</tr>
+								<tr>
+				 					<td style='border-right:1px solid #ddd'>
+				 						<div id='tdWrap' style='height:305px;overflow-y:scroll'>
+			 	 							<ul id='passed'>
+			 	 								
+			 	 							</ul>
+			 	 						</div>
+			 	 					</td>
+			 	 					<td style='border-right:1px solid #ddd'>
+			 	 						<div id='tdWrap' style='height:305px;overflow-y:scroll'>
+			 	 							<ul id='userArea' class="ztree">
+			 	 								
+			 	 							</ul>
+			 	 						</div>
+			 	 					</td>
+			 	 				</tr>
+			 	 				<tr>
+				 	 				<td colspan="2">
+				 	 					<div class="col-xs-12 well" style="padding:15px 5px;margin-bottom:0;">
+				 	 					<!-- <label style="padding-left: 5px;">意见：</label> -->
+				 	 						<textarea  class="form-control" id="passidea" placeholder="请填写意见" maxlength="100" name="passidea" rows="3"></textarea>	
+				 	 					</div>
+				 	 				</td>
+			 	 				</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/product/workflow/js/common/getCook.js"></script>
+    <script src="/product/workflow/js/common/getrequest.js"></script>
+	<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+	<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+	<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="../js/getPassed.js"></script>
+	</body>
+
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+</head>
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+    .msg{
+        margin-top: 30px;
+        margin-left:15px;
+        margin-right:15px
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="msg">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label">发送时间:</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="timeRange" id="timeRange"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 标题:</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="title" id="title"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 状态:</label>
+                            <div class="col-md-3">
+                                <label class="radio-inline">
+                                    <input type="radio" id="statusAll" name="status" value=""> 全部
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="status1" checked="checked"  name="status" value="1"> 已阅
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="status0" name="status" value="0"> 待阅
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询</button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary"> 重&nbsp;&nbsp;置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+
+<script type="text/javascript" src="/common/js/dateutil.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript">
+
+    //刷新方法，流程中需要回调
+    function refreshPage(){
+        TableInit.refTable("right_table");
+    }
+
+    //清空查询条件
+    function clearAll(){
+        $("#title").val("");	//标题
+        $("#timeRange").val("");	//时间
+    }
+
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#timeRange',
+        range: true
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '编号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var html = "";
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            html = "<span data-id='"+row.id+"' data-workFlowName='"+row.workflowName+"' data-url='"+row.sendUrl+"'>"+orderNum+"</span>"
+            return html;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'workflowName'
+        , title: '流程名称'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'title'
+        , title: '标题'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'sendTime'
+        , title: '发送时间'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'sendUserName'
+        , title: '发送人'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'readTime'
+        , title: '阅毕时间'
+        , width: '10%'
+        , align: "center"
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/system/flowSend/getSendList",
+            columns: right_table_col,
+            queryParams: function (params) {
+                params.title = $("#title").val();
+                params.sendTime = $("#timeRange").val();
+                params.status = $(":radio:checked[name=status]").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var url = $(this).parent().find("span[data-id]").attr("data-url");
+                    var workFlowName = $(this).parent().find("span[data-id]").attr("data-workFlowName")
+
+                    MyLayer.layerOpenUrl({url: url,title: workFlowName})
+
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

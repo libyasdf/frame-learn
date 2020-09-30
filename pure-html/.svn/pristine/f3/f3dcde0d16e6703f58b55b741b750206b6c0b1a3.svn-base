@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\个人门户java_20191010"></property>
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../">
+		<!-- 一、个人门户本次调整内容 开始-->
+			<!--通知公告和公文发布接口拆分-->
+			<include name="src/com/sinosoft/sinoep/modules/system/notice/controller/SysNoticeController.java"/>
+			<include name="src/com/sinosoft/sinoep/modules/system/notice/services/"/>
+			<!-- 添加音视频最新发布提醒接口-->
+			<include name="src/com/sinosoft/sinoep/modules/video/background/services/"/>
+			<include name="src/com/sinosoft/sinoep/modules/video/background/entity/MenHuContentVo.java"/>
+			<include name="src/com/sinosoft/sinoep/modules/video/background/controller/"/>
+			<include name="WebContent/common/js/main.js"/>
+			<include name="WebContent/main.html"/>
+			<!-- 一人多岗切换样式、布局调整-->
+			<include name="WebContent/modules/dept/checkDept.html"/>
+			<include name="WebContent/static/css/common/navigation.css"/>
+			<include name="WebContent/static/css/common/style.css"/>
+			<include name="WebContent/common/js/index.js"/>
+			<!-- 调整外卖预定按钮垂直居中显示-->
+			<include name="WebContent/static/css/common/index.css"/>
+		<!-- 个人门户本次调整内容 结束-->
+		
+		<!-- 二、门户升级内容 开始-->
+			<include name="WebContent/main.html"/>
+			<include name="WebContent/moduleIndex.html"/>
+			<include name="WebContent/static/css/common/style.css"/>
+			<!-- 常用模块-->
+			<include name="WebContent/modules/mypage/oftenModel/"/>
+			<include name="src/com/sinosoft/sinoep/modules/mypage/oftenModel/"/>
+			<!-- 常用工具-->
+			<include name="WebContent/modules/system/config/utillink/"/>
+			<include name="src/com/sinosoft/sinoep/modules/system/config/utillink/"/>
+			<include name="WebContent/static/core/iconfont/"/>
+			<!-- 应用导航-->
+			<include name="WebContent/modules/system/config/applicationlick/"/>
+			<include name="src/com/sinosoft/sinoep/modules/system/config/applicationlink/"/>
+			<include name="WebContent/static/images/yydh/new/"/>
+			<!-- 张浩磊整理的资源接口-->
+			<include name="src\com\sinosoft\sinoep\message\controller\NotifyController.java"/>
+			<include name="src\com\sinosoft\sinoep\uias\controller\RecourseController.java"/>
+			<include name="src\com\sinosoft\sinoep\uias\service\RecourseDubboServiceImpl.java"/>
+			<include name="src\com\sinosoft\sinoep\uias\service\RecourseService.java"/>
+			<include name="src\com\sinosoft\sinoep\uias\service\RecourseServiceImpl.java"/>
+			<include name="src\com\sinosoft\sinoep\uias\util\RecourseUtils.java"/>
+		
+			<!--2019-10-15 18:22补充 -->
+			<include name="WebContent/common/js/applicationAndUtillink.js"/>
+		<!-- 门户升级内容 结束-->
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

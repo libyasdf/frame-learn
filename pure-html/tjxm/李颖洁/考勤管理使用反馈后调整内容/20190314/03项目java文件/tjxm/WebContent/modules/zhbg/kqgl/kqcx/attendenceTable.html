@@ -1,0 +1,1329 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls>i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    .tableAlign {
+        height: auto !important;
+        padding-bottom: 0 !important;
+    }
+
+    label {
+        font-weight: normal;
+    }
+
+    .container-fluid .table-legend {
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        margin-top: 30px;
+        font-size: 20px;
+    }
+
+  
+</style>
+<link rel="stylesheet" href="/static/css/zhbg/kqgl/iconfont/iconfont.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/css/common/Loading.css">
+<link rel="stylesheet" type="text/css"
+      href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid">
+    <div class="row">
+        <div class="vertify-panel vertify-tree x-unselectable"
+             role="presentation">
+            <div class="inner">
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style=" padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+                    <input id="keyword" name="deptName" onkeydown="CommonUtil.keyDown(event);" type="text" class="form-control"
+                           placeholder="快速搜索">
+                    <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt" onclick="search()">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span>
+                </div>
+                <ul id="tree-obj" class="ztree" style="margin-top: 10px; height:510px; overflow:auto;"></ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details">
+            <!--查询-->
+            <form class="form-horizontal" id="form">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <div class="form-group">
+                                <input id="cruDeptId" name="cruDeptId" type="hidden"/>
+                                <input id="type" name="type" type="hidden" value="1"/>
+                                <input id="busiRole" name="busiRole" type="hidden"/>
+
+                                <label class="col-md-2 control-label"> 考勤月份：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="month" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="col-md-12" style="text-align: center">
+                                        <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table')">
+                                            查&nbsp;&nbsp;询
+                                        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-primary" onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12">
+                <table id="right_table" ></table>
+            </div>
+            <!-- 图例 -->
+            <div class="table-legend col-md-12">
+                <span class="icon-q"></span><span>出勤</span>
+                <span class="icon-j"></span><span>公休</span>
+                <span class="icon-a"></span><span>加班</span>
+                <span class="icon-o"></span><span>出差</span>
+                <span class="icon-b"></span><span>病假</span>
+                <span class="icon-s"></span><span>事假</span>
+                <span class="icon-c"></span><span>迟到</span>
+                <span class="icon-z"></span><span>早退</span>
+                <span class="icon-x"></span><span>旷工</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script src="/static/core/layer/layer.js"></script>
+
+<script type="text/javascript">
+    $("#cruDeptId").val(getcookie("chuShiId"));
+    $("#busiRole").val(getcookie("rolesNo"))
+    //用于存放选择的id刷新列表
+    var userIds = "";
+    var curMonth = getCurrentDate("yyyy-MM")
+    $("#month").val(curMonth);
+    Dictionary.init({ mark: 'attendanceState', type: '1', position: "attendanceState", domType: "select", name: "attendanceState" });
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#month'
+        , btns: ['now', 'confirm']
+        , type: 'month'
+
+    });
+
+    //起草
+    function draft() {
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({ url: '/modules/zhbg/kqgl/wc/wcEditForm.html?oper=NEW&resId=' + resId, title: '起草外出信息' })
+    }
+    // 定义bootatrap-table数据列
+    // sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '10%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;
+            var pageNumber = $('#right_table').bootstrapTable('getOptions').pageNumber;
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='" + row.importDate + "'>" + orderNum + "</span>";
+        }
+    },
+
+    {
+        field: 'userName'
+        , title: '&nbsp;&nbsp; &nbsp;姓&nbsp;&nbsp; 名&nbsp;&nbsp;&nbsp; '
+        , width: '15%'
+        , align: "center"
+    },
+    {
+        field: 'oneState'
+        , title: '1'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.oneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.oneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.oneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.oneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.oneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.oneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.oneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+
+    },
+    {
+        field: 'twoState'
+        , title: '2'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'thirdState'
+        , title: '3'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+        	 var states = value.split(",");
+             var html = "";
+             for (var i = 0; i < states.length; i++) {
+                 if (states[i] == "Q") {//出勤
+                     html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "J") {//公休
+                     html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "A") {//加班
+                     html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.thirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "O") {//出差
+                     html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.thirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "B") {//病假
+                     html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "S") {//事假
+                     html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "C") {//迟到
+                     html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.thirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "Z") {//早退
+                     html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.thirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                 } else if (states[i] == "X") {//旷工
+                     html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.thirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                 }
+             }
+             return html;
+        }
+
+
+    },
+    {
+        field: 'fourthState'
+        , title: '4'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.fourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.fourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.fourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.fourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.fourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.fourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.fourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+
+    },
+    {
+        field: 'fiveState'
+        , title: '5'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.fiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.fiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.fiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.fiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.fiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.fiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.fiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+
+    },
+    {
+        field: 'sixState'
+        , title: '6'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.sixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.sixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.sixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.sixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.sixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.sixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.sixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+
+    },
+    {
+        field: 'sevenState'
+        , title: '7'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.sevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.sevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.sevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.sevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.sevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.sevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.sevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'eightState'
+        , title: '8'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.eightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.eightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.eightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.eightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.eightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.eightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.eightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+
+    },
+    {
+        field: 'nineState'
+        , title: '9'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.nineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.nineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.nineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.nineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.nineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.nineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.nineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+
+    },
+    {
+        field: 'tenState'
+        , title: '10'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.tenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.tenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.tenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.tenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.tenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.tenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.tenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'elevenState'
+        , title: '11'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.elevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.elevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.elevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.elevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.elevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.elevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.elevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twelveState'
+        , title: '12'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twelveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twelveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twelveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twelveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twelveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twelveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twelveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'thirteenState'
+        , title: '13'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.thirteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.thirteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.thirteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.thirteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.thirteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'fourteenState'
+        , title: '14'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.fourteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.fourteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.fourteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.fourteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.fourteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.fourteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.fourteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'fifteenState'
+        , title: '15'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.fifteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.fifteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.fifteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.fifteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.fifteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.fifteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.fifteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'sixteenState'
+        , title: '16'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.sixteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.sixteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.sixteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.sixteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.sixteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.sixteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.sixteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'seventeenState'
+        , title: '17'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.seventeenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.seventeenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.seventeenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.seventeenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.seventeenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.seventeenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.seventeenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'eightteenState'
+        , title: '18'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.eightteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.eightteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.eightteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.eightteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.eightteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.eightteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.eightteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'nineteenState'
+        , title: '19'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.nineteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.nineteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.nineteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.nineteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.nineteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.nineteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.nineteenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentyState'
+        , title: '20'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentyOneState'
+        , title: '21'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentyTwoState'
+        , title: '22'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyTwoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyTwoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyTwoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyTwoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyTwoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyTwoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyTwoStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentyThirdState'
+        , title: '23'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyThirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyThirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyThirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyThirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyThirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyThirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyThirdStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentyFourthState'
+        , title: '24'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFourthStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+
+    },
+    {
+        field: 'twentyFiveState'
+        , title: '25'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyFiveStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentySixState'
+        , title: '26'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySixStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentySevenState'
+        , title: '27'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentySevenStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentyEightState'
+        , title: '28'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyEightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyEightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyEightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyEightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyEightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyEightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyEightStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'twentyNineState'
+        , title: '29'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyNineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyNineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyNineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyNineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyNineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyNineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.twentyNineStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'thirtyState'
+        , title: '30'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'thirtyOneState'
+        , title: '31'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var states = value.split(",");
+            var html = "";
+            for (var i = 0; i < states.length; i++) {
+                if (states[i] == "Q") {//出勤
+                    html += "<i class='icon-q' title='出勤'><b style='font-family: " + '"宋体"' + ";'></b><input value='Q' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "J") {//公休
+                    html += "<i class='icon-j' title='公休'><b style='font-family: " + '"宋体"' + ";'></b><input value='J' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "A") {//加班
+                    html += "<i class='icon-a' title='加班' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='A' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "O") {//出差
+                    html += "<i class='icon-o' title='出差' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='O' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "B") {//病假
+                    html += "<i class='icon-b' title='病假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='B' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "S") {//事假
+                    html += "<i class='icon-s' title='事假' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='S' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "C") {//迟到
+                    html += "<i class='icon-c' title='迟到' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='C' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "Z") {//早退
+                    html += "<i class='icon-z' title='早退' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='Z' type='hidden'/></i>&nbsp;&nbsp;";
+                } else if (states[i] == "X") {//旷工
+                    html += "<i class='icon-x' title='旷工' data-toggle='popover' data-trigger='hover' data-content='" + row.thirtyOneStateTitle + "'><b style='font-family: " + '"宋体"' + ";'></b><input value='X' type='hidden'/></i>&nbsp;&nbsp;";
+                }
+            }
+            return html;
+        }
+    },
+    {
+        field: 'holidays'
+        , title: '节假日公休/天'
+        , width: '15%'
+        , align: "center"
+
+    },
+    {
+        field: 'sickDays'
+        , title: '病假/天'
+        , width: '15%'
+        , align: "center"
+
+    },
+    {
+        field: 'casualDays'
+        , title: '事假/天'
+        , width: '15%'
+        , align: "center"
+
+    },
+    {
+        field: 'lateNum'
+        , title: '迟到/次'
+        , width: '15%'
+        , align: "center"
+
+    },
+    {
+        field: 'earlyLeaveNum'
+        , title: '早退/次'
+        , width: '15%'
+        , align: "center"
+
+    },
+    {
+        field: 'absentNum'
+        , title: '旷工/次'
+        , width: '15%'
+        , align: "center"
+
+    },
+    {
+        field: 'overTime'
+        , title: '加班时间'
+        , width: '15%'
+        , align: "center"
+
+    }
+    ];
+
+    $(document).ready(function (e) {
+
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            height: 520,
+            pagination: false,
+            url: "zhbg/kqgl/kqcx/attendenceTable/getList",
+            columns: right_table_col,
+            queryParams: function (params) {
+                params.month = $("#month").val();
+                params.userids = userIds;
+                return params;
+            },
+            readOnlyFn: function () {
+                showAttendanceInfo();
+            }
+        });
+
+        // 解决表格不对齐
+       // $('.fixed-table-container').addClass("tableAlign");
+    });
+
+    /*
+    ** 鼠标滑过显示考勤信息
+    */
+    function showAttendanceInfo() {
+        if ($('[data-toggle="popover"]').length) {
+            console.log("popover");
+            for (var i = 0; i < $('[data-toggle="popover"]').length; ++i) {
+                var ele = $('[data-toggle="popover"]:eq(' + i + ')');
+                var content = ele.attr("data-content");
+                if (content) {
+                    var ider = ele.find("input").val();
+
+                    var resultContent = content.split(ider + ":")[1];
+                    if (resultContent) {
+                        resultContent = resultContent.split(";")[0];
+
+                        ele.attr("data-content", resultContent);
+                    } else {
+                        ele.attr("data-content", "");
+                    }
+                }
+            }
+            $('[data-toggle="popover"]').popover();
+        }
+    }
+
+    // 表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url: '/modules/zhbg/kqgl/wc/wcEditForm.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title: "修改"
+            })
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/zhbg/kqgl/wc/delete?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate() {
+        $.ajax({
+            url: "/zhbg/kqgl/wc/getCnt",
+            data: {
+                subflag: Config.startflag, //标题
+                goOutTime: $("#goOutTime").val() //时间
+
+            },
+            type: "post",
+            success: function (data) {
+                if (data.cnt > 0) { //0 查询有数据， 可导出
+                    $('#form').attr('action', '/zhbg/kqgl/wc/export');
+                    $('#form').attr('method', 'get');
+                    $("#form").submit();
+                } else {
+                    layer.msg('暂无可导出信息！', { icon: 0 }); //没有数据时弹出提示信息
+                }
+            }
+        })
+    };
+    //清空查询条件
+    function clearAll() {
+        $("#month").val(curMonth)	//时间
+        $("#xiebPerson").val("");
+        $("#xiebPersonId").val("");
+    }
+
+    function getAttendence(cardNumber, importDate) {
+        console.log(cardNumber);
+        console.log(importDate);
+        MyLayer.layerOpenUrl({
+            url: '/modules/zhbg/kqgl/xtpz/myKqAttendanceDetailed.html?importDate=' + importDate + '&cardNumber=' + cardNumber,
+            title: "进出详情",
+        })
+    }
+</script>
+<!--部门人员树，放在最后的原因是放在前边获取不到$("#cruDeptId").val()的值-->
+<script src="/modules/zhbg/kqgl/kqcx/js/tree.js"></script>

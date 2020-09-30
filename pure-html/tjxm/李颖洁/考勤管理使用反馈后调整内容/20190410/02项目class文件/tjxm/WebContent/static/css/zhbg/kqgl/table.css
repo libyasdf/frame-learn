@@ -1,0 +1,46 @@
+ .userTitle{
+            color: #999;
+}
+.bg-info{
+    padding: 15px;
+}
+.required{
+    color: red;
+}
+.table__scrollable-y{
+    position: relative;
+    border: 1px solid #eee;
+}
+.table__header-wrapper{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.table__header-wrapper thead{
+    background: #fff;
+}
+.table_body-wrapper{
+    max-height: 300px;
+    overflow-y: auto;
+}
+.table-reset{
+    margin-bottom: 0;
+}
+.table__header-top-wrapper{
+    position: fixed;
+    top: 0;
+    display: none;
+}
+table.table-top-hover th{
+    height: 52px;
+    vertical-align: middle !important;
+    background: url(../../static/images/bg_tlisthd.png) top repeat-x;
+    color: #fff;
+}
+table.table-top-hover .glyphicon{
+    color: #fff;
+}
+.m-b-0{
+    margin-bottom: 0;
+}

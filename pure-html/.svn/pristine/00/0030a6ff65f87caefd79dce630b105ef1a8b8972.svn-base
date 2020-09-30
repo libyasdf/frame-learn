@@ -1,0 +1,45 @@
+<!--
+<div >
+    <iframe id="reportFrame" frameborder="no" scrolling="no" width="100%" height="800" src="/ReportServer?reportlet=/demo/bbglFirstTable.cpt&op=write&year=2018"></iframe>
+</div>
+<script>
+
+
+</script>-->
+
+
+<html>
+<head>
+    <title>第一表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK">
+  <!--  <script type="text/javascript" src="/WebReport/ReportServer?op=emb&resource=finereport.js"></script>-->
+</head>
+<body>
+<iframe id="reportFrame" frameborder="no" scrolling="no" width="100%" height="800"></iframe>
+</body>
+<script type="text/javascript">
+    $(function() {
+       load();
+    })
+
+    function load(){
+        $.ajax({
+            type: "POST",
+            url: "/djgl/ddjs/bbgl/histroyTotal/saveHistroyTotal",
+            data:{tableName:"one"},
+            async: false,
+            success:function(json){
+                if (json.flag == '1') {
+                    var date=new Date;
+                    var year=date.getFullYear();
+                    var status = json.status;
+                    alert(status);
+                    document.getElementById("reportFrame").src = "/ReportServer?reportlet=/ddjs/bbgl/bbglFirstTable.cpt&op=write&year="+year+"&status="+status;
+                }
+            },
+            error:function(){
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>强制增删会签分支</title>
+<link href="modules/workflow/css/css_columns.css" rel="stylesheet">
+<link href="modules/workflow/css/css_layout.css" rel="stylesheet">
+<link href="modules/workflow/css/tab-list.css" rel="stylesheet">
+<link href="plugins/bootstrap/css/bootstrap-3.3.4.css" rel="stylesheet">
+<script type="text/javascript" src="plugins/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="plugins/bootstrap/bootstrap-3.3.4.js"></script>
+<script type="text/javascript" src="common/js/getrequest.js"></script>
+<script type="text/javascript" src="modules/workflow/js/lhgdialog.min.js"></script>
+<script type="text/javascript" src="modules/workflow/js/forceAddAndDelSignBranch.js"></script>
+</head>
+<body>
+ <table id="" width="98%" border="0" align="center" cellpadding="0" cellspacing="1" class="tab2">
+ 	<th id="userdetsail">
+		<input type="radio" id="startHqWfleve" name="startHqWfleve" value="<%=startInfoArr[0]%>"  onclick="changeWfleve('<%=i%>');"/>
+		<span></span>
+	</th>
+	<tr><td><font color="blue">可强制增加的会签分支:</font></td></tr>
+	<tr >
+		<table id="kaddhq" class="tab2">
+			<tr>
+        	<td>
+	 		    <input type='checkbox' id="addHq_<%=i%>" name='addHq_<%=i%>' disabled="disabled" value='<%=en.getKey()%>'/>
+		 	    <input type='hidden' id="addHqName" name='addHqName' value='<%=en.getValue()%>' />
+		 	</td>
+			 </tr>
+		</table>
+	</tr>
+	<tr><td><font color="blue">可强制删除的会签分支:</font></td></tr>
+	<tr >
+		<table id="kdelhq" class="tab2">
+			<tr>
+				<td>
+	 		  	  <input type='checkbox' id="delHq_<%=i%>" name='delHq_<%=i%>' disabled="disabled" value='<%=en.getKey()%>'/>
+		 	   	 <input type='hidden' id="delHqName" name='delHqName' value='<%=en.getValue()%>' />
+	   		 </td>
+			</tr>
+		</table>
+	</tr>
+ </table>
+</body>
+</html>

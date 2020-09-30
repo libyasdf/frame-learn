@@ -1,0 +1,4 @@
+1.查补sql注入修改遗漏问题；
+2./tjxm/src/com/sinosoft/sinoep/modules/video/background/services/VideoContentServiceImpl.java
+/tjxm/src/com/sinosoft/sinoep/modules/video/background/services/VideoColumnServiceImpl.java
+以上两个文件在【部署说明】中说明了改动位置，其他可以直接替换；

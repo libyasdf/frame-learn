@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>Q2变更</title>
+<link rel="stylesheet"
+	href="/static/core/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+<link href="/static/css/common/style.css" rel="stylesheet" />
+<link href="/static/css/common/form-public.css" rel="stylesheet" />
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet"
+	href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+<link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+
+<body class="formpage_bj">
+	<form class="form-horizontal" id="form">
+		<div class="container-fluid formpage_area">
+			<!-- 基本信息 -->
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">Q2信息变更</span>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="" class="col-md-1 control-label"></label>
+						<table border="1" style="width: 90%; text-align: center;">
+							<thead>
+								<tr height="50px">
+									<td width="15%">序号</td>
+									<td width="35%">档案级档号</td>
+									<td width="25%">原主管单位</td>
+									<td width="25%">原主管人</td>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <tr height="50px">
+									<td>1</td>
+									<td>002-004</td>
+									<td>一处</td>
+									<td>张三</td>
+								</tr>
+								<tr height="50px">
+									<td>1</td>
+									<td>002-004</td>
+									<td>一处</td>
+									<td>张三</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="rowGroup">
+							<label for="" class="col-md-2 control-label"><span
+								style="color: red">* </span>新主管单位：</label>
+							<div class="col-md-4">
+								<select class="form-control" name="liJuanDanWei" id="liJuanDanWei">
+		                           
+                        		</select>
+							</div>
+						</div>
+						<div class="rowGroup">
+							<label for="" class="col-md-2 control-label"><span
+								style="color: red">* </span>新主管人：</label>
+							<div class="col-md-4">
+								<input type="text" class="form-control" id="newMaintitle" name="newMaintitle"
+									maxlength="45" placeholder="">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="rowGroup">
+							<label for="" class="col-md-2 control-label"><span
+								style="color: red">* </span>变更日期：</label>
+							<div class="col-md-4">
+								<input type="text" class="form-control" id="changeDate" name="changeDate"
+									maxlength="45" placeholder="">
+							</div>
+						</div>
+						<div class="rowGroup">
+							<label for="" class="col-md-2 control-label"><span
+								style="color: red">* </span>变更单号：</label>
+							<div class="col-md-4">
+								<input type="text" class="form-control" id="changeNo" name="changeNo"
+									maxlength="45" placeholder="" readonly="readonly">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="rowGroup">
+							<label for="" class="col-md-2 control-label"><span
+								style="color: red">* </span>登记日期：</label>
+							<div class="col-md-4">
+								<input type="text" class="form-control" id="registerDate" name="registerDate"
+									maxlength="45" placeholder="" readonly="readonly">
+							</div>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div class="rowGroup">
+							<label for="" class="col-md-2 control-label"><span
+								style="color: red">* </span> 变更缘由：</label>
+							<div class="col-md-10">
+								<textarea name="remark" id="remark" class="form-control" rows="3"></textarea>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- 按钮区 -->
+		<div class="form_btn_area" style="text-align: center;">
+			<button id="save" class="btn btn-primary form_btn_area_btn2"
+				onclick="saveForms()" title="变更会保留这次变更记录并更新相关Q2档案的主管单位和主管人">
+				<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+				变更
+			</button>
+			<button id="preserveBtn" class="btn btn-primary form_btn_area_btn2"
+				onclick="MyLayer.closeOpen();">
+				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+				关闭
+			</button>
+		</div>
+	</form>
+
+	<!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script
+		src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script
+		src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/core/laydate/laydate.js"></script>
+	<script src="/static/js/common/url.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<script src="/modules/dagl/daly/qtwo/js/wdglValidator.js"></script>
+	<!-- 数据回显 -->
+	<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+	<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+	<script type="text/javascript">
+	var theRequest;
+	 laydate.render({
+	        elem: '#changeDate',//指定元素
+	        done:function(value,data){
+	        	$('#changeDate').val(value).change()
+	        }
+	    });
+    var datas=null;
+	$(function(){
+		formValidator();
+		theRequest=GetRequest();
+		var date = new Date();
+		var year = date.getFullYear();
+		var Month= date.getMonth() + 1;
+		var day = date.getDate();
+        if(Month < 10){
+            Month = "0"+Month;
+        }
+		if(day < 10){
+			day = "0"+day;
+		}
+		var cre_time=year+"-"+Month+"-"+day;
+		$("#registerDate").val(cre_time);
+
+        $.ajax({
+            url:"/dagl/qtwo/findChangeConut?rdm="+Math.random(),
+            dataType: 'json',
+            async:false,
+            success: function (data) {
+                $("#changeNo").val(data.changeNo);
+            }
+        })
+
+        //获取勾选的Q2档案
+		$.ajax({
+			url:"/dagl/qtwo/findListByIds",
+			data:{ids:theRequest.ids,tName:theRequest.tName},
+			 dataType: 'json',
+			 async:false,
+			 type:'post',
+		     success: function (data) {
+		    	 datas=data;
+		    	 for(var i in data){
+		    		 $('tbody').append('<tr height="50px">\
+										<td>'+(i-0+1)+'</td>\
+										<td>'+data[i].FOLDER_NO+'</td>\
+										<td>'+data[i].BASEFOLDER_UNIT+'</td>\
+										<td>'+data[i].MAINTITLE+'</td>\
+										</tr>');
+		    	 }
+		     }
+		});
+        
+        //获取Q2的授权立卷单位
+        $.ajax({
+			url:"/dagl/qtwo/getQtwoLicenceUnit",
+			 dataType: 'json',
+			 async:false,
+			 type:'post',
+		     success: function (data) {
+		    	 var unit = data.data;
+		    	 if(unit.length == 0){
+		    		 //隐藏变更按钮
+		    		 $("#save").hide();
+		    		 layer.alert('未找到可用立卷单位，请在【系统配置-门类管理】中确认是否还未给任何立卷单位授权！', {icon: 0});
+		    	 }
+		    	 for(var i in unit){
+		    		 $("select[name='liJuanDanWei']").append("<option value='"+unit[i].LJDW_MARK+"'>"+unit[i].LJDW_NAME+"</option>");
+		    	 }
+		     }
+		})
+	})
+	
+	//执行变更操作
+	function saveForms(){
+		var bootstrapValidator = $("#form").data('bootstrapValidator');
+	    //手动触发验证
+	    bootstrapValidator.validate();
+	    if(bootstrapValidator.isValid()){
+		var obj={}
+		var list=[];
+		for(var i in datas){
+			var duixiang = {};
+			duixiang.recid =datas[i].RECID;
+			duixiang.folderNo =datas[i].FOLDER_NO;
+			duixiang.oldMaintitle =datas[i].MAINTITLE;
+			duixiang.oldBasefolderUnitId =datas[i].CRE_CHUSHI_ID;
+			duixiang.oldBasefolderUnitName =datas[i].BASEFOLDER_UNIT;
+			list.push(duixiang);
+		}
+		obj.list=list
+		obj.newMaintitle =$("#newMaintitle").val();
+		obj.newBasefolderUnitId =$("select[name='liJuanDanWei']").val();
+		obj.newBasefolderUnitName =$("select[name='liJuanDanWei']").find("option:selected").html();
+		obj.changeNo =$("#changeNo").val();
+		obj.changeDate =$("#changeDate").val();
+		obj.registerDate =$("#registerDate").val();
+		obj.remark =$("#remark").val();
+		obj.tName=theRequest.tName;
+		layer.confirm("变更会保留这次变更记录并更新相关Q2档案的主管单位和主管人，是否继续？",{icon:3},function(){
+			$.ajax({
+				type: 'post',
+				url:"/dagl/qtwo/saveChange",
+				data:JSON.stringify(obj),
+				contentType:'application/json',
+				 dataType: 'json',
+				 async:true,
+			     success: function (data) {
+			    	 if(data.flag==1){
+	                     closeIfram();
+			    		 //ayer.msg("",{ icon: 1})
+	                     window.parent.layer.msg('变更成功！',{icon:1});
+			    	 }else{
+	                     closeIfram();
+	                     window.parent.layer.msg('变更失败，稍后再试！',{icon:0});
+			    	 }
+			    	 parent.initTabs();
+			     }
+			})
+		});
+	    }
+	}
+	 //关闭当前窗口
+    function closeIfram() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+	</script>
+</body>
+</html>

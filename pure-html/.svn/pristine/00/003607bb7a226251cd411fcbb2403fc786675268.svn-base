@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>工作计划和日志</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<link href="/static/css/common/style.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+</head>
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+       #showbox {
+            width: 150px;
+            min-height: 50px;
+            font: 100 14px/1 "微软雅黑";
+            border: 1px solid #3c8dbc;
+           // display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            padding: 5px;
+        }
+        .input-group-addon{
+        	background-color: #fff;
+   			border: none;
+        }
+        .btn-both{
+        	display:inline-block;
+        	width:24px;
+        	height:24px;
+        }
+        .leftbtn{
+        	background: url("/static/images/worklog/left.png")  no-repeat;
+        }
+         .leftbtn:hover{
+        	background: url("/static/images/worklog/left-hover.png") no-repeat;
+        }
+        .rightbtn{
+        	background: url("/static/images/worklog/right.png") no-repeat;
+        }
+        .rightbtn:hover{
+        	background: url("/static/images/worklog/right-hover.png")  no-repeat;
+        }
+       .msg{
+    	margin-top: 30px;
+    	margin-left:15px;
+    	margin-right:15px
+    } 
+    .active{ background: none; }
+	.active a{ background: #0073aa; color: #ffffff; border: none;}
+</style>
+
+<div class="container-fluid">
+<div class="msg">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                           <input id="hiddenText1990" type="text" style="display:none" /> 
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                         <div class="form-group" style="text-align: center;">
+                          <label class="col-md-2 control-label form-view"> 查询类型：</label>
+                         	<div class="col-md-5 control-label" style="text-align:left;">
+                           		<input type="radio" name="dateType" value="0" id="accordingYear"><span style="margin-right:20px;">按年查询</span></input>
+                           		<input type="radio" name="dateType"   value="1" id="accordingMonth" ><span style="margin-right:20px;">按月查询</span></input>
+                           		<input type="radio" name="dateType" value="2" checked id="accordingWeek"><span style="margin-right:20px;">按周查询</span></input>
+                           		 <input type="radio" name="dateType"  value="3"  id="customTime"><span style="margin-right:20px;">自定义时间</span></input>
+                            </div>
+                            <div class="col-md-4 " >
+                           		<div class="input-group" id="year" >
+	                                <span class="input-group-addon input-group-addon1" onclick="back()">
+	                                	<span id="leftImage" class="btn-both leftbtn"></span> 
+	                                 </span>
+	                                <input class="form-control" stype="text" class="a"  style=" display:none"  id="dateLogYear" />
+	                                 <input class="form-control" stype="text" class="a" style=" display:none" id="dateLogMonth" />
+	                                  <input class="form-control" stype="text" class="a"  id="dateLogWeek1" onchange="weekChange(this)"/>
+	                                  <input class="form-control" stype="text"  class="a"  style=" display:none" id="dateLog" />
+	                                <div id="dateLogWeek" style="margin-top:25px"></div>
+	                                <span class="input-group-addon" onclick="next()">
+	                                	<span id="rightImage" class="btn-both rightbtn"></span>
+	                                </span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                         <div class="form-group">
+                         	 <label class="col-md-2 control-label"> 内容：</label>
+                            <div class="col-md-4 control-label">
+                           		<input id="hiddenText1990" type="text" style="display:none" /> 
+                                <input class="form-control" type="text" id="content" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="searchPlan()"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <!--  <div class="col-md-12">
+            <table id="workLog_table"></table>
+        </div>  -->
+    </div>
+    
+</div>
+ <div class="modal-body selectjs">
+				<div class="selectjs_block" >
+					<div class="title_tab">
+						<ul class="nav nav-tabs">
+							<li class="active" for="formpage1"><a href="#"
+								data-toggle="tab"> 工作计划</a></li>
+							<li for="formpage2"><a href="#" data-toggle="tab"> 工作日志</a>
+							</li>
+						</ul>
+					</div>
+					<div id="one" class="main" style="border:none">
+						<div id="formpage1" class="active">
+							<div class="row m-t-15" style="margin-top: 15px;">
+								<div class="col-md-12 p-f-60">
+									<table id="workLog_table"></table>
+								</div>
+							</div>
+						</div>
+						<div id="formpage2" class="hidden" style="width: 100%;">
+							<div class="row m-t-15" style="margin-top: 15px;">
+								<div class="col-md-12 p-f-60">
+									<table id="workLog_table2"></table>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+					</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/common/js/dateutil.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/common/js/config.js"></script>
+
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript">
+ //Dictionary.init({mark:'log_type',type:'1',position:"logType",domType:"checkbox",name:"logType"}); 
+ $('.nav-tabs > li').unbind('click').bind('click', function () {
+        var id = $(this).attr('for');
+        $(this).addClass('active').siblings('li').removeClass('active');
+        $('.main').children().addClass('hidden');
+        $('#' + id).removeClass('hidden');
+    }); 
+var curDate = getCurrentDate("yyyy-MM-dd")
+var curYear = curDate.substr(0,4)
+var curMonth = curDate.substr(0,7)
+
+var curMonthDate;
+var weekDate; 
+$.post("/mypage/worklog/getWeekDate", {date: curDate },function(data){
+	weekDate = data.startDate + " - " + data.endDate;
+	$("#dateLogWeek1").val(weekDate);
+	loadData();
+} );
+curMonthDate = curMonth + "-01" + " - " + curDate;
+
+//点按年查询
+$("#accordingYear").click( function () {
+	$("#dateLogMonth").hide();
+	 $("#dateLogYear").show(); 
+	 $("#dateLogWeek1").hide(); 
+	 $("#dateLog").hide(); 
+	$("#dateLogYear").val(curYear) 
+	 $("#leftImage").show()
+	 $("#rightImage").show()
+});
+$("#accordingMonth").click( function () { 
+	$("#dateLogMonth").show();
+	 $("#dateLogYear").hide(); 
+	 $("#dateLogWeek1").hide(); 
+	 $("#dateLog").hide(); 
+	$("#dateLogMonth").val(curMonth)
+	 $("#leftImage").show()
+	 $("#rightImage").show()
+});
+$("#accordingWeek").click( function () { 
+	$("#dateLogWeek1").val(weekDate)
+	$("#dateLogMonth").hide();
+	 $("#dateLogYear").hide(); 
+	 $("#dateLogWeek1").show(); 
+	 $("#dateLogWeek1").val(weekDate); 
+	 $("#dateLog").hide(); 
+	 $("#leftImage").show()
+	 $("#rightImage").show()
+	
+});
+$("#customTime").click( function () {
+ 	 $("#dateLog").val(curMonthDate)
+	$("#dateLogMonth").hide();
+	 $("#dateLogYear").hide(); 
+	 $("#dateLogWeek1").hide(); 
+	 $("#dateLog").show(); 
+	$("#leftImage").hide()
+	$("#rightImage").hide()
+});
+
+
+	//起草
+	function draft(){
+		  var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/mypage/workPlan/workPlanEditForm.html?oper=NEW&datePlan='+getCurrentDate("yyyy-MM-dd")+'&resId=' + resId,title:'新增工作计划'})
+	}
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        			elem: '#dateLog'
+        				,btns:	['now', 'confirm']
+        			, range: true
+   	});
+    laydate.render({
+		elem: '#dateLogYear'
+		,btns:	['now', 'confirm']
+		,type:'year'
+	});
+    laydate.render({
+		elem: '#dateLogMonth'
+		,btns:	['now', 'confirm']
+		,type:'month'
+	});
+    laydate.render({
+			elem: '#dateLogWeek'
+			 ,btns:	[]
+			,eventElem: '#dateLogWeek1'
+			,trigger: 'click'
+			//, range: true
+			,done : function(value, date, endDate) {
+				this.value=value;
+				$("#dateLogWeek").text("")
+				if(value==""){
+					$("#dateLogWeek1").value("")
+				}else{
+					$.post("/mypage/worklog/getWeekDate", {date: value },function(data){
+						
+						$("#dateLogWeek1").val(data.startDate + " - " + data.endDate).change()
+						$("#dateLogWeek").text("")
+					} );	
+					
+				}
+				
+			}
+		});
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+         title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	  var pageSize=$('#workLog_table').bootstrapTable('getOptions').pageSize;
+              var pageNumber=$('#workLog_table').bootstrapTable('getOptions').pageNumber;
+              var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+              return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+           }
+    }, {
+        field: 'datePlan'
+        , title: '日期'
+        , width: '15%'
+        , align:"center"
+        	, formatter: function (value, row, index) {
+            	if(value!=null){
+      	   	   		return  "<span data-date='"+row.datePlan+"'>"+value+"</span>";
+            	}else{
+            		return "";
+            	}
+            	 
+            }
+    }, {
+        field: 'content'
+        , title: '内容'
+        , width: '50%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	if(value!=null){
+        		var length = value.length
+	  	   	      var val = '';
+	  	   	      if(length>30){
+	  	   	    	  val = value.substring(0,30)+"...";//
+	  	   	      }else{
+	  	   	    	  val = value;
+	  	   	      }
+  	   	   		return  "<span title='"+value+"' data-content='"+row.content+"'>"+val+"</span>";
+        	}else{
+        		return "";
+        	}
+        	 
+        }
+    },
+    {
+        field: 'planType'
+            , title: '类别'
+            , width: '7%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                    if(value=='0'){
+                    	return '日常'
+                    }else if(value=='1'){
+                        return '业务'
+                    }else if(value=='2'){
+                        return '党务'
+                    }else {
+                        return '其他'
+                    }
+                    
+             }
+     },
+     {
+         field: 'remindTime'
+         , title: '提醒时间'
+         , width: '13%'
+         , align:"center"
+        
+     },
+    {
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+                for (var i = 0; i < opt.length; i++) {
+                    if (opt[i] == "add") {
+
+                    } else if (opt[i] == "update") {
+                    	html += "<i class='glyphicon glyphicon-edit' style='cursor:pointer' title='修改' onclick=\'list.editFun(\"" + row.id + "\",\"" + row.datePlan + "\")\'></i>&nbsp;&nbsp;";
+                    } else if (opt[i] == "delete") {
+                    	 html += "<i class='glyphicon glyphicon-trash' style='cursor:pointer' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                    } else if (row.isChange!='1') {
+                   	 html += "<i class='glyphicon glyphicon-ok-sign' style='cursor:pointer' title='转为日志' onclick=\'list.finishFun(\"" + row.id + "\")\'></i>";
+                    }
+                }
+            return html;
+        }
+    }];
+    var right_table_col2 = [{
+        title: '序号'
+       , width: '5%'
+       , order: "desc"
+       , align:"center"
+       , formatter: function (value, row, index) {
+       	  var pageSize=$('#workLog_table').bootstrapTable('getOptions').pageSize;
+             var pageNumber=$('#workLog_table').bootstrapTable('getOptions').pageNumber;
+             var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+             return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+          }
+   }, {
+       field: 'datePlan'
+       , title: '日期'
+       , width: '15%'
+       , align:"center"
+       	, formatter: function (value, row, index) {
+           	if(value!=null){
+     	   	   		return  "<span data-date='"+row.datePlan+"'>"+value+"</span>";
+           	}else{
+           		return "";
+           	}
+           	 
+           }
+   }, {
+       field: 'content'
+       , title: '内容'
+       , width: '50%'
+       , align:"center"
+       , formatter: function (value, row, index) {
+       	if(value!=null){
+       		var length = value.length
+	  	   	      var val = '';
+	  	   	      if(length>30){
+	  	   	    	  val = value.substring(0,30)+"...";//
+	  	   	      }else{
+	  	   	    	  val = value;
+	  	   	      }
+ 	   	   		return  "<span title='"+value+"' data-content='"+row.content+"'>"+val+"</span>";
+       	}else{
+       		return "";
+       	}
+       	 
+       }
+   },
+   {
+       field: 'planType'
+           , title: '类别'
+           , width: '10%'
+           , align:"center"
+           , formatter: function (value, row, index) {
+                   if(value=='0'){
+                   	return '日常'
+                   }else if(value=='1'){
+                       return '业务'
+                   }else if(value=='2'){
+                       return '党务'
+                   }else {
+                       return '其他'
+                   }
+                   
+            }
+    },
+   {
+       field: 'cz'
+       , title: '操作'
+       , width: '10%'
+       , align:"center"
+       , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+           var opt = value.split(",");
+           var html = "";
+               for (var i = 0; i < opt.length; i++) {
+                   if (opt[i] == "add") {
+
+                   } else if (opt[i] == "update") {
+                   	html += "<i class='glyphicon glyphicon-edit' style='cursor:pointer' title='修改' onclick=\'list.editFun(\"" + row.id + "\",\"" + row.datePlan + "\")\'></i>&nbsp;&nbsp;";
+                   } else if (opt[i] == "delete") {
+                   	 html += "<i class='glyphicon glyphicon-trash' style='cursor:pointer' title='删除' onclick=\'list.deleteFun2(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                   } else if (opt[i] == "publish") {
+                  	 html += "<i class='glyphicon glyphicon-ok-sign' style='cursor:pointer' title='转为日志' onclick=\'list.finishFun(\"" + row.id + "\")\'></i>";
+                   }
+               }
+           return html;
+       }
+   }];
+    $(document).ready(function (e) {
+      	
+      
+    });
+function searchPlan(){
+	TableInit.refTable('workLog_table');
+	TableInit.refTable('workLog_table2')
+}
+    //加载表格中的数据
+    function loadData(){
+    	$("input[type='checkbox']").attr("checked",true)
+        //初始化表格
+        TableInit.init({
+            domId:"workLog_table",
+            url:"/mypage/workplan/getlistBootHql",
+            columns:right_table_col,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            queryParams:function(params){
+            	 params.resId = $('#left_ul').find('a.active').attr("id");
+            	 var types=[];
+            	 $("input[type='checkbox']:checked").each(function(){
+            		 types.push(this.value)
+            	 })
+            	params.dateLogYear = $("#dateLogYear").val();
+            	params.dateLogMonth = $("#dateLogMonth").val();
+            	params.dateLogWeek = $("#dateLogWeek1").val();
+            	params.dateLog = $("#dateLog").val();
+            	params.timeCondition =$("input[type='radio']:checked").val();
+                params.content = $("#content").val();
+                params.isFinish = "0";
+                params.logType = types.join(",").toString();
+                return params;
+            }/* ,
+            readOnlyFn:function(){
+            	 $('tr.readOnly').find('td:lt(4)').unbind('click').bind('click', function (e) {
+ 					//取消事件冒泡
+ 						var resId = $('#left_ul').find('a.active').attr("id");
+		         		 var id = $(this).parent().find("span[data-id]").attr("data-id");
+		         		var datePlan = $(this).parent().find("span[data-date]").attr("data-date");
+		         		 MyLayer.layerOpenUrl({url: '/modules/mypage/workPlan/workPlanReadOnlyForm.html?id='+id+"&datePlan="+datePlan+"&oper=VIEW&resId=" + resId});
+		         		 
+                 });
+            	 $('tr.readOnly').find('td:eq(2)').bind('mouseover', function (e) {
+            		 var txt = $(this).find("span[data-content]").attr("data-content");
+	                     $(this).attr("title","点击查看详情") 
+ 		         		 
+                  });
+            	  
+            } */
+           
+        });
+    	TableInit.init({
+            domId:"workLog_table2",
+            url:"/mypage/workplan/getlistBootHql",
+            columns:right_table_col2,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            queryParams:function(params){
+            	 params.resId = $('#left_ul').find('a.active').attr("id");
+            	 var types=[];
+            	 $("input[type='checkbox']:checked").each(function(){
+            		 types.push(this.value)
+            	 })
+            	params.dateLogYear = $("#dateLogYear").val();
+            	params.dateLogMonth = $("#dateLogMonth").val();
+            	params.dateLogWeek = $("#dateLogWeek1").val();
+            	params.dateLog = $("#dateLog").val();
+            	params.timeCondition =$("input[type='radio']:checked").val();
+                params.content = $("#content").val();
+                params.isFinish = "1";
+                params.logType = types.join(",").toString();
+                return params;
+            }/* ,
+            readOnlyFn:function(){
+            	 $('tr.readOnly').find('td:lt(4)').unbind('click').bind('click', function (e) {
+ 					//取消事件冒泡
+ 						var resId = $('#left_ul').find('a.active').attr("id");
+		         		 var id = $(this).parent().find("span[data-id]").attr("data-id");
+		         		var datePlan = $(this).parent().find("span[data-date]").attr("data-date");
+		         		 MyLayer.layerOpenUrl({url: '/modules/mypage/workPlan/workPlanReadOnlyForm.html?id='+id+"&datePlan="+datePlan+"&oper=VIEW&resId=" + resId});
+		         		 
+                 });
+            	 $('tr.readOnly').find('td:eq(2)').bind('mouseover', function (e) {
+            		 var txt = $(this).find("span[data-content]").attr("data-content");
+	                     $(this).attr("title","点击查看详情") 
+ 		         		 
+                  });
+            	  
+            } */
+           
+        });
+    }
+//    表格数据项的操作
+    var list = {
+        editFun:function(id,datePlan){
+        	  var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+            	 url: '/modules/mypage/workPlan/workPlanEditForm.html?id=' + id + "&datePlan="+datePlan+"&oper=EDIT&resId=" + resId,
+                title:"修改工作计划",
+                height:'98%',
+                width:'98%'
+            })
+        },
+        deleteFun:function(id){
+        	 var resId = $('#left_ul').find('a.active').attr("id");
+            deleteOptd({
+            	url: '/mypage/workplan/delete?id=' + id+ "&resId=" + resId,
+                tableId:'workLog_table'
+            })
+        },
+        deleteFun2:function(id){
+       	 var resId = $('#left_ul').find('a.active').attr("id");
+           deleteOptd({
+           	url: '/mypage/workplan/delete?id=' + id+ "&resId=" + resId,
+               tableId:'workLog_table2'
+           })
+       },
+        finishFun:function(id){
+       	 var data = "";
+        	 var resId = $('#left_ul').find('a.active').attr("id");
+        	layer.confirm('确认是否将该计划转为日志！',{icon:3,title:'确认'},function(){
+        		 $.ajax({
+                    url: '/mypage/workplan/upFinish?id=' + id+ "&resId=" + resId
+                    , type: "GET"
+                    , dataType: "json"
+                    , success: function (result) {
+                        var msg = "";
+                        if (result.flag === "1") {
+                            msg = '计划转为日志成功！';
+                            if ($.trim(result.msg)) {
+                                msg = result.msg;
+                            }
+                            layer.msg(msg, {icon: 1});
+                            TableInit.refTable('workLog_table');
+                            TableInit.refTable('workLog_table2');
+                            //刷新父页面的日历
+                            if($('#year', window.parent.document).val()&&$('#month', window.parent.document).val()){
+  	        					parent.setData($('#year', window.parent.document).val().substring(0,$('#year', window.parent.document).val().indexOf("年")), $('#month', window.parent.document).val().substring(0,$('#month', window.parent.document).val().indexOf("月")))
+  	        				 }else if($('#year', window.top.document).val()&&$('#month', window.top.document).val()){
+  	        					top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+  	        				 }
+                           /*  if($('#year', window.parent.document).val()&&$('#month', window.parent.document).val()){
+ 	        					parent.setData($('#year', window.parent.document).val().substring(0,$('#year', window.parent.document).val().indexOf("年")), $('#month', window.parent.document).val().substring(0,$('#month', window.parent.document).val().indexOf("月")))
+ 	        				}//parent.toToday();
+ 	        				if($('#year', window.top.document).val()&&$('#month', window.top.document).val()){
+ 	        					top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+ 	        				}
+                            //parent.TableInit.refTable('workLog_table'); */
+                        } else {
+                            msg = '计划转为日志失败，请重试！';
+                            if ($.trim(result.msg)) {
+                                msg = result.msg;
+                            }
+                            layer.msg(msg, {icon: 2});
+                        }
+                    }
+                    , error: function () {
+                        layer.msg('计划转为日志失败，请重试！', {icon: 2});
+                    }
+                })
+        		});
+        }
+    }
+    function  deleteOptd (json) {
+        /**
+         * 删除确定框的默认参数
+         * @type {{url: string, msg: string, confirmBtn: confirmBtn, cancelBtn: cancelBtn}}
+         */
+        var delArg = {
+            url: ""
+            , msg: "确定要删除吗？"
+            , tableId: "table"
+            , confirmBtn: function (json) { //确定按钮的事件
+                //发送ajax请求来删除，传参url就是删除的地址
+                //_delArg.url
+                $.ajax({
+                    url: json.url
+                    , type: "GET"
+                    , dataType: "json"
+                    , success: function (result) {
+                        var msg = "";
+                        if (result.flag === "1") {
+                            msg = '删除成功！';
+                            if ($.trim(result.msg)) {
+                                msg = result.msg;
+                            }
+                            layer.msg(msg, {icon: 1});
+                            TableInit.refTable(json.tableId);
+                            if(typeof(json.tableIds)!="undefined"){
+                            	TableInit.refTable(json.tableIds);
+                            }
+                            parent.TableInit.refTable('workLog_table');
+                 			parent.TableInit.refTable('workLog_table2');
+                 			//刷新父页面的日历
+                 			if($('#year', window.parent.document).val()&&$('#month', window.parent.document).val()){
+  	        					parent.setData($('#year', window.parent.document).val().substring(0,$('#year', window.parent.document).val().indexOf("年")), $('#month', window.parent.document).val().substring(0,$('#month', window.parent.document).val().indexOf("月")))
+  	        				 }else if($('#year', window.top.document).val()&&$('#month', window.top.document).val()){
+  	        					top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+  	        				 }
+                            /* if($('#year', window.parent.document).val()&&$('#month', window.parent.document).val()){
+	        					parent.setData($('#year', window.parent.document).val().substring(0,$('#year', window.parent.document).val().indexOf("年")), $('#month', window.parent.document).val().substring(0,$('#month', window.parent.document).val().indexOf("月")))
+	        				}//parent.toToday();
+	        				if($('#year', window.top.document).val()&&$('#month', window.top.document).val()){
+	        					top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+	        				} */
+                        } else {
+                            msg = '删除失败，请重试！';
+                            if ($.trim(result.msg)) {
+                                msg = result.msg;
+                            }
+                            layer.msg(msg, {icon: 2});
+                        }
+                    }
+                    , error: function () {
+                        layer.msg('删除失败，请重试！', {icon: 2});
+                    }
+                })
+                // layer.msg('删除成功', {icon: 1, time: 1000});
+                // layer.msg('删除失败', {icon: 0,time:1000});
+            }
+            , cancelBtn: function () { //取消按钮的事件
+                // layer.msg('也可以这样', {
+                //     time: 20000, //20s后自动关闭
+                //     btn: ['明白了', '知道了']
+                // });
+            }
+        };
+
+        var _delArg = $.extend(delArg, json);
+        //询问框
+        layer.confirm(_delArg.msg, {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            _delArg.confirmBtn(_delArg)
+        }, _delArg.cancelBtn);
+    };
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+        // alert("fdsddsf");
+        layer.confirm("是否导出查询的所有信息？");
+    };
+  //清空查询条件
+	function clearAll(){
+		$("#leftImage").show()
+		$("#rightImage").show()
+		$("#dateLogYear").hide()
+		$("#dateLogMonth").hide()
+		$("#dateLog").hide()
+		$("#dateLogWeek1").show()
+		$("#dateLog").val("");	//时间
+		$("#dateLogYear").val("");
+		$("#dateLogMonth").val("");
+		$("#dateLogWeek1").val(weekDate);
+		$("#content").val("");
+		 $("input[type='radio']").removeAttr("checked");
+		$("input[type='checkbox']").prop("checked", true);
+		$("#accordingWeek").prop("checked", true);
+		
+	}
+  
+
+	$(function () {
+		      $('[data-toggle="tooltip"]').tooltip()
+		      $('[data-toggle="popover"]').popover({
+		        trigger:"hover"
+		      })
+  })
+  //根据按年或按月设置上月、或上周的查询的时间
+  function back(){
+		var timeCondition =$("input[type='radio']:checked").val()
+		if(timeCondition=='0'){
+			//按年
+			$("#dateLogYear").val(parseInt($("#dateLogYear").val())-1)
+		}else if(timeCondition=='1'){
+			//按月
+			var year = parseInt($("#dateLogMonth").val().split("-")[0])
+			var month = parseInt($("#dateLogMonth").val().split("-")[1])-1
+			if(month<=0){
+				year = year-1;
+				month = 12;
+			}
+			$("#dateLogMonth").val(year + "-" + month)
+			
+		}else if(timeCondition=='2'){
+			//按周
+			var startweek = $("#dateLogWeek1").val().substr(0,10);
+				var endweek = $("#dateLogWeek1").val().substr(13,10);
+				var start = getBeforeDate(startweek,7)
+				var end = getBeforeDate(endweek,7)
+				$("#dateLogWeek1").val(start + " - " + end)
+		}else{
+			
+		} 
+	}
+	 //根据按年或按月设置下月、或下周的查询的时间
+	  function next(){
+			var timeCondition =$("input[type='radio']:checked").val()
+			if(timeCondition=='0'){
+				//按年
+				$("#dateLogYear").val(parseInt($("#dateLogYear").val())+1)
+			}else if(timeCondition=='1'){
+				//按月
+				var year = parseInt($("#dateLogMonth").val().split("-")[0])
+				var month = parseInt($("#dateLogMonth").val().split("-")[1])+1
+				if(month>12){
+					year = year+1;
+					month = 1;
+				}
+				$("#dateLogMonth").val(year + "-" + month)
+			}else if(timeCondition=='2'){
+				//按周
+				var startweek = $("#dateLogWeek1").val().substr(0,10);
+				var endweek = $("#dateLogWeek1").val().substr(13,10);
+				var start = getBeforeDate(startweek,-7)
+				var end = getBeforeDate(endweek,-7)
+				$("#dateLogWeek1").val(start + " - " + end)
+			}else{
+				
+			} 
+		}
+	 
+	 
+	//日期时间计算（获取几天前或几天后的日期）
+	    function getBeforeDate(date,n) {
+	        var n = n;
+	        var d = new Date(date);
+	        var year = d.getFullYear();
+	        var mon = d.getMonth() + 1;
+	        var day = d.getDate();
+	        if(day <= n) {
+	            if(mon > 1) {
+	                mon = mon - 1;
+	            } else {
+	                year = year - 1;
+	                mon = 12;
+	            }
+	        }
+	        d.setDate(d.getDate() - n);
+	        year = d.getFullYear();
+	        mon = d.getMonth() + 1;
+	        day = d.getDate();
+	        s = year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day);
+	        return s;
+	    }
+	
+	function weekChange(dom){
+		/* if(dom.value==''){
+			$("#dateLogWeek").text("")
+		} */
+	}
+</script>

@@ -1,0 +1,46 @@
+{
+  "flag": "1",
+  "data": [
+    {
+      "url": "/modules/dwgl/dzz/dzzgl/dzzglList.html",
+      "name": "党组织管理",
+      "style": "/static/images/ico_listsearch.png",
+      "id": "001"
+    },
+     {
+          "url": "/modules/dwgl/dzz/hjxj/hjxjList.html",
+          "name": "换届选举",
+          "style": "/static/images/ico_listsearch.png",
+          "id": "002"
+        },
+        {
+          "url": "/modules/dwgl/dzz/dnbz/dnbzList.html",
+          "name": "党内表彰",
+          "style": "/static/images/ico_listsearch.png",
+          "id": "002"
+        },
+        {
+          "url": "/modules/dwgl/dzz/mzpy/mzpyList.html",
+          "name": "民主评议",
+          "style": "/static/images/ico_listsearch.png",
+          "id": "002"
+        },
+       {
+              "url": "/modules/dwgl/dzz/dzzbg/dzzbgList.html",
+              "name": "党组织变更",
+              "style": "/static/images/ico_listsearch.png",
+              "id": "002"
+       },
+       {
+             "url": "/modules/dwgl/dzz/dfgl/dfglList.html",
+             "name": "党费管理",
+             "style": "/static/images/ico_listsearch.png",
+             "id": "002"
+       },{
+                          "url": "/modules/dwgl/shyk/ndjh/dzbNdjhList.html",
+                          "name": "党支部年度计划",
+                          "style": "/static/images/ico_listsearch.png",
+                          "id": "002"
+                  }
+  ]
+}

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">
+	
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	
+	<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+
+	<title></title>
+	<style>
+		.msg_area {
+		    position: relative;
+		    width: calc(100% - 100px);
+		    margin: 10px auto 10px auto;
+		    background: #ffffff;
+		    min-height: 190px;
+		    border: 1px solid #e8e8e8;
+		}
+		    .huanhang{
+        word-break:normal; 
+        width:auto; 
+        display:block; 
+        white-space:pre-wrap;
+        word-wrap : break-word ;
+        overflow: hidden ;
+    }  
+	</style>
+</head>
+<body class="formpage_bj">
+<div class="container-fluid msg_area">
+    <div class="row m-t-15">
+      <div class="col-sm-12">
+	    <form class="form-horizontal" id="form">
+			<input type="hidden" id="msgId"/>
+			<input type="hidden" id="msgUrl"/>
+			<input type="hidden" id="sendTimeIn"/>
+			<input type="hidden" id="contentIn"/>
+			<input type="hidden" id="subjectIn"/>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">发送时间：</label>
+				<div class="col-sm-10 form-view">
+					<span id="sendTime" name="sendTime"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">消息主题：</label>
+				<div class="col-sm-10 form-view">
+					<span id="subject" name="subject"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">消息内容：</label>
+				<div class="col-sm-10 form-view">
+					<span class="huanhang" id="content" name="content"></span>
+				</div>
+			</div>
+		</form>
+	</div>
+	</div>
+</div>
+</body>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript">
+	
+	function init(){
+		var msgUrl = $("#msgUrl").val();
+		var content = $("#contentIn").val();
+		$("#sendTime").html($("#sendTimeIn").val());
+		$("#subject").html($("#subjectIn").val());
+		/*if(msgUrl && msgUrl != "null"){
+			if(msgUrl.indexOf("http") != -1){
+				$("#content").html("<a target='_blank' style='color:#2a6496' href='"+msgUrl+"'>"+content+"</a>");
+			}else{
+				$("#content").html("<a href='javascript:void(0);' style='color:#2a6496' onclick='closeOpen(\""+msgUrl+"\");'>"+content+"</a>");
+			}
+		}else{*/
+			$("#content").html(content);
+		// }
+	}
+	
+	/**
+	 * 打开系统内部消息，并关闭当前小页面
+	 * @param msgUrl
+	 */
+	function closeOpen(msgUrl){
+		console.log(msgUrl);
+		//查询非流程待办状态
+		var param = new GetParameter(msgUrl);
+		var workItemId = param.workItemId || "";
+		//var flowStatus = getWaitNoflow(workItemId);
+		if (msgUrl.indexOf("?") >= 0) {
+			msgUrl += "&msgId=" + $("#msgId").val();
+	    } else {
+	    	msgUrl += "?msgId=" + $("#msgId").val();
+	    }
+        var oper = param.oper;
+        if(!oper){
+            msgUrl += "&oper=EDIT";
+        }
+        if (getcookie("deptSize") == "1"){//如果是一人多岗,判断当前岗位是否可以办理待办
+            $.ajax({
+                type:"get",
+                url:"/sysWaitNoflowController/getOpenDaiBanQx?workItemId="+workItemId,
+                dataType:"json",
+                success:function (json) {
+                    var isHaveQx = json.isHaveQx;
+                    if(isHaveQx =="1"){
+                        parent.MyLayer.layerOpenUrl({url: msgUrl, title: "消息"});
+                        var index=parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    }else{
+                        layer.msg("当前岗位没有操作权限，请切换岗位！",{icon:0});
+                    }
+                },
+                error:function () {
+                    layer.msg("网络连接错误，请重试！",{icon:2});
+                }
+            });
+        }else{
+            parent.MyLayer.layerOpenUrl({url: msgUrl, title: "消息"});
+            var index=parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+
+	}
+	
+	/**
+	 * 根据待办ID查询待办状态
+	 */
+	function getWaitNoflow(workItemId){
+		var status = "0";
+		$.ajax({
+			url: "/system/waitdo/getWaitdoById",
+			data:{"id":workItemId},
+			dataType:"json",
+			async:false,
+			success: function(json){
+				console.log(json);
+				if(json.flag == "1" && json.data){
+					status = "1";
+				}else if(!json.data){
+					status = "-1";
+				}
+			},
+			error:function(){}
+		})
+		return status;
+	}
+</script>
+</html>

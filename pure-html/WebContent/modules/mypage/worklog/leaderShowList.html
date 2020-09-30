@@ -1,0 +1,455 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+       #showbox {
+            width: 150px;
+            min-height: 50px;
+            font: 100 14px/1 "微软雅黑";
+            border: 1px solid #3c8dbc;
+           // display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            padding: 5px;
+        }
+          .input-group-addon1{
+        	background-color: #fff;
+   			border: none;
+        } 
+        .btn-both{
+        	display:inline-block;
+        	width:24px;
+        	height:24px;
+        }
+        .leftbtn{
+        	background: url("/static/images/worklog/left.png")  no-repeat;
+        }
+         .leftbtn:hover{
+        	background: url("/static/images/worklog/left-hover.png") no-repeat;
+        }
+        .rightbtn{
+        	background: url("/static/images/worklog/right.png") no-repeat;
+        }
+        .rightbtn:hover{
+        	background: url("/static/images/worklog/right-hover.png")  no-repeat;
+        }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                    	<div class="form-group" style="text-align: center;">
+                         	 <label class="col-md-2 control-label form-view"> 查询类型：</label>
+                         	<div class="col-md-5 control-label" style="text-align:left;">
+                           		<input type="radio" name="dateType" value="0" id="accordingYear"><span style="margin-right:20px;">按年查询</span></input>
+                           		<input type="radio" name="dateType"   value="1" id="accordingMonth" ><span style="margin-right:20px;">按月查询</span></input>
+                           		<input type="radio" name="dateType" value="2" checked  id="accordingWeek"><span style="margin-right:20px;">按周查询</span></input>
+                           		 <input type="radio" name="dateType"  value="3"  id="customTime"><span style="margin-right:20px;">自定义时间</span></input>
+                            </div>
+                            <div class="col-md-4 " >
+                           		<div class="input-group" id="year" >
+	                                <span class="input-group-addon input-group-addon1" onclick="back()">
+	                                	<span id="leftImage" class="btn-both leftbtn"></span> 
+	                                 </span>
+	                                <input class="form-control" type="text" class="a"  style=" display:none" id="dateLogYear" />
+	                                 <input class="form-control" type="text" class="a" style=" display:none" id="dateLogMonth" />
+	                                  <input class="form-control" stype="text" class="a"   id="dateLogWeek1" />
+	                                  <input class="form-control" type="text"  class="a"  style=" display:none" id="dateLog" />
+	                               <div id="dateLogWeek" style="margin-top:25px"></div>
+	                                <span class="input-group-addon input-group-addon1" onclick="next()">
+	                                	<span id="rightImage" class="btn-both rightbtn"></span>
+	                                </span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                         <div class="form-group">
+                         	 <label class="col-md-2 control-label"> 人员：</label>
+                            <div class="col-md-4">
+                            	  <div class="input-group">
+		                            	<input id="cruDeptId" name="cruDeptName" type="hidden"/>
+			                      
+			                         	<input type="text" id="xiebPerson" unselectable="on" onclick="openSelectZtree({'id':'xiebPersonId','name':'xiebPerson','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})" class="form-control" >
+				                          <input type="hidden" id="xiebPersonId" name="xiebPersonId" /><!-- 人员ID隐藏域 -->
+				                          <span class="input-group-addon" onclick="openSelectZtree({'id':'xiebPersonId','name':'xiebPerson','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})">
+		                                      <span class="glyphicon glyphicon-user"></span>
+		                                  </span>
+		                            </div>
+                            </div>
+                            
+                            
+                            
+                              <label class="col-md-2 control-label"> 类型：</label>
+                            <div class="col-md-4"  id="logType">
+                            </div>
+                            
+                        </div>
+                         <div class="form-group">
+                             <label class="col-md-2 control-label"> 内容：</label>
+                            <div class="col-md-4">
+                           		<input id="hiddenText1990" type="text" style="display:none" /> 
+                                <input class="form-control" type="text" id="content" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('workLog_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+            
+            <!--bootstrap-table表格-->
+            <table id="workLog_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+<script src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script>
+<script type="text/javascript">
+Dictionary.init({mark:'log_type',type:'1',position:"logType",domType:"checkbox",name:"logType"}); 
+$("#cruDeptId").val(getcookie("deptid"))
+
+var curDate = getCurrentDate("yyyy-MM-dd")
+var curYear = curDate.substr(0,4)
+var curMonth = curDate.substr(0,7)
+
+var curMonthDate;
+var weekDate; 
+$.post("/mypage/worklog/getWeekDate", {date: curDate },function(data){
+	weekDate = data.startDate + " - " + data.endDate;
+	$("#dateLogWeek1").val(weekDate);
+	loadData();
+} );
+curMonthDate = curMonth + "-01" + " - " + curDate;
+
+//点按年查询
+$("#accordingYear").click( function () {
+	$("#dateLogMonth").hide();
+	 $("#dateLogYear").show(); 
+	 $("#dateLogWeek1").hide(); 
+	 $("#dateLog").hide(); 
+	$("#dateLogYear").val(curYear) 
+	 $("#leftImage").show()
+	 $("#rightImage").show()
+});
+$("#accordingMonth").click( function () { 
+	$("#dateLogMonth").show();
+	 $("#dateLogYear").hide(); 
+	 $("#dateLogWeek1").hide(); 
+	 $("#dateLog").hide(); 
+	$("#dateLogMonth").val(curMonth)
+	 $("#leftImage").show()
+	 $("#rightImage").show()
+});
+$("#accordingWeek").click( function () { 
+	$("#dateLogWeek1").val(weekDate)
+	$("#dateLogMonth").hide();
+	 $("#dateLogYear").hide(); 
+	 $("#dateLogWeek1").show(); 
+	 $("#dateLogWeek1").val(weekDate); 
+	 $("#dateLog").hide();
+	 $("#leftImage").show()
+	 $("#rightImage").show()
+	
+});
+$("#customTime").click( function () {
+ 	 $("#dateLog").val(curMonthDate)
+	$("#dateLogMonth").hide();
+	 $("#dateLogYear").hide(); 
+	 $("#dateLogWeek1").hide(); 
+	 $("#dateLog").show(); 
+	 $("#leftImage").hide()
+	 $("#rightImage").hide()
+});
+	
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#dateLog'
+        ,btns:	['now', 'confirm']
+        , range: true
+    });
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+         title: '序号'
+        , width: '10%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	  var pageSize=$('#workLog_table').bootstrapTable('getOptions').pageSize;
+              var pageNumber=$('#workLog_table').bootstrapTable('getOptions').pageNumber;
+              var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+              return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+           }
+    }, {
+        field: 'dateLog'
+        , title: '日期'
+        , width: '15%'
+        , align:"center"
+    }, {
+        field: 'content'
+        , title: '内容'
+        , width: '50%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	 var length = value.length
+	   	      var val = '';
+	   	      if(length>21){
+	   	    	  val = value.substring(0,20)+"...";//
+	   	      }else{
+	   	    	  val = value;
+	   	      }
+	   	   return  "<span data-content='"+row.content+"'>"+val+"</span>";
+        }
+    }, 
+    {
+        field: 'logTypeLable'
+        , title: '类别'
+        , width: '10%'
+        , align:"center"
+    },
+    {
+        field: 'creUserName'
+        , title: '人员'
+        , width: '15%'
+        , align:"center"
+        
+    }];
+
+    $(document).ready(function (e) {
+    	
+      
+        
+    });
+
+    //加载表格数据
+    function loadData(){
+    	//初始化表格
+        TableInit.init({
+            domId:"workLog_table",
+            url:"/mypage/worklog/getLeaderShowlist",
+            columns:right_table_col,
+            queryParams:function(params){
+            	 params.resId = $('#left_ul').find('a.active').attr("id");
+            	 var types=[];
+            	 $("input[type='checkbox']:checked").each(function(){
+            		 types.push(this.value)
+            	 })
+            	params.dateLogYear = $("#dateLogYear").val();
+            	params.dateLogMonth = $("#dateLogMonth").val();
+            	params.dateLogWeek = $("#dateLogWeek1").val();
+            	params.timeCondition =$("input[type='radio']:checked").val();
+                params.content = $("#content").val();
+            	params.dateLog = $("#dateLog").val();
+            	params.logType = types.join(",").toString();
+                params.persionId = $("#xiebPersonId").val();
+                return params;
+            },
+            readOnlyFn:function(){
+            	 $('tr.readOnly').find('td:lt(4)').unbind('click').bind('click', function (e) {
+ 					//取消事件冒泡
+ 						var resId = $('#left_ul').find('a.active').attr("id");
+		         		 var id = $(this).parent().find("span[data-id]").attr("data-id");
+		         		 MyLayer.layerOpenUrl({url: '/modules/mypage/worklog/workLogReadOnlyForm.html?id='+id+"&oper=VIEW&resId="+resId});
+		         		 
+                 });
+            	 $('tr.readOnly').find('td:eq(2)').bind('mouseover', function (e) {
+            		 var txt = $(this).find("span[data-content]").attr("data-content");
+	                     $(this).attr("title","点击查看详情") 
+ 		         		 
+                  });
+            	  
+            }
+           
+        });
+      
+    	
+    }
+
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+        // alert("fdsddsf");
+        layer.confirm("是否导出查询的所有信息？");
+    };
+  //清空查询条件
+	function clearAll(){
+		$("#leftImage").show()
+		$("#rightImage").show()
+		$("#dateLogYear").hide()
+		$("#dateLogMonth").hide()
+		$("#dateLog").hide()
+		$("#dateLogWeek1").show()
+		$("#dateLog").val("");	//时间
+		$("#dateLogYear").val("");
+		$("#dateLogMonth").val("");
+		$("#dateLogWeek1").val(weekDate);
+		$("#xiebPerson").val("");
+		$("#xiebPersonId").val("");
+		$("#content").val("");
+		$("#dateLogYear").val("")
+		 $("input[type='radio']").removeAttr("checked");
+		$("input[type='checkbox']").prop("checked", false);
+		$("#accordingWeek").prop("checked", true);
+		
+	}
+  
+
+	$(function () {
+		//$("input[type='checkbox']").attr("checked",true)
+		      $('[data-toggle="tooltip"]').tooltip()
+		      $('[data-toggle="popover"]').popover({
+		        trigger:"hover"
+		      })
+  })
+  
+    laydate.render({
+		elem: '#dateLogYear'
+		,btns:	['now', 'confirm']
+		,type:'year'
+	});
+    laydate.render({
+		elem: '#dateLogMonth'
+		,btns:	['now', 'confirm']
+		,type:'month'
+	});
+    laydate.render({
+		elem: '#dateLogWeek'
+		,btns:	[]
+		,eventElem: '#dateLogWeek1'
+		,trigger: 'click'
+		//, range: true
+		,done : function(value, date, endDate) {
+			this.value=value;
+			$("#dateLogWeek").text("")
+			if(value==""){
+					$("#dateLogWeek1").value("")
+			}else{
+				$.post("/mypage/worklog/getWeekDate", {date: value },function(data){
+					$("#dateLogWeek1").val(data.startDate + " - " + data.endDate)
+					$("#dateLogWeek").text("")
+				} );	
+			}
+			
+			
+		}
+	});
+    //根据按年或按月设置上月、或上周的查询的时间
+  function back(){
+		var timeCondition =$("input[type='radio']:checked").val()
+		if(timeCondition=='0'){
+			//按年
+			$("#dateLogYear").val(parseInt($("#dateLogYear").val())-1)
+		}else if(timeCondition=='1'){
+			//按月
+			var year = parseInt($("#dateLogMonth").val().split("-")[0])
+			var month = parseInt($("#dateLogMonth").val().split("-")[1])-1
+			if(month<=0){
+				year = year-1;
+				month = 12;
+			}
+			$("#dateLogMonth").val(year + "-" + month)
+			
+		}else if(timeCondition=='2'){
+			//按周
+			var startweek = $("#dateLogWeek1").val().substr(0,10);
+				var endweek = $("#dateLogWeek1").val().substr(13,10);
+				var start = getBeforeDate(startweek,7)
+				var end = getBeforeDate(endweek,7)
+				$("#dateLogWeek1").val(start + " - " + end)
+		}else{
+			
+		} 
+	}
+	 //根据按年或按月设置下月、或下周的查询的时间
+	  function next(){
+			var timeCondition =$("input[type='radio']:checked").val()
+			if(timeCondition=='0'){
+				//按年
+				$("#dateLogYear").val(parseInt($("#dateLogYear").val())+1)
+			}else if(timeCondition=='1'){
+				//按月
+				var year = parseInt($("#dateLogMonth").val().split("-")[0])
+				var month = parseInt($("#dateLogMonth").val().split("-")[1])+1
+				if(month>12){
+					year = year+1;
+					month = 1;
+				}
+				$("#dateLogMonth").val(year + "-" + month)
+			}else if(timeCondition=='2'){
+				//按周
+				var startweek = $("#dateLogWeek1").val().substr(0,10);
+				var endweek = $("#dateLogWeek1").val().substr(13,10);
+				var start = getBeforeDate(startweek,-7)
+				var end = getBeforeDate(endweek,-7)
+				$("#dateLogWeek1").val(start + " - " + end)
+			}else{
+				
+			} 
+		}
+	 
+	 
+	//日期时间计算（获取几天前或几天后的日期）
+	    function getBeforeDate(date,n) {
+	        var n = n;
+	        var d = new Date(date);
+	        var year = d.getFullYear();
+	        var mon = d.getMonth() + 1;
+	        var day = d.getDate();
+	        if(day <= n) {
+	            if(mon > 1) {
+	                mon = mon - 1;
+	            } else {
+	                year = year - 1;
+	                mon = 12;
+	            }
+	        }
+	        d.setDate(d.getDate() - n);
+	        year = d.getFullYear();
+	        mon = d.getMonth() + 1;
+	        day = d.getDate();
+	        s = year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day);
+	        return s;
+	    }
+</script>

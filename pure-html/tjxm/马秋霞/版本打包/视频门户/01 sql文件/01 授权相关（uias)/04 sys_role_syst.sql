@@ -1,0 +1,9 @@
+
+insert into sys_role_syst (RLSY_ID, RESOURCE_ID, RLSY_NM, ORDER_NO, SUPER_RLSY_ID, MEMO, AUTHER, STATUS, TIME, SYS_DEF, ROLE_TYPE, SUB_ID, TREE_ID, MODIFIY_TIME, MODIFIER, FLAG, RLSY_NO)
+values ('1027299', '1027274', '视频发布一级管理员 ', 0, '0', null, '1', '1', '2018-11-13 09:40:39', '0', '0', '97206', '0255', '2018-11-13 09:56:38', '1', '1', 'VIDEO_ONE_ADMIN ');
+
+insert into sys_role_syst (RLSY_ID, RESOURCE_ID, RLSY_NM, ORDER_NO, SUPER_RLSY_ID, MEMO, AUTHER, STATUS, TIME, SYS_DEF, ROLE_TYPE, SUB_ID, TREE_ID, MODIFIY_TIME, MODIFIER, FLAG, RLSY_NO)
+values ('1027300', '1027274', '视频发布二级管理员 ', 0, '0', null, '1', '1', '2018-11-13 09:41:24', '1', '0', '97206', '0256', '2018-12-13 10:12:01', '1', '1', 'VIDEO_TWO_ADMIN ');
+
+insert into sys_role_syst (RLSY_ID, RESOURCE_ID, RLSY_NM, ORDER_NO, SUPER_RLSY_ID, MEMO, AUTHER, STATUS, TIME, SYS_DEF, ROLE_TYPE, SUB_ID, TREE_ID, MODIFIY_TIME, MODIFIER, FLAG, RLSY_NO)
+values ('1027612', '1027204', '视频门户-视频门户查看 ', 0, '0', null, '1', '1', '2018-11-13 11:45:31', '1', '0', '97206', '0257', '2018-11-13 11:46:07', '1', '1', 'spmh-spmhck');

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理class_20191031"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<fileset id="wanglei" dir="../../../../">
+
+		<!--档案管理整理编目，列表优化-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/controller/BmglController.class"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/dao/VirtualClassDaoImpl.class"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/daly/borrow/services/"/>
+
+
+		<include name="WebContent/modules/dagl/bmgl/js/index.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexDangAnFind.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForAdmin.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForLjMl.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForMlLj.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForUnit.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/modify.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/readonly.js"/>
+		<include name="WebContent/modules/dagl/bmgl/index.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexDangAnFind.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexForAdmin.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexforLJ.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexForUnit.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexMl.html"/>
+		<include name="WebContent/modules/dagl/daly/shoppingtrolley/js/"/>
+		<include name="WebContent/modules/dagl/daly/shoppingtrolley/shoppingTrolleyIndex.html"/>
+		<include name="WebContent/modules/dagl/tree/js/"/>
+
+		<!--添加了pageSize，可以自定义初始化加载是数量-->
+		<include name="WebContent/static/js/common/tablelist.js"/>
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

@@ -1,0 +1,24 @@
+{
+	"table":{
+		"type":"table",
+		"data":[{
+			"userName":"张三",
+			"kqDate":"2017-03-03",
+			"id":"1",
+			"kqTime":"9:30:30—18:30:30",
+			"kqStatus":"迟到"
+		},{
+			"userName":"张三",
+			"kqDate":"2017-03-02",
+			"id":"2",
+			"kqTime":"9:30:30—18:30:30",
+			"kqStatus":"迟到"
+		},{
+			"userName":"张三",
+			"kqDate":"2017-03-01",
+			"id":"3",
+			"kqTime":"9:30:30—18:30:30",
+			"kqStatus":"迟到"
+		}]
+	}
+}

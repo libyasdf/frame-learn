@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/product/workflow/plugins/bootstrap/bootstrap.css" rel="stylesheet">
+<link href="/product/workflow/css/formAndWorkflow.css" rel="stylesheet">
+<style type="text/css">
+.style1{
+min-height:200px;
+}
+</style>
+</head>
+
+<body>
+  <div style="display: none;" id="data"></div>
+  <div class=" modal-pt width463" >
+<!--<div class="modal fade modal-pt" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+--><div class="">
+		<div class="modal-content style1" >
+			<div class="modal-header">
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                   <div class="form-group" id="startWFRadiodiv">
+                   </div>
+                </div>
+            </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="/product/workflow/plugins/jquery/jquery-1.11.2.min.js"></script>
+<script src="/product/workflow/js/common/getrequest.js"></script>
+<script src="/product/workflow/js/storages.js"></script>
+<script src="/product/workflow/plugins/lhgdialog/lhgdialog.min.js"></script>
+
+<script type="text/javascript">
+	/*var request = GetRequest();
+	var nodes = JSON.parse(request.node);
+	var flag = request.flag;*/
+
+    var nodes ;
+    var flag ;
+    var data ;
+
+    function fuzhi(){
+        data = $.parseJSON($("#data").text());
+        nodes = data.node;
+        flag = data.flag;
+        if (nodes) {
+            //var nodes = api.data['node'];
+            for ( var i in nodes) {
+                var div = $("<div>").attr({"class":"hang"});
+                var span = $("<span>"+ nodes[i]['wfleveName'] +"</span>");
+                var input = $("<input>").attr({
+                    "type" : "radio",
+                    "name" : "wfleveid",
+                    "value" : nodes[i]['wfleveId']
+                });
+                $(input).appendTo(div);
+                div.append(span);
+                div.appendTo($("#startWFRadiodiv"))
+            }
+        }
+    }
+
+	function getStartWf() {
+		var wfleveid;
+		var $startWf = $('input[name="wfleveid"]:checked');
+		if ($startWf) {
+			wfleveid = $startWf.val();
+			var formData = JSON.parse(TempCache.getItem("formData"));
+			//api.data
+			formData['wfleveid'] = wfleveid;
+			var tempIdea = formData['idea']
+			formData['idea'] = formData['idea'] == undefined ?'':formData['idea'];
+			//console.log("wfleveid:::"+api.data['wfleveid']);
+			//console.log("flag:::"+api.data['flag']);
+			formData['flag'] = flag;
+			TempCache.setItem("formData",JSON.stringify(formData));
+			//api.close();
+		}
+		return wfleveid;
+	}
+</script>
+</body>
+</html>

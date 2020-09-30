@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link href="/static/core/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <!--固定表头所需css-->
+    <link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/form-public.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+
+    <script src="/static/js/common/url.js" type="text/javascript"></script>
+</head>
+
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <!-- resId -->
+        <input type="text" id="resId" name="resId" value="" hidden="true">
+        <!-- 开关字段 -->
+        <input type="text" id="reportId" name="reportId" value="" hidden="true">
+        <input type="text" id="year_month" name="year_month" value="" hidden="true">
+        <form id="dmForm" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" style="text-align: right;"> 值班日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="timeRange" name="timeRange" />
+                            </div>
+                            <label class="col-md-2 control-label" style="text-align: right;"> 值班员：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="watchName" name="watchName"/>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center;padding-top: 5px;">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <label class="col-md-12 control-label" style="color: red;"> 操作流程： 1.导出值班表模板; 2.在值班表模版中填写值班信息; 3.导入值班表; 4.确认无误后(点击列表信息可进行修改),上报值班管理员( 上报后,如再次修改值班表信息,需要再次上报值班管理员 ); </label>
+        <!--新增等按钮-->
+        <div id="toolbar" class="col-md-12">
+            <div class="list_button_area" id = "buttonArea">
+                    <button class="list_table_btn2" onclick="importInfo()">
+                        <span class="glyphicon glyphicon-chevron-left"></span> 导入值班表
+                    </button>
+                    <button class="list_table_btn2" onclick="exportDate()">
+                        <span class="glyphicon glyphicon-chevron-right"></span> 导出模版
+                    </button>
+                    <button class="list_table_btn2" onclick="canOrNotReport()">
+                        <span class="glyphicon glyphicon-send"></span> 上报
+                    </button>
+            </div>
+        </div>
+
+        <!--查询结束-->
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+
+            <!--普网专网电话-->
+            <div style="padding-top: 10px;">
+                <div style="float: left;padding-left: 32%;">
+                    <label class="col-md-5 control-label" style="font-weight:bold; margin-top: 5px; text-align: right;">
+                        普网电话 <span class="glyphicon glyphicon-exclamation-sign userTitle" data-toggle="tooltip" data-placement="bottom" title="1-20位数字"></span> ：
+                    </label>
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" id="common_phone" style="font-weight:bold;"/>
+                    </div>
+                </div>
+                <div style="float: left;">
+                    <label class="col-md-5 control-label" style="font-weight:bold; margin-top: 5px; text-align: right;">
+                        专网电话 <span class="glyphicon glyphicon-exclamation-sign userTitle" data-toggle="tooltip" data-placement="bottom" title="1-20位数字"></span> ：
+                    </label>
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" id="private_phone" style="font-weight:bold;"/>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary btn-sm editable-submit"onclick="updatePhone()">
+                        <span class="glyphicon glyphicon-ok"> 保存普网专网电话</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<!--这里是单独引用的自己的js，因为应用公用的js固定表头会出现问题-->
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--行内编辑所需js-->
+<script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script type="text/javascript" src="/static/core/lhgdialog/lhgcore.lhgdialog.min.js?self=true&skin=iblack"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<!-- 发送消息js -->
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+<script type="text/javascript" src="/common/js/index.js"></script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+        // 获取值班表的id
+        var theRequest = GetRequest();
+        $("#resId").val(theRequest.resId ? theRequest.resId : "");
+        $("#reportId").val(theRequest.reportId ? theRequest.reportId : "");
+        $("#year_month").val(theRequest.year_month ? theRequest.year_month : "");
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'watchDate'
+        , title: '日期'
+        , width: '10%'
+        , align:"center"
+        ,cellStyle:function (row, index) {	//默认样式：居中，鼠标为手
+
+            return {
+                classes: 'readOnly'
+                ,css: {"text-align":"center"}
+            };
+        }
+    },{
+        field: 'weekday'
+        , title: '星期'
+        , width: '5%'
+        , align:"center"
+        ,cellStyle:function (row, index) {	//默认样式：居中，鼠标为手
+
+            return {
+                classes: 'readOnly'
+                ,css: {"text-align":"center"}
+            };
+        }
+    },{
+        field: 'classes'
+        , title: '值班班次'
+        , width: '5%'
+        , align:"center"
+        ,cellStyle:function (row, index) {	//默认样式：居中，鼠标为手
+
+            return {
+                classes: 'readOnly'
+                ,css: {"text-align":"center"}
+            };
+        }
+    },{
+        field: 'watchName'
+        , title: '值班员'
+        , width: '10%'
+        , align:"center"
+        ,editable: {
+            type: "text",                //编辑框的类型。支持text|textarea|select|date|checklist等
+            disabled: false,             //是否禁用编辑
+            mode: "popup",              //编辑框的模式：支持popup和inline两种模式，默认是popup
+            validate: function (value) { //字段验证
+                if (!$.trim(value)) {
+                    return '值班人不能为空';
+                }
+            }
+        }
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'phone'
+        , title: '手机号'
+        , width: '10%'
+        , align:"center"
+        ,editable: {
+            type: "text",                //编辑框的类型。支持text|textarea|select|date|checklist等
+            disabled: false,             //是否禁用编辑
+            title: "联系方式",           //编辑框的标题
+            mode: "popup",              //编辑框的模式：支持popup和inline两种模式，默认是popup
+            validate: function (value) { //字段验证
+                if (!$.trim(value)) {
+                    return '联系方式不能为空';
+                }else if(checkMobile(value)){
+                    return '手机号格式不正确！';
+                }
+            }
+        },
+        formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'shiftLeaderName'
+        , title: '带班领导'
+        , width: '10%'
+        , align:"center"
+        ,editable: {
+            type: "text",                //编辑框的类型。支持text|textarea|select|date|checklist等
+            disabled: false,             //是否禁用编辑
+            mode: "popup",              //编辑框的模式：支持popup和inline两种模式，默认是popup
+            validate: function (value) { //字段验证
+                if (!$.trim(value)) {
+                    return '带班领导不能为空！';
+                }
+            }
+        }
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'shiftLeaderPhone'
+        , title: '手机号'
+        , width: '10%'
+        , align:"center"
+        ,editable: {
+            type: "text",                //编辑框的类型。支持text|textarea|select|date|checklist等
+            disabled: false,             //是否禁用编辑
+            mode: "popup",              //编辑框的模式：支持popup和inline两种模式，默认是popup
+            validate: function (value) { //字段验证
+                if (!$.trim(value)) {
+                    return '带班领导电话不能为空！';
+                }else if(checkMobile(value)){
+                    return '手机号格式不正确！';
+                }
+            }
+        },
+        formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    }];
+
+    $(document).ready(function (e) {
+
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            striped:false,//斑马线
+            url:"/zhbg/zbgl/dutytable/list",
+            height:"400",
+            classes: 'table',
+            pagination:false,	//不分页
+            columns:right_table_col,
+            editable:true,//开启编辑模式
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $("#resId").val();
+                params.reportId = $('#reportId').val();
+                params.timeRange = $('#timeRange').val();
+                params.watchName = $('#watchName').val();
+                return params;
+            },
+            readOnlyFn:function(data){
+                try{
+                    $("#common_phone").val(data.rows[0].commonPhone);
+                    $("#private_phone").val(data.rows[0].privatePhone);
+                }catch (e) {}
+
+                try {
+                    mergeTableRow("watchDate");
+                    mergeTableRow("weekday");
+                    mergeTableRow("commonPhone");
+                    mergeTableRow("privatePhone");
+                }catch (e) {}
+
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+//                     MyLayer.layerOpenUrl({url:'/modules/zhbg/zbgl/sbqkReadOnlyForm.html',title:'只读'});
+                });
+            },
+            //保存的使用
+            onEditableSave: function (field, row, oldValue, $el) {
+                //可进行异步操作
+                $.ajax({
+                    type: "post",
+                    url: "/zhbg/zbgl/dutytable/updateDutyTable",
+                    data: row,
+                    dataType: 'JSON',
+                    success: function (data, status) {
+                        if (status == "success") {
+                            layer.msg('提交数据成功！',{icon:1}); //没有数据时弹出提示信息
+                        }
+                    },
+                    error: function () {
+                        layer.msg('编辑失败！',{icon:0}); //没有数据时弹出提示信息
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+            }
+        });
+    });
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 修改普网电话专网电话的方法
+     * @Date 2018/7/26 14:10
+     * @Param
+     * @return
+     **/
+    function updatePhone(){
+        var reportId = $("#reportId").val();
+        var commonPhone = $("#common_phone").val();
+        var privatePhone = $("#private_phone").val();
+        if("" == commonPhone){
+            layer.msg('普网电话不能为空！',{icon:0});
+            return;
+        }
+        if("" == privatePhone){
+            layer.msg('专网电话不能为空！',{icon:0});
+            return;
+        }
+        if(checkPhone(commonPhone)){
+            layer.msg('普网电话格式不正确！',{icon:0});
+            return;
+        }
+        if(checkPhone(privatePhone)){
+            layer.msg('专网电话格式不正确！',{icon:0});
+            return;
+        }
+        $.ajax({
+            type: "post",
+            url: "/zhbg/zbgl/dutytable/updateDutyTablePhone",
+            data: {
+                "id":reportId,
+                "commonPhone":commonPhone,
+                "privatePhone":privatePhone
+            },
+            dataType: 'JSON',
+            success: function (data, status) {
+                if (status == "success") {
+                    if(data.result ==0){
+                        layer.msg('没有可被修改的数据，请先导入值班表！',{icon:0});
+                    }else{
+                        layer.msg('提交数据成功！',{icon:1});
+                    }
+                }
+            },
+            error: function () {
+                layer.msg('编辑失败！',{icon:0});
+            },
+            complete: function () {
+
+            }
+
+        });
+    }
+    /**
+     * @Author 王富康
+     * @Description //TODO 导出
+     * @Date 2018/7/18 15:19
+     **/
+    function exportDate () {
+
+        layer.confirm('请选择值班类型:', {
+            btn: ['两班','三班','取消'], //按钮
+            //skin: 'layui-layer-lan' //样式类名
+        }, function(e){
+            layer.close(e);
+            $('#dmForm').attr("action","/zhbg/zbgl/dutytable/exportBqData?dutyType=two&year_month="+$("#year_month").val());
+            $('#dmForm').attr("method","post");
+            $("#dmForm").submit();
+        }, function(e){
+            layer.close(e);
+            $('#dmForm').attr("action","/zhbg/zbgl/dutytable/exportBqData?dutyType=three&year_month="+$("#year_month").val());
+            $('#dmForm').attr("method","post");
+            $("#dmForm").submit();
+        }, function (e) {
+            layer.close(e);
+        });
+
+    };
+
+    //导入
+    var _index;
+    function importInfo() {
+
+        var resId = $('#left_ul').find('a.active').attr("id");
+        var reportId = $("#reportId").val();
+
+        layer.open({
+            id:"selectZtree",
+            type: 2,
+            content: '/modules/zhbg/zbgl/dutytable/importFileFrom.html?resId=' + resId+'&importUrl=/zhbg/zbgl/dutytable/importInfo&id='+reportId,
+            area: ['55%', '55%'],
+            title: "导入",
+            success:function(layero, index){
+                _index=index;
+            }
+        })
+    }
+
+    //关闭导入窗口
+    function putBackData1(msg){
+        //关闭窗口
+        layer.close(_index);
+        if(msg.msg == "导入成功！"){
+            layer.msg(msg.msg, {icon: 1});
+        }else{
+
+            //layer.msg(msg.msg, {icon: 2});
+            layer.alert(msg.msg, {
+                area:['400px','300px'],
+                icon: 2,
+                skin: 'layui-layer-lan' //样式类名
+                ,closeBtn: 0
+            });
+        }
+
+
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 上报前判断自己是否需要上报(上报的月份，部门是否在基础配置中)
+     * @Date 2018/8/15 14:10
+     **/
+    function canOrNotReport() {
+        var reportId = $("#reportId").val();
+        var year_month = $("#year_month").val();
+        $.ajax({
+            type: "get",
+            url: "/zhbg/zbgl/config/getConfigByMonthAndUnitId",
+            data: {"month":year_month},
+            dataType: 'JSON',
+            success: function (data) {
+                if ("1" == data.flag) {
+                    if(data.data.length>0){
+                        //如果返回的有数据，则证明自己在上报范围内
+                        reportvalidator(reportId,year_month);
+                    }else{
+                        //自己不需要上报
+                        layer.msg("本部门暂不需要上报"+year_month+"的值班表！",{icon:0});
+                    }
+                }
+            },
+            error: function () {
+                layer.msg('上报失败！',{icon:0}); //没有数据时弹出提示信息
+            }
+        });
+    }
+
+    /**
+     * @Description //TODO 上报前的数据校验
+     **/
+    function  reportvalidator(reportId,year_month) {
+        $.ajax({
+            type: "get",
+            url: "/zhbg/zbgl/dutytable/list",
+            data: {"reportId":reportId},
+            dataType: 'JSON',
+            success: function (data) {
+                if ("1" == data.flag) {
+                    //遍历数据，对数据进行校验
+                    var errorCount = 0;
+                    var errorContent = "<html>\n" +
+                        "<body>\n" +
+                        "<div style='padding-left: 20px;'>\n" +
+                        "<b style='color: red; '>温馨提示：</b><br/>\n" +
+                        "<b style='color: red; padding-left: 20px;'>如果错误信息较少，您可以在列表进行修改;</b><br/>\n" +
+                        "<b style='color: red; padding-left: 20px;'>如果错误信息较多，建议修改excel表格再次导入;</b>\n" +
+                        "<h5>请检查值班表以下信息：</h5>\n" +
+                        "<ul style='margin-left: 40px;'>\n" ;
+                    //记录错误的数量
+                    if(data.data.rows.length ==0){
+                        errorContent+="<li style='list-style-type:disc;'>没有值班数据，请先填写值班表！</li>"; //没有数据时弹出提示信息
+                        errorCount++;
+                    }else{
+                        var chushiName = data.data.rows[0].creChushiName;
+                        //遍历数据，对数据进行校验
+                        for(var i = 0;i<data.data.rows.length;i++){
+                            //对值班员姓名做校验，不为空
+                            if(data.data.rows[i].watchName == ""){
+                                errorContent += "<li style='list-style-type:disc;'>"+data.data.rows[i].watchDate+""+data.data.rows[i].classes+"班，值班员不能为空！</li>";
+                                errorCount++;
+                            }
+                            //值班员手机号
+                            if(data.data.rows[i].phone == ""){
+                                errorContent += "<li style='list-style-type:disc;'>"+data.data.rows[i].watchDate+""+data.data.rows[i].classes+"班，值班员手机号不能为空！</li>";
+                                errorCount++;
+                            }else if(checkMobile(data.data.rows[i].phone)){
+                                //格式校验
+                                errorContent += "<li style='list-style-type:disc;'>"+data.data.rows[i].watchDate+""+data.data.rows[i].classes+"班，值班员手机号格式不正确！</li>";
+                                errorCount++;
+                            }
+                            //带班领导
+                            if(data.data.rows[i].shiftLeaderName == ""){
+                                errorContent += "<li style='list-style-type:disc;'>"+data.data.rows[i].watchDate+""+data.data.rows[i].classes+"班，带班领导不能为空！</li>";
+                                errorCount++;
+                            }
+                            //带班领导手机号
+                            if(data.data.rows[i].shiftLeaderPhone == ""){
+                                errorContent += "<li style='list-style-type:disc;'>"+data.data.rows[i].watchDate+""+data.data.rows[i].classes+"班，带班领导手机号不能为空！</li>";
+                                errorCount++;
+                            }else if(checkMobile(data.data.rows[i].shiftLeaderPhone)){
+                                //格式校验
+                                errorContent += "<li style='list-style-type:disc;'>"+data.data.rows[i].watchDate+""+data.data.rows[i].classes+"班，带班领导手机号格式不正确！</li>";
+                                errorCount++;
+                            }
+                        }
+                        //专网电话
+                        if(data.data.rows[0].privatePhone == ""){
+                            errorContent += "<li style='list-style-type:disc;'> 专网电话不能为空！</li>";
+                            errorCount++;
+                        }else if(checkPhone(data.data.rows[0].privatePhone)){
+                            //格式校验
+                            errorContent += "<li style='list-style-type:disc;'>专网电话格式不正确！</li>";
+                            errorCount++;
+                        }
+
+                        if(data.data.rows[0].commonPhone == ""){
+                            errorContent += "<li style='list-style-type:disc;'> 普网电话不能为空！</li>";
+                            errorCount++;
+                        }
+                        else if(checkPhone(data.data.rows[0].commonPhone)){
+                            //格式校验
+                            errorContent += "<li style='list-style-type:disc;'>普网电话格式不正确！</li>";
+                            errorCount++;
+                        }
+                    }
+                    errorContent += "</ul>\n" +
+                        "</div>\n" +
+                        "</body>\n" +
+                        "</html>";
+                    if(errorCount > 0){
+                        layer.open({
+                            type: 1,
+                            shadeClose: true,
+                            area: ['400px', '500px'],
+                            title: ["上报失败错误信息", 'font-size:16px;font-weight:bold;'],
+                            content: errorContent
+                        });
+                    }else{
+                        //修改上报表数据，发送消息
+                        report(reportId,year_month,chushiName);
+                    }
+                }
+            },
+            error: function () {
+                layer.msg('上报失败！',{icon:0}); //没有数据时弹出提示信息
+            },
+            complete: function () {
+
+            }
+
+        });
+    }
+
+    /**
+     * 上报
+     */
+    function report(reportId,year_month,chushiName){
+        layer.confirm("确定值班表信息无误，并上报吗？",function(){
+            $.ajax({
+                type: "post",
+                url: "/zhbg/zbgl/shangbao/reportDuty",
+                data: {"id":reportId,"month":year_month},
+                dataType: 'JSON',
+                success: function (data) {
+                    if ("1" == data.flag) {
+                        //修改上报状态成功，发送消息
+                        //给该值班配置的创建人id
+                        $.ajax({
+                            type: "get",
+                            url: "/zhbg/zbgl/dutytable/queryReportAdmin",
+                            data: {"id":reportId,"month":year_month},
+                            dataType: 'JSON',
+                            success: function (data) {
+                                if ("1" == data.flag) {
+                                    for(var i =0;i<data.data.length;i++){
+                                        //修改上报状态成功，发送消息
+                                        //给该值班配置的创建人id
+                                        MessageUtil.sendMsg({
+                                            senderId:Config.sysId,	//系统ID
+                                            subject: chushiName+""+year_month+"值班表",		//消息主题
+                                            content: chushiName+""+year_month+"值班表",		//消息内容
+                                            accepterId:data.data[i].userid,	//接收人ID
+                                            status:"0",		//0未读；1已读
+                                            type:"3"		//3站内消息
+                                        });
+                                    }
+                                }
+                            },
+                            error: function () {
+                                layer.msg('获取值班管理员信息失败！',{icon:0}); //没有数据时弹出提示信息
+                            }
+                        });
+                        layer.msg('上报成功！',{icon:1}); //没有数据时弹出提示信息
+                    }
+                },
+                error: function () {
+                    layer.msg('上报失败！',{icon:0}); //没有数据时弹出提示信息
+                }
+            });
+        });
+    }
+
+    //    表格数据项的操作
+    var list = {
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr('id');
+            MyLayer.deleteOpt({
+                url: '/zhbg/zbgl/dutytable/delete?id=' + id +"&resId="+resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+
+    function keyLogin(){
+        if (event.keyCode==13)  //回车键的键值为13
+            TableInit.refTable('right_table');
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 手机号验证：正确格式为:\n 1开头,第二位是3457869,然后后边9位数字
+     * @Date 2018/8/20 11:31
+     **/
+    function checkMobile(value){
+        var myreg = /^1[3457869]\d{9}$/;
+        if (!myreg.test(value)) {
+            //是不合法的手机号
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 电话号码验证：正确格式为：四位数字
+     * @Date 2018/8/20 11:32
+     **/
+    function checkPhone(str){
+        var myreg = /^[0-9]{1,20}$/;
+        if (!myreg.test(str)) {
+            //是不合法的电话
+            return true;
+        } else {
+            //电话合法
+            return false;
+        }
+    }
+</script>
+</body>
+</html>

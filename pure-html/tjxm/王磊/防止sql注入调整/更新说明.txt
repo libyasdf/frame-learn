@@ -1,0 +1,2 @@
+﻿1.删除WebContent/modules/zhbg/xxkh/gradePaper/js/jquery-3.3.1.min.js！！！
+2.告诉杜建松，让杜建松把档案的报表打印的代码整合进来再进行提交！！！

@@ -1,0 +1,431 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div class="folderBar">
+                    <!-- <i id = "addColumn" class="glyphicon glyphicon-plus-sign" onclick="addType();" style="font-size:18px;cursor: pointer; display: none" title="新增栏目"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+                    <i id = "updateColumn" class="glyphicon glyphicon-edit" onclick="editType();" style="font-size:18px;cursor: pointer; display: none" title="修改栏目"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <!-- <i id = "deleteColumn" class="glyphicon glyphicon-trash" onclick="deletType();" style="font-size:18px;cursor: pointer; display: none" title="删除栏目"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -->
+                    <!-- <i class="glyphicon glyphicon-search" onclick="showSearchFrame()" style="font-size:18px;cursor: pointer;" title="查询栏目"></i> -->
+                </div>
+                <div id="searchDiv" class="input-group input-group-sm" style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div class="vertify-panel vertify-details" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <input type="hidden" id="superId" name="" value="">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 栏目名称：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="columnName" id="columnName"/>
+                                </div>
+                                <label class="col-md-2 control-label"> 栏目编码：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="columnCode" id="columnCode"/>
+                                </div>
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+            <!--<div class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="addType()" id = "addColumn1" style="display: none">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                </div>
+            </div>-->
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/video/background/column/js/videoColumnTree.js"></script>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+ <script src="/common/js/config.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/modules/zhbg/xxkh/displayVideoAndPdf/js/displayVideoAndPdf.js"></script>
+<script type="text/javascript">
+    scrollTop.init();
+    var resId = $('#left_ul').find('a.active').attr("id");
+    // 增加栏目类型
+    function addType() {
+        // 判断是否已经选择了某个节点
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        var ztree = $.fn.zTree.getZTreeObj("treeDemo");
+        if (nodes.length == 0) {
+        	if($.fn.zTree.getZTreeObj("treeDemo").getNodes().length > 0){
+	    		layer.msg('请选择栏目', {icon: 0});
+	    		return false;
+	    	}
+			var url = "/modules/video/background/column/videoColumnAddForm.html?superId="+0+"&nodeLevel="+0+"&isFirst=1&oper=NEW&resId="+resId;
+			var title = "";
+			title = "新增栏目";
+			layer.open({
+				type : 2,
+				shadeClose : true,
+				content : url,
+				area: ['90%', '90%'],
+                title: [title, 'font-size:16px;font-weight:bold;']
+			})
+			if (nodes.length > 0) {
+				ztree.selectNode(nodes[0]);
+	        }
+        } else {
+            var superId = nodes[0].id;//父节点id
+            var nodeLevel = nodes[0].nodeLevel;//父节点级别
+            var url = "/modules/video/background/column/videoColumnAddForm.html?superId="+superId+"&nodeLevel="+nodeLevel+"&code=" + nodes[0].code + "&isFirst=0&oper=NEW&resId="+resId;
+            var title = "新增栏目";
+            layer.open({
+                type: 2,
+                shadeClose: true,
+                content: url,
+                area: ['90%', '90%'],
+                title: [title, 'font-size:16px;font-weight:bold;']
+            })
+        }
+    }
+
+    //修改栏目
+    function editType(){
+        // 判断是否已经选择了某个节点
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        if (nodes.length == 0) {
+            layer.msg('请选择栏目', {icon: 0});
+        } else {
+            var id = nodes[0].id;
+            var url = "/modules/video/background/column/videoColumnAddForm.html?id="+id+"&open=EDIT&resId="+resId;
+            layer.open({
+                type: 2,
+                shadeClose: true,
+                content: url,
+                area: ['90%', '90%'],
+                title: ['修改栏目', 'font-size:16px;font-weight:bold;']
+            })
+        }
+    }
+
+    //删除栏目
+    function deletType(){
+    	  // 判断是否已经选择了某个节点
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        if (nodes.length == 0) {
+            layer.msg('请选择栏目', {icon: 0});
+        } else {
+            var nodeChildren = nodes[0].children;
+            if(nodeChildren && nodeChildren.length>0){
+                layer.msg("该栏目下存在子栏目不能删除！",{icon:2});
+                return false;
+            }
+            layer.confirm("确定要删除该栏目吗？",function(){
+                $.ajax({
+                    type: "POST",
+                    url:"/video/background/column/delete",
+                    data:{ids:nodes[0].id},
+                    dataType:"json",
+                    success:function(data){
+                        if ('1' == data.flag) {
+                            layer.msg("删除成功！", {icon: 1,time:1000}, function (index) {
+                                typeTree.delNode(nodes[0].id);
+                              //调用接口，在音视频系统中同步删除该分类
+								deleteFenLeiInHB(nodes[0].code);
+                            });
+                            
+                        }else{
+                            layer.msg("该栏目下有子栏目，不可删除！", {icon: 5});
+                        }
+                    },
+                    error:function(data){
+                    }
+                });
+            });
+        }
+    }
+
+    //查询栏目
+    function searchType(){
+        typeTree.searchNodes($("#typeName").val());
+    }
+
+    // 查询窗口
+    function showSearchFrame() {
+        var search = $("#searchDiv");
+        if (search.is(":hidden")) {
+            search.show();
+            $("#typeName").focus();
+        } else {
+            search.hide();
+        }
+    }
+
+    // 刷新列表
+    function refresh() {
+        $("#right_table").bootstrapTable("refresh");
+    }
+
+    //清空查询条件
+    function clearAll() {
+        $("#columnName").val("");	//字典名称
+        $("#columnCode").val("");	//字典值
+    }
+
+    //判断当前人权限控制按钮是否显示
+    function showCz(columnId,isFirst){
+        var datas={"columnId":columnId};
+        var isGly = "";
+        httpRequest("get","/video/background/column/getColumnCz",datas,function (data){ //判断当前人是否是选中栏目的管理员
+            if('1'== data.isShowGlPage){
+                isGly = "1";
+            }
+        });
+        var rolesNo = getcookie("rolesNo");
+        if((rolesNo.indexOf(Config.videoRolesNoLocate)>0 || isGly == '1' || rolesNo.indexOf(Config.videoRolesNoSection)>0) && isFirst=='0'){ //如果当前是信息发布一级管理员或者是栏目管理员则可以新增删除和修改
+            $("#addColumn").show();
+            $("#updateColumn").show();
+            $("#deleteColumn").show();
+        }else{
+            $("#addColumn").hide();
+            $("#updateColumn").hide();
+            $("#deleteColumn").hide();
+        }
+    }
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            return "<span data-id='"+row.id+"'>"+(index + 1)+"</span>";
+        }
+    }, {
+        field: 'columnName'
+        , title: '栏目名称'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'columnCode'
+        , title: '栏目编码'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'isSp'
+        , title: '是否审批'
+        , width: '8%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='0'){
+                return "否";
+            }
+            if(value=='1'){
+                return "是";
+            }
+        }
+    }, {
+        field: 'columnGlUserNames'
+        , title: '栏目管理员'
+        , width: '10%'
+        , align: "center"
+    },  {
+        field: 'columnRemark'
+        , title: '栏目说明'
+        , width: '20%'
+        , align: "center"
+        , formatter: function (value, row, index) {
+        	if(value!=null){
+        		var length = value.length
+	  	   	      var val = '';
+	  	   	      if(length>18){
+	  	   	    	  val = value.substring(0,17)+"...";//
+	  	   	      }else{
+	  	   	    	  val = value;
+	  	   	      }
+  	   	   		return  "<span data-content='"+row.columnRemark+"'>"+val+"</span>";
+        	}else{
+        		return "";
+        	}
+        }
+    }, {
+        field: 'isFbfw'
+        , title: '是否有发布范围'
+        , width: '8%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='0'){
+                return "否";
+            }
+            if(value=='1'){
+                return "是";
+            }
+        }
+    }, {
+        field: 'isShow'
+        , title: '是否门户显示'
+        , width: '8%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='0'){
+                return "否";
+            }
+            if(value=='1'){
+                return "是";
+            }
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        typeTree.init();
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        var superId = "";
+        if (nodes.length > 0) {
+            $("#superId").val(nodes[0].id);
+        }
+        var columnId = $("#superId").val();
+      
+        showCz(columnId,nodes[0].isFirst);
+       /* var columnId = $("#superId").val();
+        var datas={"columnId":columnId};
+        var isGly = "";
+        httpRequest("get","info/column/getShowPage",datas,function (data){ //判断当前人是否是选中栏目的管理员
+            if('1'== data.isShowGlPage){
+                isGly = "1";
+            }
+        });
+        var rolesNo = getcookie("rolesNo");
+        if(rolesNo.indexOf("D601")>0 || isGly == '1'){ //如果当前是信息发布一级管理员或者是栏目管理员则可以新增删除和修改
+            $("#addColumn").show()
+            $("#updateColumn").show()
+            $("#deleteColumn").show()
+            $("#addColumn1").show()
+        }*/
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/video/background/column/getColumnList",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = resId;
+                params.superId = $("#superId").val();
+                params.columnName = $("#columnName").val();
+                params.columnCode = $("#columnCode").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:eq(5))').attr("title", "点击查看详情");
+                $('tr.readOnly').find('td:eq(5)').bind('mouseover', function (e) {
+           		       var txt = $(this).find("span[data-content]").attr("data-content");
+	                     $(this).attr("title",txt) 
+		         		 
+                 });
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/video/background/column/videoColumnAddFormReadOnly.html?id='+id+"&oper=VIEW&resId=" + resId, title: "栏目信息查看"});
+                });
+            },
+        });
+    });
+
+    //表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/video/background/column/videoColumnAddForm.html?id='+id+'&oper=EDIT&resId='+resId,
+                title: "修改"
+            })
+        },
+        deleteFun: function (id) {
+            MyLayer.deleteOpt({
+                url: '/video/background/column/delete?ids='+id+'&resId='+resId,
+                tableId: 'right_table'
+            });
+            typeTree.delNode(id);
+        }
+    }
+</script>

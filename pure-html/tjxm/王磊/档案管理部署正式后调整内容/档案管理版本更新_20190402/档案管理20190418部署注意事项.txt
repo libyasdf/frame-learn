@@ -1,0 +1,72 @@
+1.调整两个全宗名称为正式环境的全宗名称。
+2.新增一个门类模板（使用文书简化模板），并配置全宗为04。
+	2.1配置档号规则、数据对照。
+	2.2测试下新增、提交、汇总功能是否正常。
+3.查询门类下各层表中组卷标识（archive_flag）、档案实体状态（archive_entity_status）情况：
+	3.1查询sql:
+
+		declare
+		   i int:=1;
+		BEGIN
+		  --遍历所有门类
+		 FOR ml IN (select * from dagl_category_table t) LOOP
+		    dbms_output.put_line(i||'、门类：'||ml.category_name);
+		    --遍历门类下业务表
+		    for zl in(select t.s_table_name,td.table_chn_name from tables_relation t left join table_description td on t.s_table_name=td.table_name where t.s_table_name not like '%dak%' 
+		      start with t.m_table_name=ml.category_code connect by prior t.s_table_name=t.m_table_name) loop
+		      dbms_output.put_line('  子表：'||zl.table_chn_name||'('||zl.s_table_name||')');
+		      --遍历业务表下字段：目前已知可作为各门类、各层级公共字段为：recid（唯一标识）、maintitle（题名）、basefolder_unit（立卷单位）
+		      for zd in(SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = upper(zl.s_table_name) AND COLUMN_NAME in(upper('archive_entity_status'),upper('archive_flag'))) loop
+			dbms_output.put_line('     字段：'||zd.column_name);
+		      end loop;
+		    end loop;
+		    i:=i+1;
+		 END LOOP;
+		END;
+	3.2如果需要在业务表添加，根据需要（所有表需要时候，如果只是一两个表就手动执行下方的sql）使用下边的sql:
+		DECLARE
+		  V_SQL        VARCHAR2(2000);
+		  V_TABLE_NAME VARCHAR2(50);
+		  CURSOR C1 IS select distinct table_name from table_struct_description t;--查询所有档案业务表
+		BEGIN
+		  OPEN C1;
+		  LOOP
+		    --提取一行数据到c1
+		    FETCH C1
+		      INTO V_TABLE_NAME;
+		    --判读是否提取到值，没取到值就退出
+		    --取到值c_job%notfound 是false 
+		    --取不到值c_job%notfound 是true
+		    EXIT WHEN C1%NOTFOUND;
+		    begin
+		    --添加档案实体状态
+		    V_SQL := 'alter table ' || V_TABLE_NAME || ' add ARCHIVE_ENTITY_STATUS VARCHAR2(6 CHAR)';
+		    EXECUTE IMMEDIATE V_SQL;
+		    
+		    --添加档案实体状态备注
+		    V_SQL := 'comment on column ' || V_TABLE_NAME ||'.ARCHIVE_ENTITY_STATUS is'||'''档案实体状态：待提交，已提交待归档，已归档''';
+		    EXECUTE IMMEDIATE V_SQL;
+		    
+		     --添加组卷标识
+		    V_SQL := 'alter table ' || V_TABLE_NAME || ' add ARCHIVE_FLAG VARCHAR2(6 CHAR)';
+		    EXECUTE IMMEDIATE V_SQL;
+		    
+		    --添加组卷标识备注
+		    V_SQL := 'comment on column ' || V_TABLE_NAME ||'.ARCHIVE_FLAG is '||'''组卷标识，已组卷、未组卷''';
+		    EXECUTE IMMEDIATE V_SQL;
+
+		    dbms_output.put_line(V_TABLE_NAME||'处理完成！');
+		    
+		    exception when others then
+		      dbms_output.put_line(V_TABLE_NAME||'出现异常，该表需要手动添加这两个字段！');
+		    end;
+		  END LOOP; --关闭游标
+		  CLOSE C1;
+		END;
+4.备份、删除全宗和门类的数据字典。
+select t.* from  sys_data_dictionary t where t.mark in('fonds_no','mly0');
+5.确认下门类code是否有包含下划线“_”的情况，如果有，目前已知会影响档号规则设置。
+select t.*,t.rowid from dagl_category_table t where instr(t.category_code,'_')>0;
+6.更新表配置里所有的全宗和类别号不为简单、不为组合查询项。
+select count(*) from table_struct_description t where  t.column_name in('fonds_no','leibiehao');
+update table_struct_description t set t.column_as_simquery='F',t.column_as_ctg_query='F' where  t.column_name in('fonds_no','leibiehao');

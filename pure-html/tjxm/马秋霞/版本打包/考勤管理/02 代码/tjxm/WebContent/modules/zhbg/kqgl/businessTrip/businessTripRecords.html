@@ -1,0 +1,199 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" id="form">
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls ">
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+							<label class="col-md-2 control-label"> 出差日期：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" />
+							</div>
+							<label class="col-md-2 control-label"> 出差类型：</label>
+							<div class="col-md-3">
+								<select id="busiTripType" name="busiTripType" class="form-control"></select>
+						     </div>
+							<!-- <div class="col-md-3" id="busiTripType"></div> -->
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="col-md-12" style="text-align: center">
+									<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table1')">
+										查&nbsp;&nbsp;询</button>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<button type="button" class="btn btn-primary"
+										onclick="clearAll();">重&nbsp;&nbsp;置</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			<!--bootstrap-table表格-->
+			<table id="right_table1"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+Dictionary.init({position:"busiTripType",mark:"busiTripType",type:"1",name:"busiTripType",domType:"select"});
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        ,formatter: function (value, row, index) {
+        	//计算序号，并存放业务ID，及已办事项ID
+        	var pageSize=$('#right_table1').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table1').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";   
+       }
+    }, 
+    {
+        field: 'creUserName'
+        , title: '申请人'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'applicationUnitName'
+        , title: '单位'
+        , width: '11%'
+        , align:"center"
+    },
+    {
+        field: 'tripColleague'
+        , title: '同行人员'
+        , width: '11%'
+        , align:"center"
+    },
+    {
+        field: 'startTime'
+        , title: '出差日期'
+        , width: '20%'
+        , align:"center",
+        formatter: function (value, row, index) {
+        	if(row.endTime!=""){
+        		return value+' - '+row.endTime;
+        	}else{
+        		return value
+        	}
+        }
+    }, {
+        field: 'longTime'
+        , title: '出差时长(d)'
+        , width: '8%'
+        , order: "desc"
+        , align:"center"
+    },{
+        field: 'destination'
+        , title: '目的地'
+        , width: '10%'
+        , align:"center"
+    }
+    ,{
+        field: 'busiTripType'
+        , title: '出差类型'
+        , width: '8%'
+        , align:"center"
+        ,formatter : function (value, row, index)  {
+        	if(value=='0'){
+        		return "业务出差";
+        	}
+			if(value=='1'){
+			    return "行政出差";    		
+			        	}
+            }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table1",
+            url:"/zhbg/kqgl/businessTrip/getBusinessTripRecordList",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                 params.resId = $('#left_ul').find('a.active').attr("id");
+            	 params.busiTripType = $("#busiTripType").val();
+                 params.timeRange = $("#timeRange").val();
+                 return params;
+            },
+            readOnlyFn:function(){
+            	$('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+                  //取消事件冒泡 end
+                    var resId = $('#left_ul').find('a.active').attr("id");
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					//var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+//                    取消事件冒泡 end
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/kqgl/businessTrip/businessTripReadOnlyForm.html?id='+id+ "&oper=VIEW&resId="+resId,title:'只读详情'});
+                });
+            }
+        });
+    });
+
+   //刷新方法，流程中需要回调
+	function refreshPage(){
+		TableInit.refTable("right_table1");
+	}
+ 	//清空查询条件
+	function clearAll() {
+		$("#timeRange").val(""); //时间
+		$("#busiTripType").val("");
+		//清空倒休
+		/* var $busiTripType = $("input[name=busiTripType]");
+		$busiTripType.attr("checked", false); */
+	}
+</script>

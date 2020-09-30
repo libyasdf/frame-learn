@@ -1,0 +1,112 @@
+
+.files-upload-info-panel {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 1001;
+    display:none;
+}
+
+.files-upload-info-body {
+    position: absolute;
+    bottom: 0;
+    right: 30px;
+    width: 633px;
+    height: 420px;
+
+    background-color: #fff;
+    box-shadow: 3px 3px 8px 1px rgba(0,0,0,0.2);
+    tion:all 0.3s ease-out;
+    -moz-transition:all 0.3s ease-out; /* Firefox 4 */
+    -webkit-transition:all 0.3s ease-out; /* Safari and Chrome */
+    -o-transition:all 0.3s ease-out; /* Opera */
+    transition:all 0.3s ease-out;
+
+}
+
+.files-upload-info-body .modal-header {
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.files-upload-info-body  .table-div {
+    height: 337px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+}
+
+.files-upload-info-body table th {
+    color: rgb(154,154,154);
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.files-upload-info-body .tips{
+    position: absolute;
+    top: -1px;
+    display: block;
+    width: 100%;
+    height: 38px;
+
+    color: rgb(154,154,154);
+    font-size: 14px;
+
+    line-height: 38px;
+    color: #2e2e2e;
+    background: #f8ebbf;
+}
+
+.tips .glyphicon {
+    left: 10px;
+    top: 5px;
+    margin-right: 20px;
+    font-size: 20px;
+    color: #c57872;
+}
+
+.tips button.close {
+    position: relative;
+    top: 7px;
+    right: 15px;
+}
+
+.suspension {
+    bottom:-337px;
+}
+
+.suspension-bottom {
+    bottom:-375px;
+}
+
+
+
+.files-upload-info-panel .modal-header {
+    padding: 8px 15px ;
+    background-color: #eee;
+    border-color: #eee;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.files-upload-info-panel .modal-header > h4{
+    font-size: 20px;
+    color: #555;
+}
+
+.files-upload-info-panel .modal-header > button.close {
+    margin-top: 0px;
+    color: #555;
+    opacity: 0.8;
+}
+
+.files-upload-info-panel .modal-header > button.close:hover {
+    opacity: 1;
+}
+
+.files-upload-info-panel .modal-footer {
+    padding: 8px 15px;
+    background-color: #f5f5f5;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}

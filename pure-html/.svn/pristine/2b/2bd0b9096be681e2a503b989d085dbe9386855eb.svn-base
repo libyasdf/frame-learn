@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <!--校验表单
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>-->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+
+</head>
+
+<style type="text/css">
+    /*表格可输入*/
+    .tableInput{
+        border-color: white !important;
+        box-shadow: none !important;
+    }
+    /*使两个字每行*/
+    .width2em{
+        width: 4em;
+    }
+    /*多行文本样式*/
+    .textareaZDY{
+        width: 100%;
+        border: 0px;
+    }
+</style>
+<body class="formpage_bj">
+    <form class="form-horizontal" id="form">
+        <!-- resId -->
+        <input name="resId" id="resId" type="hidden" value="">
+        <!-- 流程字段-->
+		<input name="id" id="id" type="hidden" value=""/><!-- 工作项ID -->
+		<input name="ideaName" id="ideaName" type="hidden" value=""/><!-- 当前用户意见域名称-->
+		<input name="subflag" id="subflag" type="hidden" value=""/><!-- 流程状态 -->
+		<input name="filetypeid" id="filetypeid" type="hidden" value=""/><!-- 流程ID -->
+		<input name="workFlowId" id="workflowid" type="hidden" value=""/><!-- 流程唯一ID -->
+		<input name="workitemid" id="workitemid" type="hidden" value=""/><!-- 待办工作项ID -->
+		<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+		<input type="hidden" id="deptId" name="deptId" value="" /><!-- 部门id隐藏域 -->
+        <input type="hidden" id="fillmode" name="fillmode"value="2">
+        <input type="hidden" id="roleNo" name="roleNo"/>
+		<!-- 流程字段结束 -->
+        <div class="container-fluid formpage_idea">
+            <div class="gw_form_block">
+                <div class="gw_form_block_title">流程信息</div>
+                <div class="gw_form_block_main">
+                    <table width="90%" border="0" cellspacing="0" cellpadding="0" class="gw_form_block_table">
+                        <tbody>
+                            <tr>
+                                <td width="15%" class="text-right">节点操作提示：</td>
+                                <td width="85%" id="flowMemo"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="gw_form_block">
+                <div class="gw_form_block_title" onclick="showTable('yjxxTable','showOrHideImg');">
+                    意见信息
+                    <img align="right" style="margin-top: 10px" src="/static/images/icon7_down.gif" hspace="0" id="showOrHideImg" />
+                </div>
+                <div class="gw_form_block_main" id="yjxxTable">
+                    <div class="table_body-wrapper">
+                        <table class="table table-hover table-reset js-disk-row" style="border: 0px">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+            <!-- 基本信息 -->
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="block_title">
+                        <span class="name">基本信息</span>
+                    </div>
+                </div>
+            </div>
+            <h1 class="text-center">工作人员岗位职责书</h1>
+            <div class="col-md-12 text-center">
+                <span class="disDoneA">(<input style="width:36px;border: 0px;cursor: pointer;" type="text" name="zzsYear" class="layui-input tableInput" id="zzsYear">年度)</span>
+            </div>
+            <div style="margin-bottom: 40px;" class="col-md-12">
+                <table id="tablea" class="zqfp_table table table-bordered" style="margin-left: 60px; margin-right: 60px;width: calc(100% - 120px);">
+                    <tbody>
+                    <tr class="disDoneA">
+                        <td>姓名</td>
+                        <td><input type="text" name="zzsName" class="form-control tableInput"></td>
+                        <td>性别</td>
+                        <td>
+                            <select  name="zzsSex" style="width: 5em;"  class="form-control">
+                                <option>男</option>
+                                <option>女</option>
+                            </select>
+                        </td>
+
+                        <td class="checkoutFontLG" data-checkout="zzsAge">年龄</td>
+                        <td class="checkoutInputLG"><input data-checkout="zzsAge" type="text" name="zzsAge" class="form-control tableInput"></td>
+
+                        <td class="checkoutFontLG" data-checkout="politicsStatus" style="width: 6em;">政治面貌</td>
+                        <td class="checkoutInputLG">
+                            <select  name="politicsStatus" data-checkout="politicsStatus" class="form-control">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="disDoneA">
+                        <td>单位</td>
+                        <td colspan="3"><input type="text" name="workUnit" class="form-control tableInput"></td>
+                        <td style="width: 6em;">职位职级</td>
+                        <td><input type="text" name="positionRank" class="form-control tableInput"></td>
+                        <td style="width: 6em;">党内职务</td>
+                        <td><input type="text" name="partyPosts" class="form-control tableInput"></td>
+                    </tr>
+                    <tr class="disDoneA">
+                        <td>岗位名称</td>
+                        <td colspan="3">
+                            <select  name="jobTitle" class="form-control">
+                            </select>
+                        </td>
+                        <td style="width: 6em;">岗位类型</td>
+                        <td colspan="3">
+                            <select  name="postType" class="form-control">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="disDoneA">
+                        <td class="checkoutFontLG" data-checkout="responsibilities">岗位职责</td>
+                        <td colspan="7" class="checkoutInputLG">
+                            <textarea data-checkout="responsibilities" name="responsibilities" rows="17" placeholder="限制800字"  maxlength=800></textarea>
+                        </td>
+                    </tr>
+                    <tr class="disDoneA">
+                        <td class="spanResponsibilities">目标任务</td>
+                        <td colspan="7">
+                            <textarea name="aimTask" rows="17"  placeholder="限制800字" maxlength="800"></textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr style=" color: #eee; border: 1px solid;">
+            <div class="col-md-12 disDoneB" style="margin-top: 60px;">
+                <table class="zqfp_table table table-bordered"style="margin-left: 60px; margin-right: 60px;width: calc(100% - 120px);">
+                    <tbody>
+                    <tr>
+                        <td>履职情况</td>
+                        <td colspan="7">
+                            <textarea name="degreePerformance" rows="17"  maxlength=800></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>奖罚情况</td>
+                        <td colspan="7">
+                            <textarea name="rewardsPunishment" rows="12"  maxlength=600></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>考评结果</td>
+                        <td colspan="7">
+                            <textarea name="evaluationResults"  rows="12"  maxlength=600></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>本人意见</td>
+                        <td colspan="3" style="width: 42%;">
+                            <textarea name="myOpinion" rows="10"  maxlength=600></textarea>
+                        </td>
+                        <td><div  style="margin:0px auto;width: 2em;">主管领导意见</div></td>
+                        <td colspan="3">
+                            <textarea name="competentAdvice" rows="10"  maxlength=600></textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+    <!--意见信息start-->
+    <div class="container-fluid gw_form_bottom_yijian" id ="ideaArea" style="display: none;margin-bottom: 50px;" >
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="gw_form_bottom_table  mt_10">
+            <tr>
+                <td width="15%" class="title">我的意见：</td>
+                <td width="85%">
+                    <table>
+                        <tr>
+                            <td rowspan="2" width="90%">
+                                <textarea name="textarea" id="idea" cols="45" rows="3" placeholder="意见最多填写200字"
+                                          class="form_textarea" style="width: 100%;" onkeyup="this.value = this.value.substring(0,200)"></textarea>
+                                <span id="idea-count" name="idea-count" value="">0</span>/200
+                            </td>
+                            <td  width="10%">
+                                <select class="btn btn-default" name="CuOpinion" id="CuOpinion" onchange="onSelect(this.value,'idea')"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <a class="white" href="#" onclick="add('idea')">+添加常用意见</a></td>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!--意见信息end-->
+    <div class="gw_form_right_btn_area" style=" right: 20px; top: 20px; position: fixed;">
+    <ul>
+        <li><a href="#" onclick="openLayer('1')"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 流程记录</a></li>
+        <li><a href="#" onclick="openLayer('2')"><span class="glyphicon glyphicon-random" aria-hidden="true"></span> 流程图</a></li>
+        <li><a href="#" onclick="openLayer('3')"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 意见信息</a></li>
+    </ul>
+</div>
+
+    <div class="form_btn_area" style="text-align: center;">
+        <button class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen()"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+        <button id="print" class="btn btn-primary form_btn_area_btn2" style="display: none"  onclick="print()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> 打印</button>
+        <button id="save" class="btn btn-primary form_btn_area_btn2"style="display: none" onclick="commitForm();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+        <button id="subflow" class="btn btn-primary form_btn_area_btn2"style="display: none" onclick="commitFlow();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 发送</button>
+        <button id="approval" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="completeFlow('',Config.approvalflag)" ><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 通过</button>
+        <button id="noApproval" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="completeFlow('',Config.noApprovalflag);" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不通过</button>
+        <button id="remove" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="removeFlow()"  ><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> 撤办</button>
+        <button id="resumeFlow" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="resumeFlow()" ><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> 重新启用</button>
+        <button id="takeBack" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="takeBack()" ><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> 收回重办</button>
+    </div>
+    <!--js所在-->
+    <!-- 按钮区结束 -->
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script src="/static/js/common/mylayer.js"></script>
+    <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+    <script src="/static/core/laydate/laydate.js"></script>
+    <!-- 流程相关 -->
+    <script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+    <script type="text/javascript" src="/modules/system/component/groupTree/js/groupUserTree.js"></script>
+    <script type="text/javascript" src="/common/js/config.js"></script>
+    <script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+    <script type="text/javascript" src="/common/js/commonFunction.js"></script>
+    <!-- 获取cookie值 -->
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+    <!-- 页面获取参数 -->
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <!-- 自定义意见(最后进行加载) -->
+    <script type="text/javascript" src="/common/html/notion/notion.js"></script>
+    <!-- 数据校验 -->
+    <script type="text/javascript" src="/modules/llg/js/taskPlanValidator.js"></script>
+    <!-- 数据回显 -->
+    <script type="text/javascript" src="/static/js/common/displayData.js"></script>
+    <!--点击折叠展开-->
+    <script type="text/javascript" src="/static/js/common/toggle.js"></script>
+    <!--文件上传js-->
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    <script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+    <script src="/static/js/common/myfilupload.js"></script>
+    <!--文件上传js end-->
+    <!--自定义js-->
+    <script src="/manage/hp/js/help.js"></script>
+    <script src="/manage/export/js/FileSaver/FileSaver.min.js"></script>
+    <script src="/manage/export/js/js-xlsx/xlsx.core.min.js"></script>
+    <script src="/manage/export/js/tableExport.js"></script>
+
+
+<script type="text/javascript">
+    //流程相关数据
+    var fileTypeId = "a72698d4b3ae47f4a3591252c843c36c";
+    var workFlowId = "a72698d4b3ae47f4a3591252c843c36c";
+    /*var theRequest = GetRequest();
+    //解决在"已办列表"(通用页面)页面进行自定义传参获取异常;原因:流程的已办URL为 /modules/dwgl/gwzzs/qc/draft/zzsQcFlowPath.html?page=3&
+    var idd="?id";
+    if(theRequest[idd]){
+        theRequest.id=theRequest[idd];
+    }*/
+    //解决流程自定义传参时,值获取异常
+    var theRequest ={};
+    var search=location.search.replace(/\?/g,"&");
+    var searchArray=search.split("&");
+    for(var i = 0; i < searchArray.length; i ++) {
+        var index=searchArray[i].indexOf("=");
+        if(index!=-1){
+            theRequest[searchArray[i].substring(0,index)]=searchArray[i].substring(index+1);
+        }
+    }
+    //debugger;
+    $("#resId").val(theRequest.resId);//资源id;无removeFlow对应方法?
+    $("#id").val(regVlaue(theRequest.id));
+    $("#workitemid").val(theRequest.workItemId);//无此值表是草稿状态,即流程状态为0!!!
+    $("#opertation").val(theRequest.oper);
+
+    //业务上的开始
+    var pageI=theRequest.page;//3说明是年度流程;2是更改流程
+    var subflagI="subflag"; //记录流程状态的字段(因为两个不同的流程列,很容易写错,所以查找$("#subflag")进行排错)
+    var versionNumber=1;//版本号
+    if(pageI==3){//3说明是年度流程
+        fileTypeId = "208d3d72254b4524bb95a5a601f56079";
+        workFlowId = "208d3d72254b4524bb95a5a601f56079";
+        subflagI="yearSubflag";
+    }else {
+        $(".disDoneB").hide();
+    }
+    var zzsYear= getCurrentDate("YYYY");	//默认值;
+    //流程相关数据
+    $("#filetypeid").val(fileTypeId);
+    $("#workflowid").val(workFlowId);
+
+
+
+    //下四方法是按钮点击响应
+    //打印按钮执行
+    function print() {
+        console.log("打印执行:id是"+$("#id").val());
+
+       /* $(' <table data-numcols="3" data-numrows="2" class="pvtTable">\n' +
+            '    <thead>\n' +
+            '      <tr>\n' +
+            '        <th></th>\n' +
+            '        <th class="pvtColLabel">black</th>\n' +
+            '        <th class="pvtColLabel">hisp</th>\n' +
+            '        <th class="pvtColLabel">other</th>\n' +
+            '        <th class="pvtTotalLabel">Totals</th>\n' +
+            '      </tr>\n' +
+            '    </thead>\n' +
+            '    <tbody>\n' +
+            '      <tr>\n' +
+            '        <td class="pvtRowLabel">no</td>\n' +
+            '        <td data-value="317" class="pvtVal row0 col0">317</td>\n' +
+            '        <td data-value="494" class="pvtVal row0 col1">494</td>\n' +
+            '        <td data-value="2485" class="pvtVal row0 col2">2,485</td>\n' +
+            '        <td data-for="row0" data-value="3296" class="pvtTotal rowTotal">3,296</td>\n' +
+            '      </tr>\n' +
+            '      <tr>\n' +
+            '        <td class="pvtRowLabel">yes</td>\n' +
+            '        <td data-value="187" class="pvtVal row1 col0">187</td>\n' +
+            '        <td data-value="186" class="pvtVal row1 col1">186</td>\n' +
+            '        <td data-value="691" class="pvtVal row1 col2">691</td>\n' +
+            '        <td data-for="row1" data-value="1064" class="pvtTotal rowTotal">1,064</td>\n' +
+            '      </tr>\n' +
+            '      <tr>\n' +
+            '        <td class="pvtTotalLabel">Totals</td>\n' +
+            '        <td data-for="col0" data-value="504" class="pvtTotal colTotal">504</td>\n' +
+            '        <td data-for="col1" data-value="680" class="pvtTotal colTotal">680</td>\n' +
+            '        <td data-for="col2" data-value="3176" class="pvtTotal colTotal">3,176</td>\n' +
+            '        <td data-value="4360" class="pvtGrandTotal">4,360</td>\n' +
+            '      </tr>\n' +
+            '    </tbody>\n' +
+            '  </table>').tableExport({
+                type:'excel',
+                fileName:'导出范文',
+                mso: {
+                    styles: ['background-color',
+                        'color',
+                        'font-family',
+                        'font-size',
+                        'font-weight',
+                        'text-align'
+                    ]
+                }
+            }
+        );
+*/
+
+
+    }
+    /**
+     * 提交表单
+     * @returns
+     */
+    function commitForm() {
+        var flag = saveForm();
+        if (flag && flag == "1") {
+            layer.msg("保存成功！", { icon: 1 });
+            //刷新列表
+            parent.TableInit.refTable('right_table');
+        } else {
+            layer.msg("保存失败！", { icon: 2 });
+        }
+    }
+    /**
+     * 保存
+     */
+    function saveForm() {
+        //var boll= hp.verifyLG(".checkoutLG");
+        //if(!boll){return;}
+        var res = "";
+        if (!$("#id").val()) {
+            $("#subflag").val(Config.startflag);//赋值为0,即流程状态:草稿状态
+        }
+        var entity={}
+        entity.id= $("#id").val();
+        entity[subflagI]= $("#subflag").val();
+        entity.zzsYear=$("[name='zzsYear']").val();
+        entity.versionNumber=versionNumber+".0";
+        if(pageI==3){//3说明是年度流程
+            entity.yearSubflag=Config.startflag ;
+        }
+        $(".zqfp_table input,textarea,select").each(function(index,element){
+            var key=$(element).attr("name");
+            var value=$(element).val();
+            entity[key]=value;
+        });
+        $.ajax({
+            type: "POST",
+            url: "/djglPostManagementController/save",
+            data: entity,
+            async: false,
+            success: function (json) {
+                if (json.flag == '1') {
+                    res = json.flag;
+                    $("#id").val(json.data.id);//数据在业务表的id
+                    $("#subflag").val(json.data[subflagI]);//当前流程值
+
+                }
+            },
+            error: function () {
+            }
+        });
+        //保存临时意见
+        var tempIdea = $("#idea").val();
+        saveIdeaTemp($("#workitemid").val(), tempIdea);
+        return res;
+    }
+    /**
+     * 提交流程
+     */
+    function commitFlow() {
+        var flag = saveForm();
+        if (flag&& flag == "1") {
+            var oper = "";
+            if (!$("#workitemid").val()) {
+                oper = "NEW";
+            } else {
+                oper = "EDIT";
+            }
+            //获取意见
+            var idea = $("#idea").val();
+            var IsNotionShow = document.getElementById("ideaArea").style.display;
+            if (IsNotionShow == "block") {
+                if ("2" == document.getElementById("fillmode").value) {
+                    if (!idea) {
+                        layer.msg("请填写意见！", { icon: 0 })
+                        return false;
+                    }
+                }
+            }
+            submitToFlow(oper, this, getcookie("usernm")+"发起的"+zzsYear+"年度职责书", idea, $("#id").val(), "attr", "attr1", $("#workitemid").val(), $("#workflowid").val());
+        } else {
+            layer.msg("数据保存失败！", { icon: 2 });
+        }
+    }
+    /**
+     *  工作流回调该方法，用于改变业务数据状态,要为全局方法
+     * @param subflag 状态位
+     * @returns
+     */
+    function updateBusiData(subflag) {
+        var logo="2"
+        if(subflagI=="subflag"){
+            logo="1";
+        }
+        $.ajax({
+            type: "POST",
+            url: "/djglPostManagementController/updateBySubflag",
+            data: {
+                id: $("#id").val(),
+                value: subflag,
+                logo:logo
+            },
+            async: false,
+            success: function (data) {
+                //刷新列表
+                parent.TableInit.refTable('right_table');
+            },
+            error: function () {
+            }
+        });
+    }
+    /**
+     * 空值设置
+     * @param val
+     * @returns
+     */
+    function regVlaue(val) {
+        if (!val) {
+            val = "";
+        }
+        return val;
+    }
+
+(function() {
+
+    $(".spanResponsibilities").text(zzsYear+"年度目标任务");
+    //时间初始化
+    laydate.render({
+        elem: '#zzsYear',
+        type: 'year',
+        btns:['now', 'confirm'],
+        value:zzsYear,
+        done: function(value, date, endDate){
+            zzsYear=value;
+            $(".spanResponsibilities").text(value+"年度目标任务");
+        }
+    });
+    //去掉input的记忆功能
+    $(".zqfp_table input").attr("autocomplete","off");
+    //使每格放两个字
+    $(".zqfp_table td:even").addClass("text-center width2em");
+    //给多行文本加自定义样式
+    $(".zqfp_table textarea").addClass("textareaZDY");
+    //字典请求方法
+    function dictionaries(mark,type,callback) {
+        $.ajax({
+            'url': '/system/config/dictionary/getListByMark',
+            'type': 'get',
+            'dataType': 'json',
+            'data': {
+                "mark": mark,
+                "type": type
+            },
+            'success': function (data) {
+                if (data.flag == "1") {
+                    var list=[];
+                    $(data.data).each(function (index, item) {
+                        var map = {};
+                        map['text'] = item.name;
+                        map['code'] = item.code;
+                        list.push(map);
+                    });
+                    callback(list);
+                }
+            }
+        });
+    }
+    //政治面貌字典回调函数
+    var politicsStatusCallback=function (data) {
+        /*假值去掉*/data=[{'text':'党员','code':'01'},{'text':'群众','code':'02'}];
+        var selector=$("[name='politicsStatus']");
+        for (var i = 0; i < data.length; i++){
+            selector.append("<option value='"+data[i].code+"'>"+data[i].text+"</option>");
+        }
+        var valuee=selector.attr("data-value");
+        if(valuee){
+            selector.val(valuee);
+        }
+    }
+    //政治面貌字典加载
+    dictionaries("dwgl_dygl_xzzw_xzzw","1",politicsStatusCallback);/*标识换了*/
+    //人员类型字典回调函数
+    var politicsStatusCallback=function (data) {
+        var selector=$("[name='jobTitle']");
+        for (var i = 0; i < data.length; i++){
+            selector.append("<option value='"+data[i].code+"'>"+data[i].text+"</option>");
+        }
+        var valuee=selector.attr("data-value");
+        if(valuee){
+            selector.val(valuee);
+        }
+    }
+    //人员类型字典加载
+    dictionaries("dwgl_dygl_xzzw_xzzw","1",politicsStatusCallback);/*标识换了*/
+    //岗位类型字典回调函数
+    var politicsStatusCallback=function (data) {
+        data=[{'text':'正式员工','code':'01'},{'text':'合同工','code':'02'}];
+        var selector=$("[name='postType']");
+        for (var i = 0; i < data.length; i++){
+            selector.append("<option value='"+data[i].code+"'>"+data[i].text+"</option>");
+        }
+        var valuee=selector.attr("data-value");
+        if(valuee){
+            selector.val(valuee);
+        }
+    }
+    //岗位类型字典加载
+    dictionaries("dwgl_dygl_xzzw_xzzw","1",politicsStatusCallback);/*标识换了*/
+    //业务的表数据渲染加载
+    function edit(url) {
+        /*var id=$("#id").val();
+        debugger;*/
+        $.ajax({
+            'url' :url,
+            'type':'POST',
+            'dataType':'JSON',
+            'data' : {
+                'id':$("#id").val()
+            }
+        }).done(function( data, textStatus, jqXHR ) {
+            //debugger;
+            if (data.flag == '1') {
+                var dataEntity=data.data;
+                if(dataEntity){
+                    $("#id").val(dataEntity.id);//数据在业务表的id
+                    $("#subflag").val(dataEntity[subflagI]);
+                    versionNumber=Number(dataEntity.versionNumber);
+                    zzsYear=dataEntity.zzsYear;
+                    $(".spanResponsibilities").text(zzsYear+"年度目标任务");
+                    $("#zzsYear").val(zzsYear);
+                    $(".zqfp_table td [name]").each(function(index,element){
+                        //console.log(element.outerHTML);
+                        var valuue=dataEntity[$(element).attr("name")];
+                        $(element).val(valuue).attr("data-value",valuue);
+                    });
+                    console.log($("#subflag").val());
+                    //加载通过不通过的图片
+                    loadSeal($("#subflag").val())
+                }else{
+                    layer.alert("请起草本年度职责书岗位职责及目标任务！",{icon:0,title:'警告'}, function(index){
+                        layer.close(index);
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index);
+                    });
+                    $("#save,#subflow,#approval,#noApproval,#remove,#resumeFlow,#takeBack").remove();
+                }
+
+            }
+        })
+    }
+    //变更的数据渲染
+    function editBG(url) {
+        $.ajax({
+            'url' :url,
+            'type':'POST',
+            'dataType':'JSON',
+            'data' : {
+                'creUserId':getcookie("userid")
+            }
+        }).done(function( data, textStatus, jqXHR ) {
+            //debugger;
+            if (data.flag == '1') {
+                var dataEntity=data.data;
+                versionNumber=Number(dataEntity.versionNumber);
+                zzsYear=dataEntity.zzsYear;
+                $(".spanResponsibilities").text(zzsYear+"年度目标任务");
+                $("#zzsYear").val(zzsYear);
+                if(pageI==2){//2是更改流程页面
+                    versionNumber++;
+                }
+                $(".zqfp_table td [name]").each(function(index,element){
+                    //console.log(element.outerHTML);
+                    var valuue=dataEntity[$(element).attr("name")];
+                    $(element).val(valuue).attr("data-value",valuue);
+                });
+            }
+        })
+    }
+    //只读设置
+    function disabledUI(type) {
+        if(type){//为false时,只禁用上半部分,否则都禁用,
+            $("#form .disDoneB").find("select,input,textarea").attr("disabled","disabled");
+            $("#save,#subflow,#approval,#noApproval").hide();//,#remove,#resumeFlow,#takeBack
+            $('#print').show();//只有只读页面打印按钮出来
+        }else{
+            $('#print').hide();
+        }
+        $("#form .disDoneA").find("select,input,textarea").attr("disabled","disabled");
+
+    }
+    function init() {
+        //初始化页面，数据加载、渲染
+        if ($("#id").val()){//非新建数据进行起草
+            //业务的表数据渲染加载
+            edit('/djglPostManagementController/edit');
+            //流程相关（按钮、控件等）的渲染
+            if ($("#workitemid").val()) {
+                //var a=$("#subflag").val();
+                //var b=$("#opertation").val();
+
+                if ($("#opertation").val() == "EDIT") {//流程的修改页面
+                    var datas = {
+                        workflowid: $("#workflowid").val(),
+                        filetypeid: $("#filetypeid").val(),
+                        workitemid: $("#workitemid").val(),
+                        pkValue: $("#id").val(),
+                        userid: getcookie("userid"),
+                        deptid: getcookie("deptid"),
+                        oper: $("#opertation").val(),
+                        ideaArea: $("ideaArea").val()
+                    };
+                    DisplayData.playWorkFlow("/flowService/getFlowData", datas, $("#opertation").val(), callback);
+                                                                                                    $("#remove,#resumeFlow,#takeBack").hide();
+                } else {//oper='VIEW'   //流程的只读页面
+                    var datas = {
+                        type: "1",
+                        oper: $("#opertation").val(),
+                        workitemid: $("#workitemid").val()
+                    };
+                    DisplayData.playWorkFlow("/workflow/getYiBanData", datas, $("#opertation").val());
+                    disabledUI(true);
+                    $(".formpage_idea").hide();
+
+                }
+            } else {//非流程，可修改草稿状态数据(数据库是有这条数据的状态为0)，加载启动节点按钮及启动节点提示信息
+                //var a=$("#workitemid").val();
+                //debugger;
+                if ($("#opertation").val() == "EDIT") {//修改页面
+                    getStartWf();
+                    if(pageI==3){
+                        disabledUI(false);
+                    }
+                    //起点流程默认开启流程图里的按钮,有保存和发送
+                    $("#approval,#noApproval,#remove,#resumeFlow,#takeBack").remove();
+                }else {//oper='VIEW'   //只读页面
+                    //debugger;
+                    $(".formpage_idea").hide();
+                    disabledUI(true);
+                }
+
+            }
+        }else{//是'起草'即数据库新建数据
+            //debugger;
+            getStartWf();//id为空时，表示新建草稿状态，加载启动节点按钮及启动节点提示信息
+            if(pageI==3){//3说明是年度流程
+                disabledUI(false);//起草流程数据只读
+                edit('/djglPostManagementController/yearSelect');
+            }else if(pageI==2){//2说明是变更
+                editBG('/djglPostManagementController/bgSelect');
+            }else{
+                //业务上所填写默认值
+                $("[name='zzsName']").val(getcookie("usernm"));
+                $("[name='workUnit']").val(getcookie("deptname"));
+            }
+            //起点流程默认开启流程图里的按钮,有保存和发送
+            $("#approval,#noApproval,#remove,#resumeFlow,#takeBack").remove();
+        }
+    }
+    if(!$("#id").val()){
+        layer.open({
+            type: 1
+            ,title: false //不显示标题栏
+            ,closeBtn: false
+            ,area: '300px;'
+            ,shade: 0.8
+            ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+            ,btn: ['关闭']
+            ,btnAlign: 'c'
+            ,moveType: 1 //拖拽模式，0或者1
+            ,content:'<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight:400;">' +
+            '责任书年份' +
+            '<br><br>' +
+            '<input style="width: 100%;color: black;" type="text" class="layui-input" id="start_time">' +
+            '</div>'
+
+            ,success: function(layero){
+                //console.log(zzsYear);
+                laydate.render({
+                    elem: '#start_time',
+                    type: 'year',
+                    btns:['now', 'confirm'],
+                    value:zzsYear,
+                    done: function(value, date, endDate){
+                        zzsYear=value;
+                        $("#zzsYear").val(value)
+                        $(".spanResponsibilities").text(value+"年度目标任务");
+                    }
+                });
+            }
+        });
+        //解绑事件
+        $(document).off(".zzsQFP");
+        //关闭点击
+        $(document).on('click.zzsQFP', '.layui-layer-btn0', function() {
+            setTimeout(function(){init();},300);
+        });
+    }else{
+        init();
+    }
+
+
+
+
+//异常校验开始
+    /*hp.checkoutLG({
+        //sign:'.checkoutLG',//任意,表所在父元素
+        glyphicon_top: '7px',	//所有图标的位置disDoneB进行自定义(即对勾和叉号)
+        glyphicon_right: '1px',
+        validators:{
+            zzsAge:{//data-checkout值
+                notEmpty:{
+                    message:'非空'
+                },
+                stringLength: {
+                    min: 6,
+                    max: 30,
+                    message: '长度需在6到30之间'
+                },
+                regexp:{
+                    source:/xyz/,
+                    message: '要包含xyz'
+                }
+            },
+            responsibilities: {
+                notEmpty: {
+                    message: '非空'
+                },
+                callback:{
+                    func:function (inputJQ,fontJQ,value){
+                        console.log("!!!!!!!!!!!"+value);
+                        console.log(inputJQ[0].outerHTML);
+                        console.log(fontJQ[0].outerHTML);
+                        return {//例子
+                            result:false,//返回true表验证通过,false表失败;
+                            message:"自定义验证失败"
+                        }
+                    }
+                }
+            }
+        }
+    });*/
+})()
+
+
+</script>
+</body>
+</html>

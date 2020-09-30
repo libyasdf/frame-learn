@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+        <!-- resId -->
+        <input name="resId" id="resId" type="hidden" value="">
+        <!-- 流程字段-->
+		<input name="id" id="id" type="hidden" value=""/><!-- 工作项ID -->
+		<input name="ideaName" id="ideaName" type="hidden" value=""/><!-- 当前用户意见域名称 -->
+		<input name="subflag" id="subflag" type="hidden" value=""/><!-- 流程状态 -->
+		<input name="filetypeid" id="filetypeid" type="hidden" value=""/><!-- 流程ID -->
+		<input name="workFlowId" id="workflowid" type="hidden" value=""/><!-- 流程唯一ID -->
+		<input name="workitemid" id="workitemid" type="hidden" value=""/><!-- 待办工作项ID -->
+		<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+		<!-- 流程字段结束 -->
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">人员树</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> (异步)人员树1：</label>
+	                    <div class="col-md-4">
+	                    	<div class="input-group">
+                                <input type="text" id="personName1" unselectable="on" onclick="openSelectZtree({'id':'personId1','name':'personName1','parentId':'parentId1','parentName':'parentName1','isMulti':'0','type':'1','asyn':true,'cascade':'1','url':'/system/component/tree/getDeptOrUserTree'})" class="form-control" >
+                                <input type="hidden" id="personId1" name="personId1" /><!-- 人员ID隐藏域 -->
+                                <input type="hidden" id="parentName1" name="parentName1" />
+                                <input type="hidden" id="parentId1" name="parentId1" />
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId1','name':'personName1','parentId':'parentId1','parentName':'parentName1','isMulti':'0','type':'1','asyn':true,'cascade':'1','url':'/system/component/tree/getDeptOrUserTree'})">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </span>
+	                        </div>
+	                    </div>
+                        <label class="col-md-6" style="font-size: 12px">从某部门id开始异步加载其下面的所有人员，包括子孙部门下的人员</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId1','name':'personName1','isMulti':'0','type':'1','asyn':true,'cascade':'1','url':'/system/component/tree/getDeptOrUserTree'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                	<div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树2：</label>
+	                    <div class="col-md-4">
+	                    	<div class="input-group">
+                                <input type="text" id="personName2" unselectable="on" onclick="openSelectZtree({'id':'personId2','name':'personName2','isMulti':'1','type':'1','asyn':false,'level':'2','url':'/system/component/tree/deptUserTree'})" class="form-control" >
+                                <input type="hidden" id="personId2" name="personId2" /><!-- 人员ID隐藏域 -->
+	                          <span class="input-group-addon" onclick="openSelectZtree({'id':'personId2','name':'personName2','isMulti':'1','type':'1','asyn':false,'level':'2','url':'/system/component/tree/deptUserTree'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+	                        </div>
+	                    </div>
+                        <label class="col-md-6" style="font-size: 12px">根据deptId和level加载部门人员树</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId2','name':'personName2','isMulti':'1','type':'1','asyn':false,'level':'2','url':'/system/component/tree/deptUserTree'})</font>
+	                </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树3：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName3" unselectable="on" onclick="openSelectZtree({'id':'personId3','name':'personName3','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getUserByDeptId'})" class="form-control" >
+                                <input type="hidden" id="personId3" name="personId3" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId3','name':'personName3','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getUserByDeptId'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px"> 根据部门id，获取该部门下的所有用户</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId3','name':'personName3','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getUserByDeptId'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树4：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName4" unselectable="on" onclick="openSelectZtree({'id':'personId4','name':'personName4','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getDeptAndUserById'})" class="form-control" >
+                                <input type="hidden" id="personId4" name="personId4" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId4','name':'personName4','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getDeptAndUserById'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id，获取该部门下的所有用户，以及上级所有部门节点（上级部门节点不展示人）</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId4','name':'personName4','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getDeptAndUserById'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树5：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName5" unselectable="on" onclick="openSelectZtree({'id':'personId5','name':'personName5','type':'1','asyn':false,'deptId':93245,'url':'/system/component/tree/deptAndUserTree'})" class="form-control" >
+                                <input type="hidden" id="personId5" name="personId5" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId5','name':'personName5','type':'1','asyn':false,'deptId':93245,'url':'/system/component/tree/deptAndUserTree'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id，获取该部门下的所有用户和子部门</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId5','name':'personName5','type':'1','asyn':false,'deptId':93245,'url':'/system/component/tree/deptAndUserTree'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树6：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName6" unselectable="on" onclick="openSelectZtree({'id':'personId6','name':'personName6','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getDeptAndUserBydeptId'})" class="form-control" >
+                                <input type="hidden" id="personId6" name="personId6" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId6','name':'personName6','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getDeptAndUserBydeptId'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id，获取该部门下的所有用户和子部门，以及上级所有部门节点（上级部门节点不展示人）</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId6','name':'personName6','type':'1','asyn':false,'deptId':93254,'url':'/system/component/tree/getDeptAndUserBydeptId'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树7：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName7" unselectable="on" onclick="openSelectZtree({'id':'personId7','name':'personName7','type':'1','asyn':false,'level':1,'url':'/system/component/tree/getDeptAndUserTreeBylevel'})" class="form-control" >
+                                <input type="hidden" id="personId7" name="personId7" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId7','name':'personName7','type':'1','asyn':false,'level':1,'url':'/system/component/tree/getDeptAndUserTreeBylevel'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">从顶层节点开始，获取到某部门级别截止的部门人员；（前部门级别用户展示）</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId7','name':'personName7','type':'1','asyn':false,'level':1,'url':'/system/component/tree/getDeptAndUserTreeBylevel'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树8：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName8" unselectable="on" onclick="openSelectZtree({'id':'personId8','name':'personName8','type':'1','asyn':false,'level':2,'url':'/system/component/tree/getDeptAndUserTreeBylevel2'})" class="form-control" >
+                                <input type="hidden" id="personId8" name="personId8" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId8','name':'personName8','type':'1','asyn':false,'level':2,'url':'/system/component/tree/getDeptAndUserTreeBylevel2'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">从顶层节点开始，获取到某部门级别截止的部门人员；（前部门级别用户不展示）</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId8','name':'personName8','type':'1','asyn':false,'level':2,'url':'/system/component/tree/getDeptAndUserTreeBylevel2'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树9：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName9" unselectable="on" onclick="openSelectZtree({'id':'personId9','name':'personName9','type':'1','asyn':false,'positionName':2,'url':'/system/component/tree/getAllTreeBylevel'})" class="form-control" >
+                                <input type="hidden" id="personId9" name="personId9" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId9','name':'personName9','type':'1','asyn':false,'positionName':2,'url':'/system/component/tree/getAllTreeBylevel'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据人员职务获取部门人员树</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId9','name':'personName9','type':'1','asyn':false,'positionName':2,'url':'/system/component/tree/getAllTreeBylevel'})</font>
+                    </div>
+                </div>
+                <!--人员树10-->
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树10：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName10" unselectable="on" onclick="openSelectZtree({'id':'personId10','name':'personName10','type':'1','asyn':false,'level':3,'deptId':441,'zw':'01','url':'/user/getUserInfoByDeptIdAndZwZj'})" class="form-control" >
+                                <input type="hidden" id="personId10" name="personId10" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId10','name':'personName10','type':'1','asyn':false,'level':3,'deptId':441,'zw':'01','url':'/user/getUserInfoByDeptIdAndZwZj'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id,职务或职级获取部门人员树</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId10','name':'personName10','type':'1','asyn':false,'level':3,'deptId':441,'zw':'01','url':'/user/getUserInfoByDeptIdAndZwZj'})</font>
+                    </div>
+                </div>
+                <!--人员树11-->
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 人员树11：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="personName11" unselectable="on" onclick="openSelectZtree({'id':'personId11','name':'personName11','type':'1','asyn':false,'level':3,'deptId':441,'rolesNo':'C001,C002','url':'/system/component/tree/getDeptUserByDeptIdAndRolesNo'})" class="form-control" >
+                                <input type="hidden" id="personId11" name="personId10" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'personId11','name':'personName11','type':'1','asyn':false,'level':3,'deptId':441,'rolesNo':'C001,C002','url':'/system/component/tree/getDeptUserByDeptIdAndRolesNo'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id和业务角色编号获取对应树</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'personId11','name':'personName11','type':'1','asyn':false,'level':3,'deptId':441,'rolesNo':'C001,C002','url':'/system/component/tree/getDeptUserByDeptIdAndRolesNo'})</font>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">部门树</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> (异步)部门树1：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="deptName1" unselectable="on" onclick="openSelectZtree({'id':'deptId1','name':'deptName1','isMulti':'1','type':'2','asyn':true,'cascade':'2','url':'/system/component/tree/getDeptOrUserTree'})" class="form-control" >
+                                <input type="hidden" id="deptId1" name="deptId1" /><!-- 单位ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'deptId1','name':'deptName1','isMulti':'1','type':'2','asyn':true,'cascade':'2','url':'/system/component/tree/getDeptOrUserTree'})">
+                                      <span class="glyphicon glyphicon-user"></span>
+                                  </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">从某部门id开始加载其下面的所有子孙部门</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'deptId1','name':'deptName1','isMulti':'1','type':'2','asyn':true,'cascade':'2','url':'/system/component/tree/getDeptOrUserTree'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 部门树2：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="deptName2" unselectable="on" onclick="openSelectZtree({'id':'deptId2','name':'deptName2','isMulti':'1','type':'2','asyn':false,'level':'2','url':'/system/component/tree/deptTree'})" class="form-control">
+                                <input type="hidden" id="deptId2" name="deptId2" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'deptId2','name':'deptName2','isMulti':'1','type':'2','asyn':false,'level':'2','url':'/system/component/tree/deptTree'})">
+                                      <span class="glyphicon glyphicon-user"></span>
+                                  </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据deptId和level加载部门树</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'deptId2','name':'deptName2','isMulti':'1','type':'2','asyn':false,'level':'2','url':'/system/component/tree/deptTree'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 部门树3：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="deptName3" unselectable="on" onclick="openSelectZtree({'id':'deptId3','name':'deptName3','type':'2','asyn':false,'level':1,'deptId':441,'url':'/system/component/tree/deptTree'})" class="form-control" >
+                                <input type="hidden" id="deptId3" name="deptId3" /><!-- 单位ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'deptId3','name':'deptName3','type':'2','asyn':false,'level':1,'deptId':441,'url':'/system/component/tree/deptTree'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id，获取该部门下的直属子部门</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'deptId3','name':'deptName3','type':'2','asyn':false,'level':1,'deptId':441,'url':'/system/component/tree/deptTree'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 部门树4：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="deptName4" unselectable="on" onclick="openSelectZtree({'id':'deptId4','name':'deptName4','type':'2','asyn':false,'deptId':93255,'url':'/system/component/tree/getDeptListBydeptId'})" class="form-control" >
+                                <input type="hidden" id="deptId4" name="deptId4" /><!-- 单位ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'deptId4','name':'deptName4','type':'2','asyn':false,'deptId':93255,'url':'/system/component/tree/getDeptListBydeptId'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id，获取该部门下的直属子部门，以及上级所有部门节点</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'deptId4','name':'deptName4','type':'2','asyn':false,'deptId':93255,'url':'/system/component/tree/getDeptListBydeptId'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> (异步)部门树5：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="deptName5" unselectable="on" onclick="openSelectZtree({'id':'deptId5','name':'deptName5','type':'2','asyn':true,'deptId':93245,'url':'/system/component/tree/getDeptOrUserTree'})" class="form-control" >
+                                <input type="hidden" id="deptId5" name="deptId5" /><!-- 单位ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'deptId5','name':'deptName5','type':'2','asyn':true,'deptId':93245,'url':'/system/component/tree/getDeptOrUserTree'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id，获取该部门下的所有子部门（包括递归的）</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'deptId5','name':'deptName5','type':'2','asyn':true,'deptId':93245,'url':'/system/component/tree/getDeptOrUserTree'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 部门树6：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="deptName6" unselectable="on" onclick="openSelectZtree({'id':'deptId6','name':'deptName6','type':'2','asyn':false,'deptId':93245,'url':'/system/component/tree/getAllDeptList'})" class="form-control" >
+                                <input type="hidden" id="deptId6" name="deptId6" /><!-- 单位ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'deptId6','name':'deptName6','type':'2','asyn':false,'deptId':93245,'url':'/system/component/tree/getAllDeptList'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">根据部门id，获取该部门下的子孙部门，以及上级所有部门节点</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'deptId6','name':'deptName6','type':'2','asyn':false,'deptId':93245,'url':'/system/component/tree/getAllDeptList'})</font>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 部门树7：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="deptName7" unselectable="on" onclick="openSelectZtree({'id':'deptId7','name':'deptName7','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'})" class="form-control" >
+                                <input type="hidden" id="deptId7" name="deptId7" /><!-- 单位ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'deptId7','name':'deptName7','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'})">
+	                              <span class="glyphicon glyphicon-user"></span>
+	                          </span>
+                            </div>
+                        </div>
+                        <label class="col-md-6" style="font-size: 12px">从顶层节点开始，获取到某部门级别截止的部门节点</label>
+                        <font size="2px" class="col-md-10 col-md-offset-2">openSelectZtree({'id':'deptId7','name':'deptName7','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'})</font>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">自定义</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 参数：</label>
+                    <div class="col-md-10">
+                        <input type="text" id="json1" class="form-control" value="{'id':'id1','name':'name1','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 回显：</label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <input type="text" id="name1" unselectable="on" onclick="zidingy()" class="form-control" >
+                            <input type="hidden" id="id1" name="id1" /><!-- 单位ID隐藏域 -->
+                            <input type="hidden" id="deptId" name="deptId" /><!-- 单位ID隐藏域 -->
+                            <input type="hidden" id="deptName" name="deptName" /><!-- 单位ID隐藏域 -->
+                            <span class="input-group-addon" onclick="zidingy()">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+
+<script type="text/javascript">
+
+    scrollTop.init();
+
+    $(function () {
+        // 初始化参数
+        var theRequest = GetRequest();
+        $("#resId").val(theRequest.resId ? theRequest.resId : "");
+        if (theRequest.resId) {
+            $("#resId").val(theRequest.resId);
+        } else {
+            $("#resId").remove();
+        }
+    });
+
+    function zidingy() {
+        data = JSON.parse($("#json1").val().split("'").join("\""));
+        openSelectZtree(data);
+        // alert($("#json1").val().split("'").join("\""));
+    }
+
+</script>
+</body>
+</html>

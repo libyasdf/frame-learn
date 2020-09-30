@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\学习考核全部java_20180918"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../">
+		<!--模块内页面和js -->
+			<!-- 李颖洁：学习考核职务、职级更改表修改页面和js-->	
+			<include name="WebContent/modules/zhbg/xxkh/testManage/js/ksglEditForm.js"/>
+		
+		<!-- 模块内公共的java文件-->
+			<!-- 李颖洁：学习考核职务、职级更改表修改后端代码-->
+			<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/testmanage/services/TestManageServiceImpl.java"/>
+			<include name="src/com/sinosoft/sinoep/modules/zhbg/xxkh/constant/XXKHCommonConstants.java"/>
+			
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		
+		<!-- 公共java-->
+			
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

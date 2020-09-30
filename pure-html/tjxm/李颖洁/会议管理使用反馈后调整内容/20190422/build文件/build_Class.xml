@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\会议管理_19.4.20"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		
+		<!-- 考勤管理：加班查询的切换页数，数据丢失问题修改 -->
+		<include name=""/>
+		<!-- 视频管理:视频发送待办，一人多岗收不到待办问题修改 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/entity/VideoColumnFbUser.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/controller/VideoContentController.class"/>
+		<include name="WebContent/modules/video/background/column/js/videoColumnAddForm.js"/>
+		<include name="WebContent/modules/video/background/column/videoColumnAddForm.html"/>
+		<!-- 视频管理:一人多岗展示栏目树不对问题修改 -->
+		<include name="/tjxm/WebContent/modules/video/background/content/js/videoContentTree.js"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/common/VideoConstants.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/controller/VideoColumnController.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/services/VideoColumnService.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/services/VideoColumnServiceImpl.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/services/VideoColumnServiceImpl$1.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/video/background/services/VideoColumnServiceImpl$2.class"/>
+		<!-- 食堂食谱:查询项排版修改 -->
+		<include name="WebContent/modules/mypage/diningmenu/diningMenuList.html"/>
+		<!-- 会议管理:通知反馈后待办不删除问题 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingNotice/service/**"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingNoticeBack/services/**"/>
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

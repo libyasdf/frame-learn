@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>会议通知反馈</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+        <link href="/static/core/bootstrap-table/bootstrap-table.css"
+	rel="stylesheet" />
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+     <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<style type="text/css">
+span{ white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;text-align:left}
+</style>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+        <input type="hidden" id="textId"/>
+        <input name="id" id="id" type="hidden" value="" />
+        <input name="noticeId" id="noticeId" type="hidden" value="" />
+         <input name="attendDeptType" id="attendDeptType" type="hidden" value="" />
+        <input name="opertation" id="opertation" type="hidden" value="" />
+         <input name="state" id="state" type="hidden" value="" />
+         <input name="feedbackType1" id="feedbackType1" type="hidden" value="" />
+         <input name="creUserId" id="creUserId" type="hidden" value="" />
+         <input name="attendDept" id="attendDept" type="hidden" value="" />
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">通知信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">会议标题： </label>
+                    <div class="col-md-10 form-view">
+                        <span name="meetingName"></span>
+                    </div>
+                </div>
+                <!-- <div class="form-group">
+                    <label for="" class="col-md-2 control-label">会议室： </label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingRoom"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label">会议室地点： </label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingRoomPlace"></span>
+                    </div>
+                </div> -->
+                <!-- <div class="form-group">
+                    <label for="" class="col-md-2 control-label">开始时间：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingStartDate"></span> <span name="meetingBeginTime"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label">结束时间： </label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingEndDate"></span> <span name="meetingEndTime"></span>
+                    </div>
+                </div> -->
+                <div class="form-group" id = "backTime">
+                    <label for="" class="col-md-2 control-label">主办单位：</label>
+                    <div class="col-md-4  form-view">
+                        <span name="hostDept"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label">会议起止时间：</label>
+                    <div class="col-md-4  form-view">
+                        <span name="meetingTime"></span>
+                    </div>
+                </div>
+                <div class="form-group" id = "backTime2">
+                    <label for="" class="col-md-2 control-label">最晚反馈时间：</label>
+                    <div class="col-md-4  form-view">
+                        <span name="feedbackTime"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label">反馈类别：</label>
+                    <div class="col-md-4  form-view">
+                        <span name="feedbackType"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">通知内容： </label>
+                    <div class="col-md-10  form-view">
+                        <span class="summernote" name="meetingContent"
+								placeholder="请对项目进行详细的描述，使更多的人了解你的" action="${ctx}/file" ></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">备注： </label>
+                    <div class="col-md-10  form-view">
+                        <span name="noticeRemark"></span>
+                    </div>
+                </div>
+                 <!--附件上传-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label">附件：</label>
+                    <div class="col-md-10 form-view">
+                    	<div class="files row">
+					        <div id="files" class="col-md-12 p-f-60">
+					        </div>
+					    </div>
+                    </div>
+                </div>
+                <div class="form-group" id="tablePlan">
+                    	<label for="" class="col-md-2 control-label"> 会议室安排：</label>
+                        <div class="col-md-10" id="plan">
+                        	<table id="right_table"></table>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+        <!-- 基本信息 -->
+        <div id = "fanKuiDisplay" style="display:none;"> <!-- style="display:none;" -->
+	        <div class="row">
+	            <div class="col-md-12 ">
+	                <div class="block_title">
+	                    <span class="name">反馈信息</span>
+	                </div>
+	            </div>
+	        </div>
+		     <!-- 上部分开始 -->
+		    <div class="modal-body selectjs" style="height: 300px;display:none;    padding-right: 0;margin-top: 10px;" id="selectRen">
+			    <div style="height: 50%;">
+			    	<div class="selectjs_block" style="height: 200px;width:50%;float:left">
+			     <div class="title_tab">
+			                <ul class="nav nav-tabs">
+			                    <li class="active" for="formpage1">
+			                        <a href="#" data-toggle="tab">
+			                          正常参会人员
+			                        </a>
+			                    </li>
+			                </ul>
+			            </div>
+			          <div class="main" style="height: auto;">
+			            <div id="formpage1" class="active">
+			             		<div class="row m-t-15">
+			                        <div class="col-md-12">
+			                        	<div class="row-group"">
+							               	<div class="form-group" >
+							                    <label for="" class="col-md-3 control-label">主要领导： </label>
+							                    <div class="col-md-9">
+							                    <input id="attendPersonChuName" unselectable="on" onclick='getPersonTreeByRoleChu();' onchange='addNum()'name="attendPersonChuName" class="form-control" />
+							                        <input type="hidden" id="attendPersonChuId" name="attendPersonChuId" /><!-- 主要领导人ID隐藏域 -->
+							                         <input type="hidden" id="attendMainPersonDeptpid" name="attendMainPersonDeptpid" /><!-- 主要领导人父部门id隐藏域 -->
+							                    </div>
+							                </div>
+							               	<div class="form-group" >
+							                    <label for="" class="col-md-3 control-label">分管领导： </label>
+							                    <div class="col-md-9">
+							                    <input id="attendPersonLeaveName" unselectable="on"  onclick='getPersonTreeByRoleLeave();' onchange='addNum()' name="attendPersonLeaveName" class="form-control" />
+							                        <input type="hidden" id="attendPersonLeaveId" name="attendPersonLeaveId" /><!-- 分管领导人ID隐藏域 -->
+							                        <input type="hidden" id="attendLeavePersonDeptpid" name="attendLeavePersonDeptpid" /><!-- 分管领导人父部门id隐藏域 -->
+							                    </div>
+							                </div>
+							                <div class="form-group" >
+							                    <label for="" class="col-md-3 control-label">其他人员： </label>
+							                    <div class="col-md-9">
+							                    <input id="cruDeptId" name="cruDeptName" type="hidden"/>
+							                    <textarea id="attendPersonName" unselectable="on" onclick='getPersonTreeByRole();' onchange='addNum()' name="attendPersonName" class="form-control" rows="4"></textarea>
+							                                  <input type="hidden" id="attendPersonId" name="attendPersonId" /><!-- 其他人员ID隐藏域 -->
+							                                  <input type="hidden" id="attendPersonDeptpid" name="attendPersonDeptpid" /><!-- 其他人员父部门ID隐藏域 -->
+							                    </div>
+							                </div>
+			                        	</div>
+			                        </div>
+			             		</div>
+			                </div>
+			             </div>
+			         </div>
+			     <div class="selectjs_block" style="height: 200px;width:50%;float:right">
+					<div class="title_tab" >
+					   <ul class="nav nav-tabs" style="float:right;">
+					       <li class="active" for="formpage1">
+					           <a href="#" data-toggle="tab">
+					               不能参会人员
+					           </a>
+					       </li>
+					   </ul>
+					</div>
+			          <div class="main" style="height: auto;">
+			            <div id="formpage1" class="active">
+			             		<div class="row m-t-15">
+			                        <div class="col-md-12">
+							               	<div class="form-group" >
+							                    <label for="" class="col-md-3 control-label">主要领导： </label>
+							                    <div class="col-md-9">
+							                    <input id="notAttendPersonChuName" unselectable="on" onclick='getNotPersonTreeByRoleChu();' name="notAttendPersonChuName" class="form-control" />
+							                        <input type="hidden" id="notAttendPersonChuId" name="notAttendPersonChuId" /><!-- 不能参会人员ID隐藏域 -->
+							                    </div>
+							                </div>
+							               	<div class="form-group" >
+							                    <label for="" class="col-md-3 control-label">分管领导： </label>
+							                    <div class="col-md-9">
+							                    <input id="notAttendPersonLeaveName" unselectable="on" onclick='getNotPersonTreeByRoleLeave();' name="notAttendPersonLeaveName" class="form-control" />
+							                        <input type="hidden" id="notAttendPersonLeaveId" name="notAttendPersonLeaveId" /><!-- 人员ID隐藏域 -->
+							                    </div>
+							                </div>
+							                <div class="form-group" >
+							                    <label for="" class="col-md-3 control-label">其他人员： </label>
+							                    <div class="col-md-9">
+							                    <textarea id="notAttendPersonName" unselectable="on" onclick='getNotPersonTreeByRole();' name="notAttendPersonName" class="form-control" rows="4"></textarea>
+							                                  <input type="hidden" id="notAttendPersonId" name="notAttendPersonId" /><!-- 人员ID隐藏域 -->
+							                    </div>
+							                </div>
+			                        </div>
+			             		</div>
+			                </div>
+			             </div>
+			         </div>
+			     </div>
+		     </div>
+		     <!-- 上部分结束 -->
+		     
+		     <!-- 下部分开始-->
+		     <div style="height: 50%;">
+		     	 <div class="row m-t-15">
+		            <div class="col-md-12">
+		                <div id = "renshu" class="form-group" style="display:none;">
+		                	<div class="row-group">
+			                    <label for="" class="col-md-1 control-label" style="width:16.6666%"><b
+										style="color: red;">*&nbsp;</b> 参会人数： </label>
+			                    <div class="col-md-3" style="width:35%">
+			                        <input type="text" name="attendPersonNum" class="form-control" id="attendPersonNum">
+			                    </div>
+							</div>
+		                </div>
+		                <div id = "renshu2" class="form-group" style="display:none;">
+		                	<div class="row-group">
+			                    <label for="" class="col-md-1 control-label" style="width:16.6666%"><b
+									style="color: red;">*&nbsp;</b> 应参会人数： </label>
+			                    <div class="col-md-3" style="width:34.6666%">
+			                        <input type="text" name="shouldAttendNum" class="form-control" id="shouldAttendNum" >
+			                    </div>
+		               		</div>
+		               		<div class="row-group">
+			                    <label for="" class="col-md-1 control-label" style="width:12.3333333%"><b
+									style="color: red;">*&nbsp;</b> 实参会人数： </label>
+			                    <div class="col-md-3" style="width:34.66666%">
+			                        <input type="text" name="realAttendNum" class="form-control" id="realdAttendNum">
+			                    </div>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="" class="col-md-1 control-label" style="width:16.66666%">备注： </label>
+		                    <div class="col-md-9" style="width:81.66666%">
+		                        <textarea name="remark" class="form-control" rows="3"></textarea>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		     
+		     </div>
+		     <!-- 下部分结束-->
+    </div>
+        <!-- 基本信息结束 -->
+    </form>
+
+    <div class="row m-t-15">
+    </div>
+    <!--文件上传end-->
+</div>
+
+<!-- 按钮区 -->
+<div class="form_btn_area" style="text-align: center;">
+<button id="save"  class="btn btn-primary form_btn_area_btn2" onclick="comitForm();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+<button id="sendFLow" class="btn btn-primary form_btn_area_btn2" onclick="fankuiForm();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 反馈</button>
+<button id="close" class="btn btn-primary form_btn_area_btn2" onclick="closeAll()" >
+		<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>&nbsp;关&nbsp;闭</button>
+  <!--
+     <button id="sendFLow" class="btn btn-primary form_btn_area_btn2" onclick="global.save();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 反馈</button> -->
+</div>
+<!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script
+		src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script
+		src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+	<script type="text/javascript" src="/common/js/config.js"></script>
+	<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+	<script src="/static/core/laydate/laydate.js"></script>
+	<!-- 流程相关 -->
+	<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+	<script type="text/javascript" src="/common/js/config.js"></script>
+	<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+	<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+	<!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+	<!-- 获取cookie值 -->
+	<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<!-- 引入自己模块功能的js -->
+	<script type="text/javascript" src="js/meetingNoticeBackForm.js"></script>
+	<!-- 自定义意见(最后进行加载) -->
+	<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+	<!-- 数据校验 -->
+	<script type="text/javascript" src="js/validator.js"></script>
+	<!--点击折叠展开-->
+	<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+	<!-- 数据回显 -->
+	<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+	<script src="/static/js/common/tablelist.js"></script>
+	<!--文件上传js-->
+	<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+	<script
+		src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script
+		src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+	<script src="/static/js/common/myfilupload.js"></script>
+	<!--文件上传js end-->
+	<script src="/static/core/summernote/summernote.js"></script>
+	<script src="/static/core/summernote/summernote-zh-CN.js"></script>
+<script type="text/javascript">
+ 	/* var chuIds = new Array();
+ 	var notChuIds = new Array();
+ 	var personIdS = new Array();
+ 	var notPersonIds = new Array();
+ 	var leaveIds = new Array();
+ 	var notLeaveIds = new Array(); */
+ 	
+//根据会议通知反馈人员是部门机要交换员 还是机要交换员 调用不同的人员树 add by hlt
+  function getPersonTreeByRole(){
+	//获取当前登录人的业务角色信息
+	var curRole=getcookie("rolesNo");
+	if((curRole.indexOf('D012')!=-1 ||curRole.indexOf('C011')!=-1)&&$("#attendDeptType").val()=='0'){
+		$("#cruDeptId").val(getcookie("juId"));
+		openSelectZtree({'id':'attendPersonId','name':'attendPersonName','parentId':'attendPersonDeptpid','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'1','url':'/system/component/tree/deptUserTree'})
+	}else{
+		$("#cruDeptId").val(getcookie("chuShiId"));
+		openSelectZtree({'id':'attendPersonId','name':'attendPersonName','parentId':'attendPersonDeptpid','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'2','url':'/system/component/tree/deptUserTree'})
+	}
+	}
+  function getPersonTreeByRoleChu(){
+		//获取当前登录人的业务角色信息
+		var curRole=getcookie("rolesNo");
+		if((curRole.indexOf('D012')!=-1 ||curRole.indexOf('C011')!=-1)&&$("#attendDeptType").val()=='0'){
+			$("#cruDeptId").val(getcookie("juId"));
+			openSelectZtree({'id':'attendPersonChuId','name':'attendPersonChuName','parentId':'attendMainPersonDeptpid','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'1','url':'/system/component/tree/deptUserTree'})
+		}else{
+			$("#cruDeptId").val(getcookie("chuShiId"));
+			openSelectZtree({'id':'attendPersonChuId','name':'attendPersonChuName','parentId':'attendMainPersonDeptpid','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'2','url':'/system/component/tree/deptUserTree'})
+		}
+			/* //获取当前登录人的业务角色信息
+			$("#cruDeptId").val(getcookie("chuShiId"));
+			openSelectZtree({'id':'attendPersonChuId','name':'attendPersonChuName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'2','url':'/system/component/tree/deptUserTree'}) */
+		}
+  function getPersonTreeByRoleLeave(){
+	//获取当前登录人的业务角色信息
+		var curRole=getcookie("rolesNo");
+		if((curRole.indexOf('D012')!=-1 ||curRole.indexOf('C011')!=-1)&&$("#attendDeptType").val()=='0'){
+			$("#cruDeptId").val(getcookie("juId"));
+			openSelectZtree({'id':'attendPersonLeaveId','name':'attendPersonLeaveName','parentId':'attendLeavePersonDeptpid','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'1','url':'/system/component/tree/deptUserTree'})
+		}else{
+			$("#cruDeptId").val(getcookie("chuShiId"));
+			openSelectZtree({'id':'attendPersonLeaveId','name':'attendPersonLeaveName','parentId':'attendLeavePersonDeptpid','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'2','url':'/system/component/tree/deptUserTree'})
+		}
+  }
+  function getNotPersonTreeByRole(){
+	//获取当前登录人的业务角色信息
+	var curRole=getcookie("rolesNo");
+	if((curRole.indexOf('D012')!=-1 ||curRole.indexOf('C011')!=-1)&&$("#attendDeptType").val()=='0'){
+		$("#cruDeptId").val(getcookie("juId"));
+		openSelectZtree({'id':'notAttendPersonId','name':'notAttendPersonName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'1','url':'/system/component/tree/deptUserTree'})
+	}else{
+		$("#cruDeptId").val(getcookie("chuShiId"));
+		openSelectZtree({'id':'notAttendPersonId','name':'notAttendPersonName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'2','url':'/system/component/tree/deptUserTree'})
+	}
+	}
+  function getNotPersonTreeByRoleChu(){
+		//获取当前登录人的业务角色信息
+	 	 var curRole=getcookie("rolesNo");
+		if((curRole.indexOf('D012')!=-1 ||curRole.indexOf('C011')!=-1)&&$("#attendDeptType").val()=='0'){
+			$("#cruDeptId").val(getcookie("juId"));
+			openSelectZtree({'id':'notAttendPersonChuId','name':'notAttendPersonChuName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'1','url':'/system/component/tree/deptUserTree'})
+		}else{
+			$("#cruDeptId").val(getcookie("chuShiId"));
+			openSelectZtree({'id':'notAttendPersonChuId','name':'notAttendPersonChuName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'2','url':'/system/component/tree/deptUserTree'})
+		}
+		}
+  function getNotPersonTreeByRoleLeave(){
+	//获取当前登录人的业务角色信息
+		var curRole=getcookie("rolesNo");
+		if((curRole.indexOf('D012')!=-1 ||curRole.indexOf('C011')!=-1)&&$("#attendDeptType").val()=='0'){
+			$("#cruDeptId").val(getcookie("juId"));
+			openSelectZtree({'id':'notAttendPersonLeaveId','name':'notAttendPersonLeaveName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'1','url':'/system/component/tree/deptUserTree'})
+		}else{
+			$("#cruDeptId").val(getcookie("chuShiId"));
+			openSelectZtree({'id':'notAttendPersonLeaveId','name':'notAttendPersonLeaveName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'2','url':'/system/component/tree/deptUserTree'})
+		}
+  }
+  
+  
+    //绑定日期输入input
+    laydate.render({
+        elem: '#birth' //指定元素
+    });
+    $(document).ready(function() {
+    	/* debugger
+    	console.log($("#state").val())
+    	if ($('#state').val() == '2') {
+			$('#fanKuiDisplay').css("display", "none")//将反馈类型设置为隐藏 
+			//$('#backTime').css("display", "none")
+		} else if($('#state').val() == '1'){
+			$('#fanKuiDisplay').css("display", "block")
+			if($('#feedbackType1').val() == '1'){
+				$('#renshu').css("display", "block")
+			}else{
+				$('#renshu2').css("display", "block")
+				$('#selectRen').css("display", "block")
+			}
+		} else if($("#state").val()=='0'){
+			$('#save').show();
+			$('#sendFLow').show();
+			$('#fanKuiDisplay').css("display", "block")
+			if($('#feedbackType1').val() == '1'){
+				$('#renshu').css("display", "block")
+			}else{
+				$('#selectRen').css("display", "block")
+				$('#renshu2').css("display", "block")
+			}
+		}  */
+	});
+   function closeForm(){
+	   MyLayer.closeOpen()
+   }
+   var right_table_col = [{
+	    field: 'id'
+	    , title: '序号'
+	    , width: '5%'
+	    , sortable: false
+	    , align:"center"
+	    , formatter: function (value, row, index) {
+			return "<span data-id='"+row.id+"'>" + (index+1) + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号   
+	    }  
+	},{
+	    field: 'useDate'
+	    , title: '会议日期'
+	    , width: '8%'
+	    , sortable: false
+	    , align:"center"
+	},{
+	    field: 'weekDate'
+	    , title:'星期'
+	    , width: '8%'
+	    , sortable: false
+	    , align:"center"
+	},{
+	    field: 'meetingroomName'
+	    , title: '会议室名称'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	},{
+	    field: 'useTime'
+	    , title: '会议时间'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	}]; 
+   function showMeetingRoom(id){//会议室申请id
+		$("#right_table").bootstrapTable({
+           pagination:true,
+           striped:true,
+           classes: 'table table-hover',
+           fixedColumns: true,//是否固定列
+           pageList: "[10, 25, 50, 100]",
+           detailView:false,
+           columns: right_table_col
+		})
+		$.ajax({
+			type : "get",
+			url : "/zhbg/hygl/meetingRoomUseInfo/getByApplyId",
+			data : {applyId:id,resId:$('#left_ul').find('a.active').attr("id")},
+			async : false,
+			success : function(json) {
+				if (json.flag=='1') {
+					$('#right_table').bootstrapTable('removeAll');
+					$('#right_table').bootstrapTable('load',json.data);
+					$('#plan .pull-left').css('display','none')
+				}
+			}
+		}); 
+	}   
+   function addNum(flag){
+	   	var chuNum = 0;
+	   	var leaveNum = 0;
+	   	var personNum = 0;
+	    var mainId = $("#attendPersonChuId").val();
+		var leaveId = $("#attendPersonLeaveId").val();
+		var otherId = $("#attendPersonId").val();
+		if(mainId){
+		   chuNum = mainId.split(",").length;
+		   //$("#form").data('bootstrapValidator').updateStatus("attendPersonName","notEmpty", null).validateField("attendPersonName");
+		}
+		if(leaveId){
+		   leaveNum = leaveId.split(",").length;
+		   //$("#form").data('bootstrapValidator').updateStatus("attendPersonName","notEmpty", null).validateField("attendPersonName");
+		}
+		if(otherId){
+		   personNum = otherId.split(",").length;
+		}
+	   $("#realdAttendNum").val(chuNum+leaveNum+personNum).change();
+	   
+   }
+   
+   function hasPerson(){
+	   var mainId = $("#attendPersonChuId").val();
+		var leaveId = $("#attendPersonLeaveId").val();
+		var otherId = $("#attendPersonId").val();
+   }
+   function closeAll(){
+	   parent.TableInit.refTable("right_table")
+	   MyLayer.closeOpen();
+	   
+   }
+</script>
+</body>
+</html>

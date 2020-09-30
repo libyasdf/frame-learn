@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\考勤管理_19.5.29"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		<!-- 5.29日天津反馈 -->	
+		<!-- 1.迟到早退查询项布局混乱问题 -->	
+		<include name="WebContent/modules/zhbg/kqgl/absenteeism/absenteeismList.html"/>
+		<!-- 2.加班起草时，点击保存，先提示【提交成功】再提示【保存成功】问题：可能不是最新版，本地没代码就没有这个提示-->	
+		<include name="WebContent/modules/zhbg/kqgl/overTime/js/overTimeEdit.js"/>
+		<include name="WebContent/modules/zhbg/kqgl/overTime/overTimeEditForm.html"/>
+		<!-- 3.行政出差查询和业务出差查询，在选择部门树的时候，选择导出按钮，会报400 -->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/xzBusinessTripQuery.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/ywBusinessTripQuery.html"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/controller/CcQueryController.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/CcQueryServiceImpl.class"/>
+		<!-- 4.考勤表，以本处考勤工作管理负责人身份登进来的时候，不加载数据 -->	
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceTableServiceImp.class"/>
+		<!-- 5.出差同行人加长度限制 -->	
+		<include name="WebContent/modules/zhbg/kqgl/businessTrip/js/businessTripValidator.js"/>
+		<include name="WebContent/modules/zhbg/kqgl/businessTrip/businessTripEditForm.html"/>
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

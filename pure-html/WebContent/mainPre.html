@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>综合管理信息化系统</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+    <style type="text/css">
+		.carousel{
+			width: 100%;
+			height: 50px;
+			position: relative;
+			overflow: hidden;
+		}
+		.carousel__container{
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			width: 1000px;
+			height: 100%;
+			font-size: 0px;
+		}
+		.carousel__indicators{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top:0;
+			left: 0;
+			text-align: center;
+		}
+		.carousel__indicators__item{
+			display: inline-block;
+			width: 25px;
+			height: 2px;
+			background: #999;
+			margin-top: 42px;
+			cursor: pointer;
+		}
+		.carousel__active{
+			background: #eee;
+		}
+		.carousel__arrow--left{
+			position: absolute;
+			z-index: 10;
+			top: 15px;
+			left: 10px;
+		}
+		.carousel__arrow--right{
+			position: absolute;
+			z-index: 9;
+			top: 15px;
+			right: 10px;
+		}
+		.carousel__item{
+			display: inline-block;
+			width: 105px;
+			font-size: 14px;
+			text-align: center;
+		}
+		#right {
+		    box-sizing: border-box;
+		    width: 100%;
+		    padding-left:0px;
+		    padding-right: 0px;
+		    margin-top:115px;
+		}
+		
+	</style>
+</head>
+<body style="background: #effaff">
+<!-- 顶部容器 -->
+<div id="header">
+    <div class="head">
+        <div class="logo">
+            <img src="/static/images/head_logo.png"/>
+        </div>
+        <div class="user" id="user">
+            <img src="/static/images/ico_user.png" width="16" height="16" alt=""/>
+             您好， 张明明 | <a href="#">注销登录</a>
+			<a class="btn_user_inte" href="/modules/infoIndex.html">
+				<span class="glyphicon glyphicon-home" aria-hidden="true"> 进入信息门户</span>
+			</a>
+		</div>
+    </div>
+    <!-- 一级导航开始 -->
+    <div class="nav">
+        <ul id="top_nav">
+
+        </ul>
+    </div>
+    <!-- 一级导航结束 -->
+    <script type="text/javascript">
+        /**
+         * 顶部导航初始函数
+         * @return {[type]} [description]
+         */
+        var headerInit = function () {
+            var init = function () {
+                //loadUserInfo();
+                loadData();
+            }
+
+            /**
+             * 加载第一级导航树
+             * @return {[type]} [description]
+             */
+            var loadData = function () {
+                $.getJSON('/mock/topPre.json', function (json) {
+                    var html = [];
+                    var data = null;
+                    // json.flag为 1 时数据正常返回
+                    if (json.flag === '1') {
+                        data = json.data;
+                        for (var i = 0; i < data.length; i++) {
+                            // 从url中获取id并根据id确定选中
+                            var id;
+                            try {
+                                id = Url.prototype.parse(window.location.href).query.id;
+                            } catch (e) {
+                            }
+                            if (data[i].childrenList && data[i].childrenList.length > 0) {
+                                html.push('<li class="dropdown" >');
+                                html.push('<a href="javascript:;" id=' + data[i].id + ' data-toggle="dropdown" class="dropdown-toggle">' + data[i].name + '<span class="caret"></span>');
+                                html.push('<ul class="dropdown-menu">');
+//                                循环填充二级菜单
+                                var childrenList = data[i].childrenList;
+                                for (var j = 0; j < childrenList.length; j++) {
+                                    if (childrenList[j].id === id) {
+                                        html.push('<li class="active" >');
+                                    } else {
+                                        html.push('<li>');
+                                    }
+                                    html.push('<a href=' + childrenList[j].url + '?id=' + childrenList[j].id + ' id=' + childrenList[j].id + '>' + childrenList[j].name + '</a>');
+                                    html.push('</li>');
+                                }
+                                html.push('</ul>');
+                                html.push('</a>');
+                                html.push('</li>');
+                            } else {
+                                if (data[i].id === id) {
+                                    html.push('<li class="active" >');
+                                } else {
+                                    html.push('<li>');
+                                }
+                                html.push('<a href=' + data[i].url + '?id=' + data[i].id + ' id=' + data[i].id + '>' + data[i].name + '</a>');
+                                html.push('</li>');
+                            }
+                        }
+                        $('#top_nav').empty().append(html.join(''));
+
+                        // 加载第二级
+                        loadTwoNav();
+                    }
+                });
+            }
+
+            /**
+             * 事件绑定函数
+             * @return {[type]} [description]
+             */
+            var funBind = function () {
+                $("#top_nav li").on("click", "a", function () {
+                    $("#top_nav li").removeClass("active");
+                    $(this).parent().addClass("active");
+                    loadTwoNav();
+                });
+            }
+
+            /**
+             * 加载第二级，左边导航栏
+             * @return {[type]} [description]
+             */
+            var loadTwoNav = function () {
+                // 用来获取导航数据的id
+                var id = $("#top_nav li.active").find('a').attr('id');
+                $('#left').empty().load('modules/frame/left.html', function (html) {
+                    leftInit.init(id);
+                });
+            }
+
+            return {
+                init: function () {
+                    init();
+                }
+            }
+        }();
+
+    </script>
+
+
+</div>
+<!-- 左边导航栏 -->
+<div>
+    <!-- 导航的容器-->
+    <ul class="left_ul" id="left_ul">
+    </ul>
+    <script id="myfavor" type="text/template">
+        <? if(@data){?>
+        <?for(var i=0; i<@data.length; i++){?>
+        <li>
+            <a class="left-yiji" href="javascript:;" isChild="<?=@data[i].isChild?>" url="<?=@data[i].url?>"
+               id="<?=@data[i].id?>">
+                <? if(@data[i].isChild == "true"){?>
+                <span class="fr">
+                        <img src="/static/images/zyqy_ico_29.png"/>
+                    </span>
+                <?}?>
+                <img src="<?=@data[i].style?>"/>  <?=@data[i].name?>
+            </a>
+            <? if(@data[i].childrenList){?>
+            <ul>
+                <?for(var j=0; j<@data[i].childrenList.length; j++){?>
+                <li>
+                    <a class="left-erji" href="javascript:;" isChild="<?=@data[i].childrenList[j].isChild?>"
+                       url="<?=@data[i].childrenList[j].url?>" id="<?=@data[i].childrenList[j].id?>">
+                        <? if(@data[i].childrenList[j].isChild == "true"){?>
+                        <img src="/static/images/icon16/ico_gd.gif"/>
+                        <?}?>
+                        <?=@data[i].childrenList[j].name?>
+                    </a>
+                </li>
+                <? if(@data[i].childrenList[j].childrenList){?>
+                <ul>
+                    <?for(var k=0; k<@data[i].childrenList[j].childrenList.length; k++){?>
+                    <li>
+                        <a class="left-sanji" href="javascript:;"
+                           url="<?=@data[i].childrenList[j].childrenList[k].url?>"
+                           id="<?=@data[i].childrenList[j].childrenList[k].id?>"
+                           isChild="<?=@data[i].childrenList[j].childrenList[k].isChild?>"><?=@data[i].childrenList[j].childrenList[k].name?></a>
+                    </li>
+                    <?}?>
+                </ul>
+                <?}?>
+                <?}?>
+            </ul>
+            <?}?>
+        </li>
+        <?}?>
+        <?}?>
+    </script>
+    <script type="text/javascript">
+        var leftInit = function () {
+            /**
+             * 初始化函数
+             * @return {[type]} [description]
+             */
+            var init = function (id) {
+                loadData(id);
+            }
+
+            /**
+             * 加载第二级导航树
+             * id: 加载左边导航树必须参数，目前模拟不使用
+             * @return {[type]} [description]
+             */
+            var loadData = function (id) {
+//            $.getJSON('mock/left.json', function(json) {
+                $.getJSON('mock/leftdata/' + id, function (json) {
+                    if (json.flag === '1') {
+                        // 获取模板
+                        var content = $('#myfavor').html();
+                        // 格式化数据，主要是添加isChild标志位
+                        json = FormatData(json);
+
+                        // 拼接模板
+                        nodetpl.render(content, json, function (html) {
+                            $("#left_ul").empty().append(html);
+
+                            // 调用绑定事件方法
+                            funBind();
+
+                            // 默认初始化内容区域
+                            if ($('#left_ul .left-sanji').length > 0) {
+                                var _url = $('#left_ul .left-sanji').eq(0).attr('url');
+                                $('#left_ul .left-sanji').eq(0).addClass('active');
+                                loadContent(_url);
+                            } else
+                            // 如果没有第三级，选择第二级
+                            if ($('#left_ul .left-erji').length > 0) {
+                                var _url = $('#left_ul .left-erji').eq(0).attr('url');
+                                $('#left_ul .left-erji').eq(0).addClass('active');
+                                loadContent(_url);
+                            } else
+                            // 如果没有第二级，选择第一级
+                            if ($('#left_ul .left-yiji').length > 0) {
+                                var _url = $('#left_ul .left-yiji').eq(0).attr('url');
+                                $('#left_ul .left-yiji').eq(0).addClass('active');
+                                loadContent(_url);
+                            }
+                        })
+                    }
+                });
+            }
+
+            /**
+             * 格式化数据
+             * [FormatData description]
+             */
+            var FormatData = function (json) {
+                var data = json.data;
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].childrenList && data[i].childrenList.length > 0) {
+                        data[i].isChild = "true";
+                        data[i].childrenList = recursion(data[i].childrenList);
+                    } else {
+                        data[i].isChild = "false";
+                    }
+                }
+
+                return {
+                    flag: json.flag,
+                    data: data
+                }
+            }
+
+            var recursion = function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].childrenList && data[i].childrenList.length > 0) {
+                        data[i].isChild = "true";
+                        data[i].childrenList = recursion(data[i].childrenList);
+                    } else {
+                        data[i].isChild = "false";
+                    }
+                }
+                return data;
+            }
+
+            /**
+             * 绑定事件方法
+             * @return {[type]} [description]
+             */
+            var funBind = function () {
+                // 绑定第一级
+                $('#left_ul .left-yiji').unbind('click').bind('click', function () {
+                    if ($(this).attr('isChild') == 'true') {
+                        if ($(this).siblings('ul:hidden').length > 0) {
+                            $(this).siblings('ul').show('slow');
+                            $(this).find('span.fr > img').attr('src', 'static/images/zyqy_ico_29.png');
+                        } else {
+                            $(this).siblings('ul').hide('slow');
+                            $(this).find('span.fr > img').attr('src', 'static/images/zyqy_ico_28.png');
+                        }
+                    } else {
+                        // 添加样式
+                        $('#left_ul').find('a.active').removeClass('active');
+                        $(this).addClass('active');
+                        // 加载页面
+                        var url = $(this).attr('url');
+                        loadContent(url);
+                    }
+                })
+
+                // 绑定第二级
+                $('#left_ul .left-erji').unbind('click').bind('click', function () {
+                    if ($(this).attr('isChild') == 'true') {
+                        if ($(this).parent('li').next('ul:hidden').length > 0) {
+                            $(this).parent('li').next('ul').show('show');
+                            $(this).find('img').attr('src', 'static/images/icon16/ico_gd.gif');
+                        } else {
+                            $(this).parent('li').next('ul').hide('show');
+                            $(this).find('img').attr('src', 'static/images/icon16/ico_gr.gif');
+                        }
+                    } else {
+                        // 添加样式
+                        $('#left_ul').find('a.active').removeClass('active');
+                        $(this).addClass('active');
+                        // 加载页面
+                        var url = $(this).attr('url');
+                        loadContent(url);
+                    }
+                })
+
+                // 绑定第三级
+                $('#left_ul .left-sanji').unbind('click').bind('click', function () {
+                    // 添加样式
+                    $('#left_ul').find('a.active').removeClass('active');
+                    $(this).addClass('active');
+                    // 加载页面
+                    var url = $(this).attr('url');
+                    loadContent(url);
+                })
+            }
+
+            /**
+             * 加载内容区域
+             * @return {[type]} [description]
+             */
+            var loadContent = function (url) {
+                var url = url == "#" ? "404.html" : url;
+                $('#right').empty().load(url, function () {
+
+                });
+            }
+
+            return {
+                init: function (id) {
+                    init(id);
+                }
+            };
+        }();
+    </script>
+</div>
+<!-- 右边内容区域-->
+<div id="right">
+	<div class="container gr_index_container">
+	<div class="row clearfix">
+		<div class="col-md-3 column gr_index_column">
+			<div class="gr_index_block gr_index_user" style="height: 145px;">
+				<div class="gr_index_user_left">
+					<div class="gr_top">03:24<br><span class="date">2018-04-23</span></div>
+					<div class="gr_down">星期五</div>
+				</div>
+				<div class="gr_index_user_right">
+					<div class="gr_top"><span class="name">张建国</span><br>XXX部门XXXX处室 <div class="xiala"><a href="#"><img src="images/ico_xiala.png" width="22" height="21" alt=""/></a></div></div>
+					<div class="carousel">
+						<div class="gr_down carousel__container"> 
+							<span class="glyphicon glyphicon-chevron-left carousel__arrow--left" style='display:none'></span>
+							<span class="glyphicon glyphicon-chevron-right carousel__arrow--right" style='display:none'></span>
+							<div class="carousel__item">
+								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 我的考勤 &nbsp; &nbsp;|
+							</div>
+							<div class="carousel__item">
+								<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> 我的资产 
+							</div>
+							<div class="carousel__item">
+								<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> 我的工作 &nbsp; &nbsp; |
+							</div>
+							<div class="carousel__item">
+								<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> 我的邮件 
+							</div>
+							<div class="carousel__item">
+								<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> 我的待办 &nbsp; &nbsp; |
+							</div>
+							<div class="carousel__item">
+								<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> 我的已办 
+							</div>
+						</div>
+						<ul class="carousel__indicators" style="display:none">
+							<li class="carousel__indicators__item carousel__active"></li>
+							<li class="carousel__indicators__item"></li>
+							<li class="carousel__indicators__item"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div class="gr_index_block" style="height: 135px;">
+				<div class="gr_index_block_title"><span class="more"><a href="#">更多&gt;</a></span><span class="name">我的邮箱</span></div>
+				<div class="gr_index_block_main" style="padding: 0;">
+					<div class="gr_index_mail_div" style="border-right: 1px solid #eaeaea;">
+						<img class="mail_ico" src="/static/images/ico_mail1.png" />
+						<div class="mail_main"><a href="#"><span class="num red">2</span><br>未读邮件</a></div>
+				  </div>
+				  <div class="gr_index_mail_div">
+						<img class="mail_ico" src="/static/images/ico_mail2.png" />
+						<div class="mail_main"><a href="#"><span class="num">34</span><br>已读邮件</a></div>
+				  </div>
+				</div>
+			</div>
+			
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title"><span class="more"><a href="#">更多&gt;</a></span><span class="name">信息门户提醒</span></div>
+				<div class="gr_index_block_main">
+					<ul class="gr_index_block_gw_ul">
+						<li><a href="#">上周工作简报</a><br><span class="date">2018-21-23</span></li>
+						<li><a href="#">我局召开学习十九大会议精神</a><br><span class="date">2018-21-23</span></li>
+						<li><a href="#">五一劳动节表彰</a><br><span class="date">2018-21-23</span></li>
+						<li><a href="#">知识竞赛获奖情况通知</a><br><span class="date">2018-21-23</span></li>
+						<li><a href="#">关于系统在线办公平台公文标题</a><br><span class="date">2018-21-23</span></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title">
+					<ul class="gr_block_title_tab_ul nav-tabs">
+						<li class="active" for="formpage1">工作计划</li>
+						<li for="formpage2">工作日志</li>
+					</ul>
+				</div>
+				<div class="gr_index_block_main main" style="padding: 0;">
+					<div id="formpage1" class="gr_index_rili active">
+						<div class="gr_rili_block_select"><a href="#">今天</a> 2018年7月 <a href="#">&lt;</a> <a href="#">&gt;</a></div>
+						<div class="gr_rili_main" style="height: 210px;">
+					  	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_rili_table">
+						  <tbody>
+						    <tr class="shen table_title">
+							  <td width="14%">日</td>
+							  <td width="15%">一</td>
+							  <td width="14%">二</td>
+							  <td width="14%">三</td>
+							  <td width="14%">四</td>
+							  <td width="14%">五</td>
+							  <td width="15%">六</td>
+							</tr>
+							<tr>
+							  <td><span class="none">27</span></td>
+							  <td><span class="none">28</span></td>
+							  <td><span class="none">29</span></td>
+							  <td><span class="none">30</span></td>
+							  <td>1</td>
+							  <td>2</td>
+							  <td>3</td>
+							</tr>
+							<tr class="shen">
+							  <td>4</td>
+							  <td>5</td>
+							  <td>6</td>
+							  <td>7</td>
+							  <td>8</td>
+							  <td>9</td>
+							  <td>0</td>
+							</tr>
+							<tr>
+							  <td>11</td>
+							  <td>12</td>
+							  <td>13</td>
+							  <td>14</td>
+							  <td><span class="taday">15</span></td>
+							  <td>16</td>
+							  <td>17</td>
+							</tr>
+							<tr class="shen">
+							  <td>18</td>
+							  <td>19</td>
+							  <td>20</td>
+							  <td>21</td>
+							  <td>22</td>
+							  <td>23</td>
+							  <td>24</td>
+							</tr>
+							<tr>
+							  <td>25</td>
+							  <td>26</td>
+							  <td>27</td>
+							  <td>28</td>
+							  <td>29</td>
+							  <td>30</td>
+							  <td>31</td>
+							</tr>
+							<tr class="shen">
+							  <td><span class="none">1</span></td>
+							  <td><span class="none">2</span></td>
+							  <td><span class="none">3</span></td>
+							  <td><span class="none">4</span></td>
+							  <td><span class="none">5</span></td>
+							  <td><span class="none">6</span></td>
+							  <td><span class="none">7</span></td>
+							</tr>
+							
+						  </tbody>
+						</table>
+					</div>		
+					</div>
+					<div id="formpage2" class="gr_index_rili hidden">
+						<div class="gr_rili_block_select"><a href="#">今天</a> 2018年8月 <a href="#">&lt;</a> <a href="#">&gt;</a></div>
+						<div class="gr_rili_main" style="height: 210px;">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_rili_table">
+								<tbody>
+								<tr class="shen table_title">
+									<td width="14%">日</td>
+									<td width="15%">一</td>
+									<td width="14%">二</td>
+									<td width="14%">三</td>
+									<td width="14%">四</td>
+									<td width="14%">五</td>
+									<td width="15%">六</td>
+								</tr>
+								<tr>
+									<td><span class="none">27</span></td>
+									<td><span class="none">28</span></td>
+									<td><span class="none">29</span></td>
+									<td><span class="none">30</span></td>
+									<td>1</td>
+									<td>2</td>
+									<td>3</td>
+								</tr>
+								<tr class="shen">
+									<td>4</td>
+									<td>5</td>
+									<td>6</td>
+									<td>7</td>
+									<td>8</td>
+									<td>9</td>
+									<td>0</td>
+								</tr>
+								<tr>
+									<td>11</td>
+									<td>12</td>
+									<td>13</td>
+									<td>14</td>
+									<td><span class="taday">15</span></td>
+									<td>16</td>
+									<td>17</td>
+								</tr>
+								<tr class="shen">
+									<td>18</td>
+									<td>19</td>
+									<td>20</td>
+									<td>21</td>
+									<td>22</td>
+									<td>23</td>
+									<td>24</td>
+								</tr>
+								<tr>
+									<td>25</td>
+									<td>26</td>
+									<td>27</td>
+									<td>28</td>
+									<td>29</td>
+									<td>30</td>
+									<td>31</td>
+								</tr>
+								<tr class="shen">
+									<td><span class="none">1</span></td>
+									<td><span class="none">2</span></td>
+									<td><span class="none">3</span></td>
+									<td><span class="none">4</span></td>
+									<td><span class="none">5</span></td>
+									<td><span class="none">6</span></td>
+									<td><span class="none">7</span></td>
+								</tr>
+
+								</tbody>
+							</table>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 column gr_index_column">
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title"><span class="more"><a href="#">更多&gt;</a></span>
+					<div class="gr_block_title_tab">
+					<ul class="gr_block_title_tab_ul">
+						<li style="cursor: pointer;" id="db" class="workflow active">待办事项</li>
+						<li style="cursor: pointer;" id="yb" class="workflow">已办事项</li>
+					</ul>
+					</div>
+				</div>
+				<div class="gr_index_block_main" id="daiban">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_index_block_main_list_table">
+					  <tbody>
+						<!-- <tr>
+							<td width="67%">【这是待办】<span class="red"><a href="#">请及时提交2017-02-23的尝试报价</a></span><img src="/static/images/ico_new.png"/></td>
+							<td width="12%" class="text-center">张来</td>
+							<td width="21%" class="time">2017-03-12 12:23</td>
+						</tr> -->
+					  </tbody>
+					</table>
+				</div>
+				<div class="gr_index_block_main" id="yiban" style="display: none;">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="gr_index_block_main_list_table">
+					  <tbody>
+					  </tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title"><span class="more"><a href="#">更多&gt;</a></span><span class="name">消息提醒</span></div>
+				<div class="gr_index_block_main">
+					<div class="gr_index_block_yellow_ts">您有  <span class="num"><a href="#">3</a></span>  个新消息</div>
+				  <ul class="gr_index_block_ul">
+					  <li><span class="date">2017-03-12 12:23</span><img src="/static/images/ico_mail01.png" /> <a href="#">关于系统在线办公平台公文标题</a></li>
+					  <li><span class="date">2017-03-12 12:23</span><img src="/static/images/ico_mail01.png" /> <a href="#">关于系统在线办公平台公文标题</a></li>
+					  <li><span class="date">2017-03-12 12:23</span><img src="/static/images/ico_mail02.png" /> <a href="#">关于系统在线办公平台公文标题</a></li>
+					  <li><span class="date">2017-03-12 12:23</span><img src="/static/images/ico_mail02.png" /> <a href="#">关于系统在线办公平台公文标题</a></li>
+					  <li><span class="date">2017-03-12 12:23</span><img src="/static/images/ico_mail02.png" /> <a href="#">关于系统在线办公平台公文标题</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title"><span class="more"><a href="#">更多&gt;</a></span><span class="name">应用导航</span></div>
+				<div class="gr_index_block_main">
+					<ul class="gr_index_yingyong_ul">
+						<li style="background: url(/static/images/yingyong_01.jpg) no-repeat;"><a href="#">财务系统</a></li>
+						<li style="background: url(/static/images/yingyong_02.jpg) no-repeat;"><a href="#">财务系统</a></li>
+						<li style="background: url(/static/images/yingyong_03.jpg) no-repeat;"><a href="#">文字可修改</a></li>
+						<li style="background: url(/static/images/yingyong_04.jpg) no-repeat;"><a href="#">领导驾驶舱</a></li>
+						<li style="background: url(/static/images/yingyong_05.jpg) no-repeat;"><a href="#">文字多六个字</a></li>
+						<li style="background: url(/static/images/yingyong_06.jpg) no-repeat;"><a href="#">财务系统</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3 column gr_index_column">
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title"><a class="peizhi" href="#"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a><span class="name">常用模块</span></div>
+				<div class="gr_index_block_main">
+					<ul class="gr_index_block_changyong_ul">
+						<li><a href="#"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><br>学习培训</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-plane" aria-hidden="true"></span><br>学习培训</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-random" aria-hidden="true"></span><br>学习培训</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span><br>学习培训</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span><br>学习培训</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-link" aria-hidden="true"></span><br>信息服务审批流...</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title"><div class="st_date"><a href="#">&lt;</a> 3月28日  星期三 <a href="#">&gt;</a></div><span class="name">食堂食谱</span></div>
+				<div class="gr_index_block_main">
+					<div class="st_title_tab">
+					<ul class="st_nav nav-pills">
+					  <li role="presentation" class="active"><a href="#">福利餐</a></li>
+					  <li role="presentation"><a href="#">特色餐</a></li>
+					  <li role="presentation"><a href="#">二楼面食</a></li>
+					  <li role="presentation"><a href="#">晚外卖</a></li>
+					</ul>
+					</div>
+					<div class="st_main">
+						<p><b class="blue">四元区</b><br>番茄鸡蛋菜花，肉片面筋白菜，肉末冬瓜</p>
+						<p><b class="blue">四元区</b><br>赛蟹肉，土豆辣子肉片，虎皮尖椒，爆两样</p>
+						<p><b class="blue">四元区</b><br>番茄鸡蛋菜花，肉片面筋白菜，肉末冬瓜</p>
+
+					</div>
+				</div>
+			</div>
+			
+			<div class="gr_index_block" style="height: 300px;">
+				<div class="gr_index_block_title"><span class="more"><a href="#">更多&gt;</a></span><span class="name">常用工具</span></div>
+				<div class="gr_index_block_main">
+					<ul class="gr_index_block_gj_ul">
+						<li><a href="#"><img src="/static/images/ico_gj_01.png" /><br>病毒库</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_02.png" /><br>升级包</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_03.png" /><br>常用浏览器</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_04.png" /><br>表格模板</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_05.png" /><br>浏览器</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_06.png" /><br>安全控件</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_07.png" /><br>输入法</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_08.png" /><br>常用字体</a></li>
+						<li><a href="#"><img src="/static/images/ico_gj_09.png" /><br>病毒库</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="footer clr">版权所有 综合管理平台</div>
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!--<script src="/common/js/index.js"></script>-->
+<!-- 引入自己的js -->
+<!--<script src="/common/js/main.js"></script>-->
+<script src="/common/js/config.js"></script>
+<script src="/common/js/commonFunction.js"></script>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        headerInit.init();
+    });
+
+	 $(function () {
+        // tab页切换
+        $('.nav-tabs > li').unbind('click').bind('click', function () {
+            var id = $(this).attr('for');
+            $(this).addClass('active').siblings('li').removeClass('active');
+            $('.main').children().addClass('hidden');
+            $('#' + id).removeClass('hidden');
+        })
+
+		// 轮播图
+		jQuery(document).ready(function($) {
+			$(".carousel").mouseover(function(){
+			  	$(".carousel__indicators").show();
+			});
+			$(".carousel").mouseout(function(){
+			  	$(".carousel__indicators").hide();
+			});
+			
+			$('.carousel__indicators__item').unbind('click').bind('click', function(e){
+				$(this).siblings('li.carousel__active').removeClass('carousel__active')
+				$(this).addClass('carousel__active');
+				var _index = $('.carousel__indicators__item').index($(this));
+				var _width = $('.carousel').width();
+				var _offset = 0 - parseInt(_index) * parseInt(_width);
+				$('.carousel__container').animate({
+					'left': _offset
+				}, 1000);
+			})	
+		});
+    })
+</script>
+</body>
+
+</html>
+
+

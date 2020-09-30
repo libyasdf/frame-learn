@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title>企业中心</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+     <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+     <!-- Bootstrap -->
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+   
+</head>
+
+<body class="formpage_bj" >
+<div class="container-fluid formpage_area" >
+    <form class="form-horizontal" id="form">
+            <!-- resId -->
+        <input name="resId" id="resId" type="hidden" value="">
+    	       <!-- 流程字段-->
+		<input name="id" id="id"  type="hidden" value=""/><!-- 工作项ID -->
+		<input name="ideaName" id="ideaName" type="hidden" value=""/><!-- 当前用户意见域名称 -->
+		<input name="subflag" id="subflag" type="hidden" value=""/><!-- 流程状态 -->
+		<input name="filetypeid" id="filetypeid" type="hidden" value=""/><!-- 流程ID -->
+		<input name="workFlowId" id="workflowid" type="hidden" value=""/><!-- 流程唯一ID -->
+		<input name="workitemid" id="workitemid" type="hidden" value=""/><!-- 待办工作项ID -->
+		<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+		<input type="hidden" name="isFinish" id="isFinish" value=""/>
+		<!-- 流程字段结束 -->
+        <input type="hidden" id="textId"/>
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name" >添加计划</span>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+             <div class="form-group">
+                    <div class="col-md-4">
+                         <input type="hidden" name="datePlan" class="form-control" id="datePlan" readonly="readonly" placeholder=""> 
+                        <input type="hidden" name="flag" id="flag">
+                    </div>
+						
+                	</div>
+                	 <div class="form-group">
+                    <label for="" class="col-md-2 control-label"> <b style="color: red;">*</b> 类别：</label>
+                    <div class="col-md-2">
+                        <select  id="planType" name="planType"  class="form-control" ></select>
+                    </div>
+                    <div id = "remindDiv">
+                     <label for="" class="col-md-2 control-label"> 提醒时间：</label>
+                    <div class="col-md-4">
+                        <input type="text"  id="remindTime" name="remindTime" readonly="readonly" class="form-control" >
+                    </div>
+                    </div>
+                	</div>
+                 <div class="form-group">
+                 <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 内容：</label>
+                    <div class="col-md-10">
+                    <textarea name="content" autofocus="autofocus" id="content" class="form-control" rows="2" ></textarea>
+                    </div>
+                	</div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    
+    </form>
+    <div style="text-align: center;">
+		<button id="save" class="btn btn-primary form_btn_area_btn2"
+			onclick="save('0');">
+			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+			保存
+		</button>
+		<button id="finish" class="btn btn-primary form_btn_area_btn2"
+			onclick="save('1');">
+			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+			转为日志
+		</button>
+	</div>  
+<!--     <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">计划列表</span>
+                </div>
+            </div>
+        </div>
+            <div class="col-md-12">
+                <table id="right_table" ></table>
+            </div>  -->                
+</div>
+<!-- 按钮区结束 -->
+<!-- 按钮区结束 -->
+<!-- 按钮区结束 -->
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!-- 引入自己模块功能的js -->
+<!-- <script type="text/javascript" src="js/workPlanEdit.js"></script> -->
+<!-- <script type="text/javascript" src="js/workPlanValidator.js"></script> -->
+<!--文件上传js end-->
+<script type="text/javascript">
+var dateLog;
+var from;
+$(function(){
+	var theRequest = GetRequest();
+	$("#id").val(regVlaue(theRequest.id));
+	$("#opertation").val(theRequest.oper);
+	$("#datePlan").val(theRequest.datePlan);
+	var year = '';
+	var month = '';
+	var day = '';
+	year = theRequest.datePlan.split('-')[0] + '年';
+    if (theRequest.datePlan.split('-')[1].substr(0, 1) == 0) {
+        month = theRequest.datePlan.split('-')[1].substr(1, 2)+'月' ;
+    } else {
+        month = theRequest.datePlan.split('-')[1] + '月';
+    }
+	if (theRequest.datePlan.split('-')[2].substr(0, 1) == 0) {
+        day = theRequest.datePlan.split('-')[2].substr(1, 2)+'日' ;
+    } else {
+        day = theRequest.datePlan.split('-')[2] + '日';
+    }
+	$("#tishi").text("您正在添加的是"+year+month+day+"的计划和日志");
+	$("#resId").val(theRequest.resId);
+	
+initFormData();
+})
+
+function initFormData(){
+	/**
+	 * 初始化页面，数据加载、渲染
+	 */
+	if($("#datePlan").val() != ""){
+		
+		//表单数据渲染
+		var datas = {"datePlan":$("#datePlan").val(),"id":$("#id").val(),"resId":$("#resId").val()};
+		if($("#opertation").val()=="VIEW"){
+			httpRequest("get","/mypage/workplan/edit",datas,function (data){
+				/*$("#dateLog").text(data.data.dateLog)
+				$("#content").text(data.data.content)*/
+				
+				DisplayData.playData({data: data});
+			});
+		}else{
+			httpRequest("get","/mypage/workplan/edit",datas,function (data){
+				//dateLog=data.data.datePlan;
+				
+				DisplayData.playData({data: data});
+				//$("#content").val(data.data.content).change();
+			});
+		}
+	 }
+	if($("#isFinish").val()=='1'){
+		$("#anniu").css("display","none");
+	}else{
+		$("#anniu").css("display","inline-block");
+	}
+}
+
+/**
+ * 空值设置
+ * 
+ * @param val
+ * @returns
+ */
+function regVlaue(val) {
+	if (!val) {
+		val = "";
+	}
+	return val;
+}
+Dictionary.init({mark:'log_type',type:'1',position:"planType",domType:"select",name:"planType",hasSelect:false});
+Dictionary.init({mark:'log_type',type:'1',position:"planType2",domType:"select",name:"planType2",hasSelect:false});
+    scrollTop.init();
+
+</script>
+<!--文件上传js end-->
+<script type="text/javascript">
+//Dictionary.init({mark:'log_type',type:'1',position:"planType",domType:"select",name:"planType"});
+var curDate = getCurrentDate("yyyy-MM-dd")
+//alert($("#datePlan").val())
+
+$(function () {
+	/* if($("#datePlan").val()>curDate){
+		$('#remindDiv').css("display", "block")
+	} */
+	laydate.render({
+        elem: '#remindTime' //指定元素
+        //,type: 'datetime'
+        ,min: getBeforeDate(curDate,-1)
+        ,max: $("#datePlan").val()
+        ,done: function(value, date, endDate){
+        	$('#remindTime').val(value).change()
+        } 
+    });
+})
+ function getBeforeDate(date,n) {
+	        var n = n;
+	        var d = new Date(date);
+	        var year = d.getFullYear();
+	        var mon = d.getMonth() + 1;
+	        var day = d.getDate();
+	        if(day <= n) {
+	            if(mon > 1) {
+	                mon = mon - 1;
+	            } else {
+	                year = year - 1;
+	                mon = 12;
+	            }
+	        }
+	        d.setDate(d.getDate() - n);
+	        year = d.getFullYear();
+	        mon = d.getMonth() + 1;
+	        day = d.getDate();
+	        s = year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day);
+	        return s;
+	    } 
+/* function  deleteOpt (json) {
+         /**
+          * 删除确定框的默认参数
+          * @type {{url: string, msg: string, confirmBtn: confirmBtn, cancelBtn: cancelBtn}}
+          */
+/*          var delArg = {
+             url: ""
+             , msg: "确定要删除吗？"
+             , tableId: "table"
+             , confirmBtn: function (json) { //确定按钮的事件
+                 //发送ajax请求来删除，传参url就是删除的地址
+                 //_delArg.url
+                 $.ajax({
+                     url: json.url
+                     , type: "GET"
+                     , dataType: "json"
+                     , success: function (result) {
+                         var msg = "";
+                         if (result.flag === "1") {
+                             msg = '删除成功！';
+                             if ($.trim(result.msg)) {
+                                 msg = result.msg;
+                             }
+                             layer.msg(msg, {icon: 1});
+                             TableInit.refTable(json.tableId);
+                             if(typeof(json.tableIds)!="undefined"){
+                             	TableInit.refTable(json.tableIds);
+                             }
+                             if(window.parent.$("#workLog_table").text()){
+                            	 parent.TableInit.refTable('workLog_table');
+                                 parent.TableInit.refTable('workLog_table2'); 
+                             }
+                             if($('#year', window.parent.document).val()&&$('#month', window.parent.document).val()){
+ 	        					parent.setData($('#year', window.parent.document).val().substring(0,$('#year', window.parent.document).val().indexOf("年")), $('#month', window.parent.document).val().substring(0,$('#month', window.parent.document).val().indexOf("月")))
+ 	        				}else if($('#year', window.top.document).val()&&$('#month', window.top.document).val()){
+ 	        					top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+ 	        				}
+                         } else {
+                             msg = '删除失败，请重试！';
+                             if ($.trim(result.msg)) {
+                                 msg = result.msg;
+                             }
+                             layer.msg(msg, {icon: 2});
+                         }
+                     }
+                     , error: function () {
+                         layer.msg('删除失败，请重试！', {icon: 2});
+                     }
+                 })
+                 // layer.msg('删除成功', {icon: 1, time: 1000});
+                 // layer.msg('删除失败', {icon: 0,time:1000});
+             }
+             , cancelBtn: function () { //取消按钮的事件
+                 // layer.msg('也可以这样', {
+                 //     time: 20000, //20s后自动关闭
+                 //     btn: ['明白了', '知道了']
+                 // });
+             }
+         };
+
+         var _delArg = $.extend(delArg, json);
+         //询问框
+         layer.confirm(_delArg.msg, {
+             btn: ['确定', '取消'] //按钮
+         }, function () {
+             _delArg.confirmBtn(_delArg)
+         }, _delArg.cancelBtn);
+     }; */ 
+     function save(isremind){
+  	        if($("#datePlan").val()){
+  	        	if(	$("#content").val()&&$("#planType").val()){
+  	        		if($("#content").val().replace(/[\u0391-\uFFE5]/g,"aa").length >176){
+  	        			layer.msg("内容不能超过88个字！", {
+  	    	                icon: 0
+  	    	            });
+  	        		}else{
+  	        			saveChange0(isremind);
+  	        		}
+  	        	}else if (!$("#content").val()){
+  	        		layer.msg("内容不能为空！", {
+  	  	                icon: 0
+  	  	            });
+  	        	}else if (!$("#planType").val()){
+  	        		layer.msg("类型不能为空！", {
+  	  	                icon: 0
+  	  	            });
+  	        	}
+  	        }else{
+  	        	layer.msg("请选择一个日期！", {
+  	                icon: 0
+  	            });
+  	        }
+ }
+     /* function save2(){
+ 	        if($("#datePlan").val()){
+ 	        	if($("#content2").val()&&$("#planType2").val()){
+					if($("#content2").val().replace(/[\u0391-\uFFE5]/g,"aa").length >176){
+						layer.msg("内容不能超过88个字！", {
+		 	                icon: 0
+		 	            });
+ 	        		}else{
+ 	        			saveChange1();
+ 	        		}
+ 	        	}else if (!$("#content2").val()){
+  	        		layer.msg("内容不能为空！", {
+  	  	                icon: 0
+  	  	            });
+  	        		return;
+  	        	}else if (!$("#planType2").val()){
+  	        		layer.msg("类型不能为空！", {
+  	  	                icon: 0
+  	  	            });
+  	        	}
+ 	        }else{
+ 	        	layer.msg("请选择一个日期！", {
+ 	                icon: 0
+ 	            });
+ 	        }
+} */
+
+     function saveChange0(isremind){
+ 		var info = "";
+ 		if(isremind=='0'){
+ 			$("#isFinish").val("0");
+ 			$("#isRemind").val("0");
+ 		}else{
+ 			$("#isFinish").val("1");
+ 			$("#isRemind").val("1");
+ 		}
+ 		
+ 		//var bootstrapValidator = $("#form").data('bootstrapValidator');
+ 	    //手动触发验证
+ 	    //bootstrapValidator.validate();
+ 	   // if(bootstrapValidator.isValid()){
+ 	    				$.ajax({
+ 	    	        		type: "POST",
+ 	    	        		url:"/mypage/workplan/saveForm",
+ 	    	        		data:$("#form").serialize(),
+ 	    	        		async: false,
+ 	    	        		success:function(json){
+ 	    	        			if (json) {
+ 	    	        				info = json.id;
+ 	    	        				$("#id").val(json.id);
+ 	    	        				if($('#year', window.parent.document).val()&&$('#month', window.parent.document).val()){
+ 	    	        					parent.setData($('#year', window.parent.document).val().substring(0,$('#year', window.parent.document).val().indexOf("年")), $('#month', window.parent.document).val().substring(0,$('#month', window.parent.document).val().indexOf("月")))
+ 	    	        				}else if($('#year', window.top.document).val()&&$('#month', window.top.document).val()){
+ 	    	        					top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+ 	    	        				}
+ 	    	        			}
+ 	    	        		}
+ 	    	        	});
+ 	    	
+ 	    //}
+ 	    if(info){
+ 			layer.msg("保存成功！", {icon: 1});
+ 			$("#id").val("");
+ 			//$("#isFinish").val("");
+    		$("#content").val("");
+    		$("#content").focus();
+    		$("#planType").val("0")
+    		//if(window.parent.$("#right_table").text()){
+ 			TableInit.refTable('right_table')
+    		//}
+ 			//刷新列表
+ 			if(window.parent.$("#workLog_table").text()){
+ 			parent.TableInit.refTable('workLog_table');
+ 			parent.TableInit.refTable('workLog_table2');
+ 			}
+ 			
+}
+} 
+     /* function saveChange1(){
+    		var info = "";
+    		$("#isFinish").val("1");
+    		$("#id").val($("#id2").val());
+    		$("#content").val($("#content2").val());
+    		$("#planType").val($("#planType2").val());
+    		//var bootstrapValidator = $("#form2").data('bootstrapValidator');
+    	    //手动触发验证
+    	   // bootstrapValidator.validate();
+    	   // if(bootstrapValidator.isValid()){
+    	    				$.ajax({
+    	    	        		type: "POST",
+    	    	        		url:"/mypage/workplan/saveForm",
+    	    	        		data:$("#form").serialize(),
+    	    	        		async: false,
+    	    	        		success:function(json){
+    	    	        			if (json) {
+    	    	        				info = json.id;
+    	    	        				$("#id").val(json.id);
+    	    	        				if($('#year', window.parent.document).val()&&$('#month', window.parent.document).val()){
+    	    	        					parent.setData($('#year', window.parent.document).val().substring(0,$('#year', window.parent.document).val().indexOf("年")), $('#month', window.parent.document).val().substring(0,$('#month', window.parent.document).val().indexOf("月")))
+    	    	        				}else if($('#year', window.top.document).val()&&$('#month', window.top.document).val()){
+    	    	        					top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+    	    	        				}
+    	    	        			}
+    	    	        		}
+    	    	        	});
+    	    	
+    	   // }
+    	    if(info){
+    			layer.msg("保存成功！", {icon: 1});
+    			$("#id2").val("");
+    			$("#id").val("");
+     			//$("#isFinish").val("");
+        		$("#content2").val("");
+        		$("#content2").focus();
+        		$("#content").val("");
+        		$("#planType").val("0");
+        		$("#planType2").val("0");
+        		//if(window.parent.$("#right_table2").text()){
+    			TableInit.refTable('right_table2');
+        		//}
+    			//刷新列表
+    			if(window.parent.$("#workLog_table").text()){
+    			parent.TableInit.refTable('workLog_table');
+    			parent.TableInit.refTable('workLog_table2');
+    			}
+    			
+    	}  		
+    	} */
+     function dateChange(date){
+    	 
+     }
+</script>
+</body>
+</html>

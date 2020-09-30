@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    
+    <!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+	<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+	
+	<script src="/static/core/laydate/laydate.js"></script>
+	<!-- 流程相关 -->
+	<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+	<script type="text/javascript" src="/common/js/config.js"></script>
+	<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+	<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+	<!-- 获取cookie值 -->
+	<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<!-- 自定义意见(最后进行加载) -->
+	<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+	<!-- 数据校验 -->
+	<!-- <script type="text/javascript" src="/modules/llg/js/taskPlanValidator.js"></script> -->
+	<!-- 数据回显 -->
+	<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+	
+</head>
+<body>
+<div class="container">
+	<form name="addedit" id="addedit" target="_self">
+		<input type="hidden" name="sccreditid" value="" id="sccreditid">
+		<input type="hidden" name="cre_user" value="" id="cre_user">
+		<input type="hidden" name="sysId" id ="sysId" value=""/>
+		<input type="hidden" name="orgId" id ="orgId" value=""/>
+		<table  class="table topsearch" >
+			<tr >
+				<td  class="tl" ><label  style="padding-top: 7px;">授权范围: </label></td>
+				<td  class="tr" >
+			    	<input type="radio" id="scopeone" name="scope" value="1" checked onClick="changeShow();">
+			    	<label for='scopeone'>全部授权</label> &nbsp; &nbsp;
+					<input type="radio" id="scope" name="scope" value="0" onClick="changeShow();">
+					<label for='scope'>部分授权</label>
+				</td>
+				<td class="tl" ><label  style="padding-top: 7px;"><b style="color: red;">*</b>办理类型: </label></td>
+				<td class="tr">
+				 <select name="sccredittype" class="form-control" style="width: 300px;">
+					<option selected="selected" value="">--请选择--</option>
+					<option value="1">单独代办</option>
+					<option value="2">共同办理</option>
+				  </select>
+			    </td>
+			</tr>
+			
+			<tr  id="typeShow" style="display:none">
+				<td class="tl" ><label  style="padding-top: 7px;"><b style="color: red;">*</b>事项类型: </label></TD>
+				<td class="tr" ><select name="fileType" id="filetype"
+					class="form-control" size="9" style="width: 85%">
+				</select></td>
+				<td class="tl" >
+				&nbsp; <input type="button"
+					class="btn btn-mini btn-primary" name="add" onClick="addSelectRecord()"
+					value="&nbsp添 &nbsp&nbsp&nbsp&nbsp加&nbsp"> <br>
+				&nbsp; <br>
+				&nbsp; <input type="button" class="btn btn-mini btn-primary" name="addall"
+					onClick="addAllSelectRecord()" value="&nbsp添加全部 "> <br>
+				&nbsp; <br>
+				&nbsp; <input type="button" class="btn btn-mini btn-primary" name="delete"
+					onClick="del()" value="&nbsp移&nbsp&nbsp&nbsp&nbsp除 &nbsp"> <br>
+				&nbsp; <br>
+				&nbsp; <input type="button" class="btn btn-mini btn-primary" name="deleteall"
+					onClick="delAllRecord()" value="&nbsp移除全部">
+		 
+				</td>
+				<td class="tr" ><select id='fileTypeItem'
+					name="fileTypeItem" multiple="multiple" class="form-control" size="9"
+					style="width: 85%">
+				</select></td>
+			</tr>
+			<tr style="display: none;">
+				<td class="tl" ><label  style="padding-top: 7px;">授权人: </label></td>
+				<td colspan="3" >
+					<INPUT TYPE="hidden" NAME="authPeople" id="authPeople" value=""> 
+					<INPUT TYPE="hidden" NAME="userid" id="userid" value=""> 
+					<INPUT TYPE="hidden" NAME="authDeptID" value="" id="authDeptID"> 
+					<INPUT TYPE="hidden" NAME="authDept" value=""/>
+				</td>
+			</tr>
+			<tr>
+				<td class="tl" ><label  style="padding-top: 7px;"><b style="color: red;">*</b>被授权人: </label></td>
+				<td colspan="3">
+					<div class="input-group">
+						<input type="text" name="authedPeople" id="authedPeople" class="form-control" maxlength="500" value="" unselectable="on" style="width:100%; margin-left:10px;"
+							onclick="openSelectZtree({'id':'sccredituserid','name':'authedPeople','isMulti':'1','type':'1','asyn':true,'check':'','cancle':'','url':'/system/component/tree/getDeptOrUserTree'})"/>
+						<span class="input-group-addon" onclick="openSelectZtree({'id':'sccredituserid','name':'authedPeople','isMulti':'1','type':'1','asyn':true,'check':'','cancle':'','url':'/system/component/tree/getDeptOrUserTree'})">
+                                  <span class="glyphicon glyphicon-user"></span>
+                              </span>
+						<input type="hidden" name="sccredituserid" value="" id="sccredituserid">
+						<input type="hidden" name="ObjectUserDept" value="">
+						<input type="hidden" name="authedDeptID" id="authedDeptID" value=""/>
+						<input type="hidden" name="authedDept" value=""/>
+					</div>
+				</td>
+			</tr>
+			<tr >
+				<td colspan="4" style="color: red;text-align: center;">*******生效时间,失效时间请填写时间,精确到小时*******</td>
+			</tr>
+			<tr >
+				<td class="tl"><label  style="padding-top: 7px;"><b style="color: red;">*</b>生效时间: </label></td>
+				<td class="tr">
+				  <input class="form-control" size="15" unselectable="on" value="" name="sccbegindate" type='text'
+					id="sccbegindate" style="width:200px;margin-left:10px;" />
+				</td>
+				<td class="tl"><label  style="padding-top: 7px;"><b style="color: red;">*</b>失效时间: </label></td>
+				<td class="tr">
+				  <input class="form-control" size="15" name="sccenddate" type='text'
+					value="" id="sccenddate" unselectable="on" style="width:200px;margin-left:10px;" />
+				
+				</td>
+			</tr>
+			<tr>
+				<td class="tl"><label  style="padding-top: 7px;"><b style="color: red;">*</b>是否允许再授权: </label></td>
+				<td colspan="3">
+					<input TYPE="radio" id="issccreditone" NAME="issccredit" value="1" style="margin-left:10px;"><label for='issccreditone'>是 </label>
+				    &nbsp; &nbsp;
+					<INPUT TYPE="radio" id="issccredittwo" NAME="issccredit" value="0"><label for='issccredittwo'>否 </label>
+			   </td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="formsubmit();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+    <!-- <button id="closeBtn" class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>关闭</button> -->
+</div>
+<script type="text/javascript">
+
+var request = new GetRequest();
+
+/**
+ * 生效时间
+ */
+laydate.render({
+	elem: '#sccbegindate',
+	format:'yyyy-MM-dd HH:mm:ss',
+	type:'datetime'
+})
+
+/**
+ * 失效时间
+ */
+laydate.render({
+	elem: '#sccenddate',
+	format:'yyyy-MM-dd HH:mm:ss',
+	type:'datetime'
+})
+
+$(function(){
+	//获取流程事项
+	getLicenseFlowType();
+	//编辑页面回显
+	showData();
+	
+});
+
+/**
+ * 修改编辑页面数据回显
+ */
+function showData(){
+	var id = request.id;
+	if(id!=""){
+		//设置scope的值为0
+		$("#scope").prop("checked", true);
+		changeShow();
+		var data={"id":id};
+		getDataByAjax('/flowSccredit/view',data,function(data) {
+			if (data["result"] == "0") {
+				result = data["msg"];
+				layer.alert(result,{icon:0,title:'警告'});
+				//Overlay.unableAlert(result);
+			} else {
+				//将获取到的值写入到form中
+				 $("select[name=sccredittype]").val(data.sccredittype);
+				 var newOption = new Option(data.filetypename,data.filetype);
+	        	 $("#fileTypeItem").append(newOption);
+	        	 $("#sccreditid").val(data.sccreditid);
+	        	 $("#authPeople").val(data.username);
+	        	 $("#userid").val(data.userid);
+	        	 $("#authedPeople").val(data.sccreditusername);
+	        	 $("#sccredituserid").val(data.sccredituserid);
+	        	 $("#sccbegindate").val(data.sccbegindate);
+	        	 $("#sccenddate").val(data.sccenddate);
+	        	 $("input[type=radio][name=issccredit][value="+data.issccredit+"]").attr("checked",true); 
+	        	 $("#updateAuth").hide();
+	        	 $("#updateSubmit").show();
+			}
+		});
+	}
+}
+
+/**
+ * 获取事项类型
+ */
+function getLicenseFlowType(){
+	$("#filetype").html("");
+	var view = "";
+	$.ajax({
+        type: "post",
+        url: "/workflow/getworkflow",	//获取该用户可启动的流程
+        //url: "/flowSccredit/getLicenseFlowType",	//获取所有流程分类,供待办授权使用(不分系统)
+        //url: "/workflow/getManageFlowByUser",	//获取该用户管理的流程
+        data:{},
+        dataType: "json",
+        success: function(data) {
+        	console.log("获取到的流程事项：");
+        	console.log(data);
+        	//url: "/workflow/getworkflow"
+        	for ( var i in data.flows) {
+        		for(var j in data.flows[i].flowList){
+        			var newOption = new Option(data.flows[i].flowList[j].fileTypeName,data.flows[i].flowList[j].fileTypeId);
+        			$("#filetype").append(newOption);
+        		}
+			}
+			//url: "/flowSccredit/getLicenseFlowType"
+        	/* for ( var i in data) {
+       			var newOption = new Option(data[i].flowTypeName,data[i].flowTypeId);
+       			$("#filetype").append(newOption);
+			} */
+        },
+        error: function() {
+        	layer.alert("请重新登入系统！",{icon:0,title:'警告'}, function(index){
+        		window.location.href = path + "/main.html";
+       			layer.close(index);
+       		});
+        }
+    });
+}
+
+/**
+ * 显示/隐藏“事项类型”
+ */
+function changeShow(){
+	var scope = document.forms["addedit"].elements["scope"];
+	if(scope[1].checked){//显示
+		document.getElementById("typeShow").style.display="";
+		delAllRecord();
+	}else if(scope[0].checked){//隐藏
+		document.getElementById("typeShow").style.display="none";
+		addAllSelectRecord();
+	}
+	if(scope.value == 0){
+	   delAllRecord();
+	}
+}
+
+/**
+ * 添加事项类型
+ */
+function MoveRecord(){
+	var objFile = document.addedit.fileType;
+	var objFileItem = document.addedit.fileTypeItem;
+	var selectIndex = objFile.selectedIndex;
+	var addFlag = "0";
+	
+	var selText = objFile.options[selectIndex].text;
+	var selValue = objFile.options[selectIndex].value;
+	var newOption = new Option(objFile.options[selectIndex].text,objFile.options[selectIndex].value);
+	for(var i=0;i<objFileItem.length;i++){
+		var tempText = objFileItem.options[i].text;
+		var tempValue = objFileItem.options[i].value;
+		if(tempText==selText && tempValue==selValue){
+			addFlag = "1";
+			break;
+		}
+	}
+	if(addFlag=="0"){
+		objFileItem.add(newOption);
+	}
+}
+
+/**
+ * 添加所有(选中的)事项类型
+ */
+function MoveAllRecord(){
+	var objFile = document.addedit.fileType;
+	var objFileItem = document.addedit.fileTypeItem;
+	var length = objFile.options.length;
+	var addFlag = "0";
+	
+	for(var i=0;i<length;i++){
+		var selText = objFile.options[i].text;
+		var selValue = objFile.options[i].value;
+		var newOption = new Option(objFile.options[i].text,objFile.options[i].value);
+		for(var j=0;j<objFileItem.length;j++){
+			var tempText = objFileItem.options[j].text;
+			var tempValue = objFileItem.options[j].value;
+			if(tempText==selText && tempValue==selValue){
+				addFlag = "1";
+			}
+		}
+		if(addFlag=="0"){
+			objFileItem.add(newOption);
+		}
+		addFlag = 0;
+	}
+}
+
+/**
+ * 移除全部(已选)事项类型
+ */
+function delAllRecord(){
+	var obj = document.addedit.fileTypeItem;
+	var length = obj.options.length;
+	for(var i=0;i<length;i++){
+		obj.remove(0);
+	}
+}
+
+/**
+ * 添加(选中的)事项类型
+ */
+function addSelectRecord(){
+	var obj =document.addedit.fileType.value;
+	if(obj==""){
+		//Overlay.unableAlert("请选择要增加的事项类型");
+		layer.alert("请选择要增加的事项类型",{icon:0,title:'警告'});
+	return false;
+	}
+	MoveRecord();
+}
+
+/**
+ * 添加全部(选中的)事项类型
+ */
+function addAllSelectRecord(){
+	MoveAllRecord();
+}
+
+/**
+ * 移除事项类型
+ */
+function del(){
+	var obj = document.addedit.fileTypeItem.value;
+	if(obj==""){
+		//Overlay.unableAlert("请选择要删除的事项类型");
+		layer.alert("请选择要删除的事项类型",{icon:0,title:'警告'});
+		return false;
+	}
+	var obj = document.addedit.fileTypeItem;
+	var selectIndex = document.addedit.fileTypeItem.selectedIndex;
+	if (selectIndex != -1){
+		document.addedit.fileTypeItem.remove(selectIndex);
+	}
+}
+
+/**
+ * 确定，保存授权方法
+ */
+function formsubmit(){
+	var id = request.id;
+	if(id!=""){
+		if(addedit.fileTypeItem.length<1){
+			layer.msg("请选择事项类型！", {icon: 0});
+		  	return false;
+		}
+	    if(addedit.fileTypeItem.length>1){
+	    	layer.msg("请选择要修改的一项事项类型！", {icon: 0});
+	     	return false;
+		}
+		if(addedit.authedPeople.value==""){
+			layer.msg("请选择被授权人！", {icon: 0});
+		  	return false;
+		}
+		if(addedit.sccredituserid.value==addedit.cre_user.value){
+			layer.msg("不能授权给自己！", {icon: 0});
+		  	return false;
+		}
+		if(addedit.issccredit.value==""){
+			layer.msg("请选择是否可再授权！", {icon: 0});
+		  	return false;
+		}
+		if(addedit.sccredittype.value==""){
+			layer.msg("请选择办理类型！", {icon: 0});
+		  	return false;
+		}
+	    if(addedit.sccenddate.value==""){
+	    	layer.msg("生效日期不能为空！", {icon: 0});
+		  	return false;
+		}
+		if(addedit.sccenddate.value==""){
+			layer.msg("失效日期不能为空 ！", {icon: 0});
+		  	return false;
+		}
+		 if (document.addedit.sccenddate.value.length > 0 && document.addedit.sccenddate.value.length > 0){
+	            if (opinionDate(document.addedit.sccenddate.value,document.addedit.sccenddate.value)==false){
+	            	layer.msg("生效日期必须小于或者等于失效日期！", {icon: 0});	
+		                return false;
+		        }
+	        }
+		 if(addedit.fileTypeItem.length > 0){
+				var i=0;
+				for(i=0;i<addedit.fileTypeItem.length;i++){
+					addedit.fileTypeItem.options[i].selected=true;
+				}
+				getDataByAjax('/flowSccredit/update',$('#addedit').serialize(),function(data) {
+					if (data["result"] == "0") {
+						result = data["msg"];
+						layer.msg(result, {icon: 2});
+						//setTimeout("MyLayer.closeOpen();",2000);
+					} else {
+						result = data["msg"];
+						layer.msg(result, {icon: 1});
+						parent.TableInit.refTable('right_table');
+						setTimeout("MyLayer.closeOpen();",2000);
+					}
+					return data["result"];
+				});
+			}else{
+				layer.msg('事项类型为空！', {icon: 0});
+				return false;
+			}
+	}else{
+		if(addedit.scope.value=="1"){
+			MoveAllRecord();
+		}else{
+			if(addedit.fileTypeItem.length < 1){
+				layer.msg('请选择事项类型！', {icon: 0});
+			  	return false;
+			}
+		}
+		if(addedit.authedPeople.value==""){
+			layer.msg('请选择被授权人！', {icon: 0});
+		  	return false;
+		}
+		
+		if(addedit.sccredituserid.value==addedit.cre_user.value){
+			layer.msg('不能授权给自己！', {icon: 0});
+		  	return false;
+		}
+		if(addedit.issccredit.value==""){
+			layer.msg('请选择是否可再授权！', {icon: 0});
+		  	return false;
+		}
+		if(addedit.sccredittype.value==""){
+			layer.msg('请选择办理类型！', {icon: 0});
+		  	return false;
+		}
+	    if(addedit.sccbegindate.value==""){
+	    	layer.msg('生效日期不能为空！', {icon: 0});
+		  	return false;
+		}
+		if(addedit.sccenddate.value==""){
+			layer.msg('失效日期不能为空 ！', {icon: 0});
+		  	return false;
+		}
+		if (document.addedit.sccbegindate.value.length>0&&document.addedit.sccbegindate.value.length>0){
+			if (opinionDate(document.addedit.sccbegindate.value,document.addedit.sccenddate.value)==false){
+				layer.msg('生效日期必须小于或者等于失效日期！', {icon: 0});
+				return false;
+			}
+		}
+		if(addedit.fileTypeItem.length > 0){
+			var i=0;
+			for(i=0;i<addedit.fileTypeItem.length;i++){
+				addedit.fileTypeItem.options[i].selected=true;
+			}
+			getDataByAjax('/flowSccredit/save?',$('#addedit').serialize(),function(data) {
+				if (data["result"] == "0") {
+					result = data["msg"];
+					layer.msg(result, {icon: 2});
+					//setTimeout("MyLayer.closeOpen();",2000);
+				} else {
+					result = data["msg"];
+					layer.msg(result, {icon: 1});
+					parent.TableInit.refTable('right_table');
+					setTimeout("MyLayer.closeOpen();",2000);
+				}
+				return data["result"];
+			});
+		}else{
+			layer.msg('事项类型为空！', {icon: 0});
+			return false ;
+		}
+	}
+}
+
+/*
+ * 一个判断日期大小，sDate代表起始时间，eDate代表结束时间，如果eDate大于sDate，返回true
+ */
+function opinionDate(sDate, eDate) {
+	startDate = sDate;
+	endDate = eDate;
+	startMark1 = startDate.indexOf("-");
+	startYear = startDate.substring(0, startMark1);
+	startDate = startDate.substring(startMark1 + 1, startDate.length);
+	startMark2 = startDate.indexOf("-");
+	startMonth = startDate.substring(0, startMark2);
+	startDate = startDate.substring(startMark2 + 1, startDate.length);
+	startDay = startDate;
+
+	endMark1 = endDate.indexOf("-");
+	endYear = endDate.substring(0, endMark1);
+	endDate = endDate.substring(endMark1 + 1, endDate.length);
+	endMark2 = endDate.indexOf("-");
+	endMonth = endDate.substring(0, endMark2);
+	endDate = endDate.substring(endMark2 + 1, endDate.length);
+	endDay = endDate;
+
+	if (startMonth.substring(0, 1) == 0) {
+		startMonth = startMonth.substring(1, 2);
+	}
+	if (endMonth.substring(0, 1) == 0) {
+		endMonth = endMonth.substring(1, 2);
+	}
+	if (startDay.substring(0, 1) == 0) {
+		startDay = startDay.substring(1, 2);
+	}
+	if (endDay.substring(0, 1) == 0) {
+		endDay = endDay.substring(1, 2);
+	}
+	if (parseInt(endYear) < parseInt(startYear)) {
+		return false;
+	} else if ((parseInt(endYear) == parseInt(startYear))) {
+		if (parseInt(startMonth) < parseInt(endMonth)) {
+			return true;
+		} else if (parseInt(startMonth) > parseInt(endMonth)) {
+			return false;
+		} else if (parseInt(startMonth) == parseInt(endMonth)) {
+			if (parseInt(startDay) > parseInt(endDay)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+</script>
+</body>
+</html>

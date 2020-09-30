@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+
+</head>
+<style type="text/css">
+    html,
+    body {
+        height: 100%;
+    }
+
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls>i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+
+    /* 周日期css */
+    .input-group-addon1 {
+        background-color: #fff;
+        border: none;
+    }
+
+    .btn-both {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+    }
+
+    .leftbtn {
+        background: url("/static/images/worklog/left.png") no-repeat;
+    }
+
+    .leftbtn:hover {
+        background: url("/static/images/worklog/left-hover.png") no-repeat;
+    }
+
+    .rightbtn {
+        background: url("/static/images/worklog/right.png") no-repeat;
+    }
+
+    .rightbtn:hover {
+        background: url("/static/images/worklog/right-hover.png") no-repeat;
+    }
+
+    /* td被选中 */
+    .checkTd:after {
+        /*content: '';*/
+        /*display: inline-block;*/
+        /*width: 10px;*/
+        /*height: 10px;*/
+        /*background-color: #66CCFF;*/
+    }
+
+    /* 内容 */
+    .formpage_area {
+        height: calc(100% - 80px);
+        overflow: auto;
+    }
+
+    /* 按钮样式 */
+    .form_btn_area {
+        position: fixed;
+        bottom: 0;
+        height: 50px;
+        line-height: 50px;
+        background: #c7c7c7;
+        width: 100%;
+        text-align: center;
+    }
+
+    .form_btn_area_btn2 {
+        margin-right: 20px;
+        width: 110px;
+        padding: 5px 15px;
+        line-height: 20px;
+        font-size: 15px;
+        color: #ffffff
+    }
+    .selectTime {
+        width: 120px;
+        text-align: center;
+    }
+    .input-group-addon1 {
+        width: auto;
+        cursor: pointer;
+    }
+    .list_wrapper table thead{display: block;}
+    .list_wrapper table tbody{display: block; height: 300px; overflow: auto;}
+    .list_wrapper table tr{
+        display: table;width:100%;
+        height: 25px;
+        line-height: 25px;
+    }
+    .table_header {
+        position: absolute;
+        top: -20px;
+        right: 0;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+    }
+    .btns_right {
+        position: absolute;
+        right: 15px;
+        /*top: -20px;*/
+    }
+    .btns_right > span {
+        margin-left: 15px;
+    }
+    .btns_right .selected {
+        display: inline-block;
+    }
+    .takeUp {
+        color:#428bca;
+    }
+    .apply {
+        color:#ec856e;
+    }
+    .selected {
+        margin: auto 5px;
+        display: none;
+        color: green;
+    }
+	.disable{
+		background:rgb(248,248,248);
+		/* background:red; */
+		width:100%;
+		height:100%
+	}
+</style>
+
+<body class="formpage_bj">
+    <div class="container-fluid formpage_area">
+        <!--查询-->
+        <div class="row">
+            <form class="form-horizontal">
+
+                <input name="meetingroomId" id="meetingroomId" type="hidden" value="" /><!-- 会议室ID -->
+                <input name="meetingStartDate" id="meetingStartDate" type="hidden" value="" /><!-- 开始时间 -->
+                <input name="meetingStartTime" id="meetingStartTime" type="hidden" value="" /><!-- 开始时间上下午-->
+                <input type="hidden" id="meetingEndDate" name="meetingEndDate" value="" /><!-- 结束时间 -->
+                <input type="hidden" id="meetingEndTime" name="meetingEndTime" value="2"><!-- 结束时间上下午 -->
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+
+                                <label class="col-md-5 control-label"> 日期：</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon input-group-addon1" onclick="lastDay()">
+                                            <span id="leftImage" class="btn-both leftbtn"></span>
+                                        </span>
+                                        <input class="form-control selectTime" id="selectTime" readonly />
+                                        <span class="input-group-addon input-group-addon1" onclick="nextDay()">
+                                            <span id="rightImage" class="btn-both rightbtn"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12" style="padding-top:10px">
+                <div class="table_header">
+                    <div class="btns_right">
+                        <span><i class="takeUp glyphicon glyphicon-exclamation-sign"></i> 已占用 </span>
+                        <span><i class="selected glyphicon glyphicon-ok-sign"></i> 选中 </span>
+                        <span><i class="apply glyphicon glyphicon-adjust"></i> 申请中 </span>
+                        <span><i class="selected  glyphicon glyphicon-ok-sign"></i><i class="takeUp glyphicon glyphicon-exclamation-sign"></i> 已选中但被他人占用 </span>
+                        <span><i class="selected  glyphicon  glyphicon-ok-sign"></i><i class="apply glyphicon glyphicon-adjust"></i> 已选中但被他人申请 </span>
+                    </div>
+                </div>
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+    <!-- 按钮区 -->
+    <div class="form_btn_area">
+        <button id="preview" class="btn btn-primary form_btn_area_btn2">
+            预览
+        </button>
+        <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="confirm();">
+            确定
+        </button>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="modal_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        会议室预定列表
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="list_wrapper" class="list_wrapper">
+                        <table id="list"class="table">
+                            <thead class="list_head">
+                            <tr>
+                                <th width="10%">序号</th>
+                                <th width="20%">预定日期</th>
+                                <th width="15%" >星期</th>
+                                <th >会议室名称</th>
+                                <th width="20%">预定时间段</th>
+                                <th width="15%">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list_content" id="list_content">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/nodetpl.min.js"></script>
+    <script src="/static/core/laydate/laydate.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script src="/modules/zhbg/hygl/meetingApply/js/bootstrap-table.min.js"></script>
+    <!-- <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script> -->
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/js/common/mylayer.js"></script>
+    <script src="/static/js/common/tablelist.js"></script>
+
+    <script type="text/javascript" src="/common/js/dateutil.js"></script>
+    <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+    <!-- 获取cookie值 -->
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+    <!-- 流程相关 -->
+    <script type="text/javascript" src="/common/js/commonFunction.js"></script>
+    <!-- 获取cookie值 -->
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+    <!-- 页面获取参数 -->
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <!--合并单元格的js-->
+    <script type="text/javascript" src="/common/js/mergeTable.js"></script>
+    
+    <script type="text/javascript" src="./js/choseMeetingRoom.js"></script>
+    <script type="text/javascript">
+    $("#leftImage").mouseover(function(){
+    	if($("#selectTime").val()==startTime){
+    	  $("#leftImage").css("cursor","not-allowed");
+   		}else{
+   			$("#leftImage").css("cursor","pointer");
+   		}
+   	});
+    $("#rightImage").mouseover(function(){
+    	if($("#selectTime").val()==endTime){
+    	  $("#rightImage").css("cursor","not-allowed");
+   		}else{
+   			$("#rightImage").css("cursor","pointer");
+   		}
+   	});
+    </script>
+</body>
+
+</html>

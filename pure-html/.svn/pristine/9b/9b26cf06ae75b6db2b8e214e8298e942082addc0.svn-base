@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>合并版使用 - layui</title>
+	
+	<meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+	<link rel="stylesheet" href="/static/core/layui/css/layui.css" media="all">
+
+	<link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="/static/core/html5/html5shiv.min.js"></script>
+	<script src="/static/core/html5/respond.js"></script>
+	<![endif]-->
+	<link href="/static/css/common/style.css" rel="stylesheet"/>
+	<link href="/static/css/common/form-public.css" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+
+	<style>
+
+		#left{
+			float:left;
+			width:1000px;
+			margin-top: 70px
+		}
+		#mid{
+			float:right;
+			width:500px;
+		}
+		#right{
+			float:left;
+			width:400px;
+		}
+
+		.layui-timeline-custom{
+			padding-left:25px
+		}
+		.form_btn_area1{
+			position:fixed;
+			z-index: 100;
+			height: 70px;
+			background: #eee;
+			width: 100%;
+			padding-top: 10px;
+		}
+	</style>
+
+</head>
+<body>
+	<div class="form_btn_area1" style="text-align: center;">
+		<!-- <span style="color: #268ee8">
+			红色节点：表示未按时进行反馈；红色日期：表示逾期反馈；<br/>
+		</span>
+		<span style="color: #bb4761">
+			(主责)：2018-01-10 / 每月;&nbsp;&nbsp;&nbsp;&nbsp;(协助)：2018-02-15 / 每季度
+		</span> -->
+	</div>
+	<div id="left">
+		<!-- <div class="layui-timeline-custom">
+			<span style="color: #268ee8">
+				红色节点：表示存在未按时反馈单位，点击节点，可催办<br/>
+			</span>
+			<span style="color: #bb4761">
+				首次反馈时间点/反馈周期：2018-01-10 / 每月
+			</span>
+		</div> -->
+		<fieldset class="layui-elem-field layui-field-title" style="margin-top:20px;">
+			<h3 class="layui-timeline-custom"></h3>
+		</fieldset>
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-08-15</h3>
+					<span>2018-08-15</span>
+					<p>1.assistUtil.js中增加职务职级涉密等级数据字典初始化方法userLevel.init(json)；</p>
+					<!-- <p>2.右上角添加当前登录用户数量、去除部门信息;</p>
+					<p>3.门户待办已办点击事件添加到&lttr&gt 标签;</p> -->
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-07-17</h3>
+					<span>2018-07-17</span>
+					<p>1.UserUtil工具类，方法getUserVo()；增加职务全称字段；</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-06-20</h3>
+					<span>2018-06-20</span>
+					<p>1.在session和cookie中存放系统角色ID、编号（sysRoleIds，sysRoleNos）</p>
+					<p>2.UserUtil工具类增加返回用户警号、卡号、部门等信息，方法getUserVo()</p>
+					<p>3.上传附件增加附件大小限制</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-06-04</h3>
+					<span>2018-06-04</span>
+					<p>1.在session和cookie中存放业务角色编号（key：rolesNo）</p>
+					<p>2.在已办列表重新启用后，直接打开待办页面；</p>
+					<p>3.部门人员树调用时，deptid参数从cookie中获取改为从隐藏域中获取；<br/>&nbsp;&nbsp;&nbsp;
+						当业务ID为空时从cookie中获取放入隐藏域，当业务ID不为空时采用数据回显给隐藏域赋值<br/>&nbsp;&nbsp;&nbsp;
+						调用见taskPlanEditForm2.html</p>
+					<p>4.部门人员树方法修改，调用方式需要修改，详见DEMO草稿列表“treeDemo”、“treeDemo1”两个页面</p>
+					<p>5.非流程待办发送时，可同时发送消息（是否发送可开关控制）</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-05-23</h3>
+					<span>2018-05-23</span>
+					<p>1.修改数据字典初始化方法，增加参数hasAll是否显示“全部”选项；true显示、false不显示（默认）；<br/>&nbsp;&nbsp;只针对radio和checkbox有效；</p>
+					<p>2.部门人员树修改参数cascade，改为两个：check、cancle；，；<br/>&nbsp;&nbsp;
+						check:勾选节点时，对父、子节点的联动状态，四中状态：'s'（对子联动，默认）,'ps'（父子联动）,'p'（父联动）,''（不联动）；<br/>&nbsp;&nbsp;
+						cancle：取消勾选时的联动状态，同check；</p>
+					<p>3.流程回调更新业务表数据方法，改名为：updateBusiData(subflag)</p>
+					<p>4.增加查询用户全部基本信息的方法；UserUtil.getUserVo(userIds)<br/>&nbsp;&nbsp;
+						可传多个userid，用','或者';'隔开；</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-05-17</h3>
+					<span>2018-05-17</span>
+					<p>1.数据字典，增加方法getNameAndCode，获取一个以code和name为键值对的map集合</p>
+					<p>2.cookie中存放处室、二级局信息（chuShiId,chuShiName,juId,juName）</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-05-15</h3>
+					<span>2018-05-15</span>
+					<p>1.选择人员时，同时将其所在部门回显;增加两个参数：parentId、parentName；<br/>详情参照taskPlanEditForm2.html页面的“主办人”数据项。</p>
+					<p>2.部门人员树增加参数：cascade级联选择，默认1(1：级联选择，2：不级联选择子节点);</p>
+					<p>3.发送流程时增加遮罩效果啊，页面需要引用<strong>Loading.css</strong>及<strong>assistUtil.js</strong>;</p>
+					<p>4.撤办、收回重办、重新启用方法增加workitemid不为空判断；</p>
+					<p>5.优化数据字典，字典类型初始化值；</p>
+					<p>6.MyLayer.openLayerUrl方法增加success回调；</p>
+					<p>7.更新session中存储的用户信息，增加处室、二级局信息，以及可以通过UserUtil获取一个SessionUser对象；<br/>对象中包含session中所有的用户信息。</p>
+					<p>8.已办列表可以根据fileTypeId和workFlowId查询，支持同一参数传多个值；</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-05-10</h3>
+					<span>2018-05-10</span>
+					<p>1.支持一个页面多个附件上传功能(参见页面taskPlanEditForm2.html);</p>
+					<p>2.数据字典二级联动(参见页面taskPlanEditForm2.html,数据项“省份”、“城市”)；</p>
+					<p>3.commonFunction.js增加获取系统时间方法:getCurrentDate()；<br/>参数详见方法说明</p>
+					<p>4.增加公共已办列表(/modules/workflow/yibanList.html)；<br/>配置路径需添加(?workFlowId=****)。参照demo文件</p>
+					<p>5.tablelist.js增加开放隔行变色参数；</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-05-07</h3>
+					<span>2018-05-07</span>
+					<p>1.增加个人门户页面，包括已办、待办列表</p>
+					<p>2.assistUtil.js增加数据字典初始化组件</p>
+					<p>3.tablelist.js增加初始化参数sidePagination和responseHandler</p>
+					<p>4.重新自定义流程状态subflag值</p>
+					<p>5.修改附件上传进度条显示方式</p>
+					<p>6.增加已办列表</p>
+				</div>
+			</li>
+		</ul>
+		
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-04-27</h3>
+					<span>2018-04-27</span>
+					<p>1.数据回显组件进行重构，方法名称改为：playData</p>
+					<p>调用参见templateEdit.js</p>
+					<p>2.assistUtil.js增加数据字典初始化组件</p>
+					<p>调用参见templateEdit.js</p>
+					<p>3.tablelist.js增加初始化参数rowStyle</p>
+					<p>可自定义表格行样式</p>
+					<p>4.修改system下包路径</p>
+					<p>有在业务中用到该路径下资源的位置需修改资源请求路径</p>
+				</div>
+			</li>
+		</ul>
+		
+		<!-- 
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-02-10</h3>
+					<span>2018-02-09</span>
+					<p>积极落实工作要求和工作内容，按时完成既定任务</p>
+					<p>局领导：张三；处室领导：李四</p>
+					<i class='iconfont icon-icondownload' title='下载附件'></i>
+				</div>
+			</li>
+		</ul>
+		<ul class="layui-timeline-custom">
+			<li class="layui-timeline-item">
+				<i class="layui-icon layui-timeline-axis"><span class="glyphicon glyphicon-map-marker"></span></i>
+				<div class="layui-timeline-content layui-text">
+					<h3 class="layui-timeline-title">2018-01-10</h3>
+					<span>2018-01-08</span>
+					<p>积极落实工作要求和工作内容，按时完成既定任务，按时完成既定任务</p>
+					<p>局领导：张三；处室领导：李四</p>
+					<i class='iconfont icon-icondownload' title='下载附件'></i>
+				</div>
+			</li>
+		</ul>
+		-->
+	</div>
+
+	<!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/js/common/url.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+
+	<script src="/static/core/laydate/laydate.js"></script>
+
+	<!--文件上传js-->
+	<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+	<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+	<script src="/static/js/common/myfilupload.js"></script>
+	<!--文件上传js end-->
+	<script src="/static/js/template/form.js"></script>
+	<script type="text/javascript">
+        //绑定日期输入input
+        laydate.render({
+            elem: '#standTime' //指定元素
+        });
+        laydate.render({
+            elem: '#completeTime' //指定元素
+        });
+        laydate.render({
+            elem: '#notificationTime' //指定元素
+        });
+
+        //    表格数据项的操作
+        var list = {
+            editFun:function(id){
+                MyLayer.layerOpenUrl({
+                    url:'/modules/zhbg/dcdb/task/taskEditForm.html?id='+id,
+                    title:"修改"
+                })
+            },
+            deleteFun:function(id){
+                MyLayer.deleteOpt({
+                    url:'../index.html?id=' + id,
+                    tableId:'right_table'
+                })
+            },
+            cuibanFun:function(id){
+                //layer.prompt({title: "这里是标题",formType:1}, function (val, index) {  //formType:1  表示文本输入框
+                layer.prompt({title: "催办提醒",formType:2,value: "请及时上报督办事项反馈！", maxlength: 100}, function (val, index) {  //formType:2  表示文本域
+                    layer.msg("输入了：" + val);
+                    layer.close(index);
+                });
+            }
+        }
+	</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "zbdw": "单位A",
+        "cz": "update,delete"
+      },
+      {
+        "id": 2,
+        "zbdw": "单位B",
+        "cz": "update,delete"
+      },
+      {
+        "id": 3,
+        "zbdw": "单位C",
+        "cz": "update,delete"
+      }
+    ]
+  }
+}

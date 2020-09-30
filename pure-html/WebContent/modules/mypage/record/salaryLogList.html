@@ -1,0 +1,225 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+       #showbox {
+            width: 150px;
+            min-height: 50px;
+            font: 100 14px/1 "微软雅黑";
+            border: 1px solid #3c8dbc;
+           // display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            padding: 5px;
+        }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                         <div class="form-group">
+                            <label class="col-md-2 control-label"> 导入人：</label>
+                             
+                            <div class="col-md-4">
+                            <input id="hiddenText1990" type="text" style="display:none" /> 
+                                
+                                 <input type="text" id="personName1" unselectable="on" onclick="openSelectZtree({'id':'personId1','name':'personName1','type':'1','asyn':false,'deptId':'441','level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})" class="form-control" >
+		                          <input type="hidden" id="personId1" name="personId1" /><!-- 人员ID隐藏域 -->
+		                          
+                            </div>
+                             <label class="col-md-2 control-label"> 导入时间：</label>
+                            <div class="col-md-4">
+                            	<input class="form-control" type="text" id="yearMonth" name="yearMonth"/>
+	                         
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+             
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script>
+<script type="text/javascript">
+
+laydate.render({
+    elem: '#yearMonth'
+    	
+});
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+         title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	  var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;
+              var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;
+              var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+              return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+           }
+    }, 
+    {
+        field: 'creTime'
+        , title: '导入时间'
+        , width: '17%'
+        , align:"center"
+    },  
+    {
+        	field: 'creUserName'
+            , title: '导入人'
+            , width: '10%'
+            , align:"center"
+     },
+     {
+     	field: 'successNum'
+        , title: '导入成功数量/条'
+        , width: '15%'
+         , align:"center"
+  	},
+     {
+     	field: 'errorNum'
+            , title: '导入失败数量/条'
+            , width: '15%'
+            , align:"center"
+ 	 },
+ 	 
+  	{
+       	field: 'errorReason'
+        , title: '导入失败原因'
+         , width: '15%'
+         , align:"center"
+         
+   	 }/* ,
+ 	{
+      	field: 'remark'
+             , title: '备注'
+             , width: '23%'
+             , align:"center"
+            , formatter: function (value, row, index) {
+            	if(value!=null){
+	            		  var length = value.length
+	       	   	      var val = '';
+	       	   	      if(length>11){
+	       	   	    	  val = value.substring(0,9)+"...";
+	       	   	      }else{
+	       	   	    	  val = value;
+	       	   	      }
+	       	   	   return  "<span data-content='"+row.remark+"'>"+val+"</span>"; 
+            	}else{
+            		return "";
+            	}
+                 	
+         	}
+  	 } */
+ 	
+   ];
+
+    $(document).ready(function (e) {
+    	
+      
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/salary/importLog/getlistBootHql",
+            columns:right_table_col,
+            queryParams:function(params){
+            	 params.resId = $('#left_ul').find('a.active').attr("id");
+            	params.personId = $("#personId1").val();
+                params.yearMonth = $("#yearMonth").val();
+                return params;
+            },
+            readOnlyFn:function(){
+            	 $('tr.readOnly').find('td:lt(7)').unbind('click').bind('click', function (e) {
+ 					//取消事件冒泡
+ 						var resId = $('#left_ul').find('a.active').attr("id");
+		         		 var id = $(this).parent().find("span[data-id]").attr("data-id");
+		         		 MyLayer.layerOpenUrl({url: '/modules/zhbg/salary/salaryLogReadOnlyForm.html?id='+id+"&oper=VIEW&resId="+resId});
+		         		 
+                 });
+            	 $('tr.readOnly').find('td:eq(6)').bind('mouseover', function (e) {
+            		  	var txt = $(this).find("span[data-content]").attr("data-content");
+	                     $(this).attr("title",txt)  
+ 		         		 
+                  });
+            	  
+            }
+           
+        });
+      
+    });
+
+
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+        // alert("fdsddsf");
+        layer.confirm("是否导出查询的所有信息？");
+    };
+  //清空查询条件
+	function clearAll(){
+		$("#personName1").val("");	//时间
+		$("#personId1").val("");
+		$("#yearMonth").val("");
+	}
+  
+  //导入
+	function importInfo() {
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({url:'/modules/zhbg/salary/importFileForm.html?resId=' + resId,title:'导入',width: "55%", height: "55%"});
+    }
+
+	$(function () {
+		      $('[data-toggle="tooltip"]').tooltip()
+		      $('[data-toggle="popover"]').popover({
+		        trigger:"hover"
+		      })
+  })
+</script>

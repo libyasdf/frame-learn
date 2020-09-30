@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>动态调整页面</title>
+
+    <!--下拉多选框-->
+    <link href="/manage/bootstrap/css/bootstrap-select.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="/manage/bootstrap/js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="/manage/bootstrap/js/bootstrap-select-create.js"></script>
+
+    <!--让IE8/9支持媒体查询，兼容栅格布局-->
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <!--全局工具js-->
+    <script src="/manage/hp/js/help.js"></script>
+
+	<style>
+
+	</style>
+
+  </head>
+<body>
+    <div id="dyReg_body">
+
+        <div style="padding-bottom: 20px;" class="page-header col-md-12 col-xs-12">
+            <label class="pull-left">数据表名:</label>
+            <div class="col-md-3 col-xs-4">
+                <input type="text" class="form-control" id="dy_reg_tableName" >
+            </div>
+            <button id="dyReg_cx" class="btn btn-default dynamicRegulationEvent">查询</button>
+            <button id="dyReg_bc" class="btn btn-default dynamicRegulationEvent">保存</button>
+        </div>
+        <div id="dyReg_main" class="col-md-12 col-xs-12">
+
+
+        </div>
+    </div>
+</body>
+
+<script>
+
+    (function(){
+        //解绑事件-防止事件叠加
+        $(".dynamicRegulationEvent").off();
+        $(document).off(".dyReg");
+        //查询点击 //或为$(document).on('click.dyReg', '#dyReg_cx', function() {
+        $("#dyReg_cx").on("click",function() {
+            var tableName = $("#dy_reg_tableName").val();
+            tableName=$.trim(tableName);//去除两端空格
+            if(!tableName){
+                layer.msg("表名无效!", {icon: 0});
+            }else{
+                $.ajax({
+                    'url' : '/dynamicRegulationController/tableLineD',
+                    'type':'POST',
+                    'dataType':'json',
+                    'data' : {
+                        'tablename':tableName
+                    }
+                }).done(function( data, textStatus, jqXHR ) {
+                    if(!data){data=[];}
+                    if(data.statusCode&&data.statusCode!=200){
+                        layer.msg(data.stateDescribe, { icon: 2 });
+                        return;
+                    }else{
+                        if(data.valueDescribe){
+                            data=data.valueDescribe;
+                        }
+                        //根据业务需求,只要PAGE_SHOW为1的数据
+                        var dataD=[];  //console.log(data);
+                        for (var i = 0; i < data.k.length; i++){
+                            var item=data.k[i];
+                            if(item.PAGE_SHOW=="1"){
+                                dataD.push(item);
+                            }
+                        }
+                        createHTML(data.y,dataD);
+                    }
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    console.log("错误异常:"+errorThrown);
+                })
+            }
+
+        });
+        var dataRecord={};//请求字典记录的数据缓存;页面重新打开清除缓存
+        //根据返回值生成样式
+        function createHTML(datay,datak){//datak 列样式表;datay 业务表;用动态调整写业务时,列样式表只是记录列的样式等信息,保存数据等操作操作业务表
+            var regularMap={};//校验集合
+            var displayTypeMap={};//需要生成的字典
+            var dateID={};//需要初始化的日期控件
+            var StrHTML="";
+            $(datay).each(function(index,item){
+                StrHTML+="<div class=\"col-md-12 col-xs-12 dyReg_line\" data-y-col='"+item.COLNAME+"' data-y-id=\""+item.ID+"\" > " +
+                        "   <div class=\"col-md-12 col-xs-12\"> " +
+                        "       <label class=\"pull-left\">"+item.COLNAME+"</label> " +
+                        "   </div>"+
+                        "   <div class=\"col-md-12 col-xs-12\"> ";
+                $(datak).each(function(indexx,itemm){
+                    var regular=itemm.VERIFICATION_RULE;
+                    var classFont="";
+                    var classInput="";
+                    var dataCheckout="";
+                    var columnNAME=itemm.COLUMN_NAME;
+                    var columnNameI=columnNAME+"_"+index;
+                    var dictValue=itemm.DICTIONARY_VALUE;
+                    if(regular){
+                        classFont="checkoutFontLG";
+                        classInput ="checkoutInputLG";
+                        dataCheckout="data-checkout=\""+columnNameI+"\"";
+                        regularMap[columnNameI]={regexp:{source:new RegExp(itemm.VERIFICATION_RULE),message: itemm.CHECK_PROMPT_MESSAGE}};
+                    }
+                    StrHTML+="  <div style=\"height: 34px;margin-bottom: 2px;\" class=\"col-md-4 col-xs-6\"> " +
+                        "            <label class=\"col-md-6 col-xs-6 pull-left "+classFont+"\" "+dataCheckout+">"+itemm.CHINESE_NAME_DISPLAYED+"</label> " +
+                        "            <div data-column-name='"+columnNAME+"' class=\"col-md-6 col-xs-6 "+classInput+"\"> " ;
+                                        var displayType=itemm.DISPLAY_TYPE;//控件类型
+                                        if(displayType=="text"||displayType=="number"||displayType=="date"){//注意数字类型IE支持差,建议用text
+                                            var widthh="";
+                                            var placeholder="";
+                                            if(itemm.PAGE_SHOW_WIDTH){
+                                                widthh="style='width:"+itemm.PAGE_SHOW_WIDTH+"'"
+                                            }
+                                            if(itemm.PROMPT_MESSAGE){
+                                                placeholder="Placeholder='"+itemm.PROMPT_MESSAGE+"'";
+                                            }
+                                            if(displayType=="date"){//日期选择框
+                                                StrHTML+=" <input type=\"text\" "+widthh+" class=\"form-control\" id='"+columnNameI+"'>";
+                                                dateID[columnNameI]=itemm.DATE_RULE_DEFINITION;
+                                            }else{
+                                                StrHTML+="<input type=\""+displayType+"\" "+widthh+" class=\"form-control\" "+dataCheckout+" ` "+placeholder+">";
+
+                                            }
+
+                                        }else if(displayType=="dictionary"||displayType=="dictionaries"){//字典下拉框
+                                            var multiple="";
+                                            if(displayType=="dictionaries") {//字典下拉框(多选)
+                                                var multiple="multiple";
+                                            }
+                                            StrHTML+="<select id=\""+columnNameI+"\" class=\"form-control selectpicker\" "+multiple+"> " +
+                                                    "</select>";
+                                            displayTypeMap[columnNameI]=dictValue;
+
+                                        }else if(displayType=="radio"||displayType=="checkbox"){//单选,多选框
+                                            var dataa="";
+                                            if(dataRecord.hasOwnProperty(dictValue)){
+                                                dataa=dataRecord[dictValue];
+                                            }else{
+                                                $.ajax({
+                                                    'url': '/system/config/dictionary/getListByMark',
+                                                    'type': 'get',
+                                                    'dataType': 'json',
+                                                    'async': false,
+                                                    'data': {
+                                                        "mark": dictValue,
+                                                        "type": 1
+                                                    },
+                                                    'success': function (data) {
+                                                        if (data.flag == "1") {
+                                                            dataa=data;
+                                                            dataRecord[dictValue]=data;
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                            $(dataa.data).each(function (index, item) {
+                                                if(displayType=="radio") {//单选框
+                                                    StrHTML+="<label style=\"line-height: 1.42857143;\"  class=\"radio-inline\"> " +
+                                                                "<input type=\"radio\" name=\""+columnNameI+"\" value=\""+item.code+"\">"+item.name+
+                                                             "</label>";
+                                                }else{
+                                                    StrHTML+="<label style=\"line-height: 1.42857143;\" class=\"checkbox-inline\"> " +
+                                                                "<input type=\"checkbox\" name=\""+columnNameI+"\"  value=\""+item.code+"\">"+item.name+
+                                                             "</label>";
+                                                }
+                                            });
+
+
+                                        }
+                    StrHTML+= "      </div> " +
+                        "       </div>";
+                });
+                StrHTML+="  </div>"+
+                        " </div>";
+            });
+            //生成代码
+            $("#dyReg_main").html(StrHTML);
+
+            //日期初始化
+            $.each(dateID,function(key,value){
+                laydate.render({
+                    elem: '#'+key,
+                    type: value
+                });
+            });
+            //校验初始化
+            hp.checkoutLG({
+                sign:'#dyReg_body',
+                hideStar:true,
+                //glyphicon_hide: true,	//所有图标隐藏不生成;(默认值false)
+                validators:regularMap
+            });
+            //赋值 data-y-col
+            $(datay).each(function(index,item){
+                $("[data-y-col='"+item.COLNAME+"']").each(function(index,element){
+                    $(element).find("[data-column-name]").each(function(indexx,elementt){
+                        var colnam=$(elementt).attr("data-column-name");
+                        var inputt=$(elementt).find("input");
+                        var intype=inputt.attr("type");
+                        if(intype=="radio"){
+                            inputt.filter("[value='"+item[colnam]+"']").attr("checked","checked");
+                        }else if(intype=="checkbox"){
+                            var checkeds=[];
+                            if(item[colnam]){
+                                try{
+                                    var verifyT=JSON.parse(item[colnam]);
+                                    if(typeof(verifyT)=="object") {
+                                        checkeds=verifyT;
+                                    }
+                                }catch(e){}
+                            }
+                            $(checkeds).each(function(index,item){
+                                inputt.filter("[value='"+item+"']").attr("checked","checked");
+                            });
+                        }else{
+                            $(elementt).find("input").val(item[colnam]);//可用val进行赋值的元素
+                            //data-start-value为了方便业务逻辑而写的属性
+                            $(elementt).find("select.selectpicker").attr("data-start-value",item[colnam]);
+                        }
+                    });
+                });
+
+            });
+            //字典生成
+            $.each(displayTypeMap,function(key,value){
+                bootstrapSelect.dictionaries({selectID:key,mark:value,type:"1",bolRecord:true,onLoadSuccess:function () {
+                        if(typeof($("#"+key).attr("multiple"))=="undefined"){
+                            //是单选
+                            $("#"+key).selectpicker('val',$("#"+key).attr("data-start-value"));
+                        }else{
+                            var val=$("#"+key).attr("data-start-value");
+                            if(!val){
+                                val="[]";
+                            }
+                            $("#"+key).selectpicker('val',JSON.parse(val));
+                        }
+                        //console.log("xxxx");
+                    }});
+            });
+            //下拉框有个300的回调,所以要如此写
+            setTimeout(function(){
+                funChange();
+            },301);
+
+        }
+        //保存部分开始
+        function funChange() {
+            //解绑事件
+            $("#dyReg_main input,#dyReg_main select").off();
+            //修改部分加标记
+            $("#dyReg_main input,#dyReg_main select").on("change",function() {
+                //$(document).on('change.dyReg', '#dyReg_main input,#dyReg_main select', function() {
+                $(this).parents("[data-column-name]").eq(0).attr("data-change",'true');
+                //console.log("事件响应");
+            })
+        }
+        //保存点击
+        $("#dyReg_bc").on("click",function() {
+            console.log("开始保存");
+        });
+
+    })();
+</script>
+
+<script>
+    $(function(){
+
+
+
+    })
+</script>
+
+</html>

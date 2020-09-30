@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="/static/css/gateway/reset.css">
+	<link rel="stylesheet" href="/static/font/iconfont-gateway/iconfont.css">
+	<link rel="stylesheet" href="/static/css/gateway/index.css">
+	<link rel="stylesheet" href="/static/css/gateway/swiper.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">
+	<link href="/static/css/common/style.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="/modules/kindeditor/themes/default/default.css" />
+	<link rel="stylesheet" href="/modules/kindeditor/plugins/code/prettify.css" />
+	<link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<title></title>
+</head>
+<body style="background-color: #fff;">
+	<input type="hidden" id="id" name="id" value="">
+	<input type="hidden" id="resId" name="resId" value="">
+	<input name="subflag" id="subflag" type="hidden" value=""/><!-- 流程状态 -->
+	<input name="filetypeid" id="filetypeid" type="hidden" value=""/><!-- 流程ID -->
+	<input name="workFlowId" id="workflowid" type="hidden" value=""/><!-- 流程唯一ID -->
+	<input name="workitemid" id="workitemid" type="hidden" value=""/><!-- 待办工作项ID -->
+	<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+	<input name="columnCode" id="columnCode" type="hidden" value=""/>
+
+	<!--查询项输入框选择框等开始-->
+	<div class="container" style="padding-bottom: 60px">
+		<div class="mesCon">
+			<div class="article">
+				<H3 class="article-head" id = "title"></H3>
+				<div class="article-datails clearFloat" style="border-bottom: 1px solid #ddd;">
+					<div class="fl">
+						<span class="article-source" id="author">作者：&nbsp;XXX</span>
+						<span class="article-source" id="creDeptName">发布部门：&nbsp;XXX</span>
+						<span class="article-source" id="source">文章来源：&nbsp;中国建材网</span>
+					</div>
+					<div class="fr">
+						<span class="article-data" id="fbTime" >XXXX年XX月XX日 XX:XX:XX</span>&nbsp;&nbsp;
+					</div>
+				</div>
+				<div class="article-con" id="content">
+				</div>
+			</div>
+		</div>
+		<div class="form-group" style="padding-top: 10px">
+			<label class="col-md-4 control-label">附件：</label>
+			<div class="col-md-10">
+				<!--文件上传-->
+				<div class="files row">
+					<div id="files" class="col-md-10">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" id ="imageIds" style="display:none;">
+			<label class="col-sm-4 control-label">缩略图提示：图片统一上传大小为400*300像素</label>
+			<div>
+				<img id="image" src="/modules/info/xxfb/content/noPic.gif"  width="200px" height="140px" style="cursor: pointer;" />
+				<!--<input id="imgfileupload" name="imgfileupload" type="file" style="position: absolute;top: 670px;left: 260px;width: 30%;height: 150px;opacity: 0;cursor: pointer;"/>-->
+				<small class="help-block cover-tips" style="color: #dd4b39;display: none;">请上传照片</small>
+			</div>
+			<div id="files1" class="col-md-10">
+			</div>
+		</div>
+	</div>
+	<div class="gw_form_right_btn_area" style=" right: 20px; top: 20px; position: fixed;">
+		<ul>
+			<li><a href="#" onclick="openLayer('1')"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 流程记录</a></li>
+			<li><a href="#" onclick="openLayer('2')"><span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span> 流程图</a></li>
+			<li><a href="#" onclick="openLayer('3')"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 意见信息</a></li>
+		</ul>
+	</div>
+	<div class="form_btn_area" style="text-align: center;">
+		<button id="closeButton" class="btn btn-primary form_btn_area_btn2" onclick="closeIfram();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+		<button id="remove" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="removeFlow();" ><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>撤办</button>
+		<button id="resumeFlow" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="resumeFlow();" ><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>重新启用</button>
+		<button id="takeBack" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="takeBack();" ><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>收回重办</button>
+	</div>
+</body>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-util.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/modules/kindeditor/kindeditor-all.js"></script>
+<script type="text/javascript" src="/modules/kindeditor/lang/zh-CN.js"></script>
+<script type="text/javascript" src="/modules/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript" src="/modules/info/xxfb/content/js/infoContentReadOnly.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<script src="/static/js/common/imgMyFiluploadtoServer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script type="text/javascript">
+	//参考：http://www.layui.com/laydate/
+	//绑定日期输入input
+	laydate.render({
+		elem: '#showTime'
+		,type: 'datetime'
+		,range: true
+	});
+	KindEditor.ready(function(K) {
+		window.editor = K.create('#editor_id',{
+			resizeType : 1,
+			cssPath : '/modules/kindeditor/plugins/code/prettify.css',
+			uploadJson : '/modules/kindeditor/jsp/upload_json.jsp',
+			fileManagerJson : '/modules/kindeditor/jsp/file_manager_json.jsp',
+			allowFileManager : false,
+		});
+	});
+	//关闭当前窗口
+	function closeIfram() {
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+	}
+</script>
+</html>

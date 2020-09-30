@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title></title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <form id="form" class="form-horizontal" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 列名称：</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" id="select" onchange="colChange()">
+                                <option value="">--请选择--</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 修改类型：</label>
+                        <div class="col-sm-7">
+                            <input name="type" type="radio" value="replace" checked="checked"/>替换
+                            <input name="type" type="radio" value="update"/>修改
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="oldReplaceValueDiv">
+                        <label class="col-sm-offset-1 col-sm-2 control-label"><b style="color: red;"></b> 替换值：</label>
+                        <div class="col-sm-7" id="oldValueDiv">
+                            <input class="form-control" type="text" id="oldReplaceValue" name="oldReplaceValue">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label"><b style="color: red;"></b> 替换为：</label>
+                        <div class="col-sm-7" id="nowValueDiv">
+                            <input class="form-control" maxlength="10" type="text" id="nowReplaceValue" name="nowReplaceValue">
+                        </div>
+                    </div>
+                    <!--查询项输入框选择框等结束-->
+
+                    <!--查询重置等按钮-->
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align: center">
+                            <button id="saveButton" type="button" class="btn btn-primary" onclick="saveDictionary()">
+                                更&nbsp;&nbsp;新
+                            </button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary" onclick="closeIfram();">
+                                关&nbsp;&nbsp;闭
+                            </button>
+                        </div>
+                    </div>
+                    <!--查询重置等按钮 end-->
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <script type="text/javascript" src="/common/js/commonFunction.js"></script>
+    <script type="text/javascript" src="/static/js/common/displayData.js"></script>
+    <!-- 音视频系统ip -->
+    <script type="text/javascript" src="/common/js/config.js"></script>
+    <script type="text/javascript" src="/modules/dagl/bmgl/js/common.js"></script>
+    <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+    <!--获取cookie的js-->
+    <script src="/product/workflow/js/common/getCook.js"></script>
+    <script type="text/javascript">
+        var theRequest = GetRequest();
+        //表名
+        var tName = theRequest.tName;
+        //门类code
+        var categoryCode = theRequest.categoryCode;
+        //总层数
+        var all = theRequest.all;
+        //当前层数
+        var ranking = theRequest.ranking;
+        // 表单数据
+        var form = [];
+        //"序号"列列名
+        var lastColName = "";
+        //档号列名
+        var dhColName = "";
+        //档号列名
+        var fDhColName = "";
+        //文件开始时间列列名
+        var stratTime = "doc_start_time";
+        //文件结束时间列列名
+        var endTime = "doc_end_time";
+        var type = "replace";
+        //所有不可修改的列
+        var canNotFixCol = new Array();
+        canNotFixCol.push("recid","fonds_no","barcode","archive_entity_status","item_folder_no","archive_flag",stratTime,endTime);
+
+        var fileNumberRule = null; // 档号规则
+
+        //替换值的文本框类型，
+        var replaceInputType = "";
+
+        $(function () {
+            //先获取档号规则
+            //getfileNumberRule();
+            $("input[name=type]").click(function(){
+                debugger;
+                type = $(this).val();
+                if("replace" == type){
+                    $("#oldReplaceValueDiv").show();
+                }else{
+                    $("#oldReplaceValueDiv").hide();
+                }
+            });
+
+            if(all != ranking){
+                canNotFixCol.push("page_num","piece_num","item_piece_num","folder_num");
+            }
+            // 初始化参数
+            $.ajax({
+                type: "get",
+                url: "/dagl/bmgl/findAdd",
+                data: { tName: tName },
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    form = data;
+                    $.ajax({
+                        url: '/dagl/bmgl/findDHGZ',
+                        data: {
+                            categoryCode: categoryCode, // 门类
+                            tName: tName, // 表名
+                            all: all, // 标签页总数
+                            ranking: ranking // 当前标签页层级
+                        },
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (result) {
+
+                            // 获取 data
+                            var result = result.data;
+                            console.log('获取档号规则返回的数据：\n', result);
+
+                            // 获取档号相关属性
+                            // 获取档号规则
+                            fileNumberRule = result.rows.sort(sortByNumber('ORDER_NUM'));
+                            console.log('获取档号规则：\n', fileNumberRule);
+                            // 获取父表，子表中文名
+                            debugger;
+                            if (ranking === "1") {
+                                fDhColName = result.colsf.M_COL_NAME;
+                            } else if (ranking === "2" && all === "2") {
+                                fDhColName = result.colsf.M_COL_NAME;
+                                dhColName = 'archive_no';
+                            } else if (ranking === "2") {
+                                fDhColName = result.colsf.M_COL_NAME;
+                                dhColName = result.colsz.M_COL_NAME;
+                            } else if (ranking === "3") {
+                                fDhColName = result.colsf.M_COL_NAME;
+                                dhColName = 'archive_no';
+                            }
+                            lastColName = fileNumberRule[fileNumberRule.length-1].RULE_FIELD;
+                            canNotFixCol.push(lastColName,dhColName,fDhColName);
+                            for(var i=0;i<data.length;i++){
+
+                                if(canNotFixCol.indexOf(data[i].COLUMN_NAME) == -1){
+                                    $("#select").append("<option value=" + data[i].COLUMN_NAME + " data-value="+data[i].COLUMN_CAN_NULL+" data-type = "+data[i].COLUMN_TYPE+" >" + data[i].COLUMN_CHN_NAME + "</option>")
+                                }
+                            }
+                        },
+                        error: function (err) {
+                            layer.msg('档号规则加载失败，请刷新页面',{icon: 2,time:1000});
+                            console.log("加载档号规则失败，错误信息：\n", err);
+                        }
+                    });
+
+                }
+            });
+        });
+
+        /**
+         * 选择要改的值事件
+         */
+        function colChange() {
+            var oldHtml = "11";
+            var nowHtml = "22";
+            var changeCol = $("#select").val();
+            for(var i=0;i<form.length-1;i++){
+                if(changeCol==form[i].COLUMN_NAME){
+
+                    if(form[i].COLUMN_INPUT_TYPE=="S"){
+                        replaceInputType = "select";
+                        //下拉
+                        debugger;
+                        if("basefolder_unit" == form[i].COLUMN_NAME && tName.indexOf("_dak")==-1){
+                            //立卷单位特殊处理
+                            //单位预立库，展示当前登录人负责的立卷单位。
+                            $.ajax({
+                                url: "/dagl/xtpz/category/LJDWmark?code="+categoryCode+"&userId="+getcookie("userid"),
+                                type: 'get',
+                                dataType: 'json',
+                                asyn:true,
+                                success: function (data) {
+                                    debugger;
+                                    if(data.flag==1){
+                                        oldHtml ='<select class="form-control" id="oldReplaceValue" ">\n' +
+                                            '                                <option value="">--请选择--</option>\n' ;
+                                        nowHtml ='<select class="form-control" id="nowReplaceValue" ">\n' +
+                                            '                                <option value="">--请选择--</option>\n' ;
+                                        for(var i in data.data){
+                                            oldHtml +='                                <option value="'+i+'">'+ data.data[i]+'</option>\n';
+                                            nowHtml +='                                <option value="'+i+'">'+ data.data[i]+'</option>\n';
+                                        }
+                                        oldHtml +='                            </select>';
+                                        nowHtml +='                            </select>';
+                                        $("#oldValueDiv").html(oldHtml);
+                                        $("#nowValueDiv").html(nowHtml);
+                                    }
+                                }
+                            });
+                        }else{
+                            var selectOption = Dictionary.getNameAndCode({
+                                mark:form[i].COLUMN_SELECT_NO,
+                                type:'1'
+                            });
+                            oldHtml ='<select class="form-control" id="oldReplaceValue" ">\n' +
+                                '                                <option value="">--请选择--</option>\n' ;
+                            nowHtml ='<select class="form-control" id="nowReplaceValue" ">\n' +
+                                '                                <option value="">--请选择--</option>\n' ;
+                            for(i in selectOption){
+                                oldHtml +='                                <option value="'+i+'">'+selectOption[i]+'</option>\n';
+                                nowHtml +='                                <option value="'+i+'">'+selectOption[i]+'</option>\n';
+                            }
+                            oldHtml +='                            </select>';
+                            nowHtml +='                            </select>';
+                            $("#oldValueDiv").html(oldHtml);
+                            $("#nowValueDiv").html(nowHtml);
+                        }
+
+
+
+                    }else{
+                        replaceInputType = "input";
+                        //文本框
+                        oldHtml = '<input class="form-control" type="text" id="oldReplaceValue" name="oldReplaceValue">';
+                        nowHtml = '<input class="form-control" maxlength="10" type="text" id="nowReplaceValue" name="nowReplaceValue">';
+                        $("#oldValueDiv").html(oldHtml);
+                        $("#nowValueDiv").html(nowHtml);
+                    }
+                }
+            }
+        }
+
+        /**
+         * @Author 王富康
+         * @Description //TODO 更新
+         * @Date 2019/7/30 18:14
+         * @Param
+         * @return
+         **/
+        function saveDictionary() {
+        	if($("#oldReplaceValue").val().trim()==""){
+				
+			}
+        	if($("#select").val()==""){
+        		layer.msg("请选择需要修改的项",{icon: 0})
+				return;
+        	}
+			if($("#select").find("option:selected").attr("data-value")=="F"){
+				if($("#nowReplaceValue").val().trim()==""){
+					layer.msg("该项为必填项，替换结果不可为空！",{icon: 0})
+					return;
+				}
+			}
+			if($("#select").find("option:selected").attr("data-type")=="2"){
+				var reg=/^\d*$/;
+				if(!reg.test($("#oldReplaceValue").val().trim())||!reg.test($("#nowReplaceValue").val().trim())){
+					layer.msg("该项只能填写数字",{icon: 0});
+					return;
+				}
+			}
+            var par = {};
+			if(replaceInputType =="input"){
+                par = { tName: theRequest.tName,
+                    fids: theRequest.fids,
+                    column: $("#select").val().toUpperCase(),
+                    categoryCode:categoryCode,
+                    fileNumberRule:JSON.stringify(fileNumberRule),
+                    replaceInputType:replaceInputType,
+                    oldReplaceValue: $("#oldReplaceValue").val(),
+                    nowReplaceValue: $("#nowReplaceValue").val(),
+                    all:all,
+                    ranking:ranking,
+                    type:type
+                }
+            }else if(replaceInputType = "select"){
+                par = { tName: theRequest.tName,
+                    fids: theRequest.fids,
+                    column: $("#select").val().toUpperCase(),
+                    categoryCode:categoryCode,
+                    fileNumberRule:JSON.stringify(fileNumberRule),
+                    replaceInputType:replaceInputType,
+                    oldReplaceValue: $("#oldReplaceValue").val(),
+                    oldReplaceCode: $("#oldReplaceValue").find("option:selected").text(),
+                    nowReplaceValue:$("#nowReplaceValue").val(),
+                    nowReplaceCode: $("#nowReplaceValue").find("option:selected").text(),
+                    all:all,
+                    ranking:ranking,
+                    type:type
+                }
+            }else{
+        	    layer.msg("获取替换信息错误，请刷新页面重试！",{icon:0,time:1000});
+        	    return;
+            }
+            console.log(par);
+            // 添加动画
+            var index_loading = parent.layer.msg('处理中，请稍等...', {
+                icon: 16,
+                shade: [0.1, '#fff'],
+                time: false
+            });
+            $.post("/dagl/bmgl/replace", par, function (o) {
+                if (o.flag == 1) {
+                    //关闭动画
+                    parent.layer.close(index_loading);
+
+                    parent.initPanel();
+                    closeIfram();
+                    parent.layer.alert(o.msg, {icon: 1});
+                } else {
+                    //关闭动画
+                    parent.layer.close(index_loading);
+
+                    layer.alert(o.msg, {icon: 0})
+                }
+            }, "json")
+        }
+
+        //关闭当前窗口
+        function closeIfram() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+    </script>
+</body>
+
+</html>

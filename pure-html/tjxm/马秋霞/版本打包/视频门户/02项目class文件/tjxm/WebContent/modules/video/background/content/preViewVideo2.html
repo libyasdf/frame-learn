@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="shortcut icon" href="/modules/video/playVideo/res/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/modules/video/playVideo/lib/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="/modules/video/playVideo/lib/video.js/dist/video-js.min.css">
+    <link rel="stylesheet" href="/modules/video/playVideo/lib/index/style.css">
+    <style id="timeline"></style>
+</head>
+
+<body>
+    <!-- 播放部分 -->
+    <div class="ysp-player-container">
+        <!-- 播放器 -->
+        <div class="ysp-player">
+            <video id="player" width="900" height="600" class="video-js vjs-big-play-centered" controls preload="auto" data-setup='{}'>
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a web browser that
+                    <a href="http://videojs.com/html5-video-support/" target="_blank">
+                        supports HTML5 video
+                    </a>
+                </p>
+            </video>
+
+            <!-- 显示按钮 -->
+            <div class="extend extend_show" style="display: none;">
+                <img src="/modules/video/playVideo/res/images/extend_btn_show.png" alt="显示按钮">
+            </div>
+        </div>
+
+        <!-- 播放目录 -->
+        <div class="ysp-player-menu">
+
+            <!-- 标题 -->
+            <div class="ysp-player-menu-title">
+                <span></span>
+            </div>
+
+            <!-- 目录字样 -->
+            <div class="play-menu">
+                <img src="/modules/video/playVideo/res/images/menu.png" alt="菜单">
+                <span>目录</span>
+            </div>
+
+            <!-- 目录 -->
+            <div id="cd-timeline" class="ysp-player-menu-panel cd-container">
+            
+            </div>
+
+            <!-- 隐藏按钮 -->
+            <div class="extend_hide extend">
+                <img src="/modules/video/playVideo/res/images/extend_btn_hide.png" alt="隐藏按钮">
+            </div>
+        </div>
+
+        <!-- 当前视频名 -->
+        <div class="video-name">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</body>
+<script src="/modules/video/playVideo/lib/jquery/jquery-1.11.2.min.js"></script>
+<script src="/modules/video/playVideo/lib/bootstrap/bootstrap.js"></script>
+<script src="/modules/video/playVideo/lib/layer/layer.js"></script>
+<script src="/modules/video/playVideo/lib/video.js/dist/video.js"></script>
+<script src="/modules/video/playVideo/lib/index/app.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+
+</html>
+
+<div></div>

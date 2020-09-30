@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<form class="form-horizontal" id="form">
+    <!-- resId -->
+    <input name="resId" id="resId" type="hidden" value="">
+    <input name="resId" id="annual" type="hidden" value="">
+    <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">已上报组织</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+                <br/>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">未上报组织</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick='cubaoFunAll()'>
+                        <span class="glyphicon glyphicon-earphone"></span> 催报
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table1"></table>
+                <br/>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </div>
+</form>
+
+
+<!--<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="commitForm();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+</div>-->
+<div class="form_btn_area" style="text-align: center;">
+    <button class="btn btn-primary form_btn_area_btn2"  onclick="MyLayer.closeOpen()"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+
+<script src="/static/js/common/tablelist.js"></script>
+
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="/modules/llg/js/taskPlanValidator.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<script type="text/javascript">
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [ {
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'annual'
+        , title: '年度'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'partyOrganizationName'
+        , title: '党组织'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'reportingTime'
+        , title: '上报时间'
+        , width: '10%'
+        , align: "center"
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            html +="<i title='详情' class='glyphicon glyphicon-tasks' style='cursor: pointer' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+            return html;
+        }
+    }];
+
+    var right_table_col1 = [ {
+        checkbox:true,
+        width:'5%'
+    }, {
+        field: 'annual'
+        , title: '年度'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'partyOrganizationName'
+        , title: '党组织'
+        , width: '10%'
+        , align: "center"
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            html +="<i title='催报' class='glyphicon glyphicon-earphone' style='cursor: pointer' onclick=\'cubaoFun(\"" + row.partyOrganizationId +"\",\""+ row.annual+"\")\'></i>&nbsp;&nbsp;"
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+
+
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/djgl/ddjs/shyk/ndjh/getNdjhList",
+            columns:right_table_col,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为箭头
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":""}
+                };
+            },
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                var theRequest = GetRequest();
+                if(theRequest.annual!=null&&theRequest.annual!=""&&theRequest.annual!=undefined){
+                    $("#annual").val(theRequest.annual+"-"+theRequest.annual);
+                }
+                params.annual = $("#annual").val();
+                params.typeVal = "jh";//统计
+                return params;
+            },
+/*            domId: "right_table",
+            url: "/djgl/ddjs/shyk/ndjh/getNdjhList",
+/!*            pagination: false,	//不分页
+            striped:false,*!/
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.name = $("#name").val();
+                params.code = $("#code").val();
+                return params;
+            },*/
+          /*  readOnlyFn : function() {
+                //$('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+                $('tr.readOnly').find('td:not(:last)').unbind('click')
+                        .bind('click',function(e) {
+
+                            //                    取消事件冒泡
+                            var evt = e ? e
+                                    : window.event;
+                            if (evt.stopPropagation) {
+                                evt
+                                        .stopPropagation();
+                            } else {
+                                evt.cancelBubble = true;
+                            }
+                            //                    取消事件冒泡 end
+                            var id = $(this).parent().find("span[recordid]").attr("recordid");
+                            var resId = $('#left_ul').find('a.active').attr("id");
+                            MyLayer
+                                    .layerOpenUrl({
+                                        url : '/modules/dwgl/shyk/ndjh/ndjhEditReadOnlyForm.html?id='+id+"&resId="+resId+"&opertation=VIEW",
+                                        title : '年度计划信息',
+                                        width : '90%',
+                                        height : '85%'
+                                    });
+                        });
+            }*/
+        })
+
+        //初始化表格
+        TableInit.init({
+            domId:"right_table1",
+            url:"/djgl/ddjs/shyk/ndjh/getUnreported",
+            columns:right_table_col1,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为箭头
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":""}
+                };
+            },
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                var theRequest = GetRequest();
+                if(theRequest.annual!=null&&theRequest.annual!=""&&theRequest.annual!=undefined){
+                    $("#annual").val(theRequest.annual);
+                }
+                params.annual = $("#annual").val();
+                params.sqlName = "ndjh";
+                return params;
+            },
+            readOnlyFn: function () {
+
+            }
+        })
+    });
+
+
+    //    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer
+                    .layerOpenUrl({
+                        url : '/modules/dwgl/shyk/ndjh/ndjhEditReadOnlyForm.html?id='+id+"&resId="+resId+"&opertation=VIEW",
+                        title : '年度计划信息',
+                        width : '90%',
+                        height : '85%'
+                    });
+        }
+    }
+    function cubaoFunAll(){
+        var rows = $("#right_table1").bootstrapTable('getSelections');
+        var ids="";
+        var  annual="";
+        for(var i=0;i<rows.length;i++){
+            if(i<rows.length-1){
+                var id =rows[i]['partyOrganizationId'].toString();
+                ids = ids+id+",";
+            }else{
+                var id =rows[i]['partyOrganizationId'].toString();
+                annual = rows[i]['annual'].toString()
+                ids = ids+id;
+            }
+        }
+        cubaoFun(ids,annual);
+    }
+    function cubaoFun(id,annual){
+        var res="";
+        if(id!=""&&id!="undefined"){
+            $.ajax({
+                type: "POST",
+                url:"/djgl/ddjs/shyk/ndjh/urge?ids="+id+"&annual="+annual,
+                async: false,
+                success:function(json){
+                    if(json.flag=='1'){
+                        layer.msg("催报成功！", {icon: 1});
+                    }else{
+                        layer.msg("催报失败！", {icon: 1});
+                    }
+                },
+                error:function(json){
+                    layer.msg("请稍后再试！", {icon: 1});
+                }
+            });
+        }else{
+            layer.msg("请选择一条数据进行催报！", {icon: 7});
+        }
+
+    }
+
+</script>
+</body>
+</html>

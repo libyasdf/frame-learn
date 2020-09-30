@@ -1,0 +1,38 @@
+{
+  "flag": "1",
+  "msg": "",
+  "data": {
+    "name": "张三",
+    "sex": "1",
+    "nation": "汉",
+    "birth": "1966-10-23",
+    "remark": "这是一条很重要的备注,看到了吗？",
+    "isPrivacy": "1",
+    "displayDept": [
+      "01",
+      "02"
+    ],
+    "ourPeopleNum": "3",
+    "peerPeopleNum": "5",
+    "table": [
+      {
+        "name": "小明",
+        "age": "18",
+        "id": "1",
+        "address": "北京"
+      },
+      {
+        "name": "小红",
+        "age": "18",
+        "id": "2",
+        "address": "北京"
+      },
+      {
+        "name": "小天",
+        "age": "19",
+        "id": "3",
+        "address": "北京"
+      }
+    ]
+  }
+}

@@ -1,0 +1,475 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div class="folderBar">
+                    <label class="radio-checkbox">
+                        <input type="checkbox" id="ckb" value="1"> 显示党员数
+                    </label>
+                </div>
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div class="vertify-panel vertify-details" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 党组织名称：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  id="orgName" name="orgName" type="text"/>
+                                </div>
+                                <label class="col-md-2 control-label"> 组织属性：</label>
+                                <div class="col-md-3">
+                                    <select name="orgType" id="orgType" class="form-control">
+                                    </select>                                </div>
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="cxonclick();"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="reset();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="add()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                    <button class="list_table_btn2" onclick="list.setGroup()">
+                        <span class="glyphicon glyphicon-user"></span> 设党小组
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                    <!--bootstrap-table表格-->
+                    <table id="right_table"></table>
+                </div>
+
+        </div>
+    </div>
+</div>
+    <script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+    <script src="/static/js/common/jquery.tablednd.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+    <script src="/modules/dwgl/common/dzzTree.js"></script>
+    <!-- 页面获取参数 -->
+    <script type="text/javascript">
+        Dictionary.init({position:"orgType",mark:"dwgl_orgType",type:"1",name:"orgType",domType:"select"});
+        //为查询条件form表单绑定submit事件，返回false,阻止当form中只有一个input时，点击回车刷新页面的问题
+        $("form.form-horizontal").unbind('submit').bind('submit',function(){return false;});
+
+        $('.panel-heading').unbind('click').bind('click',function(){
+            if($(this).find('.showSelect').hasClass('glyphicon-minus')){
+                // $('.panel-body').hide("slow");
+                $('.panel-body').hide();
+                $(this).find('.showSelect').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+            }else{
+                // $('.panel-body').show("slow");
+                $('.panel-body').show();
+                $(this).find('.showSelect').removeClass('glyphicon-plus').addClass(' glyphicon-minus');
+            }
+        })
+
+        var orgTypeMap = Dictionary.getNameAndCode({mark:"dwgl_orgType",type:"1"});
+
+        //定义bootatrap-table数据列
+        //sortable：开启列排序，其他参考API
+        var right_table_col = [{
+            title: '序号'
+            , width: '5%'
+            , order: "desc"
+            , align: "center"
+            , formatter: function (value, row, index) {
+                return index + 1;//计算序号
+            }
+        }, {
+            field: 'orgName'
+            , title: '组织名称'
+            , width: '15%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+        }, {
+            field: 'orgId'
+            , title: '组织编码'
+            , width: '20%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+        }, {
+            field: 'orgType'
+            , title: '组织属性'
+            , width: '15%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return "<span orgType='"+row.orgType+"'><span partyBranchId='"+row.partyBranchId+"'>"+orgTypeMap[value];+"</span>";
+            }
+        },  {
+            field: 'contactMan'
+            , title: '联系人'
+            , width: '15%'
+            , align: "center"
+        }, {
+            field: 'contactNumber'
+            , title: '联系电话'
+            , width: '15%'
+            , align: "center"
+        }, {
+            field: 'cz'
+            ,title: '操作'
+            , width: '20%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var html = "";
+                var ztree = $.fn.zTree.getZTreeObj("treeDemo");
+                if(ztree){
+                    var node = ztree.getNodes()[0];
+                    if(row.id=="4028d08266cd1d0a0166cd462e260001"||superOrgId!=row.id){
+                        html += "<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\",\""+row.orgType+"\",\""+row.partyBranchId+"\")\'></i>&nbsp;&nbsp;"
+                    }
+                    if(row.orgType != '666'){
+                        html += "<i title='设置单位' class='glyphicon glyphicon-tasks' onclick=\'list.setFun(\"" + row.id + "\",\""+row.orgType+"\")\'></i>&nbsp;&nbsp;";
+                    }
+                    if(row.orgType != '666' && row.id != node.id){
+                        html += "<i title='撤销' class='glyphicon glyphicon-off' onclick=\'list.revokeFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                    }
+                    if(row.id != node.id){
+                        html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id+ "\")\'></i>";
+                    }
+                    return html;
+                }
+            }
+        }];
+        var superOrgId ="";
+        if(getcookie("rolesNo").indexOf("D478") >= 0){
+            dzzTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"org"});
+            superOrgId ='4028d08266cd1d0a0166cd462e260001';
+        }else{
+            $.ajax({
+                type: "get",
+                async: false,
+                url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+                dataType: "json",
+                success: function (data) {
+                    dzzTree.init({id:data.data,type:"org"});
+                    superOrgId=data.data;
+                },
+                error: function (data) {
+                }
+            })
+        }
+        var id="";
+        if( $.fn.zTree.getZTreeObj("treeDemo")){
+            var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+            id = nodes[0].id;
+        }
+
+        $('#right_table').bootstrapTable({
+            url: "/djgl/ddjs/dzz/dzzgl/list?id="+id,
+            sidePagination:"client",
+            columns: right_table_col,
+            pagination:true,
+            striped:true,
+            classes: 'table table-hover',
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"pointer"}
+                };
+            },
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.orgName = $.trim($("#orgName").val());
+                params.orgType = $.trim($("#orgType").val());
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                return params;
+            },
+
+            onClickRow:function (row,$element,field) {
+                if(field != "cz"){
+                    var id = row.id;
+                    var orgType = row.orgType;
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    if(orgType == '666'){
+                        var partyBranchId =  row.partyBranchId;
+                        MyLayer.layerOpenUrl({url: '/modules/dwgl/dzz/dzzgl/dxzReadOnlyForm.html?id='+id+"&oper=VIEW&partyBranchId="+partyBranchId+"&resId=" + resId, title: "只读"});
+                    }else{
+                        MyLayer.layerOpenUrl({url: '/modules/dwgl/dzz/dzzgl/dzzglReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读"});
+                    }
+                }
+            },
+            onLoadSuccess:function () {
+                $('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+                if(getcookie("rolesNo").indexOf("D478") == -1 && getcookie("rolesNo").indexOf("D488") == -1 && getcookie("rolesNo").indexOf("C433") == -1){
+                    $('#right_table').bootstrapTable('hideColumn', 'cz');
+                    $('.list_button_area').hide();
+                }
+            }
+        })
+
+        function refreshTable(treeNode) {
+            var opt = {
+                url:"/djgl/ddjs/dzz/dzzgl/list?id="+treeNode.id,
+                pageNumber:1,
+                pageSize:10
+            };
+            $('#right_table').bootstrapTable('refresh',opt);
+        }
+
+
+
+        //表格数据项的操作
+        var list = {
+            editFun: function (id,type,partyBranchId) {
+                var resId = $('#left_ul').find('a.active').attr("id");
+                if(type != '666'){
+                    url = '/modules/dwgl/dzz/dzzgl/dzzglEditForm.html?resId='+resId+'&oper=EDIT&id='+id;
+                }else{
+                    url = '/modules/dwgl/dzz/dzzgl/dxzEditForm.html?resId='+resId+'&id='+id+"&partyBranchId="+partyBranchId;
+                }
+                MyLayer.layerOpenUrl({
+                    url: url,
+                    title: "修改"
+                })
+            },
+            setFun: function (id,orgType) {
+                var resId = $('#left_ul').find('a.active').attr("id");
+                MyLayer.layerOpenUrl({
+                    url: '/modules/dwgl/dzz/dzzgl/dwglList.html?resId='+resId+'&id='+id+'&orgType='+orgType,
+                    title: "单位管理"
+                })
+            },
+            setGroup:function(){
+                var resId = $('#left_ul').find('a.active').attr("id");
+                var rows = $("#right_table").bootstrapTable('getData');
+                var orgType = rows[0]['orgType'];
+                var partyBranchId = rows[0]['id'];
+                if(orgType != '631'){
+                    layer.msg("组织属性为党支部的组织才能增加党小组！", {icon: 0,time:3000});
+                    return false;
+                }
+                MyLayer.layerOpenUrl({
+                    url: '/modules/dwgl/dzz/dzzgl/dxzEditForm.html?resId='+resId+'&partyBranchId='+partyBranchId,
+                    title: "党小组管理",
+
+                })
+            },
+            deleteFun: function (id) {
+                var resId = $('#left_ul').find('a.active').attr("id");
+                $.ajax({
+                    url: '/djgl/ddjs/dzz/dzzgl/isRevoke?resId='+resId+'&id=' + id
+                    , type: "GET"
+                    , dataType: "json"
+                    , success: function (result) {
+                        if(result){
+                            MyLayer.deleteOpt({
+                                msg: '该组织及下级组织一并删除，不保存历史党组织信息，确定要删除吗？',
+                                url: '/djgl/ddjs/dzz/dzzgl/delete?resId='+resId+'&id=' + id,
+                                tableId: 'right_table'
+                                , confirmBtn: function (json) { //确定按钮的事件
+                                    //发送ajax请求来删除，传参url就是删除的地址
+                                    //_delArg.url
+                                    $.ajax({
+                                        url: json.url
+                                        , type: "GET"
+                                        , dataType: "json"
+                                        , success: function (result) {
+                                            var msg = "";
+                                            if (result.flag === "1") {
+                                                msg = '删除成功！';
+                                                if ($.trim(result.msg)) {
+                                                    msg = result.msg;
+                                                }
+                                                layer.msg(msg, {icon: 1});
+                                                TableInit.refTable(json.tableId);
+                                                if(typeof(json.tableIds)!="undefined"){
+                                                    TableInit.refTable(json.tableIds);
+                                                }
+                                                dzzTree.delNode(id);
+                                            } else {
+                                                msg = '删除失败，请重试！';
+                                                if ($.trim(result.msg)) {
+                                                    msg = result.msg;
+                                                }
+                                                layer.msg(msg, {icon: 2});
+                                            }
+                                        }
+                                        , error: function () {
+                                            layer.msg('删除失败，请重试！', {icon: 2});
+                                        }
+                                    })
+                                    // layer.msg('删除成功', {icon: 1, time: 1000});
+                                    // layer.msg('删除失败', {icon: 0,time:3000});
+                                }
+                            })
+                        }else{
+                            layer.msg("删除党组织，应该先把党员转走！", {icon: 0,time:3000});
+                        }
+
+                    }
+                    , error: function () {
+                    }
+                })
+
+
+            },
+            revokeFun: function (id){
+                var resId = $('#left_ul').find('a.active').attr("id");
+                $.ajax({
+                    url: '/djgl/ddjs/dzz/dzzgl/isRevoke?resId='+resId+'&id=' + id
+                    , type: "GET"
+                    , dataType: "json"
+                    , success: function (result) {
+                        if(result){
+                            layer.open({
+                                type: 2,
+                                content: '/modules/dwgl/dzz/dzzgl/revokeEditForm.html?resId='+resId+'&dwxtOrgId='+id,
+                                area: ['1220px', '594px'],
+                                title: ['撤销信息', 'font-size:16px;font-weight:bold;']
+                            })
+                        }else{
+                            layer.msg("撤销党组织，应该先把党员转走！", {icon: 0,time:3000});
+                        }
+
+                    }
+                    , error: function () {
+                    }
+                })
+
+            }
+        }
+
+        function add() {
+            if ($.fn.zTree.getZTreeObj("treeDemo")) {
+                var resId = $('#left_ul').find('a.active').attr("id");
+                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                var node = treeObj.getSelectedNodes()[0];
+                if (node.orgType == '631') {
+                    layer.msg("党支部下只能设置党小组！", {icon: 0, time: 3000});
+                    return false;
+                }
+                MyLayer.layerOpenUrl({
+                    url: '/modules/dwgl/dzz/dzzgl/dzzglEditForm.html?resId=' + resId + '&superId=' + node.id + '&superOrgId=' + node.code + '&superOrgType=' + node.orgType + "&&oper=ADD",
+                    title: "新增"
+                })
+            }
+        }
+
+        //刷新方法
+        function refreshPage(){
+            TableInit.refTable("right_table");
+        }
+
+        //显示人员数
+        $("#ckb").off('change').on('change', function (e) {
+            var treeObj=$.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = treeObj.transformToArray(treeObj.getNodes());
+            if($('#ckb').is(':checked')){
+                for(var i = 0;i<nodes.length;i++){
+                    nodes[i].sname = nodes[i].name;
+                    nodes[i].name = nodes[i].name+"("+nodes[i].count+")";
+                    treeObj.updateNode(nodes[i]);
+                }
+            }else{
+                for(var i = 0;i<nodes.length;i++){
+                    nodes[i].name = nodes[i].sname;
+                    treeObj.updateNode(nodes[i]);
+                }
+            }
+        })
+
+        $("#orgName").blur(function(){
+            if(check($("#orgName").val())){
+                layer.msg("请删除查询条件中的%或'！", {
+                    icon : 7
+                });
+            }
+        });
+        function cxonclick(){
+            if(check($("#orgName").val())){
+                layer.msg("请删除查询条件中的%或'！", {
+                    icon : 7
+                });
+            }else{
+                TableInit.refTable('right_table');
+            }
+        }
+
+        function check(a){
+            fibdn = new Array ("'" ,"%");
+            i=fibdn.length;
+            j=a.length;
+            for (ii=0; ii<i; ii++){
+                for (jj=0; jj<j; jj++) {
+                    temp1=a.charAt(jj);
+                    temp2=fibdn[ii];
+                    if (temp1==temp2) {
+                        return 1;
+                    }
+                 }
+            }
+            return 0;
+
+        }
+
+    </script>

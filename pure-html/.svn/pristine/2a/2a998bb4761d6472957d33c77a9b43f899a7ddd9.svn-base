@@ -1,0 +1,313 @@
+<style type="text/css">
+	.panel-controls{
+		position: absolute;
+		right: 40px;
+		top: 10px;
+	}
+	.panel-controls > i.showSelect{
+		font-size: 16px;
+		color: #acb1b8;
+		cursor: pointer;
+	}
+	label{
+		font-weight: normal;
+	}
+	#right_table .bs-checkbox input{
+		cursor:pointer;
+	} 
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" >
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls " >
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+							<label class="col-md-2 control-label"> 外卖名称：</label>
+							<div class="col-md-3">
+									<input class="form-control" type="text" id="name" name="name" />
+							</div>
+							<label class="col-md-2 control-label"> 主题：</label>
+							<div class="col-md-3">
+									<input class="form-control" type="text" id="title" name="title" />
+							</div>
+							
+							
+						</div>
+						<div class="form-group">
+							<label class="col-md-2 control-label"> 最晚下单时间：</label>
+							<div class="col-md-3">
+									<input class="form-control" type="text" id="deadlineTime" name="deadlineTime" />
+							</div>
+							<label class="col-md-2 control-label"> 状态：</label>
+							<div class="col-md-3">
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio1" name="status" value="" checked="checked"> 全部
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio2" name="status" value="0"> 草稿
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio3" name="status" value="1"> 已发布
+								</label>
+							</div>
+							<!-- <label class="col-md-4 control-label"> 是否停止预定：</label>
+							<div class="col-md-3">
+									<label class="radio-inline">
+									<input type="radio" id="inlineRadio1" name="status" value="" checked="checked"> 全部
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio2" name="status" value="0"> 草稿
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio3" name="status" value="1"> 已发布
+								</label>
+							</div> -->
+							
+						</div>
+						
+						<!--查询重置等按钮-->
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center">
+								<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+								</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-primary"
+										onclick="clearAll()"> 重&nbsp;&nbsp;置
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			<div class="list_button_area">
+				<button class="list_table_btn2"
+						onclick="draft();">
+					<span class="glyphicon glyphicon-plus-sign"></span> 新增
+				</button>
+				<button class="list_table_btn2"
+						onclick="reuse();">
+					 <img alt="" src="/modules/mypage/wmgl/image/reuse.png">&nbsp;复用
+				</button>
+			</div>
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	//起草
+	function draft(){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/mypage/wmgl/takeout/takeOutEditForm.html?resId=' + resId,title:'新增外卖信息',width:'90%',height:'98%'})
+	
+	}
+	//复用
+	function reuse(){
+		var selectList = $('#right_table').bootstrapTable('getSelections');
+		
+		if(selectList.length<=0){
+			 layer.msg("请选择要复用的外卖信息!",{icon:0})
+		}else{
+			$.post("/mypage/wmgl/takeout/takeoutInfo/reuse", { id: selectList[0].id },function(data){
+				if(data.flag=='1'){
+					layer.msg("复用成功!",{icon:1})
+					TableInit.refTable('right_table')
+				}
+			} );
+		}
+	}
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+   laydate.render({
+		elem : '#takeFoodTime',
+		range : true
+	});
+   
+   laydate.render({
+		elem : '#deadlineTime',
+		range : true
+	});
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [
+    	{
+    		title : "",
+    		width : '3%',
+    		align : "center",
+    		checkbox : "true"
+    	},
+    	{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'name'
+            , title: '外卖名称'
+            , width: '15%'
+            , align:"center"
+        },
+    {
+        field: 'title'
+        , title: '主题'
+        , width: '8%'
+        , align:"center"
+    },{
+        field: 'takeFoodTime'
+        , title: '取餐时间'
+        , width: '25%'
+        , align:"center"
+    },
+    {
+        field: 'deadlineTime'
+        , title: '最晚下单时间'
+        , width: '12%'
+        , align:"center"
+    },
+      {
+         field: 'stop'
+             , title: '是否停止下单'
+             , width: '12%'
+             , align:"center"
+             , formatter: function (value, row, index) {
+              	if(value=='1'){
+              		return '未停止'
+              	}else{
+              		return '已停止'
+              	}
+              }
+          },{
+         field: 'orderNo'
+             , title: '订单数量'
+             , width: '8%'
+             , align:"center"
+             , formatter: function (value, row, index) {
+             	return '<a style="color:blue;cursor:pointer" onclick="showOrder(\''+ row.id + '\')" title="点击查看订单详情">'+value+'</a>'
+             }
+         },
+    {
+        field: 'status'
+        , title: '状态'
+        , width: '7%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+             	if(value=='0'){
+             		return '草稿'
+             	}else{
+             		return '已发布'
+             	}
+          }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '9%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+			html += "<i style='cursor:pointer;' class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\""+ row.id + "\")\'></i>&nbsp;&nbsp;";
+            if(row.status=='0'){
+            	html += "<i style='cursor:pointer;' class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            }
+            return html;
+        }
+    }];
+    
+	//显示订单人
+	function showOrder(id){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/mypage/wmgl/takeout/takeOutOrderForm.html?takeOutid=' + id + '&resId=' + resId,title:'确认订单信息',width:'90%',height:'98%'})
+	}
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            singleSelect:true,
+            url:"/mypage/wmgl/takeout/takeoutInfo/getlistBootHql",
+            columns:right_table_col,
+            queryParams:function(params){
+            	params.title=$("#title").val();
+            	params.name = $("#name").val();
+            	params.takeFoodTime=$("#takeFoodTime").val();
+            	 params.status = $("input[name='status']:checked").val();
+            	 params.deadlineTime=$("#deadlineTime").val();
+                return params;
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"pointer"}
+                };
+            },
+            readOnlyFn:function(){
+            	var resId = $('#left_ul').find('a.active').attr("id");
+            	$('tr.readOnly').find('td:not(:last,:first)').attr('title','点击查看详情');
+            	$('tr.readOnly').find('td:last').css('cursor','default');
+            	$('tr.readOnly').find('td:eq(6)').css('cursor','default');
+            	$('tr.readOnly').find('td:not(:first)').unbind('click').bind('click',function(e){
+            		  var index = $(this).index(); 
+            		  if(index==9 || index==7){
+            			  return;
+            		  }
+                       var id = $(this).parent().find("span[data-id]").attr("data-id");
+    					MyLayer.layerOpenUrl({
+    						url : '/modules/mypage/wmgl/takeout/takeOutReadOnlyForm.html?id=' + id + '&oper=EDIT&resId=' + resId,
+    						title : "查看外卖信息"
+    					})
+                });
+            }
+        });
+    });
+
+    var list = {
+			editFun : function(id) {
+				var resId = $('#left_ul').find('a.active').attr("id");
+				MyLayer.layerOpenUrl({url:'/modules/mypage/wmgl/takeout/takeOutEditForm.html?id=' + id + '&resId=' + resId,title:'修改外卖信息',width:'90%',height:'98%'})
+				
+			},
+			deleteFun : function(id) {
+				var resId = $('#left_ul').find('a.active').attr("id");
+	            MyLayer.deleteOpt({
+	            	url: '/mypage/wmgl/takeout/takeoutInfo/delete?id=' + id + "&resId=" + resId,
+	                tableId:'right_table'
+	            })
+			}
+		}
+
+    //重置
+    function clearAll(){
+    	$("#title").val("")
+    	$("#takeFoodTime").val("")
+    	$("#deadlineTime").val("")
+    	 $("input[name=status]").each(function(index){
+        	if(index==0){
+        		$(this).prop("checked", true);
+        	}else{
+        		$(this).prop("checked", false);
+        	}
+        })
+    }
+
+
+</script>

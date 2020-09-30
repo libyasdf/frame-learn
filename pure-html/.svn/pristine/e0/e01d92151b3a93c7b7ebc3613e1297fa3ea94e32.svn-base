@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="Expires" content="0">
+	    <meta http-equiv="Pragma" content="no-cache">
+	    <meta http-equiv="Cache-control" content="no-cache">
+	    <meta http-equiv="Cache" content="no-cache">
+        <title>浏览文件</title>
+        <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css" />
+		<link href="/static/css/common/style.css" rel="stylesheet" />
+    </head>
+    <body>
+    	<div class="ctrlDiv" style="width: 100%;height: 100%;">
+		    <div class="eleContainer elePaddingBtm">
+		        <iframe id="displayPdfIframe" width="100%" height="736px"></iframe>
+		    </div>
+		</div>
+    	<!-- 按钮区 -->
+		<div class="form_btn_area" style="text-align: center;">
+			<button style="display:none;" id="justClose" class="btn btn-primary form_btn_area_btn2" onclick="quitPlayVideoNoSave();">
+				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭
+			</button>
+		</div>
+		<!-- 按钮区结束 -->
+    </body>
+	<!-- 页面获取参数 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+	<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+	<script src="/common/js/cookie.js"></script>
+    <script type="text/javascript">
+        var theRequest = GetRequest();
+        var affixId = theRequest.affixId;
+        var affixName = decodeURI(theRequest.affixName);
+        var url = encodeURIComponent("/system/component/affix/downloadPDF?affixId="+affixId+"&math="+Math.random());
+        $(function(){
+            var suffix = affixName.substring(affixName.lastIndexOf(".") + 1);
+            if("doc,docx,pdf".indexOf(suffix)>=0){
+                $("#displayPdfIframe").attr("src","/modules/pdfPreView/generic/web/viewer.html?file="+url);
+				/*httpRequest("get","/wordTransfer/filePath/"+affixId+"/pdf","",function (json){
+					if(json.flag == "1"){
+						var filePath = json.filePath;
+						filePath = filePath.substring(filePath.indexOf("upload")-1);
+						$("#displayPdfIframe").attr("src","/modules/pdfPreView/generic/web/viewer.html?file="+filePath);
+					}else {
+						layer.msg("预览失败！",{icon:0});
+					}
+				});*/
+            }else{
+                layer.msg("预览只支持doc,docx,pdf格式文件！",{icon:0});
+			}
+        });
+	  	//关闭
+	  	function quitPlayVideoNoSave(){
+	  		window.close();
+	  	}
+    </script>
+</html>

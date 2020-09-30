@@ -1,0 +1,49 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 4,
+    "rows": [
+      {
+        "id": 1,
+        "orderNum": "201901001",
+        "cardNo": "1521",
+        "goodsName": "鱼、肘子、馒头",
+        "orderLimt": "已下单",
+         "cz": "update,delete"
+      },
+      {
+       "id": 2,
+        "title": "201901",
+        "takeFoodTime": "2019-05-25 14:00:00 - 2019-05-25 16:00:00",
+        "deadlineTime": "2019-05-20 14:00:00",
+        "orderLimt": "2",
+        "isStop":"0",
+        "orderNo":"45",
+        "status":"1",
+         "cz": "update,delete"
+      },
+      {
+        "id": 3,
+        "title": "201901",
+        "takeFoodTime": "2019-05-25 14:00:00 - 2019-05-25 16:00:00",
+        "deadlineTime": "2019-05-20 14:00:00",
+        "orderLimt": "2",
+        "isStop":"0",
+        "orderNo":"45",
+        "status":"1",
+         "cz": "update,delete"
+      },
+      {
+        "id": 4,
+        "title": "201901",
+        "takeFoodTime": "2019-05-25 14:00:00 - 2019-05-25 16:00:00",
+        "deadlineTime": "2019-05-20 14:00:00",
+        "orderLimt": "2",
+        "isStop":"0",
+        "orderNo":"45",
+        "status":"1",
+         "cz": "update,delete"
+      }
+    ]
+  }
+}

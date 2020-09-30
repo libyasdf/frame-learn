@@ -1,0 +1,353 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-details" >
+            <form class="form-horizontal">
+                <div class="modal-body selectjs">
+                    <div class="selectjs_block" style="height: auto;">
+                        <div class="title_tab">
+                            <ul class="nav nav-tabs">
+                                <li for="formpage1" id="page1" style="width: 33.33%;display: none">
+                                    <a href="#" data-toggle="tab">
+                                        维护页面
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="main" style="height: auto;">
+                            <div id="formpage1" class="hidden">
+                                <form class="form-horizontal" id="form1">
+                                    <!-- 维护页面 -->
+                                    <div class="row">
+                                        <div class="col-md-12 ">
+                                            <div class="panel panel-default toggle">
+                                                <div class="panel-heading" style="cursor: pointer;">
+                                                    <h3 class="panel-title">查询项</h3>
+                                                    <div class="panel-controls ">
+                                                        <i class="glyphicon glyphicon-plus showSelect"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body" style="display: none;">
+                                                    <!--查询项输入框选择框等开始-->
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 control-label"> 标题：</label>
+                                                        <div class="col-md-4">
+                                                            <input class="form-control" type="text" name="title" id="title"/>
+                                                        </div>
+                                                        <label class="col-md-2 control-label"> 发布日期：</label>
+                                                        <div class="col-md-4">
+                                                            <input class="form-control" type="text" name="timeRange" id="timeRange"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 control-label"> 状态：</label>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control" name="subflag" id="subflag">
+                                                                <option value="">---请选择---</option>
+                                                                <option value="0">草稿</option>
+                                                                <option value="1">流程中</option>
+                                                                <option value="3">撤办</option>
+                                                                <option value="5">已发布</option>
+                                                                <option value="6">审批未通过</option>
+                                                            </select>
+                                                            <!-- <label class="radio-inline">
+                                                                <input type="radio" id="inlineRadio2" name="flag" value="2"> 已撤销
+                                                            </label> -->
+                                                        </div>
+                                                        <label class="col-md-2 control-label"> 是否需要反馈：</label>
+                                                        <div class="col-md-4">
+                                                            <label class="radio-inline">
+                                                                <input type="radio" id="backRadio" name="isBack" checked value=""> 全部
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" id="backRadio0" name="isBack" value="1"> 是
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" id="backRadio1" name="isBack" value="0"> 否
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询项输入框选择框等结束-->
+
+                                                    <!--查询重置等按钮-->
+                                                    <div class="form-group">
+                                                        <div class="col-md-12" style="text-align: center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                    onclick="TableInit.refTable('right_table1')"> 查&nbsp;&nbsp;询
+                                                            </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <button type="button" class="btn btn-primary"
+                                                                    onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询重置等按钮 end-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row m-t-15">
+                                        <div class="col-md-12">
+                                            <div class="list_button_area">
+                                                <button type="button" class="list_table_btn2" onclick="draft()">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                                                </button>
+                                                <!--<button type="button" class="list_table_btn2" onclick="layer.msg('导出成功！', {icon: 1})">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 导出
+                                                </button>-->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <!--bootstrap-table表格-->
+                                            <table id="right_table1"></table>
+                                        </div>
+                                    </div>
+                                    <!-- 维护页面 -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript">
+    scrollTop.init();
+    //获取url中的参数，封装成json对象
+    var url = $("#left_ul").find("a.active").attr("url");
+    var paramJson = new GetParameter(url);
+    var noticeType = paramJson.noticeType;
+
+    var resId = $('#left_ul').find('a.active').attr("id");
+    //起草
+    function draft(){
+        // 获取资源id
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({url:'/modules/system/notice/noticeEditDeptForm.html?noticeType=' + noticeType + '&oper=NEW&resId=' + resId,title:'起草通知公告'});
+    }
+
+    //根据登录人判断是否显示标签页
+    $(function () {
+        debugger;
+        var rolesNo = getcookie("rolesNo");
+        if(rolesNo.indexOf("C616") != -1 || rolesNo.indexOf("D616") != -1 ){
+            $("#page1").show();
+            $("#formpage1").removeClass('hidden');
+        }
+    });
+
+    //刷新方法，流程中需要回调
+    function refreshPage(id){
+        if(id == 'formpage1'){
+            TableInit.refTable("right_table1");
+        }
+    }
+
+    //清空查询条件
+    function clearAll(){
+        $("#title").val("");	//内容
+        $("#timeRange").val("");	//时间
+        $("#subflag").val("");
+        //$("#noticeType option[value='']").prop("selected",true);	//通知公告类型
+        $(":radio[name=isBack][value='']").prop("checked",true);	//是否需要反馈
+    }
+
+
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#timeRange',
+        range: true
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col1 = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table1').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table1').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'title'
+        , title: '标题'
+        , width: '30%'
+        , align: "center"
+    },{
+        field: 'source'
+        , title: '来源'
+        , width: '15%'
+        , align: "center"
+    },{
+        field: 'publishTime'
+        , title: '发布日期'
+        , width: '15%'
+        , sortable: true
+        , align: "center"
+    },{
+        field: 'subflag'
+        , title: '状态'
+        , width: '5%'
+        , sortable: true
+        , align: "center"
+        , formatter: function (value, row, index) {
+            if(value == '0'){
+                return "草稿";
+            }else if(value == '5'){
+                return "已发布";
+            }else if(value == '2'){
+                return "已撤销";
+            }else if(value == '3'){
+                return "撤办";
+            }else if(value == '1'){
+                return "流程中";
+            }else if(value == '6'){
+                return "审批未通过";
+            }
+        }
+    }, {
+        field: 'isBack'
+        , title: '是否需要反馈'
+        , width: '5%'
+        , sortable: true
+        , align: "center"
+        , formatter: function (value, row, index) {
+            if(value == '0'){
+                return "否";
+            }else if(value == '1'){
+                return "是";
+            }else{
+                return "";
+            }
+        }
+    },{
+        field: 'isTop'
+        , title: '是否置顶'
+        , width: '8%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value == '0'){
+                return "否";
+            }else if(value == '1'){
+                return "是";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            if(value){
+                var opt = value.split(",");
+                for (var i = 0; i < opt.length; i++) {
+                    if (opt[i] == "seeBack") {
+                        html += "<i class='glyphicon glyphicon-list-alt' title='查看反馈信息' onclick=\'list.seeBack(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                    }
+                }
+            }
+            html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+            html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            return html;
+        }
+    }];
+
+
+    //维护页面
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table1",
+            url: "/system/notice/getAllNoticeList",
+            columns: right_table_col1,
+            pagination:true,	//分页
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.title = $("#title").val();
+                params.timeRange = $("#timeRange").val();
+                params.subflag = $("#subflag").val();
+                params.isBack = $(":radio[name=isBack]:checked").val();
+                params.noticeType = noticeType;
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/system/notice/noticeReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "通知公告详情"});
+                });
+            }
+        });
+    });
+
+
+    //表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url: '/modules/system/notice/noticeEditDeptForm.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title: "修改通知公告"
+            })
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/system/notice/delete?noticeId=' + id + "&resId=" + resId,
+                tableId: 'right_table1',
+            })
+        },
+        seeBack: function(id){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url: '/modules/system/notice/noticeBackInfo.html?noticeId=' + id + "&resId=" + resId,
+                title: '反馈信息'
+            })
+        }
+    }
+
+
+</script>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>荣誉墙</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css" />
+    <!-- style.css /tjxm/WebContent/modules/mypage/honorWall/css/style.css-->
+
+    <link href="/static/css/common/style.css" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+    <style type="text/css">
+        body .layer_bg .layui-layer-content{
+            background-image: url("/modules/mypage/honorWall/img/honor.png");
+        }
+        .honor{
+            padding-top: 150px;
+        }
+        .honor-title{
+            display: inline-block;
+            width: auto;
+            text-align: center;
+            height: 34px;
+            line-height: 34px;
+            background-color: #c6131b;
+            font-size: 18px;
+            font-weight: normal;
+            color: #fdfce4;
+            margin-left: 100px;
+            border-radius: 30px;
+            margin-top: 16px;
+        }
+
+        .honor-con{
+            text-indent: 2em;
+            line-height: 24px;
+            font-size: 16px;
+            color: #9b2024;
+            padding: 0 100px;
+            word-break: normal;
+    		white-space: pre-wrap;
+    		word-wrap: break-word;
+        }
+        .outer {
+            margin-top: 16px;
+            width: 900px;
+            height: 160px;
+            overflow: hidden;
+        }
+        .content {
+            width: 920px;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .jitiList span {
+            width : 30%;
+            display: inline-block;
+            text-align: center;
+            margin-right: 15px;
+            margin-bottom: 30px;
+            vertical-align: text-top;
+            word-break:normal;
+            white-space:pre-wrap;
+            word-wrap : break-word;
+
+        }
+
+        .rognyu-con .rongyu-nameList {
+            line-height: 25px;
+        }
+
+        .rognyu-con .rongyu-nameList span {
+            width: 16%;
+            margin-right: 15px;
+            margin-bottom: 30px;
+            vertical-align: text-top;
+            word-break:normal;
+            white-space:pre-wrap;
+            word-wrap : break-word;
+        }
+    </style>
+</head>
+
+<body style="background: #bc0200;" id="form">
+    <header class="rongyu-bg"></header>
+    <div class="rongyu-container" id="info" style="display:none">
+        <div class="rognyu-con">
+            <h2 class="rongyu-title">一级英模</h2>
+            <p id="supreme" class="rongyu-nameList">
+            </p>
+            <h2 class="rongyu-title">二级英模</h2>
+            <p id="secondary" class="rongyu-nameList">
+
+            </p>
+        </div>
+        <div class="rognyu-con">
+            <div id="year" class="yearlist">
+                <div class="yearbtn-container"></div>
+            </div>
+            <h2 class="rongyu-title">个人一等功</h2>
+            <p id="indivFirst" class="rongyu-nameList">
+
+            </p>
+            <h2 class="rongyu-title">个人二等功</h2>
+            <p id="indivSecond" class="rongyu-nameList">
+
+            </p>
+            <h2 class="rongyu-title">个人三等功</h2>
+            <p id="indivThird" class="rongyu-nameList">
+
+            </p>
+
+            <!--集体-->
+            <!--集体一等功-->
+            <h2 class="rongyu-title">集体一等功</h2>
+            <ul id="collecFirst" class="jitiList clearFloat">
+            </ul>
+            <!--集体二等功-->
+            <h2 class="rongyu-title">集体二等功</h2>
+            <ul id="collecSecond" class="jitiList clearFloat">
+            </ul>
+            <!--集体三等功-->
+            <h2 class="rongyu-title">集体三等功</h2>
+            <ul id="collecThird" class="jitiList clearFloat">
+            </ul>
+        </div>
+    </div>
+    <div class="footline"></div>
+    <div class="rongyu-footer">
+        <p>
+            <span>综合管理平台提供技术支持</span>
+        </p>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script src="/static/js/common/mylayer.js"></script>
+    <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+    <script src="/static/core/laydate/laydate.js"></script>
+    <!-- 流程相关 -->
+
+    <script type="text/javascript" src="/common/js/config.js"></script>
+    <script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+    <script type="text/javascript" src="/common/js/commonFunction.js"></script>
+    <!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+    <!-- 获取cookie值 -->
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+    <!-- 页面获取参数 -->
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <!-- 自定义意见(最后进行加载) -->
+    <script type="text/javascript" src="/common/html/notion/notion.js"></script>
+    <!-- 数据回显 -->
+    <script type="text/javascript" src="/static/js/common/displayData.js"></script>
+    <script type="text/javascript">
+        //年份按钮点击切换效果
+        var currentDate;//= getCurrentDate("yyyy");
+        var checkedYear;
+        $(function () {
+
+            var theRequest = GetRequest();
+            var year = theRequest.year;
+            currentDate = getCurrentDate("yyyy");
+            var datas = { "year": year };
+
+            httpRequest("get", "/system/honor/getlist", datas, function (data) {
+                if (data.length > 0) {
+                	$("#info").show();
+                	if(data.length > 5){
+                		$(".yearbtn-container").before($(''
+                                + '<div class="right-container">'
+                                + '<button class="right" style="display: none;"><</button>'
+                                + '</div>'
+                            ));
+                	}else{
+                		$(".yearbtn-container").before($(''
+                                + '<div class="right-container">'
+                                + '</div>'
+                            ));
+                	}
+
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].year == currentDate) {
+                            $(".yearbtn-container").append("<button class='yearbtn checked'>" + data[i].year + "</button>");
+                            checkedYear = data[i].year;
+                        } else {
+                            $(".yearbtn-container").append("<button class='yearbtn'>" + data[i].year + "</button>");
+                        }
+                    }
+                    var p = document.getElementsByTagName('button');
+                    var hasThisyear = "0"
+                    for (var i = 0; i < p.length; i++) {
+                        if (p[i].className == 'yearbtn checked') {
+                            hasThisyear = "1";
+                        }
+                    }
+                    if (hasThisyear == "0") {
+                        $(".yearbtn-container .yearbtn:first").addClass('checked');
+                        //alert($(".yearbtn-container .yearbtn:first").html());
+                        checkedYear = $(".yearbtn-container .yearbtn:first").html();
+                    }
+                    if(data.length > 5){
+                    $(".yearbtn-container").after($(''
+                        + '<div class="right-container">'
+                        + '<button class="right">></button>'
+                        + '</div>'
+                    ));
+                    }else{
+                    	 $(".yearbtn-container").after($(''
+                                 + '<div class="right-container">'
+                                 + '</div>'
+                             ));
+                    }
+                    $('.right-container:eq(0) button').click(function () {
+                        var i = 0;
+                        var $this = $(this);
+                        var timer1 = window.setInterval(function () {
+                            $(".yearbtn-container").scrollLeft($(".yearbtn-container").scrollLeft() - 10);
+                            i++;
+                            if (i === 13) {
+                                if ($(".yearbtn-container").scrollLeft() === 0) {
+                                    $this.hide();
+                                } else {
+                                    $this.show();
+                                }
+                                $('.right-container:eq(1) button').show();
+                                window.clearInterval(timer1);
+                            }
+                        }, 10);
+                    });
+
+                    $('.right-container:eq(1) button').click(function () {
+                        var i = 0;
+                        var $this = $(this);
+                        var timer2 = window.setInterval(function () {
+                            $(".yearbtn-container").scrollLeft($(".yearbtn-container").scrollLeft() + 10);
+                            i++;
+                            if (i === 13) {
+
+                                if ($(".yearbtn-container").scrollLeft() === ($('.yearbtn-container .yearbtn').length - 5) * 130) {
+                                    $this.hide();
+                                } else {
+                                    $this.show();
+                                }
+                                $('.right-container:eq(0) button').show();
+                                window.clearInterval(timer2);
+                            }
+                        }, 10);
+                    });
+                }else{
+                	$("#info").html("")
+                	var columsStr = "<img style=' display: block;width: 1000px;margin: 0 auto;margin: 0 auto;'src='img/noInfo.png'>";
+        			$("#form header").after(columsStr);
+                } 
+
+            });
+
+            //var year = getCurrentDate("yyyy");
+            getHonorWall(checkedYear);
+            $(".yearbtn").click(function () {
+                $(this).siblings('button').removeClass('checked');
+                $(this).addClass('checked');
+                $("#supreme").html("");
+                $("#secondary").html("");
+                $("#indivFirst").html("");
+                $("#indivSecond").html("");
+                $("#indivThird").html("");
+                $("#collecFirst").html("");
+                $("#collecSecond").html("");
+                $("#collecThird").html("");
+                getHonorWall($(this).text());
+            });
+        });
+
+
+        function getHonorWall(year) {
+            var datas = { "year": year };
+            httpRequest("get", "/system/honor/findByYear", datas, function (data) {
+                console.log(data);
+                $.each(data,function(i,obj){
+                    if(data[i].personName){
+                        if(data[i].featsType == '1'){
+                            $("#supreme").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }else if(data[i].featsType == '2'){
+                            $("#secondary").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }else if(data[i].featsType == '3'){
+                            $("#indivFirst").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }else if(data[i].featsType == '4'){
+                            $("#indivSecond").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }else if(data[i].featsType == '5'){
+                            $("#indivThird").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }else if(data[i].featsType == '6'){
+                            $("#collecFirst").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }else if(data[i].featsType == '7'){
+                            $("#collecSecond").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }else if(data[i].featsType == '8'){
+                            $("#collecThird").append("<span style=\"cursor:pointer\" title=\"点击查看光荣事迹\" onclick=\"openStory('"+data[i].honorStory+"','"+data[i].personName+"')\">" + data[i].personName + "</span>");
+                        }
+                    }
+                });
+            });
+        }
+
+        function openStory(content,name){
+            if(content == "null"){
+                layer.msg("暂无事迹简介！", {icon: 0});
+                return false;
+            }
+            layer.open({
+                type: 1,
+                title: false,
+//                shadeClose: true,
+//                shade: 0.8,
+                skin: 'layer_bg',   //layer_bg是自定义的css样式
+                area: ['900px', '500px'],
+                content: "<div class=\"honor\"><h3 style='padding-left:10px;padding-right:10px;'class=\"honor-title\">"+name+"事迹简介</h3><div class=\"outer\"><div class=\"content\">"+content+"</div></div></div>"
+            });
+
+        }
+
+        /**
+         * 空值设置
+         * @param val
+         * @returns
+         */
+        function regVlaue(val) {
+            if (!val) {
+                val = "";
+            }
+            return val;
+        }
+    </script>
+</body>
+
+</html>

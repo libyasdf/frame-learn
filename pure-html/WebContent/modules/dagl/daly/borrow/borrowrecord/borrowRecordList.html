@@ -1,0 +1,706 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<!--固定表头所需css-->
+<link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;" onclick="resetView();">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 借阅日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control"  type="text" name="borrowDate" id="borrowDate"/>
+                            </div>
+
+                            <label class="col-md-2 control-label"> 借阅状态：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="borrowStatus" name="borrowStatus">
+                                    <option value="">-请选择-</option>
+                                    <option value="1">未归还</option>
+                                    <option value="2">部分归还</option>
+                                    <option value="3">已归还</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <!--新增等按钮-->
+        <div id="toolbar" class="col-md-12">
+
+
+            <div class="list_button_area">
+                <button class="list_table_btn2" onclick="renew()" rel="drevil"
+                        data-container="body" data-toggle="popover" data-placement="bottom"
+                        data-content="可续借单次借阅中未还的档案">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 续借
+                </button>
+                <button class="list_table_btn2" onclick="borrowAgain()" rel="drevil"
+                        data-container="body" data-toggle="popover" data-placement="bottom"
+                        data-content="可重借同一立卷单位已还的档案">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 重借
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<!--这里是单独引用的自己的js，因为应用公用的js固定表头会出现问题-->
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript">
+
+    $("[data-toggle='popover']").popover();
+
+
+    $("[rel=drevil]").popover({
+        trigger:'manual',
+        //placement : 'bottom', //placement of the popover. also can use top, bottom, left or right
+        //天title : '<div style="text-align:center; color:red; text-decoration:underline; font-size:14px;"> Muah ha ha</div>', //this is the top title bar of the popover. add some basic css
+        html: 'true', //needed to show html of course
+        //content : '<div id="popOverBox"><img src="http://www.hd-report.com/wp-content/uploads/2008/08/mr-evil.jpg" width="251" height="201" /></div>', //this is the content of the html box. add the image here or anything you want really.
+        animation: false
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide")
+            }
+        }, 300);
+    });
+
+
+    var date = new Date();
+    function DateToStringFomatter(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+    };
+
+    var today = DateToStringFomatter(date);
+
+    laydate.render({
+        elem: '#borrowDate'
+        , range: true
+    });
+
+    var selectData = new Array();//存放选中的数据
+    var selectId = [];//存放选中的id,用于回显
+    var selectBorrowId = [];
+
+    Dictionary.init({position:"usePurpose",mark:"dagl_usePurpose",type:"1",name:"usePurpose",domType:"select"});
+    //Dictionary.init({position:"borrowStatus",mark:"dagl_borrowStatus",type:"1",name:"borrowStatus",domType:"select"});
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '6%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            return "<span data-id='"+row.id+"' >"+(index+1)+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'borrowDate'
+        , title: '借阅日期'
+        , width: '20%'
+        , align:"center"
+    }, {
+        field: 'shouldReturnDate'
+        , title: '应还日期'
+        , width: '20%'
+        , align:"center"
+    }, {
+        field: 'borrowStatus'
+        , title: '借阅状态'
+        , width: '20%'
+        , align:"center"
+        ,formatter:function(value,row,index){
+            if("1" == value){
+                return "未归还";
+            }else if("2" == value){
+                return "部分归还";
+            }else if("3" == value){
+                return "已归还";
+            }else{
+                return "-";
+            }
+        }
+    }, {
+        field: 'approveUserName'
+        , title: '审批人'
+        , width: '17%'
+        , align:"center"
+    }, {
+        field: 'handleUserName'
+        , title: '经办人'
+        , width: '17%'
+        , align:"center"
+    }];
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col_s = [{
+        field:'check',
+        width: '5%',
+        checkbox:true,
+        //clickToSelect: true,
+        //singleSelect: true,
+        formatter : function(value, row, index) {
+             if($.inArray(row.id,selectId)!= -1){
+                 return {
+                     checked : true               // 存在则选中
+                 }
+             }
+        }
+    },{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        //, order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            return "<span data-id='"+row.id+"' >"+(index+1)+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'borrowId'
+        , title: '借阅id'
+        , width: '5%'
+        //, order: "desc"
+        , align:"center",
+        visible: false
+    }, {
+        field: 'categoryName'
+        , title: '门类'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'archiveNo'
+        , title: '档号'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>5){
+                    val = value.substring(0,5)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'basefolderUnit'
+        , title: '立卷单位'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'mainTitle'
+        , title: '题名'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>5){
+                    val = value.substring(0,5)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'borrowDate'
+        , title: '借阅日期'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'shouldReturnDate'
+        , title: '应还日期'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'returnDate'
+        , title: '归还日期'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'borrowStatus'
+        , title: '借阅状态'
+        , width: '10%'
+        , align:"center"
+        ,formatter:function(value,row,index){
+            if(null == row.returnDate && today <= row.shouldReturnDate){
+                return "未归还";
+            }else if(null == row.returnDate && today > row.shouldReturnDate){
+                return "逾期未还";
+            }else if(row.returnDate <= row.shouldReturnDate){
+                return "按时还";
+            }else if(row.returnDate > row.shouldReturnDate){
+                return "逾期还";
+            }
+        }
+    }, {
+        field: 'securityClass'
+        , title: '密级'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'pageNum'
+        , title: '页数'
+        , width: '10%'
+        , align:"center"
+    }];
+
+    //初始化子表格(无线循环)
+    /*oInit.InitSubTable = function (index, row, $detail) {
+
+    };*/
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/dagl/daly/borrow/getBorrowList",
+            columns:right_table_col,
+            detailView: true,//父子表
+            height:450,
+            pagination:false,	//不分页
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.borrowDate = $("#borrowDate").val();
+                params.usePurpose = $('#usePurpose').val();
+                params.borrowStatus = $('#borrowStatus').val();
+                return params;
+            },
+            readOnlyFn: function (row) {
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var year_month = $(this).parent().find("span[data-content]").attr("data-content");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                   // MyLayer.layerOpenUrl({url: 'modules/zhbg/zbgl/shangbao/zbbReadOnlyForm.html?reportId='+id+"&year_month="+year_month+"&resId="+resId, title: '查看'+year_month+'值班表信息'});
+                });
+            },
+            //注册加载子表的事件。注意下这里的三个参数！
+            onExpandRow: function (index, row, $detail) {
+                var borrowId = row.id;
+                var cur_table = $detail.html('<table></table>').find('table');
+                $(cur_table).bootstrapTable({
+                    url: '/dagl/daly/borrow/getFileList',
+                    method: 'get',
+                    queryParams: function(params){
+                        //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                        params.resId = $('#left_ul').find('a.active').attr("id");
+                        params.id = borrowId;
+                        /*params.isReport = $('#inlineRadio:checked').val();
+                        params.reportStatus = $('#onTimeRadio:checked').val();*/
+                        return params;
+                    },
+                    //clickToSelect: true,
+                    checkboxHeader:true,
+                    detailView: false,//父子表
+                    //uniqueId: "MENU_ID",
+                    pagination:false,	//不分页
+                    //height:400,
+                    //pageSize: 10,
+                    //pageList: [10, 25],
+                    columns: right_table_col_s
+                    ,
+                    readOnlyFn: function (row) {
+                        $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+//                    取消事件冒泡
+                            var evt = e ? e : window.event;
+                            if (evt.stopPropagation) {
+                                evt.stopPropagation();
+                            } else {
+                                evt.cancelBubble = true;
+                            }
+//                    取消事件冒泡 end
+                            var id = $(this).parent().find("span[data-id]").attr("data-id");
+                            var year_month = $(this).parent().find("span[data-content]").attr("data-content");
+                            var resId = $('#left_ul').find('a.active').attr("id");
+                            // MyLayer.layerOpenUrl({url: 'modules/zhbg/zbgl/shangbao/zbbReadOnlyForm.html?reportId='+id+"&year_month="+year_month+"&resId="+resId, title: '查看'+year_month+'值班表信息'});
+                        });
+                    },
+                    onCheck: function (row) {
+                        selectData.push(row);
+                        selectId.push(row.id);
+                        if(selectBorrowId.indexOf(row.borrowId) == -1){
+                            //不包含则新增
+                            selectBorrowId.push(row.borrowId);
+                        }
+                    },
+                    onUncheck: function (row) {
+
+                        //删除id
+                        var indexOfId = selectId.indexOf(row.id);
+                        if (indexOfId > -1) {
+                            selectId.splice(indexOfId, 1);
+                        }
+
+                        //删除数据
+                        //var indexOfData = selectData.indexOf(row);
+                        for(var m = 0;m<selectData.length;m++){
+                            if(selectData[m].id && selectData[m].id !="" && selectData[m].id==row.id){
+                                selectData.splice(m, 1);
+                            }
+                        }
+                        //删除本次借阅的id
+
+                       /* var indexOfBorrowId = selectBorrowId.indexOf(row.borrowId);
+                        if (indexOfBorrowId > -1) {
+                            selectBorrowId.splice(indexOfBorrowId, 1);
+                        }*/
+                        selectBorrowId.splice(0,selectBorrowId.length);
+                        for(var k = 0;k<selectData.length;k++){
+                            if(selectData[k].borrowId && selectData[k].borrowId !=""){
+                                if(selectBorrowId.indexOf(selectData[k].borrowId) == -1){
+                                    //不包含则新增
+                                    selectBorrowId.push(selectData[k].borrowId);
+                                }
+                            }
+                        }
+                    },
+                    onCheckAll: function (rows) {
+                        for (var i= 0;i<rows.length;i++){
+                            if(selectId.indexOf(rows[i].id) == -1){
+                                selectId.push(rows[i].id);
+                                //这里是因为全选按钮的原因导致数据重复，当解决，全选框不勾选的问题之后这里的判断则不再需要，目前只能这样控制，等待前端解决全选按钮问题
+                                selectData.push(rows[i]);
+                            }
+                            if(selectBorrowId.indexOf(rows[i].borrowId) == -1){
+                                //不包含则新增
+                                selectBorrowId.push(rows[i].borrowId);
+                            }
+                        }
+                    },
+                    onUncheckAll: function (rows) {
+                        for (var i= 0;i<rows.length;i++){
+
+                            //删除id
+                            var indexOfId = selectId.indexOf(rows[i].id);
+                            if (indexOfId > -1) {
+                                selectId.splice(indexOfId, 1);
+                                //删除数据
+                                selectData.splice(indexOfId, 1);
+                            }
+                            var indexOfBorrowId = selectBorrowId.indexOf(rows[i].borrowId);
+                            if (indexOfBorrowId > -1) {
+                                selectBorrowId.splice(indexOfBorrowId, 1);
+                            }
+
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 续借
+     * @Date 2019/2/27 11:47
+     **/
+    function renew() {
+
+        if(selectId.length ==0){
+            layer.msg("请选择要续借的信息！",{icon:0,time:1000});
+            return false;
+        }else{
+            //续借是按次的，每次只能续借上次借阅的部分，不能两次借阅交叉借阅
+            if(selectBorrowId.length>1){
+                layer.msg("续借只能选择一次借阅信息！",{icon:0,time:1000});
+                return false;
+            }else{
+                //只能对为归还的数据续借
+                for(var i = 0;i<selectData.length;i++){
+                    if(selectData[i].returnDate && selectData[i].returnDate !=""){
+                        layer.msg("数据中包含已归还数据，请重新选择！", {icon: 0});
+                        return false;
+                    }
+                }
+
+                // 创建传输对象
+                var Arr = [];
+                for (var j=0; j<selectData.length; j++) {
+                    Arr.push(JSON.stringify(selectData[j]));
+                }
+                sessionStorage.setItem('selectData',Arr.join('$$$'));
+
+
+                //如果该数据正在续借，还没有审批通过，则不能重复续借
+                $.ajax({
+                    type: "POST",
+                    url: "/dagl/daly/borrow/isInBorrow",
+                   // contentType: "application/json",
+                    data: {ids: selectId.join(',')},
+                    dataType: "json",
+                    async: false,
+                    success: function (json) {
+                        if (json.flag == '1') {
+                            res = json.flag;
+                            if(json.data==0){
+                                //续借
+                                var resId = $('#left_ul').find('a.active').attr("id");
+                                MyLayer.layerOpenUrl({
+                                    url: '/modules/dagl/daly/borrow/borrowrecord/renewApplyEditForm.html?selectList=' + selectBorrowId[0] + '&id=' + selectBorrowId[0] + '&oper=EDIT&flag=borrowRecordList&resId=' + resId,
+                                    title: "续借"
+                                })
+                            }else{
+                                layer.msg("数据中包含正在续借数据，请重新选择！", {icon: 0});
+                            }
+                        }else{
+                            layer.msg("续借失败！", {icon: 2});
+                        }
+                    },
+                    error: function () {
+                        layer.msg("续借失败！", {icon: 2});
+                    }
+                });
+                //layer.msg("一次借阅信息！",{icon:0,time:1000})
+            }
+        }
+
+    }
+
+    /**
+     * @Description //TODO 重借
+     **/
+    function borrowAgain(){
+
+        //可从selectData中去取数据，做数据校验
+        if(selectId.length ==0){
+            layer.msg("请选择要重借的信息！",{icon:0,time:1000});
+            return false;
+        }else{
+            //续借是按次的，每次只能续借上次借阅的部分，不能两次借阅交叉借阅
+            /*if(selectBorrowId.length>1){
+                layer.msg("续借只能选择一次借阅信息！",{icon:0,time:1000});
+                return false;
+            }else{*/
+                //只能对为归还的数据续借
+            var ljdwMark = "";
+                for(var i = 0;i<selectData.length;i++){
+                    // newSelectData.push(JSON.stringify(selectData[i]));
+
+                    if(!selectData[i].returnDate || selectData[i].returnDate ==""){
+                        layer.msg("数据中包含未归还数据，请重新选择！", {icon: 0});
+                        return false;
+                    }
+                    if(i==0){
+                        ljdwMark = selectData[i].ljdwMark;
+                    }else{
+                        if(ljdwMark != selectData[i].ljdwMark){
+                            layer.msg("只能借阅同一立卷单位的数据，请重新选择！", {icon: 0});
+                            return false;
+                        }
+                    }
+
+                }
+                // 创建传输对象
+                var Arr = [];
+                for (var j=0; j<selectData.length; j++) {
+                    Arr.push(JSON.stringify(selectData[j]));
+                }
+                sessionStorage.setItem('selectData',Arr.join('$$$'));
+
+
+                //如果该数据正在续借，还没有审批通过，则不能重复续借
+                $.ajax({
+                    type: "POST",
+                    url: "/dagl/daly/borrow/isInBorrow",
+                    // contentType: "application/json",
+                    data: {ids: selectId.join(',')},
+                    dataType: "json",
+                    async: false,
+                    success: function (json) {
+                        if (json.flag == '1') {
+                            res = json.flag;
+                            if(json.data==0){
+                                //续借
+                                var resId = $('#left_ul').find('a.active').attr("id");
+                                MyLayer.layerOpenUrl({
+                                    url: '/modules/dagl/daly/borrow/borrowrecord/renewApplyEditForm.html?selectList=' + selectBorrowId[0] + '&id=' + selectBorrowId[0] + '&oper=EDIT&flag=borrowRecordList&resId=' + resId,
+                                    title: "重借"
+                                })
+                            }else{
+                                layer.msg("数据中包含正在重借数据，请重新选择！", {icon: 0});
+                            }
+                        }else{
+                            layer.msg("重借失败！", {icon: 2});
+                        }
+                    },
+                    error: function () {
+                        layer.msg("重借失败！", {icon: 2});
+                    }
+                });
+                //layer.msg("一次借阅信息！",{icon:0,time:1000})
+            }
+       // }
+
+    }
+
+    //展开查询项列表不对齐
+    function resetView(){
+        $("#right_table").bootstrapTable('resetView');
+    }
+
+    //    表格数据项的操作
+    /*var list = {
+        editFun:function(id,year_month){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:"/modules/zhbg/zbgl/dutytable/zbbRl.html?reportId="+id+"&year_month="+year_month+"&resId="+resId,
+                title:"修改"+year_month+"值班表信息",
+                cancel:function () {
+                    TableInit.refTable('right_table');//刷新列表
+                }
+            })
+
+        }
+    }*/
+
+    function keyLogin(){
+        if (event.keyCode==13)  //回车键的键值为13
+            TableInit.refTable('right_table');
+    }
+
+
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 选择月份后新增值班表
+     * @Date 2018/8/15 14:46
+     **/
+    /*function confirm() {
+        var resId = $('#left_ul').find('a.active').attr("id");
+        var month = $("#addmonth").val();
+        if(month ==""){
+            layer.msg('请先选择需要增加的值班表月份！',{icon:0});
+        }else{
+            $.ajax({
+                type: "post",
+                url: "/zhbg/zbgl/shangbao/queryOne",
+                data: {"month":month},
+                dataType: 'JSON',
+                success: function (data) {
+                    if ("1" == data.flag) {
+                        if(data.data.length == 0){
+                            //没有查询到数据，新增上报表数据，并打开值班表编辑页面
+                            addShangBao(resId,month);
+                        }else{
+                            layer.msg('已存在该月的值班信息，请点击列表进行编辑！',{icon:0}); //没有数据时弹出提示信息
+                            //提示是否打开该月的值班表编辑页面,id取返回的数值
+                            /!*var url = "/modules/zhbg/zbgl/dutytable/zbbRl.html?reportId="+data.data[0].id+"&year_month="+month+"&resId="+resId;
+                            var title = "修改"+month+"值班表信息";
+                            OpenZbbRl(url,title);*!/
+                        }
+                        $("#addmonth").val("");
+                    }
+                },
+                error: function () {
+                    layer.msg('查询失败！',{icon:0}); //没有数据时弹出提示信息
+                }
+            });
+        }
+
+    }
+
+    function addShangBao(resId,month) {
+        $.ajax({
+            type: "post",
+            url: "/zhbg/zbgl/shangbao/save",
+            data: {"month":month},
+            dataType: 'JSON',
+            success: function (data) {
+                if ("1" == data.flag) {
+                    layer.msg('新增上报表数据成功！',{icon:1});
+                    //在这里根据id和month打开值班表
+
+                    var url = "/modules/zhbg/zbgl/dutytable/zbbRl.html?reportId="+data.data.id+"&year_month="+month+"&resId="+resId;
+                    var title = "新增"+month+"值班表信息";
+                    OpenZbbRl(url,title);
+                }
+            },
+            error: function () {
+                layer.msg('新增失败！',{icon:0}); //没有数据时弹出提示信息
+            }
+        });
+    }*/
+
+</script>

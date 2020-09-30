@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <div class="modal-body selectjs">
+        <div class="selectjs_block" style="height: auto;">
+            <div class="title_tab">
+                <ul class="nav nav-tabs">
+                    <li class="active" for="formpage1">
+                        <a href="#" data-toggle="tab">
+                            人员基本情况
+                        </a>
+                    </li>
+                    <li for="formpage2">
+                        <a href="#" data-toggle="tab">
+                            入党申请人员情况
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="main" style="height: auto;">
+                <div id="formpage1" class="active">
+                    <form class="form-horizontal" id="form">
+                        <!-- resId -->
+                        <input name="resId" id="resId" type="hidden" value="">
+                        <!-- 基本信息 -->
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="block_title">
+                                    <span class="name">人员基本信息</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-t-15">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 姓名：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 曾用名：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 身份证号：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 户口所在地：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 性别：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">女</option>
+                                                <option value="1">男</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 民族：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="01">汉族</option>
+                                                <option value="02">内蒙古</option>
+                                                <option value="03">回族</option>
+                                                <option value="04">藏族</option>
+                                                <option value="05">维吾尔族</option>
+                                                <option value="06">苗族</option>
+                                                <option value="07">彝族</option>
+                                                <option value="08">壮族</option>
+                                                <option value="09">布依族</option>
+                                                <option value="10">朝鲜族</option>
+                                                <option value="11">满族</option>
+                                                <option value="12">侗族</option>
+                                                <option value="13">瑶族</option>
+                                                <option value="14">白族</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 籍贯：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="01">北京</option>
+                                                <option value="02">北京西城</option>
+                                                <option value="03">北京东城</option>
+                                                <option value="04">北京崇文</option>
+                                                <option value="05">北京宣武</option>
+                                                <option value="06">北京朝阳</option>
+                                                <option value="07">北京丰台</option>
+                                                <option value="08">北京石景山</option>
+                                                <option value="09">北京海淀</option>
+                                                <option value="10">北京门头沟</option>
+                                                <option value="11">北京房山</option>
+                                                <option value="12">北京通州</option>
+                                                <option value="13">北京顺义</option>
+                                                <option value="14">北京昌平</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 出生地：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 健康状况：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="01">健康或良好</option>
+                                                <option value="02">一般或较弱</option>
+                                                <option value="03">有病</option>
+                                                <option value="04">有生理缺陷</option>
+                                                <option value="05">残疾</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 家庭出身：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="01">工人</option>
+                                                <option value="02">社员</option>
+                                                <option value="03">农民</option>
+                                                <option value="04">雇农</option>
+                                                <option value="05">贫农</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 出生日期：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 婚姻状况：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="01">未婚</option>
+                                                <option value="02">已婚</option>
+                                                <option value="03">丧偶</option>
+                                                <option value="04">离婚</option>
+                                                <option value="05">再婚</option>
+                                                <option value="05">其他</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 工作单位：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 工作时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 个人身份：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="011">公务员</option>
+                                                <option value="0311">公有经济控制单位固定工</option>
+                                                <option value="501">离休人员</option>
+                                                <option value="502">公有经济控制单位固定工</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 农民工：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 一线情况：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">企业生产第一线</option>
+                                                <option value="1">农村生产第一线</option>
+                                                <option value="1">教学第一线</option>
+                                                <option value="1">科研第一线</option>
+                                                <option value="1">机关第一线</option>
+                                                <option value="1">连队第一线</option>
+                                                <option value="1">其他第一线</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 新阶层：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">民营科技企业技术人员、创业人员</option>
+                                                <option value="1">个体劳动者</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 民主党派：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">民革会员</option>
+                                                <option value="1">民盟盟员</option>
+                                                <option value="1">民建盟员</option>
+                                                <option value="1">民进盟员</option>
+                                                <option value="1">农工党党员</option>
+                                                <option value="1">致公党党员</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 学历：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">研究生</option>
+                                                <option value="1">大学</option>
+                                                <option value="1">大专</option>
+                                                <option value="1">中专</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 学位：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">名誉博士</option>
+                                                <option value="1">哲学博士学位</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 专业：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 毕业院校：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 技术职务：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">教授</option>
+                                                <option value="1">副教授</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 职务级别：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="2">国家级正职</option>
+                                                <option value="1">国家级</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 联系电话(手机)：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 退休时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 离岗时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 离岗原因：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 基本信息结束 -->
+                    </form>
+                </div>
+                <div id="formpage2" class="hidden">
+                    <form class="form-horizontal" id="form1">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="block_title">
+                                        <span class="name">入党申请人员情况</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-t-15">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 序号：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 入党申请时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="1990-01-01">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 入党联系人：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 发展类型：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control">
+                                                <option value="01">共青团发展</option>
+                                                <option value="02">其他组织推荐</option>
+                                                <option value="03">特殊情况下发展</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 曾任职务：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 发展类型：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 加入时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 确定为积极分子时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="" class="col-md-2 control-label"> 奖惩情况：</label>
+                                    <div class="col-md-10">
+                                        <textarea type="text" class="form-control" value=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-md-2 control-label"> 现时表现：</label>
+                                    <div class="col-md-10">
+                                        <textarea type="text" class="form-control" value=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-md-2 control-label"> 备注：</label>
+                                    <div class="col-md-10">
+                                        <textarea type="text" class="form-control" value=""></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="commitForm();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="/modules/llg/js/taskPlanValidator.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.nav-tabs > li').unbind('click').bind('click',function(){
+            var id = $(this).attr('for');
+            $(this).addClass('active').siblings('li').removeClass('active');
+            $('.main').children().addClass('hidden');
+            $('#'+id).removeClass('hidden');
+        });
+    });
+
+</script>
+</body>
+</html>

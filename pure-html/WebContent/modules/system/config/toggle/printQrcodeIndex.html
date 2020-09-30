@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE> New Document </TITLE>
+<meta charset="utf-8">
+<META NAME="Generator" CONTENT="EditPlus">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+</HEAD>
+
+    
+<script type="text/javascript">     
+function print(){    
+/**
+全称是 Brother p-touch Applicable Component， 即Brother PT打印机编程接口组件。它的核心实现成一个COM组件，ProgID 是BrssCom.Document，通过它开放的方法，可以打开 lbx 文件，并修改其中的文本内容、条码内容，再输出打印。 BrssCom.Document提供的重要的方法就是： open (打开某个lbx)、doprint (将已打开的lbx内容输出打印)、SetText (替换lbx中的某index的text的内容)、SetBarcodeData(替换lbx中某index的barcode的内容)。
+
+默认情况下直接调用doPrint(0, '0') 打印标签，你会发现每吐出一个条码标签前打印机总是会先吐出一小短空白的纸，这是由于brother的硬件设计，其转印头边缘至切刀有一小段距离，所以为了保证每次都能顺利出标签，会先吐出一段空白的并切掉它。 如果需要批量打印，这无疑是很大的浪费、不便。 幸而SDK中考虑了这种情况，可以在调用DoPrint时通过组合 bpoAutoCut or bpoChainPrint 两个选项告诉打印机处于连续出纸态。**/	
+debugger;
+/*var printClient = new ActiveXObject("BTDPrintClient.PrintClient");
+var result = printClient.open ("C:/Users/lenovo/Desktop/ZM400模版01.btw");//调模板,进入页面自动下载模板，并放到指定位置。
+if ("0" ==result){
+	//没有找到模板
+	alert("请到常用工具下载模板，并存放在D盘根目录下！");
+}else{
+	
+for(var i=0;i<1;i++){
+    printClient.SetNamedSubStringValue("code","81EA87FEC4");//更改二维码内容
+    printClient.SetNamedSubStringValue("value","03-Q2-KJDA-001.001");//更改文本内容
+    printClient.Print();//打印
+}
+}*/
+
+
+
+    var app =  new ActiveXObject("BarTender.Application");
+    var Format = app.Formats.Open("C:/Users/lenovo/Desktop/PJMB.btw",false,"");
+    Format.SetNamedSubStringValue ("barcode", "81EA87FEC4");
+    Format.SetNamedSubStringValue ("text", "03-QJDA-0004-001-004");
+    Format.PrintOut(false, false);
+
+
+
+}
+</script>
+<BODY>
+	
+	<div class="form-group">
+        <div class="col-md-12" style="text-align: center">
+            <button type="button" 
+                    onclick="print();"> 打&nbsp;&nbsp;印
+            </button>
+        </div>
+    </div>
+<!-- 	<input type="butten" name="print" onclick="print()"/> -->
+
+    <object id="BTDPrintClient" classid="clsid:{0750A7B0-CF1E-4EAD-8C73-E0C8F6D9E890}" codebase="CAB/BarTender_AX.cab">
+</BODY>
+</HTML>

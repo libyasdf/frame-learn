@@ -1,0 +1,44 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "meetingName": "保密会议",
+        "meetingRoom": "第一会议室",
+         "applyTime": "2018-02-18 上午 - 2018-02-18 下午",
+        "applyDept": "情报科",
+        "status": "草稿",
+        "cz": "update,delete"
+      },
+      {
+        "id": 2,
+        "meetingRoom": "第一会议室",
+        "meetingName": "办公会议",
+        "applyDept": "情报科",
+        "applyTime": "2018-02-17 上午 - 2018-02-17 下午",
+        "status": "草稿",
+        "cz": "update,delete"
+      },
+      {
+        "id": 3,
+        "meetingRoom": "第一会议室",
+        "meetingName": "安全会议",
+        "applyDept": "情报科",
+        "applyTime": "2018-02-16 下午 - 2018-02-16 下午",
+        "status": "流程中",
+        "cz": ""
+      },
+      {
+        "id": 4,
+        "meetingRoom": "第一会议室",
+        "meetingName": "安全会议",
+        "applyDept": "情报科",
+        "applyTime": "2018-02-14 下午 - 2018-02-14 下午",
+        "status": "流程中",
+        "cz": ""
+      }
+    ]
+  }
+}

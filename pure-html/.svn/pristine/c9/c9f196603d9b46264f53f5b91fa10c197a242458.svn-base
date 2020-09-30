@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <div class="modal-body selectjs">
+        <div class="selectjs_block" style="height: auto;">
+            <div class="title_tab">
+                <ul class="nav nav-tabs">
+                    <li class="active" for="formpage1">
+                        <a href="#" data-toggle="tab">
+                            人员基本情况
+                        </a>
+                    </li>
+                    <li for="formpage2">
+                        <a href="#" data-toggle="tab" class="btn disabled">
+                            积极分子人员情况
+                        </a>
+                    </li>
+                    <li for="formpage4">
+                        <a href="#" data-toggle="tab" class="btn disabled">
+                            工作岗位
+                        </a>
+                    </li>
+                    <li for="formpage7">
+                        <a href="#" data-toggle="tab" class="btn disabled">
+                            学位学历
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        <form class="form-horizontal" id="form">
+            <div class="main" style="height: auto;">
+                <div id="formpage1" class="active">
+                        <!-- resId -->
+                        <input name="resId" id="resId" type="hidden" value="">
+                        <input name="id" id="id" type="hidden" value="">
+                        <input name="opertation" id="opertation" type="hidden" value="">
+                         <input id="associativeUnitId" name ="associativeUnitId"type="hidden" value="">
+                         <input name="typeOfPersonnel" id="typeOfPersonnel" type="hidden" value="">
+                        <input name="partyOrganizationId" id="partyOrganizationId" type="hidden" value="">
+                        <input name="partyOrganizationName" id="partyOrganizationName" type="hidden" value="">
+                    <!-- 基本信息 -->
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <div class="block_title">
+                                        <span class="name">人员基本信息</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-t-15">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 姓名：</label>
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <input type="text" id="name"  unselectable="on"  name="name" class="form-control" onclick="onclickName();">
+                                                    <input type="hidden" id="userId" name="userId" /><!-- 人员ID隐藏域 -->
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-user" onclick="onclickName();"></span>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 身份证号：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="pinCodes" name="pinCodes" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> 户口所在地：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control"  id="registeredResidence" name="registeredResidence"  value="">
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 性别：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control"  readonly id="sex" name="sex" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 民族：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" id="nation" name="nation">
+                                                  <!--  <option value="01">汉族</option>
+                                                    <option value="02">内蒙古</option>
+                                                    <option value="03">回族</option>
+                                                    <option value="04">藏族</option>
+                                                    <option value="05">维吾尔族</option>
+                                                    <option value="06">苗族</option>
+                                                    <option value="07">彝族</option>
+                                                    <option value="08">壮族</option>
+                                                    <option value="09">布依族</option>
+                                                    <option value="10">朝鲜族</option>
+                                                    <option value="11">满族</option>
+                                                    <option value="12">侗族</option>
+                                                    <option value="13">瑶族</option>
+                                                    <option value="14">白族</option>
+
+-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 籍贯：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" id="nativePlace" name="nativePlace">
+                                                   <!-- <option value="01">北京</option>
+                                                    <option value="02">北京西城</option>
+                                                    <option value="03">北京东城</option>
+                                                    <option value="04">北京崇文</option>
+                                                    <option value="05">北京宣武</option>
+                                                    <option value="06">北京朝阳</option>
+                                                    <option value="07">北京丰台</option>
+                                                    <option value="08">北京石景山</option>
+                                                    <option value="09">北京海淀</option>
+                                                    <option value="10">北京门头沟</option>
+                                                    <option value="11">北京房山</option>
+                                                    <option value="12">北京通州</option>
+                                                    <option value="13">北京顺义</option>
+                                                    <option value="14">北京昌平</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> 出生地：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control"  id="birthplace" name="birthplace" value="">
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> 健康状况：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control"  id="healthStatus" name="healthStatus">
+                                                   <!-- <option value="01">健康或良好</option>
+                                                    <option value="02">一般或较弱</option>
+                                                    <option value="03">有病</option>
+                                                    <option value="04">有生理缺陷</option>
+                                                    <option value="05">残疾</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 出生日期：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly id="dateOfBirth" name="dateOfBirth" value="">
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> 婚姻状况：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control"  id="maritalStatus" name="maritalStatus">
+                                                   <!-- <option value="01">未婚</option>
+                                                    <option value="02">已婚</option>
+                                                    <option value="03">丧偶</option>
+                                                    <option value="04">离婚</option>
+                                                    <option value="05">再婚</option>
+                                                    <option value="05">其他</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 工作单位：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control"  id="workingUnit" name="workingUnit" value="">
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> 工作时间：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="workingTime" name="workingTime"  value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 个人身份：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control"  id="ryIdentity" name="ryIdentity" >
+                                                  <!--  <option value="01">公务员</option>
+                                                    <option value="02">参照公务员法管理的机关工作人员</option>
+                                                    <option value="03">参照公务员法管理的事业单位管理人员</option>
+                                                    <option value="04">其他事业单位管理人员</option>
+                                                    <option value="05">其他事业单位专业技术人员</option>
+                                                    <option value="06">公有经济控制企业管理人员</option>
+                                                    <option value="07">公有经济控制企业专业技术人员</option>
+                                                    <option value="08">公有经济控制单位固定工（含营业员、服务员）</option>
+                                                    <option value="09">公有经济控制单位合同制工（含营业员、服务员）</option>
+                                                    <option value="10">公有经济控制单位临时工</option>
+                                                    <option value="11">离休人员</option>
+                                                    <option value="12">退休人员</option>
+                                                    <option value="13">退职人员</option>
+                                                    <option value="14">内部退养职工</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> <b style="color: red;">*</b>一线情况：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" id="frontlineSituation" name="frontlineSituation">
+                                                   <!-- <option value="2">企业生产第一线</option>
+                                                    <option value="1">农村生产第一线</option>
+                                                    <option value="1">教学第一线</option>
+                                                    <option value="1">科研第一线</option>
+                                                    <option value="1">机关第一线</option>
+                                                    <option value="1">连队第一线</option>
+                                                    <option value="1">其他第一线</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 学历：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" id="ryEducation" name="ryEducation">
+                                                   <!-- <option value="2">研究生</option>
+                                                    <option value="1">大学</option>
+                                                    <option value="1">大专</option>
+                                                    <option value="1">中专</option>-->
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> 学位：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" id="ryGegree" name="ryGegree">
+                                                  <!--  <option value="2">名誉博士</option>
+                                                    <option value="1">哲学博士学位</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label">  专业：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="ryMajor" name="ryMajor"  value="">
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label">毕业院校：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control"  id="ryGraduationAcademy" name="ryGraduationAcademy" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label">技术职务：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" id="technicalPost" name="technicalPost">
+                                                    <option value="2">教授</option>
+                                                    <option value="1">副教授</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label">职务级别：</label>
+                                            <div class="col-md-4">
+                                                <select class="form-control" id="jobLevel" name="jobLevel">
+                                                    <!--<option value="2">国家级正职</option>
+                                                    <option value="1">国家级</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label for="" class="col-md-2 control-label"> 联系电话(手机)：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="contactNumber" name="contactNumber" value="">
+                                            </div>
+                                        </div>
+                                        <div class="rowGroup">
+                                            <label class="col-md-2 control-label"><b style="color: red;"></b> 家庭地址：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="homeAddress" name="homeAddress" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="rowGroup">
+                                            <label class="col-md-2 control-label"><b style="color: red;"></b> 户口所在派出所：</label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="localPoliceStation" name="localPoliceStation" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 基本信息结束 -->
+                    <!--</form>-->
+                </div>
+
+                <div id="formpage2" class="hidden">
+                   <!-- <form class="form-horizontal" id="form1">-->
+                    <input name="partybasicinfoId" id="partybasicinfoId" type="hidden" value="">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="block_title">
+                                        <span class="name">积极分子人员情况</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-t-15">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 序号：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="serialNumber" name="serialNumber" value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 入党申请时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control"  id="applicationTime" name="applicationTime"  value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 培养联系人：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control"  id="trainingContacts" name="trainingContacts"  value="">
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 发展类型：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control"  id="developmentType" name="developmentType" >
+                                                <option value="02">入党积极分子</option>
+                                                <option value="01">入党申请人员</option>
+                                                <option value="03">计划发展对象</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 政治面貌：</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control"  id="politicalOutlook" name="politicalOutlook" >
+                                                <option value="01">团员</option>
+                                                <option value="02">群众</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 确定为积极分子时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control"  id="determineActivistTime" name="determineActivistTime"  value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 确定为发展对象时间：</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control"  id="developmentObjectTime" name="developmentObjectTime"  value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 奖惩情况：</label>
+                                        <div class="col-md-10">
+                                            <textarea type="text" class="form-control"  id="rewardsAndPunishments" name="rewardsAndPunishments"  value=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 现时表现：</label>
+                                        <div class="col-md-10">
+                                            <textarea type="text" class="form-control"  id="presentPerformance" name="presentPerformance"  value=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="rowGroup">
+                                        <label for="" class="col-md-2 control-label"> 备注：</label>
+                                        <div class="col-md-10">
+                                            <textarea type="text" class="form-control"  id="memo" name="memo"  value=""></textarea>
+                                        </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                   <!-- </form>-->
+                        <!--入党申请人员情况结束-->
+                </div>
+                <div id="formpage4" class="hidden">
+                    <!-- <form class="form-horizontal" id="form4">-->
+                    <input name="workingId" id="workingId" type="hidden" value="">
+                    <input name="workingSuperId" id="workingSuperId" type="hidden" value="">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="block_title">
+                                    <span class="name">工作岗位</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t-15">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 开始时间：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="beforeTime" name="beforeTime" ></span>
+                                    </div>
+                                </div>
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 截止时间：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="endTime" name="endTime" ></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 个人身份：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="identity" name="identity" ></span>
+                                    </div>
+                                </div>
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 一线情况：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="workFrontlineSituation" name="workFrontlineSituation" ></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="block_title">
+                                <span class="name">岗位列表信息</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row m-t-15">
+                        <div class="col-md-12">
+                            <div class="list_button_area">
+                                <button class="list_table_btn2" onclick="list.addWork()">
+                                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <!--bootstrap-table表格-->
+                            <table id="right_table3"></table>
+                            <br/>
+                        </div>
+                    </div>
+                    <!-- </form>-->
+                </div>
+
+                <div id="formpage7" class="hidden">
+                    <!-- <form class="form-horizontal" id="form7">-->
+                    <input name="degreeId" id="degreeId" type="hidden" value="">
+                    <input name="degreeSuperId" id="degreeSuperId" type="hidden" value="">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="block_title">
+                                    <span class="name">学位学历</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t-15">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 教育类别：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="educationSector" name="educationSector" ></span>
+                                    </div>
+                                </div>
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 学历：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="education" name="education" ></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 入学日期：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="enrolmentTime" name="enrolmentTime" ></span>
+                                    </div>
+                                </div>
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 毕业日期：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="graduationTime" name="graduationTime" ></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 专业：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="major" name="major" ></span>
+                                    </div>
+                                </div>
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 毕业院校：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="graduationAcademy" name="graduationAcademy" ></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 学位：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="degree" name="degree" ></span>
+                                    </div>
+                                </div>
+                                <div class="rowGroup">
+                                    <label class="col-md-2 control-label"> 学位授予日期：</label>
+                                    <div class="col-md-4 form-view">
+                                        <span id="degreeAwardTime" name="degreeAwardTime" ></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="block_title">
+                                <span class="name">学位学历列表信息</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t-15">
+                        <div class="col-md-12">
+                            <div class="list_button_area">
+                                <button class="list_table_btn2" onclick="list.addDegree()">
+                                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <!--bootstrap-table表格-->
+                            <table id="right_table4"></table>
+                            <br/>
+                        </div>
+                    </div>
+                    <!-- </form>-->
+                </div>
+
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="commitForm('0',true);" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+    <button id="close" class="btn btn-primary form_btn_area_btn2"  onclick="MyLayer.closeOpen()"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!--引入自己js-->
+<script src="/modules/dwgl/sqrgl/jjfz/js/jjfzEditFrom.js"></script>
+<script src="/modules/dwgl/sqrgl/jjfz/js/jjfzValidator.js"></script>
+<!-- 数据校验 -->
+<!--
+<script type="text/javascript" src="/modules/llg/js/taskPlanValidator.js"></script>
+-->
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/dwgl/common/dzzTree.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript">
+    var resource = {
+        resId : $('#left_ul').find('a.active').attr("id")
+    }
+    var grsfMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_grsf",type:"1"});
+    var yxqkMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_yxqk",type:"1"});
+    var xlMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_xl",type:"1"});
+    var xwMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_xw",type:"1"});
+    var xzzwMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_xzzw_xzzw",type:"1"});
+    var grpxMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_xzzw_grzwpx",type:"1"});
+    laydate.render({//入党申请时间
+        elem: '#applicationTime' //指定元素
+        ,done: function(value, date, endDate){
+            $('#applicationTime').val(value).change()
+            var beginDate=$("#applicationTime").val();
+            var endDate="";
+            var nameVal ="";
+            if($('#determineActivistTime').val()!=""){
+                endDate =$('#determineActivistTime').val();
+                if(isTimeSize(beginDate,endDate)){
+                    $("#applicationTime").val("").change();
+                    layer.msg("入党申请时间不能晚于确定为积极分子时间!", {icon: 1});
+                } ;
+            }
+            if( $('#developmentObjectTime').val()!=""){
+                endDate =$('#developmentObjectTime').val();
+                if(isTimeSize(beginDate,endDate)){
+                    $("#applicationTime").val("").change();
+                    layer.msg("入党申请时间不能晚于确定为发展对象时间!", {icon: 1});
+                } ;
+            }
+
+        }
+    });
+    laydate.render({//确定为积极分子时间
+        elem: '#determineActivistTime' //指定元素
+        ,done: function(value, date, endDate){
+            $('#determineActivistTime').val(value).change()
+            var beginDate="";
+            var endDate="";
+            if( $('#applicationTime').val()!=""){
+                beginDate=$('#applicationTime').val();
+                endDate =$('#determineActivistTime').val();
+               if(isTimeSize(beginDate,endDate)){
+                   $("#determineActivistTime").val("").change();
+                   layer.msg("确定为积极分子时间不能早于入党申请时间!", {icon: 1});
+               } ;
+            }
+            if ($('#developmentObjectTime').val()!=""){
+                beginDate=$('#determineActivistTime').val();
+                endDate =$('#developmentObjectTime').val();
+                if(isTimeSize(beginDate,endDate)){
+                    $("#determineActivistTime").val("").change();
+                    layer.msg("确定为积极分子时间不能晚于确定为发展对象时间!", {icon: 1});
+                } ;
+            }
+
+        }
+    });
+
+     laydate.render({
+            elem: '#workingTime' //指定元素
+            ,done: function(value, date, endDate){
+                $('#workingTime').val(value).change()
+            }
+        });
+    laydate.render({//确定为发展对象时间
+            elem: '#developmentObjectTime' //指定元素
+            ,done: function(value, date, endDate){
+                $('#developmentObjectTime').val(value).change();
+
+            var beginDate="";
+            var endDate=$("#developmentObjectTime").val();
+            var nameVal ="";
+            if($('#determineActivistTime').val()!=""){
+                beginDate =$('#determineActivistTime').val();
+                if(isTimeSize(beginDate,endDate)){
+                    $("#developmentObjectTime").val("").change();
+                    layer.msg("确定为发展对象时间不能早于确定为积极分子时间!", {icon: 1});
+                } ;
+            }
+            if( $('#applicationTime').val()!=""){
+                beginDate =$('#applicationTime').val();
+                if(isTimeSize(beginDate,endDate)){
+                    debugger
+                    $("#developmentObjectTime").val("").change();
+                    layer.msg("确定为发展对象时间不能早于入党申请时间!", {icon: 1});
+                } ;
+            }
+
+            }
+        });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col3 = [{
+        field: 'workingId'
+        ,title: '序号'
+        , width: '5%'
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table3').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table3').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'beforeTime'
+        , title: '开始时间'
+        , width: '12%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+    }, {
+        field: 'endTime'
+        , title: '截止时间'
+        , width: '12%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+    }, {
+        field: 'identity'
+        , title: '个人身份'
+        , width: '12%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            return grsfMap[value];
+        }
+    }, {
+        field: 'workFrontlineSituation'
+        , title: '一线情况'
+        , width: '12%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            return yxqkMap[value];
+        }
+    },{
+        title: '操作'
+        , width: '12%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            html += "<i title='修改'class='glyphicon glyphicon-edit' style='cursor: pointer' onclick=\'list.editWork(\"" + row.workingId + "\")\'></i>&nbsp;&nbsp;";
+            html += "<i title='删除' class='glyphicon glyphicon-trash' style='cursor: pointer' onclick=\'list.deleteWork(\"" + row.workingId + "\")\'></i>";
+
+            return html;
+        }
+    }];
+
+    var right_table_col4 = [{
+        field: 'id'
+        ,title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table4').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table4').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'educationSector'
+        , title: '教育类别'
+        , width: '10%'
+        , align: "center"
+        , formatter: function (value, row, index) {
+            if(value == "121"){
+                return "全日制教育";
+            }else{
+                return "在职教育";
+            }
+        }
+    }, {
+        field: 'education'
+        , title: '学历'
+        , width: '10%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            return xlMap[value];
+        }
+    }, {
+        field: 'enrolmentTime'
+        , title: '入学日期'
+        , width: '10%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+    },  {
+        field: 'graduationTime'
+        , title: '毕业日期'
+        , width: '10%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+    },  {
+        field: 'major'
+        , title: '专业'
+        , width: '10%'
+        , align: "center"
+    },  {
+        field: 'graduationAcademy'
+        , title: '毕业院校'
+        , width: '12%'
+        , align: "center"
+
+    },  {
+        field: 'degree'
+        , title: '学位'
+        , width: '10%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            return xwMap[value];
+        }
+    },  {
+        field: 'degreeAwardTime'
+        , title: '学位授予日期'
+        , width: '10%'
+        , align: "center"
+
+    },{
+        title: '操作'
+        , width: '12%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            html += "<i title='修改' class='glyphicon glyphicon-edit' style='cursor: pointer' onclick=\'list.editDegree(\"" + row.degreeId + "\")\'></i>&nbsp;&nbsp;";
+            html += "<i title='删除' class='glyphicon glyphicon-trash' style='cursor: pointer' onclick=\'list.deleteDegree(\"" + row.degreeId + "\")\'></i>";
+            return html;
+        }
+    }];
+    $(function () {
+        var recrodId = $("#id").val();
+        if(recrodId != null && recrodId != '' && (typeof(recrodId) != undefined)){
+            $('a.btn.disabled').removeClass();
+            initTab();
+        }
+    });
+
+    function initTab() {
+        $('.nav-tabs > li').unbind('click').bind('click',function(){
+            var id = $(this).attr('for');
+            $(this).addClass('active').siblings('li').removeClass('active');
+            $('.main').children().addClass('hidden');
+            $('#'+id).removeClass('hidden');
+            if(id == "formpage4" || id == "formpage7"){
+                $("#save").hide();
+            }else{
+                $("#save").show();
+            }
+            LoadFormpage(id);
+        });
+    }
+
+    //表格数据项的操作
+    var list = {
+        addDegree: function () {
+            MyLayer.layerOpenUrl({
+                url:'/modules/dwgl/dygl/dyxxwh/dyxx/degreeEditForm.html?resId='+resource.resId+'&degreeSuperId='+$("#id").val(),
+                title: "新增学位学历"
+            })
+        },
+        editDegree: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/dygl/dyxxwh/dyxx/degreeEditForm.html?resId='+resource.resId+'&opertation=EDIT&degreeId=' + id,
+                title: "修改"
+            })
+        },
+        addWork: function () {
+            MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/dygl/dyxxwh/dyxx/workEditForm.html?resId='+resource.resId+'&opertation=ADD&superId='+$("#id").val(),
+                title: "新增工作岗位"
+            })
+        },
+        editWork: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/dygl/dyxxwh/dyxx/workEditForm.html?resId='+resource.resId+'&opertation=EDIT&workingId='+id,
+                title: "修改"
+            })
+        },
+        deleteDegree: function (id) {
+            var resId = $("#resId").val();
+            MyLayer.deleteOpt({
+                url: '/djgl/ddjs/dygl/dyxx/deleteDegree?resId='+resId+'&id=' + id,
+                tableId: 'right_table4'
+            })
+        },
+        deleteWork: function (id) {
+            var resId = $("#resId").val();
+            MyLayer.deleteOpt({
+                url: '/djgl/ddjs/dygl/dyxx/deleteWork?resId='+resId+'&id=' + id,
+                tableId: 'right_table3'
+            })
+        }
+    }
+
+
+
+    $("#pinCodes").blur(function(){
+        var idCard = $("#pinCodes").val();
+        if(idCard != null && idCard != ""){
+            if(idCard.length == 15){
+                birthday = "19"+idCard.substr(6,6);
+            } else if(idCard.length == 18){
+                birthday = idCard.substr(6,8);
+            }
+
+            birthday = birthday.replace(/(.{4})(.{2})/,"$1-$2-");
+            $("#dateOfBirth").val(birthday).change();
+
+            if (parseInt(idCard.substr(16, 1)) % 2 == 1) {
+                $("#sex").val('男').change();//男
+            } else {
+                $("#sex").val('女').change();//女
+            }
+        }else{
+            $("#dateOfBirth").val("").change();
+            $("#sex").val("").change();
+        }
+    })
+    $("#name").blur(function(){
+        $("#name").val($("#name").val()).change();//姓名
+    })
+
+
+    function changeFin(){
+        var json = {};
+        var valid ,msg;
+        var userId=$("#userId").val();
+        if(userId!=""){
+            var datas = {"userId":userId};
+            httpRequest("get","/djgl/ddjs/sqrgl/sqrxx/queryUser",datas,function (data){
+
+                if(data.data.id!=null && data.data.id!=""&&data.data.id!=$("#id").val()){
+                    msg =$("#name").val()+"已为"+data.data.typeOfPersonnel+"，请选择其他人员！";
+                    valid = false;
+                    $("#name").val("");
+                    $("#userId").val("");
+                }else{
+                    valid = true;
+                    httpRequest("get","/djgl/ddjs/dygl/dyxx/queryIsUser",datas,function (data){
+                        if(data.data.id!=null && data.data.id!=""){
+                            var theRequest = GetRequest();
+                            data.data.superId=regVlaue(theRequest.superId);
+                            DisplayData.playData({data:data});
+                        }else{
+                            var dataVal = {"id":userId};
+                            httpRequest("get","/djgl/ddjs/dygl/dyxx/persondoc",dataVal,function (data){
+                                $("#pinCodes").val(data.identity);
+                                var  birthday1 ="";
+                                var idCard = $("#pinCodes").val();
+                                if(idCard != null && idCard != ""){
+                                    if(idCard.length == 15){
+                                        birthday1 = "19"+idCard.substr(6,6);
+                                    } else if(idCard.length == 18){
+                                        birthday1 = idCard.substr(6,8);
+                                    }
+
+                                    birthday1 = birthday1.replace(/(.{4})(.{2})/,"$1-$2-");
+                                    $("#dateOfBirth").val(birthday1).change();
+
+                                    if (parseInt(idCard.substr(16, 1)) % 2 == 1) {
+                                        $("#sex").val('男').change();//男
+                                    } else {
+                                        $("#sex").val('女').change();//女
+                                    }
+                                }else{
+                                    $("#dateOfBirth").val("")
+                                    $("#sex").val("")
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        json.valid = valid;
+        json.message = msg;
+        return json;
+    }
+    function changeFinFalse(){
+        var json = {};
+        var valid ,msg;
+        json.valid = false;
+        json.message = "姓名不能为空！";
+        return json;
+    }
+    function isTimeSize(beginDate,endDate){
+        var d1 = new Date(beginDate.replace(/\-/g, "\/"));
+        var d2 = new Date(endDate.replace(/\-/g, "\/"));
+        if(beginDate!=""&&endDate!=""&&d1 >d2)
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function onclickName(){
+        if($('#associativeUnitId').val()!=null&&$('#associativeUnitId').val()!=""){
+            openSelectZtree({'id':'userId','height':'450px','name':'name','type':'1','asyn':false,'isMulti':'1','deptId':$('#associativeUnitId').val(),'url':'/system/component/tree/deptAndUserTree'});
+        }
+    }
+</script>
+</body>
+</html>

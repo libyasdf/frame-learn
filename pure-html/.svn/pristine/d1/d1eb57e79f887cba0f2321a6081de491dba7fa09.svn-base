@@ -1,0 +1,358 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+#import{display: inline-block;width:15px}
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                         <div class="form-group">
+                            <label class="col-md-2 control-label"> 姓名：</label>
+                            <div class="col-md-3">
+                             <div class="input-group">
+		                          <input type="text" id="reUserName" name="reUserName" unselectable="on" onclick=openSelectZtree({'id':'reUserId','name':'reUserName','type':'1','asyn':false,'deptId':'441','level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'}) class="form-control" >
+		                          <input type="hidden" id="reUserId" name="reUserId" /><!-- 人员ID隐藏域 -->
+		                          <span class="input-group-addon" onclick=openSelectZtree({'id':'reUserId','name':'reUserName','type':'1','asyn':false,'deptId':'441','level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})>
+                                      <span class="glyphicon glyphicon-user"></span>
+                                   </span>   
+                                   </div>
+                            </div>
+                             <!-- <label class="col-md-1 control-label"> 单位：</label>
+                             <div class="col-md-3">
+                                <div class="input-group">
+                                  <input type="text" id="reDeptName"  unselectable="on" onclick=openSelectZtree({'id':'reDeptId','name':'reDeptName','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'}) name="reDeptName" class="form-control" >
+                                  <input type="hidden" id="reDeptId" name="reDeptId" />单位ID隐藏域
+                                  <span class="input-group-addon" onclick=openSelectZtree({'id':'reDeptId','name':'reDeptName','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'})>
+                                      <span class="glyphicon glyphicon-user"></span>
+                                  </span>
+                                </div>
+                            </div> -->
+                            <label class="col-md-2 control-label"> 身份证号：</label>
+                            <div class="col-md-3">
+                            	<input class="form-control" type="text" id="identity" name="identity"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+             <div class="list_button_area">
+             <button class="list_table_btn2"
+                        onclick="draft();">
+                    <span  id="draft" class="glyphicon glyphicon-plus-sign" style="display: inline-block;"></span> 新增
+                </button>
+                <button class="list_table_btn2"
+                        onclick="importInfo();">
+                    <span  id="import" class="glyphicon glyphicon-chevron-left" style="display: inline-block;"></span> 导入
+                </button>
+                <button class="list_table_btn2"
+                        onclick="templateDwon();">
+                    <span class="glyphicon glyphicon-download-alt"></span> 履历模板
+                </button>
+                <a class='glyphicon glyphicon-download-alt' id="templateDwon" hidden> 履历模板</a>
+                <!-- <span id="affixlist"></span> -->
+                 <!-- <a href="/file/工资模块.xlsx"><b style="font:green">下载模板</b></a>  -->
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+ <script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script> 
+
+
+<script type="text/javascript">
+function draft(){
+	  var resId = $('#left_ul').find('a.active').attr("id");
+	MyLayer.layerOpenUrl({url:'/modules/mypage/record/recordEditForm.html?oper=NEW&resId=' + resId,title:'新增履历信息'})
+}
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+         title: '序号'
+        , width: '10%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	  var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;
+              var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;
+              var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+              return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+           }
+    }, 
+    /* {
+    	field: 'reDeptName'
+        , title: '单位'
+        , width: '15%'
+        , align:"center"
+        ,visible:false
+        	, formatter: function (value, row, index) {
+            	if(value!=null){
+            		var length = value.length
+    	  	   	      var val = '';
+    	  	   	      if(length>21){
+    	  	   	    	  val = value.substring(0,20)+"...";//
+    	  	   	      }else{
+    	  	   	    	  val = value;
+    	  	   	      }
+      	   	   		return  "<span data-content='"+row.reDeptName+"'>"+val+"</span>";
+            	}else{
+            		return "";
+            	}
+            	 
+            }
+     }, */
+     {
+         field: 'reUserName'
+         , title: '职员姓名'
+         , width: '15%'
+         , align:"center"
+     },
+     {
+        	field: 'identity'
+          , title: '身份证号'
+          , width: '15%'
+          , align:"center"
+    	}
+    	,
+     {
+       	field: 'recordInfo'
+         , title: '履历信息'
+         , width: '15%'
+         , align:"center"
+         ,formatter: function (value, row, index) {
+             	if(value!=null){
+             		var length = value.length
+     	  	   	      var val = '';
+     	  	   	      if(length>21){
+     	  	   	    	  val = value.substring(0,20)+"...";//
+     	  	   	      }else{
+     	  	   	    	  val = value;
+     	  	   	      }
+       	   	   		return  "<span data-content='"+row.recordInfo+"'>"+val+"</span>";
+             	}else{
+             		return "";
+             	}
+             	 
+             }
+   	},
+   	
+     
+  	{
+        field: 'cz'
+        , title: '&nbsp;操作&nbsp;'
+        , width: '15%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+                for (var i = 0; i < opt.length; i++) {
+                    if (opt[i] == "add") {
+
+                    } else if (opt[i] == "update") {
+                    	html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;";
+                    } else if (opt[i] == "delete") {
+                    	 html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+                    }
+                }
+            return html;
+        }
+    }
+ 	
+   ];
+
+    $(document).ready(function (e) {
+    	
+      
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mypage/record/getlistBootHql",
+            columns:right_table_col,
+            queryParams:function(params){
+            	 params.resId = $('#left_ul').find('a.active').attr("id");
+            	params.reUserName = $("#reUserName").val();
+            	params.reDeptName=$("#reDeptName").val();
+            	params.identity=$("#identity").val()
+                return params;
+            },
+            readOnlyFn:function(){
+            	 $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+ 					//取消事件冒泡
+ 						var resId = $('#left_ul').find('a.active').attr("id");
+		         		 var id = $(this).parent().find("span[data-id]").attr("data-id");
+		         		 
+		         		 MyLayer.layerOpenUrl({url: '/modules/mypage/record/recordReadOnlyForm.html?id='+id+"&oper=VIEW&resId="+resId
+		         				 , title:"个人履历详情页面"});
+		         		 
+                 });
+            	
+            	  
+            }
+           
+        });
+        //显示下载的工资模板
+        //getAffixList();
+        
+      
+    });
+
+
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+        // alert("fdsddsf");
+        layer.confirm("是否导出查询的所有信息？");
+    };
+  //清空查询条件
+	function clearAll(){
+		$("#reUserName").val("");	
+		$("#reDeptName").val("");
+		$("#reUserId").val("");
+		$("#reDeptId").val("");
+		$("#identity").val("");
+		
+	}
+  
+//  表格数据项的操作
+    var list = {
+        editFun:function(id){
+        	  var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+            	 url: '/modules/mypage/record/recordEditForm.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title:"修改"
+            })
+        },
+        deleteFun:function(id){
+        	 var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+            	url: '/mypage/record/delete?id=' + id+ "&resId=" + resId,
+                tableId:'right_table'
+            })
+        }
+    }
+  
+  //导入
+	var _index;
+    function importInfo() {
+        var resId = $('#left_ul').find('a.active').attr("id");
+       // MyLayer.layerOpenUrl({url:'/modules/template/importFileForm.html?importUrl=/zhbg/salary/importInfo&resId=' + resId,title:'导入',width: "55%", height: "55%"});
+        layer.open({
+	        id:"selectZtree",
+	        type: 2,
+	        content: '/modules/template/importFileForm.html?importUrl=/mypage/record/importInfo&resId=' + resId,
+	        area: ['55%', '55%'],
+	        title: "导入",
+	        success:function(layero, index){
+	        	_index=index;
+	        }
+	    })
+    }
+
+	$(function () {
+		      $('[data-toggle="tooltip"]').tooltip()
+		      $('[data-toggle="popover"]').popover({
+		        trigger:"hover"
+		      })
+  })
+  //关闭导入窗口
+  function putBackData1(msg){
+    //关闭窗口
+    layer.close(_index);
+    if(msg.msg.indexOf("导入失败,请核对数据格式是否与模板数据格式一致")!=-1){
+    	layer.msg(msg.msg, {
+			icon : 2
+		});
+    }else if (msg.msg.indexOf("导入失败")!=-1){
+    	layer.msg("导入失败，请检查文件类型是否是excel", {
+			icon : 2
+		});
+    }else if (msg.msg.indexOf("表格中无数据")!=-1){
+    	layer.msg(msg.msg, {
+			icon : 2
+		});
+    }else if(msg.msg.indexOf("其中：")==-1){
+    	layer.msg(msg.msg, {
+			icon : 1
+		});
+    }else{
+    	layer.open({
+    	  icon: 1,
+  		  skin: 'layer-ext-moon', //加上边框
+  		  area: ['600px', '360px'], //宽高
+          content: msg.msg,
+          success:function(layero, index){  //修改弹出框中的样式
+            // 图标
+            var SuccessIcon = layero.children()[1].getElementsByClassName('layui-layer-ico1')[0];  
+            // 内容区
+            var SuccessCon = SuccessIcon ? layero.children()[1].children[1] : layero.children()[1].children[0] ;
+            if (SuccessIcon){   // 改变图标样式
+                SuccessIcon.style.left = 0 ;
+                SuccessIcon.style.right = '100px' ;
+                SuccessIcon.style.margin = 'auto' ;
+            }
+            if(SuccessCon){ // 改变内容区样式
+                 SuccessCon.style.padding = "0 20px 20px 20px"
+            }
+           
+          }  
+  		});
+    }
+    	
+}
+	
+/**
+ * 回显工资模板
+ */
+/*  function getAffixList(){
+	 $("#affixlist").append("<a  class='glyphicon glyphicon-download-alt' href='/system/component/template/download?templateId="+Config.recordModelId+"'>履历模板</a>")
+} */
+//下载模板
+ function templateDwon(){
+ 	var resId = $('#left_ul').find('a.active').attr("id");
+     document.getElementById("templateDwon").href="/system/component/template/download?templateId="+Config.recordModelId+"&resId="+resId;
+     document.getElementById("templateDwon").click();
+	}
+</script>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+<title>起草会议通知</title>
+   <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css"
+	rel="stylesheet" />
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+
+</head>
+
+<body class="formpage_bj">
+	<div class="container-fluid formpage_area" style="margin-bottom: 100px">
+		<form class="form-horizontal" id="form" onsubmit="return iframeCallback(this)">
+			<!-- resId -->
+			<input name="resId" id="resId" type="hidden" value="">
+			<input name="noticeName" id="noticeName" type="hidden" value="" />
+			<input name="id" id="id" type="hidden" value="" />
+			<!-- 工作项ID -->
+			<input name="ideaName" id="ideaName" type="hidden" value="" />
+			<!-- 当前用户意见域名称-->
+			<input name="subflag" id="subflag" type="hidden" value="" />
+			<!-- 流程状态 -->
+			<input name="filetypeid" id="filetypeid" type="hidden" value="" />
+			<!-- 流程ID -->
+			<input name="workFlowId" id="workflowid" type="hidden" value="" />
+			<!-- 流程唯一ID -->
+			<input name="workitemid" id="workitemid" type="hidden" value="" />
+			<!-- 待办工作项ID -->
+			<input name="opertation" id="opertation" type="hidden" value="" />
+			<!-- 操作方法 -->
+			<input type="hidden" id="deptId" name="deptId" value="" />
+			<input type="hidden" id="applyId" name="applyId" value="" />
+			<!-- 部门id隐藏域 -->
+			<input type="hidden" id="fillmode" name="fillmode" value="2">
+			<!-- 流程字段结束 -->
+			<input type="hidden" id="textId" />
+			<input name="meetingRoomInfo" id="meetingRoomInfo" type="hidden" value="" />
+			<!-- 基本信息 -->
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">请选择会议</span>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label"><b
+							style="color: red;">*&nbsp;</b>会议标题：</label>
+						<div class="col-md-10 form-view">
+						<input type="text" name="meetingName" class="form-control"
+								id="meetingName" placeholder="请选择会议" >
+						</div>
+					</div>
+					<div class="form-group" id="time" hidden>
+						<label for="" class="col-md-2 control-label"><b
+							style="color: red;"></b>主办单位：</label>
+						<div class="col-md-4 form-view">
+							<span name="hostDeptName" id="hostDeptName"></span>
+						</div>
+						<label for="" class="col-md-2 control-label"><b
+							style="color: red;"></b>会议起止时间：</label>
+						<div class="col-md-4 form-view">
+							<span name="meetingTime" id="meetingTime"></span>
+						</div>
+					</div>
+					<div class="form-group" id="tablePlan" style="display:none">
+                    	<label for="" class="col-md-2 control-label"> 会议室安排：</label>
+                        <div class="col-md-10" id="plan">
+                        	<table id="right_table"></table>
+                        </div>
+                    </div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">通知信息</span>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label"><b
+							style="color: red;">*&nbsp;</b>是否反馈： </label>
+						<div class="col-md-4">
+							<label class="radio-inline"> <input type="radio"
+								id="inlineRadio1" name="isFankui" value="1"> 是
+							</label> <label class="radio-inline"> <input type="radio"
+								id="inlineRadio2" name="isFankui" value="0" checked="checked"> 否
+							</label>
+						</div>
+						<div id = "fanKui" style="display:none;">
+							<label for="" class="col-md-2 control-label"><b
+								style="color: red;">*&nbsp;</b>反馈类别： </label>
+							<div class="col-md-4">
+								<label class="radio-inline"> <input type="radio"
+									id="fankuiType1" name="fankuiType" value="1" checked="checked"> 参会人数
+								</label> <label class="radio-inline"> <input type="radio"
+									id="fankuiType2" name="fankuiType" value="0"> 参会人名
+								</label>
+							</div>
+						</div>
+					</div>
+					<div id = "fanKuiTime" class="form-group" style="display:none;">
+						<label for="" class="col-md-2 control-label"><b
+							style="color: red;">*&nbsp;</b>最晚反馈时间：</label>
+						<div class="col-md-4">
+							<input type="text" name="responseTime" class="form-control"
+								id="responseTime" placeholder="反馈时间">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">参会单位（部门）： </label>
+						<div class="col-md-10">
+						<textarea id="attendDeptJu" unselectable="on" onclick=openSelectZtree({'id':'attendDeptJuId','name':'attendDeptJu','treeId':'treeId','type':'2','asyn':false,'level':'1','url':'/system/component/tree/deptTree'}) name="attendDeptJu" class="form-control"  rows="4"></textarea>
+                                  <input type="hidden" id="attendDeptJuId" name="attendDeptJuId" /><!-- 人员ID隐藏域 -->
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">参会单位（处）： </label>
+						<div class="col-md-10">
+						<textarea id="attendDept" unselectable="on" onclick=openSelectZtree({'id':'attendDeptId','name':'attendDept','treeId':'treeId','type':'2','asyn':false,'level':'2','url':'/system/component/tree/deptTree'}) name="attendDept" class="form-control" rows="4"></textarea>
+                                  <input type="hidden" id="attendDeptId" name="attendDeptId" /><!-- 人员ID隐藏域 -->
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label"><b
+							style="color: red;">*&nbsp;</b>通知内容： </label>
+						<div class="col-md-10">
+						<textarea name="contents" class="form-control" rows="6"></textarea>
+							
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">备注： </label>
+						<div class="col-md-10">
+							<textarea name="remark" class="form-control" rows="3"></textarea>
+						</div>
+						<input type="hidden" id="status" name="status" /><!-- 通知状态 -->
+					</div>
+
+					
+				</div>
+				
+			</div>
+			<div class="form-group">
+						<label for="" class="col-md-2 control-label">附件：</label>
+						<div class="col-md-10">
+                    <!--文件上传-->
+                    <span class="btn btn-primary fileinput-button">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>选择文件...</span>
+                        <input id="fileupload" type="file" name="files[]" multiple>
+                    </span>
+                    <div class="files row">
+                        <div id="files" class="col-md-10">
+                        </div>
+                    </div>
+                  </div>
+					</div>
+		</form>
+	</div>
+	<!-- 基本信息结束 -->
+	<!-- 按钮区 -->
+	<div class="form_btn_area" style="text-align: center;">
+		<button id="save" class="btn btn-primary form_btn_area_btn2"
+			onclick="comitForm();">
+			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+			保存
+		</button>
+		<button id="sendFLow" class="btn btn-primary form_btn_area_btn2"
+			onclick="publishForm();">
+			<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+			发布
+		</button>
+		<button id="close" class="btn btn-primary form_btn_area_btn2" onclick="closeAll()" >
+		<span class="glyphicon glyphicon-remove-circle" aria-hidden="true">
+		</span>&nbsp;关&nbsp;闭
+		</button>
+	</div>
+	<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript">
+$("#meetingName").click(function(){
+	MyLayer.layerOpenUrl({
+        url:'/modules/zhbg/hygl/meetingNotice/meetingNoticeListWd.html?id='+$('#applyId').val(),
+        title:"选择会议"
+    })
+})
+</script>
+	<!-- 引入自己模块功能的js -->
+	<script type="text/javascript" src="js/meetingNoticeForm.js"></script>
+	<!-- 自定义意见(最后进行加载) -->
+	<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+	<!-- 数据校验 -->
+	<script type="text/javascript" src="js/validator.js"></script><!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<!--文件上传js-->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+
+
+	<!--文件上传js end-->
+
+
+	<script type="text/javascript">
+		//sortable：开启列排序，其他参考API
+		var right_table_col = [{
+		    field: 'id'
+		    , title: '序号'
+		    , width: '5%'
+		    , sortable: false
+		    , align:"center"
+		    , formatter: function (value, row, index) {
+				return "<span data-id='"+row.id+"' data-mrid='"+row.meetingroomId+"'>" + (index+1) + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号   
+		    }  
+		},{
+		    field: 'useDate'
+		    , title: '会议日期'
+		    , width: '8%'
+		    , sortable: false
+		    , align:"center"
+		},{
+		    field: 'weekDate'
+		    , title:'星期'
+		    , width: '8%'
+		    , sortable: false
+		    , align:"center"
+		},{
+		    field: 'meetingroomName'
+		    , title: '会议室名称'
+		    , sortable: false
+		    , width: '10%'
+		    , align:"center"
+		},{
+		    field: 'useTime'
+		    , title: '会议时间'
+		    , sortable: false
+		    , width: '10%'
+		    , align:"center"
+		}]; 
+		laydate.render({
+			elem : '#responseTime', //指定元素
+			type : 'datetime',
+			done : function(value,datas){
+				$('#responseTime').val(value).change();
+			}
+		});
+		
+		/* $("#attendDept").change(function(){
+    		$("#form").data('bootstrapValidator').updateStatus("attendDeptJu","notEmpty", null).validateField("attendDeptJu");
+    	}) */
+
+		$(document).ready(function() {
+			//add by hlt从编辑页面进入时 不会触发change事件  如果是反馈状态 也会不显示 反馈类型 和最晚反馈时间
+			if($('input[type=radio][name=isFankui]:checked').val()=='1'){
+				$("#fanKui").show();
+				$("#fanKuiTime").show();
+			}else{
+				$("#fanKui").hide();
+				$("#fanKuiTime").hide();
+			}
+			$('input[type=radio][name=isFankui]').change(function() {
+				if (this.value == '0') {
+					$('#fanKui').css("display", "none")//将反馈类型设置为隐藏 
+					$('#fanKuiTime').css("display", "none")//将反馈时间设置为隐藏 
+				} else if (this.value == '1') {
+					$('#fanKui').css("display", "block")
+					$('#fanKuiTime').css("display", "block")
+				}
+			});
+			
+			if (this.value == '0') {
+				$('#fanKui').css("display", "none")//将反馈类型设置为隐藏 
+				$('#fanKuiTime').css("display", "none")
+			} else if (this.value == '1') {
+				$('#fanKui').css("display", "block")
+				$('#fanKuiTime').css("display", "block")
+			}
+		});
+		
+		function showMeetingRoom(id){//会议室申请id
+			$("#right_table").bootstrapTable({
+	            pagination:true,
+	            striped:true,
+	            classes: 'table table-hover',
+	            fixedColumns: true,//是否固定列
+	            pageList: "[10, 25, 50, 100]",
+	            detailView:false,
+	            columns: right_table_col
+			})
+			$.ajax({
+				type : "get",
+				url : "/zhbg/hygl/meetingRoomUseInfo/getByApplyId",
+				data : {applyId:id,resId:$('#left_ul').find('a.active').attr("id")},
+				async : false,
+				success : function(json) {
+					if (json.flag=='1') {
+						$('#right_table').bootstrapTable('removeAll');
+						$('#right_table').bootstrapTable('load',json.data);
+						$('#plan .pull-left').css('display','none')
+					}
+				}
+			}); 
+		}    
+		function closeAll(){
+			   parent.TableInit.refTable("right_table")
+			   MyLayer.closeOpen();
+			   
+		   }
+	</script>
+</body>
+</html>

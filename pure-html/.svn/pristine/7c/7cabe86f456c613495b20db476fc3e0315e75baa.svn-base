@@ -1,0 +1,228 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 更新时间：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="timeRange" id="timeRange"/>
+                            </div>
+                            <label class="col-md-2 control-label"> 版本号：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="version" id="version"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 更新内容：</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" name="content" id="content"/>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="draft();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 创建新版本
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript">
+
+	//起草
+	function draft(){
+	    // 获取资源id
+        var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({
+            width: "60%",
+            height: "65%",
+            url:'/modules/system/config/msgVersion/msgVersionEditForm.html?oper=NEW&resId=' + resId,
+            title:'创建新版本'
+		})
+	}
+
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#timeRange',
+        range: true
+    });
+	
+	//清空查询条件
+	function clearAll(){
+		$("#version").val("");	//版本号
+		$("#timeRange").val("");	//时间
+        $("#content").val("");	//更新内容
+	}
+	
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+        	//计算序号，并存放业务ID，及已办事项ID
+        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'version'
+        , title: '版本号'
+        , width: '10%'
+        , sortable: true
+        , align: "center"
+    }, {
+        field: 'creTime'
+        , title: '更新时间'
+        , width: '15%'
+        , sortable: true
+        , align: "center"
+    }, {
+        field: 'content'
+        , title: '更新内容'
+        , width: '55%'
+        , align: "center"
+        , formatter: function(value, row, index){
+            if(value){
+                var length = value.length
+                var val = '';
+                if(length > 45){
+                    val = value.substring(0,45)+"...";
+                }else{
+                    val = value;
+                }
+                return "<span>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var html = "";
+            html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+            // html += "<i class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/system/config/msgVersion/getVersionList",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.version = $("#version").val();
+                params.timeRange = $("#timeRange").val();
+                params.content = $("#content").val();
+                return params;
+            },
+            readOnlyFn: function () {
+            	$('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+            	$('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var resId = $('#left_ul').find('a.active').attr("id");
+                    MyLayer.layerOpenUrl({
+                        width: "60%",
+                        height: "65%",
+                        url: '/modules/system/config/msgVersion/msgVersionReadonlyForm.html?id='+id+"&oper=VIEW&resId=" + resId,
+                        title: "查看版本信息"
+                    });
+                });
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+        	MyLayer.layerOpenUrl({
+                width: "60%",
+                height: "65%",
+                url: '/modules/system/config/msgVersion/msgVersionEditForm.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title: "修改版本信息"
+            }) 
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/system/config/msgVersion/deleteVersion?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+    
+</script>

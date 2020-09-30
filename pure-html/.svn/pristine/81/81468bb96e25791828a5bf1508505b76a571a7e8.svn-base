@@ -1,0 +1,315 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+.horizontal .control-label{
+	padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+}
+.horizontal .radio-inline{
+	padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+}
+</style>
+<link rel="stylesheet" type="text/css"
+	href="/static/css/common/Loading.css">
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form id = "dmForm" onkeydown="keyLogin();" class="horizontal">
+		<input name="resId" id="resId" type="hidden" value="">
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls ">
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<!--查询项输入框选择框等开始-->
+						<div class="form-group">
+							<label class="col-md-2 control-label" > 日期范围：</label>
+							<div class="col-md-3">
+							<input id="hiddenText1990" type="text" style="display:none" />
+								<input class="form-control" type="text" name="timeRange"
+									id="timeRange" />
+							</div>
+							<label class="col-md-2 control-label"> 状态：</label>
+							<div class="col-md-3">
+								<label class="radio-inline">
+                            		<input type="radio" id="inlineRadio1" name="state" value="" checked="checked"> 全部
+                       			</label>
+                        		<label class="radio-inline">
+                            		<input type="radio" id="inlineRadio2" name="state" value="0"> 草稿
+                        		</label>
+                        		<label class="radio-inline">
+                            		<input type="radio" id="inlineRadio3" name="state" value="1"> 已发布
+                        		</label>								
+							</div>
+						</div>
+						<!--查询项输入框选择框等结束-->
+
+						<!--查询重置等按钮-->
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center">
+								<button type="button" class="btn btn-primary"
+									onclick="TableInit.refTable('right_table')">
+									查&nbsp;&nbsp;询</button>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-primary"
+									onclick="clearAll();">重&nbsp;&nbsp;置</button>
+							</div>
+						</div>
+						<!--查询重置等按钮 end-->
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			<div class="list_button_area">
+				<button class="list_table_btn2" onclick="draft();">
+					<span class="glyphicon glyphicon-plus-sign"></span> 新增
+				</button>
+				<button class="list_table_btn2" onclick="exportExcel();">
+					<span class="glyphicon glyphicon-chevron-right"></span> 导出
+				</button>
+				
+			</div>
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	//起草
+	function draft() {
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer
+				.layerOpenUrl({
+					url : '/modules/mypage/diningmenu/diningMenuEditForm.html?oper=NEW&resId=' + resId,
+					title : '新增食堂食谱信息'
+				})
+	}
+	function exportExcel() {	
+			 $.ajax({
+					url : "/diningMenu/selectDiningMenu",
+					data : {
+						 state : $('input[name="state"]:checked').val(), //标题
+						 timeRange : $("#timeRange").val() //时间
+					},
+					type : "post",
+					success : function(date){						
+						if( date.flag == '0'){ //0 查询有数据， 可导出
+							$('#dmForm').attr('action','/diningMenu/exportDiningMenu');
+							$('#dmForm').attr('method','get');
+							$("#dmForm").submit();
+						}else{
+							layer.msg('暂无可导出信息！',{icon:0}); //没有数据时弹出提示信息
+						}
+					}
+				})
+	}
+	
+
+	//清空查询条件
+	function clearAll() {
+		$("#timeRange").val(""); //时间
+		$("input:radio[name=state]")[0].checked = true;
+	}
+	//参考：http://www.layui.com/laydate/
+	//日期范围
+	laydate.render({
+		elem : '#timeRange',
+		range : true
+	});
+
+	//定义bootatrap-table数据列
+	//sortable：开启列排序，其他参考API
+	var right_table_col = [
+			{
+				title : '序号',
+				width : '5%',
+				order : "desc",
+				align : "center",
+				formatter : function(value, row, index) {
+					//计算序号，并存放业务ID，及已办事项ID
+					var pageSize = $('#right_table').bootstrapTable(
+							'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+					var pageNumber = $('#right_table').bootstrapTable(
+							'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+					var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+					return "<span data-id='"+row.id+"'>" + orderNum + "</span>";
+				}
+			},
+			{
+				field : 'dateMenu',
+				sortable : true,
+				title : '食谱日期',
+				width : '20%',
+				align : "center"
+			},
+			{
+				field : 'week',
+				title : '星期',
+				width : '20%',
+				align : "center",
+				formatter : function(value, row, index) {
+					if (value == "1") {
+						return "星期一";
+					} else if (value == "2") {
+						return "星期二";
+					} else if (value == "3") {
+						return "星期三";
+					} else if (value == "4") {
+						return "星期四";
+					} else if (value == "5") {
+						return "星期五";
+					} else if (value == "6") {
+						return "星期六";
+					} else if (value == "7") {
+						return "星期日";
+					}
+				}
+
+			},
+			{
+				field : 'state',
+				title : '食谱状态',
+				width : '20%',
+				sortable : true,
+				align : "center",
+				formatter : function(value, row, index) {
+					if (value == "0") {
+						return "草稿";
+					} else if (value == "1") {
+						return "已发布";
+					}
+				}
+			},
+			{
+				field : 'cz',
+				title : '操作',
+				width : '20%',
+				align : "center",
+				formatter : function(value, row, index) { //直接定义function,return就是html代码
+					var opt = value.split(",");
+					var html = "";
+					for (var i = 0; i < opt.length; i++) {
+						if (opt[i] == "add") {
+
+						} else if (opt[i] == "update") {
+							html += "<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\""
+									+ row.id + "\")\'></i>&nbsp;&nbsp;";
+						} else if (opt[i] == "delete") {
+							html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\""
+									+ row.id + "\")\'></i>";
+						}
+					}
+					return html;
+				}
+			} ];
+
+	$(document)
+			.ready(
+					function(e) {
+						var resId = $('#left_ul').find('a.active').attr("id");
+						$("#resId").val(resId);
+						//初始化表格
+						TableInit
+								.init({
+									domId : "right_table",
+									url : "/diningMenu/getlistBootHql",
+									columns : right_table_col,
+									queryParams : function(params) {
+										//这里将各个查询项添加到要传递的参数中
+										//                可以做一些校验
+										params.state = $('input[name="state"]:checked').val();
+										params.timeRange = $("#timeRange")
+												.val();
+										return params;
+									},
+									readOnlyFn : function() {
+										$('tr.readOnly').attr("title","点击查看详情");
+										$('tr.readOnly')
+												.find('td:not(:last)')
+												.unbind('click')
+												.bind(
+														'click',
+														function(e) {
+															//取消事件冒泡
+															var evt = e ? e
+																	: window.event;
+															if (evt.stopPropagation) {
+																evt
+																		.stopPropagation();
+															} else {
+																evt.cancelBubble = true;
+															}
+															//取消事件冒泡 end
+															var id = $(this)
+																	.parent()
+																	.find(
+																			"span[data-id]")
+																	.attr(
+																			"data-id");
+															var workItemId = $(
+																	this)
+																	.parent()
+																	.find(
+																			"span[data-id]")
+																	.attr(
+																			"data-workitemid");
+															//流程审批列表需要workitemid已办事项ID
+															MyLayer
+																	.layerOpenUrl({
+																		url : '/modules/mypage/diningmenu/diningMenuReadonlyForm.html?id='
+																				+ id
+																				+ "&oper=VIEW",
+																		title : "查看食堂食谱详情信息"
+																	});
+														});
+									}
+								});
+					});
+
+	//    表格数据项的操作
+	var list = {
+		editFun : function(id) {
+			var resId = $('#left_ul').find('a.active').attr("id");
+			MyLayer.layerOpenUrl({
+				url : '/modules/mypage/diningmenu/diningMenuEditForm.html?id='
+						+ id + "&oper=EDIT&resId=" + resId,
+				title : "修改食堂食谱信息"
+			})
+		},
+		deleteFun : function(id) {
+			var resId = $('#left_ul').find('a.active').attr("id");
+			MyLayer.deleteOpt({
+				url : '/diningMenu/deleteDiningMenu?id=' + id + "&resId=" + resId,
+				tableId : 'right_table'
+			})
+		}
+	}
+	//回车执行查询
+	function keyLogin(){
+	   	 if (event.keyCode==13)  //回车键的键值为13
+	   	 TableInit.refTable('right_table');
+	    }
+</script>

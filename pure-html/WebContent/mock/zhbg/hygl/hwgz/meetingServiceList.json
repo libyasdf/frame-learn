@@ -1,0 +1,52 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "meetingName": "关于保密第四次会议",
+        "meetingRoom": "第一会议室",
+        "hydd": "主楼5层501",
+        "startTime": "2018-03-04 上午 - 2018-03-04 上午",
+        "meetingService":"茶水",
+        "status":"0",
+        "yydw": "保密办",
+        "cz": ""
+      },
+      {
+        "id": 2,
+        "meetingName": "关于保密第三次会议",
+        "meetingRoom": "第二会议室",
+        "hydd": "主楼5层501",
+        "startTime": "2018-03-03 上午 - 2018-03-03 上午",
+        "meetingService":"音响",
+        "status":"1",
+        "yydw": "保密办",
+        "cz": ""
+      },
+      {
+        "id": 3,
+        "meetingName": "关于保密第二次会议",
+        "meetingRoom": "第二会议室",
+        "hydd": "主楼5层501",
+        "startTime": "2018-03-02 上午 - 2018-03-02 下午",
+        "meetingService":"桌牌",
+        "status":"0",
+        "yydw": "保密办",
+        "cz": ""
+      },
+      {
+        "id": 4,
+        "meetingName": "关于保密第一次会议",
+        "meetingRoom": "第一会议室",
+        "hydd": "主楼5层501",
+        "startTime": "2018-03-01 上午 - 2018-03-01 上午",
+        "meetingService":"卫生",
+        "status":"1",
+        "yydw": "保密办",
+        "cz": ""
+      }
+    ]
+  }
+}

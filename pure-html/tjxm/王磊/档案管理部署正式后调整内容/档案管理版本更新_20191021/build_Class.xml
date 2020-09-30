@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理class_20191021"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<fileset id="wanglei" dir="../../../../">
+		<!--档号规则字段 不能设置为值继承项
+			添加档号规则组成项，相对应的修改该项的值继承为‘否’-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/xtpz/datacontrast/services/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/xtpz/filenumberrule/services/"/>
+
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterEditForm.html"/>
+		<include name="WebContent/modules/dagl/xtpz/mlgl/js/table.js"/>
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

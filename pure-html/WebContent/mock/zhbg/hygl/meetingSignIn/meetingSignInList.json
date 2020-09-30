@@ -1,0 +1,44 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "meetingRoom": "第一会议室",
+        "meetingName": "测试",
+        "joinDept": "保卫科",
+        "joinPerson": "张三",
+        "status": "已签到",
+        "cz": "add"
+      },
+      {
+        "id": 2,
+        "meetingRoom": "第一会议室",
+        "meetingName": "测试",
+        "joinDept": "情报科",
+        "joinPerson": "李四",
+        "status": "已签到",
+        "cz": "add"
+      },
+      {
+        "id": 3,
+        "meetingRoom": "第一会议室",
+        "meetingName": "测试",
+        "joinDept": "保密科",
+        "joinPerson": "王五",
+        "status": "未签到",
+        "cz": "update"
+      },
+      {
+        "id": 4,
+        "meetingRoom": "第一会议室",
+        "meetingName": "测试",
+        "joinDept": "情报科",
+        "joinPerson": "赵六",
+        "status": "未签到",
+        "cz": "update"
+      }
+    ]
+  }
+}

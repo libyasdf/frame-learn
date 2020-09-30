@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link href="/static/core/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <!--固定表头所需css-->
+    <link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/form-public.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+
+    <script src="/static/js/common/url.js" type="text/javascript"></script>
+</head>
+
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <input class="form-control" type="text" id="cruChushiId" style="display: none;"/>
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" autocomplete="off">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;" onclick="resetView();">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 题名：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="mainTitle"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 立卷单位：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id=basefolder_unit name="basefolder_unit">
+                                    <option value="">---请选择---</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label"> 档号：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="archive_no"
+                                       name="archive_no"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 门类名称：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="category_name"
+                                       name="category_name"/>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <label class="col-md-12 control-label" style="color: red;"> *勾选数据只可进行删除操作；选择借阅人之后，进行推送，将自行推送并清空收集列表数据；</label>
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2" onclick="deleteSome()">
+                    <span class="glyphicon glyphicon-remove"></span> 删除
+                </button>
+                <button class="list_table_btn2" onclick="deleteAll()">
+                    <span class="glyphicon glyphicon-trash"></span> 清空收集列表
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+
+            <!--普网专网电话-->
+            <div style="padding-top: 10px;">
+                <div style="float: left;padding-left: 50%;">
+                    <label class="col-md-4 control-label" style="font-weight:bold;"> 借阅人：</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="lrrNames" id="lrrNames" unselectable="on"
+                               onclick="openSelectZtree({'id':'lrrIds','name':'lrrNames','type':'1','isMulti':'1','asyn':false,'deptId':$('#cruChushiId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})"
+                               autocomplete="off"/>
+                        <input type="text" class="form-control" name="lrrIds" id="lrrIds" style="display: none;"/>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary btn-sm editable-submit"
+                            onclick="sendShoppingTrolley()">
+                        <span class="glyphicon glyphicon-send"> 推送</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<!--这里是单独引用的自己的js，因为应用公用的js固定表头会出现问题-->
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--行内编辑所需js-->
+<script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script type="text/javascript" src="/static/core/lhgdialog/lhgcore.lhgdialog.min.js?self=true&skin=iblack"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript"
+        src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<!-- 发送消息js -->
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+<script type="text/javascript" src="/common/js/index.js"></script>
+<script type="text/javascript">
+
+    $("#cruChushiId").val(getcookie("chuShiId"));
+
+    Dictionary.init({
+        mark: 'dagl_ljdw',
+        type: '1',
+        position: "basefolder_unit",
+        domType: "select",
+        hasSelect: true
+    });
+
+    //清空查询条件
+    function clearAll() {
+        $("#mainTitle").val("");	//标题
+        $("#basefolder_unit").each(function (i, j) {
+            $(j).find("option:selected").attr("selected", false);
+        });
+        $("#archive_no").val("");	//时间
+        $("#category_name").val("");		//流程状态
+    }
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'selectAll',
+        title: "",
+        width: '3%',
+        align: "center",
+        checkbox: "true"
+    }, {
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber = $('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='" + row.id + "' data-workitemid='" + row.recid + "'>" + orderNum + "</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'mainTitle'
+        , title: '题名'
+        , width: '18%'
+        , align: "center"
+    }, {
+        field: 'basefolderUnit'
+        , title: '立卷单位'
+        , width: '7%'
+        , align: "center"
+    }, {
+        field: 'archiveNo'
+        , title: '档号'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'categoryName'
+        , title: '门类名称'
+        , width: '23%'
+        , align: "center"
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/dagl/daly/shoppingtrolley/getShoppingTrolleyListOfAdmin",
+            columns: right_table_col,
+            pagination: false,	//不分页
+            height: 400,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.mainTitle = $("#mainTitle").val();
+                params.ljdwMark = $("#basefolder_unit").val();
+                params.archiveNo = $("#archive_no").val();
+                params.categoryName = $("#category_name").val();
+                return params;
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td').unbind('click').bind('click', function (e) {
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                });
+            }
+        });
+    });
+
+    function deleteSome() {
+
+        var getSelectRows = $("#right_table").bootstrapTable('getSelections');
+        var deleteList = new Array();
+        if (getSelectRows.length == 0) {
+            layer.msg("请选择一条数据！", {icon: 7, time: 1000});
+            return;
+        } else {
+            var ids = "";
+            for (var i = 0; i < getSelectRows.length; i++) {
+                var id = getSelectRows[i]['id'];//字段名
+                ids += id + ",";
+            }
+            if ("" != ids) {
+                //去最后一个，
+                ids = ids.substring(0, ids.length - 1);
+            }
+            layer.confirm('确认删除所选信息吗？', {icon: 3, title: '信息'}, function (e) {
+                layer.close(e);
+                //提交数据到后台
+                $.ajax({
+                    type: "POST",
+                    url: "/dagl/daly/shoppingtrolley/deleteShoppingTrolley",
+                    data: {ShoppingTrolleyIds: ids},
+                    dataType: "json",
+                    success: function (data) {
+                        if ('1' == data.flag) {
+                            layer.msg("删除成功！", {icon: 1, time: 1000});
+                            TableInit.refTable("right_table");
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg("删除失败！", {icon: 0, time: 1000});
+                    }
+                });
+            })
+
+
+        }
+    }
+
+    function deleteAll() {
+        var data = $("#right_table").bootstrapTable("getData");
+        if (data.length == 0) {
+            layer.msg('没有收集的档案信息！', {icon: 0, time: 1000});
+        } else {
+            layer.confirm('确认清空收集列表信息吗？', {icon: 3, title: '信息'}, function (e) {
+                layer.close(e);
+                $.ajax({
+                    type: "POST",
+                    url: "/dagl/daly/shoppingtrolley/deleteShoppingTrolley",
+                    contentType: "application/json;charsetset=UTF-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if ('1' == data.flag) {
+                            layer.msg("清除收集列表成功！", {icon: 1, time: 1000});
+                            TableInit.refTable("right_table");
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg("清除收集列表失败！", {icon: 0, time: 1000});
+                    }
+                });
+            });
+        }
+
+    }
+
+    function sendShoppingTrolley() {
+
+
+        var sendUserName = $("#lrrNames").val();
+        var sendUserId = $("#lrrIds").val();
+
+        var data = $("#right_table").bootstrapTable("getData");
+
+        if ("" == sendUserId) {
+            layer.msg('请选择借阅人！', {icon: 0, time: 1000});
+        } else if (data.length == 0) {
+            layer.msg('暂无可推送的数据！', {icon: 0, time: 1000});
+        } else {
+            layer.confirm('确认将收集信息发送给' + sendUserName + '吗？', {icon: 3, title: '信息'}, function (e) {
+                layer.close(e);
+                $.ajax({
+                    type: "POST",
+                    url: "/dagl/daly/shoppingtrolley/sendShoppingTrolley?rdm=" + Math.random(),
+                    data: {"borrowUserId": sendUserId, "borrowUserName": sendUserName},
+                    dataType: "json",
+                    success: function (data) {
+                        if ('1' == data.flag) {
+                            var msg = "";
+                            if(data.data[0].existErrorList.length ==0){
+                                msg += data.data[0].successList.length+"条记录推送成功！<br/>";
+                                layer.msg(msg,{icon:1}, function () {
+                                    window.parent.layer.closeAll();
+                                });
+                            }else{
+                                if (data.data[0].successList.length > 0) {
+                                    //新增
+                                    msg += data.data[0].successList.length+"条记录推送成功！<br/>";
+                                    for (var i = 0; i < data.data[0].successList.length; i++) {
+                                        msg += "【" + data.data[0].successList[i].mainTitle + "】<br/>";
+                                    }
+                                    //msg += "推送成功！<br/>"
+                                }
+                                if (data.data[0].existErrorList.length > 0) {
+                                    //已存在的
+                                    msg += data.data[0].existErrorList.length+"条记录已推送，不可重复推送！<br/>"
+                                    for (var i = 0; i < data.data[0].existErrorList.length; i++) {
+                                        msg += "【" + data.data[0].existErrorList[i].mainTitle + "】<br/>";
+                                    }
+                                    //msg += "已推送，不可重复推送！<br/>"
+                                }
+                                if (data.data[0].existErrorList.length == 0) {
+                                    layer.alert(msg, function () {
+                                        window.parent.layer.closeAll();
+                                    });
+                                }else{
+                                    layer.alert(msg);
+                                }
+                            }
+
+                            TableInit.refTable("right_table");
+                        } else {
+                            layer.msg("推送失败，请刷新页面再次操作", {icon: 5, time: 1000});
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg("推送失败，请刷新重试！", {icon: 0, time: 1000});
+                    }
+                });
+            });
+        }
+    }
+
+    //展开查询项列表不对齐
+    function resetView() {
+        $("#right_table").bootstrapTable('resetView');
+    }
+
+</script>
+</body>
+</html>

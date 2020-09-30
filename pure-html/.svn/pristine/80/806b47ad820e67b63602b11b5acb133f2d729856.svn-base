@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<!-- 用户服务接口  start -->
+	<dubbo:reference interface="com.sinosoft.sinoep.api.user.service.UserService" id="userService" protocol="dubbo"/>      
+	<dubbo:reference interface="com.sinosoft.sinoep.api.user.service.UserBaseService" id="userBaseService" protocol="dubbo"/>
+	<dubbo:reference interface="com.sinosoft.sinoep.api.user.service.SysSubRdInfoService" id="sysSubRdInfoService" protocol="dubbo"/>
+	<dubbo:reference interface="com.sinosoft.sinoep.api.user.service.UserInfoBindService" id="userInfoBindService" protocol="dubbo" />
+	<dubbo:reference interface="com.sinosoft.sinoep.api.auth.service.AuthApiService" id="authApiService" protocol="dubbo"/>      
+	<dubbo:reference interface="com.sinosoft.authorization.module.system.deptuser.service.ISysSubUserService" id="sysSubUserService" protocol="dubbo"/>      
+    <dubbo:reference interface="com.sinosoft.sinoep.api.user.service.UserExService" id="userExService" protocol="dubbo"/>   
+    <dubbo:reference interface="workflow.service.DeptService" id="deptService"   protocol="dubbo" />   
+    <dubbo:reference interface="com.workflow.external.IClientWorkflowOrg" id="clientWorkflowOrg" protocol="dubbo" />
+    <dubbo:reference interface="com.sinosoft.sinoep.api.dept.DeptInfoService" id="deptInfoService" protocol="dubbo" />
+    <dubbo:reference interface="com.sinosoft.sinoep.api.dept.service.DeptInfoService" id="sDeptInfoService" protocol="dubbo" />
+    <dubbo:reference interface="com.sinosoft.sinoep.api.auditlog.service.SysAuditLogService" id="sysAuditLogService" protocol="dubbo" />
+    <!-- 用户服务接口  end -->
+	
+	<!-- 消息服务start   -->
+	<dubbo:reference interface="com.sinosoft.sinoep.message.service.MessageService" id="messageService" protocol="dubbo"/>   
+ 	<dubbo:reference interface="com.sinosoft.sinoep.message.service.NotityService" id="notityService" protocol="dubbo"/>      
+	<!-- 消息服务end   -->
+
+
+	<!-- 表单消费服务start -->
+    <dubbo:reference interface="com.sinosoft.ep.webform.ext.FormRunnerService" id="formRunnerService" version="1.0.0" group="webform"/>
+    <dubbo:reference interface="com.sinosoft.ep.webform.ext.AffixRemoteService" id="affixRemoteService" version="1.0.0" group="webform"/>
+    <!-- 表单消费服务end -->
+    
+    <!-- 工作流消费服务start -->
+    <dubbo:reference interface="workflow.spring.ProcessControlService" id="processControlService" protocol="dubbo" />
+    <dubbo:reference interface="workflow.spring.OutControlProcessService" id="outControlProcessService" protocol="dubbo" />
+    <dubbo:reference interface="workflow.spring.ProcessRelaDataService" id="processRelaDataService" protocol="dubbo"  /><!-- url="dubbo://192.168.80.142:19003"  -->
+	<dubbo:reference interface="workflow.spring.FlowDataService" id="flowDataService" protocol="dubbo" />
+    <dubbo:reference interface="workflow.service.AccreditService" id="accreditService" protocol="dubbo" />
+
+    <!-- 工作流消费服务end -->
+	
+</beans>  

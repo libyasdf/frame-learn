@@ -1,0 +1,593 @@
+@charset "utf-8";
+
+/*
+	@公共样式 请勿修改
+	@重定义浏览器默认样式
+	@全局常用样式
+	@公共页头、页底、分页样式
+*/
+
+/**==================== 重定义浏览器默认样式 ===========================**/
+
+/* 防止用户自定义背景颜色对网页的影响 */
+html {color:#333;font-size:14px;font-family:"Microsoft YaHei", "微软雅黑", "宋体";}
+
+a span{
+	color:#fff !important;
+}
+
+body, ul, li, ol, dl, dt, dd, form, input, textarea, img, p, h1, h2, h3, h4, h5, h6, fieldset, button,label {margin:0;padding:0;font-size:14px;font-size:1.2rem;}
+body {width:100%;height:100%; background:#eee;line-height:26px;font-family:"Microsoft YaHei", '微软雅黑', '宋体'; font-size:14px;}
+ol, ul, li {list-style:none;}
+img {border:0;}
+h1 {font-size: 20px;font-size:2rem;}//px针对ie8
+h2 {font-size: 18px;font-size:1.8rem;}
+h3 {font-size: 16px;font-size:1.6rem;}
+h4{ font-size: 12px;font-size:1.2rem;}
+h5, h6 {font-size: 2px; font-size:0.2rem; font-weight:normal;}
+em, cite, i {font-style: normal;}
+a {text-decoration:none;cursor:pointer;}
+a:hover {text-decoration:none;}
+a:focus {outline:none;}
+input{font-family:"Microsoft YaHei", '微软雅黑', '宋体'; font-size:14px;}
+body.ifr_width{ width:100%; min-width: 100%;}
+
+/* 去掉各Table  cell 的边距并让其边重合 */
+table{border-collapse:collapse;border-spacing:0;}
+
+
+
+/**==================== 重定义浏览器默认样式 End=============================**/
+
+
+/**============================ 全局常用样式 ============================**/
+ /*清除浮动*/
+.clr:after {visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+.clr {zoom:1;}
+
+.hidden_element{display:none}
+
+/*解除浮动*/
+.clr_n {clear:both;}
+
+/*元素不显示*/
+.none {display:none;}
+
+/*无背景*/
+.none_bg {background:none;}
+
+/*左浮动*/
+.f_l {float:left;}
+
+/*右浮动*/
+.f_r {float:right;}
+
+/*块状元素*/
+.dpb {display:block;}
+
+/*内联元素*/
+.dpi {display:inline;}
+.dpib {display:inline-block;}
+
+/*文本缩进*/
+.int2em {text-indent:2em;}
+
+.bodyback{
+	background:url(../../../image/personCenterNew/new_background.jpg);
+	/*background:#0C4384;*/
+}
+
+.f_w_b{
+	font-weight:bold;
+}
+
+.welcome{
+	color:#FFFFFF;
+	font-weight:lighter;
+	font-size: 15px;
+	background-color: #167ADA;
+	padding-right: 15px;
+	padding-left: 15px;
+	font-family:"Microsoft YaHei", '微软雅黑', '宋体'; 
+	font-size:14px;
+}
+
+/*元素的大小*/
+.w_100{width:100%}
+.w_80{width:80%}
+.w_50{width:50%}
+.w_85{width:85%}
+.w_60{width:60%}
+.w_40{width:40%}
+.w_55{width:55%}
+.w_45{width:45%}
+.w_48{width:48%}
+.w_49{width:49%}
+.main_h_90{min-height:90px;}
+
+/*内补白，外补白*/
+.marginL_10B{margin-left:10%;}
+.mainginL_50{margin-left:50px;}
+.marginL_40{margin-left:40px;}
+.mainginL_20{margin-left:20px;}
+.mainginL_10{margin-left:10px;}
+.mainginL_14{margin-left:14px;}
+.marginR_10{margin-right:10px;}
+.marginT_10{margin-top:10px}
+.marginT_7{margin-top:7px}
+.marginR_20{margin-right:20px;}
+.marginT_20{margin-top:20px}
+.marginT_15{margin-top:15px}
+.marginT_28{margin-top:28px;}
+.marginT_25{margin-top:25px;}
+
+.paddingT_20{padding-top:20px}
+.paddingT_5{padding-top:5px}
+.paddingL_10{padding-left:10px;}
+.paddingB_9{padding-bottom:9px;}
+.paddingB_15{padding-bottom:15px;}
+
+
+/*常用字体样式 字体颜色*/
+.fc0 {color:#000;}
+.fc3 {color:#333;}
+.fc6 {color:#666;}
+.fc9 {color:#999;}
+.fcf{color:#fff}
+.fc_red{ color:#e45151;}
+
+.fwb {font-weight:bold;}
+.fwn {font-weight:normal;}
+
+.fs12{ font-size:12px;}
+.fs13{font-size:13px;}
+.fs14{ font-size:14px;}
+.fs16{ font-size:16px;}
+
+/*文本对齐方式*/
+.text_align_c{text-align:center;}
+.text_align_l{text-align:left;}
+.text_align_r{text-align:right !important;}
+.vertical_align_m{
+	vertical-align:middle;
+	font-size:16px;
+	font-family:"Microsoft YaHei", '微软雅黑', '宋体'; 
+	font-weight:bold;
+	font-size:1.2rem
+	}
+/*鼠标样式*/
+.cursor_p{cursor:pointer;}
+.cursor_d{cursor:default !important;}
+
+.sysModuleOpen{cursor:pointer;}
+
+/*边框的样式*/
+
+/*居中*/
+.marginAuto{margin:0px auto;}
+
+/*模块图标*/
+.icon_item{
+	background-repeat: no-repeat;
+	display:block;
+	width:84px;
+	line-height:84px;
+	height:84px;
+	margin:auto;
+}
+.icon_archives{
+	background-image:url(../../../image/personCenterNew/Box-Incoming-2.png);
+}
+.knowledgeTree_ico{
+	background-image:url(../../../image/personCenterNew/zhishiku.png);
+}
+.icon_supervision{
+	background-image:url(../../../image/personCenterNew/List-w--Images.png);
+}
+.icon_Watch{
+	background-image:url(../../../image/personCenterNew/Create---Write.png);
+}
+.icon_schedule{
+	background-image:url(../../../image/personCenterNew/Month-Calendar.png);
+}
+.icon_file{
+	background-image:url(../../../image/personCenterNew/Locked-Folder.png);
+}
+.icon_user{
+	background-image:url(../../../image/personCenterNew/Group-2.png);
+}
+.icon_leave{
+	background-image:url(../../../image/personCenterNew/book-.png);
+}
+.icon_phone{
+	background-image:url(../../../image/personCenterNew/address-book.png);
+}
+.icon_trends{
+	background-image:url(../../../image/personCenterNew/Computer-iMac.png);
+}
+.icon_finance{
+	background-image:url(../../../image/personCenterNew/Chart-8.png);
+}
+.icon_meeting{
+	background-image:url(../../../image/personCenterNew/Suitcase-2.png);
+}
+.icon_leader{
+	background-image:url(../../../image/personCenterNew/v-card.png);
+}
+.icon_mail{
+	background-image:url(../../../image/personCenterNew/Mail.png);
+}
+.icon_tool{
+	background-image:url(../../../image/personCenterNew/tool.png);
+}
+.icon_system{
+	background-image:url(../../../image/personCenterNew/tool.png);
+}
+
+
+
+/*全文索引*/
+.search{
+	width: 80;
+	margin-top: 25px
+}
+
+.more{
+	font-family:"Microsoft YaHei", '微软雅黑', '宋体'; 
+	font-weight:bold;
+	font-size:12px;
+}
+.searchInput{width:230px;height:30px;color:#a6a6a6;border-radius:8px 0px 0px 8px;border-left:2px solid #f6f6f6;border-top:2px solid #f6f6f6;}
+.searchBtn{width:100px;height:30px;color:#fff;border-radius:0px 8px 8px 0px;border-left:2px solid #f6f6f6;border-top:2px solid #f6f6f6;background:#4c9ed9}
+
+/*导航模块*/
+.navigationClass{
+	float:left;
+	border:1px solid #f5f5f5;
+	width:120px;
+	height:135px;
+	margin:5px;
+	color:#f5f5f5;
+	background:#607c49;
+}
+/*待办*/
+.doing{
+	background:#64A7DE;
+	color:#f5f5f5;
+	font-size:16px;
+	font-family:"Microsoft YaHei", '微软雅黑', '宋体'; 
+	font-weight:bold;
+	font-size:1.2rem
+	}
+.doing_ul{margin-bottom:25px;}
+.doing_ul li{
+	width:90%;
+	margin:0px auto;
+	border-bottom:1px solid #f5f5f5;
+	padding-top:7px;
+	padding-left:20px;
+	padding-bottom:4px;
+	font-size:15px;
+	font-weight:lighter;
+	font-family:"Microsoft YaHei", '微软雅黑', '宋体'; 
+}
+.numberClass{
+	float:right;
+	margin-right:20px;
+	min-width:20px;
+	padding-left:2px;
+	padding-right:2px;
+	height:20px;
+	color:#f5f5f5;
+	border:1px solid #467498;
+	background:#467498;
+	text-align:center;
+	line-height:20px;
+	
+}
+.doing_number_name{
+	cursor:pointer;
+}
+
+/*邮件消息*/
+.email{
+	background:#55BAC4;
+	color:#f5f5f5;
+	height:80px;
+    text-align:center;
+    margin-top:15px;
+ }
+ .email_num{
+    background-image: url(../../../image/zy.png);
+    display:inline-block;
+    width:28px;
+    height:28px;
+    margin-left:6px;
+ }
+.email_span{
+	dispaly:inline-block;
+	height:80px;
+	line-height:80px;
+}
+
+/*公告栏*/
+.notice{
+	color:#f5f5f5;
+	height:auto;
+	background-color:#779ED5;
+	padding-bottom:20px;
+}
+.noticeLi{
+	margin-top:6px;
+	font-size:13px;
+	margin-bottom:5px;
+}
+.dotClass{
+	width:5px;
+	height:5px;
+	display:inline-block ;
+	vertical-align:middle;
+	margin-left:9px;
+	margin-right:8px;
+	background-color:#f5f5f5;
+}
+
+.toolClass{
+ background-color:#AEC43E;
+}
+.endClass{
+	background-color:#49535f;
+}
+.tools{
+	background-color:#AEC43E;
+}
+.other_sys{
+	background-color:#55BAC4;
+}
+.one_li_background{
+	background:#55BAC4;
+}
+.two_li_background{
+	background:#AEC43E;
+}
+.three_li_background{
+	background:#769DD6;
+}
+.four_li_background{
+	background:#55BAC4;
+}
+.five_li_background{
+	background:#ddd;
+}
+
+/*新增 为了主页以及菜单背景色 专用*/
+.li_background_0{
+	background:#55BAC4;
+}
+.li_background_1{
+	background:#AEC43E;
+}
+.li_background_2{
+	background:#769DD6;
+}
+.li_background_3{
+	background:#55BAC4;
+}
+.li_background_4{
+	background:rgb(100, 109, 59);
+}
+
+
+.li_background_5{
+	background:#55BAC4;
+}
+
+.li_background_6{
+	background:#AEC43E;
+}
+.li_background_7{
+	background:#769DD6;
+}
+.li_background_8{
+	background:#55BAC4;
+}
+.li_background_9{
+	background:rgb(100, 109, 59);
+}
+
+/*图标*/
+.iconClass{
+	text-align:center;
+	float:left;
+	width:110px;
+	height:125px;
+	color:#f5f5f5;
+	margin:1px;
+	cursor:pointer;
+	margin-left:10px;
+	margin-top:10px;
+}
+.iconClass2{
+	text-align:center;
+	float:left;
+	height:110px;
+	color:#f5f5f5;
+	margin:5px;
+}
+/*图标*/
+.other_icon{
+	text-align:center;
+	float:left;
+	width:48%;
+	height:auto;
+	color:#f5f5f5;
+	margin:1px;
+	cursor:pointer;
+}
+.iconClass img{
+	display:block;
+	text-align:center;
+	margin:0px auto;
+	margin-top:24px
+}
+.iconClass2 img{
+	display:block;
+	text-align:center;
+	margin:0px auto;
+	margin-top:20px
+}
+
+.iconClass span{
+	text-align:center;
+	margin-top:9px;
+	display:block;
+	font-family:"Microsoft YaHei", '微软雅黑', '宋体'; font-size:16px;
+}
+
+/*个人日程*/
+.schedule{
+	color:#f5f5f5;
+	background:#55BAC4;
+}
+.schedule_ul{
+	width:100%;
+	margin:0px auto;
+	
+}
+.schedule_ul li{
+	font-size:13px;
+}
+.timeClass{margin-right:20px;margin-left:5px;}
+.titleClass{}
+.CalendarInfo_C{
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	width:100%;
+}
+/*底部信息*/
+.buttomClass{
+	width:100%;
+	margin:0px auto;
+	text-align:center;
+	vertical-align:middle;
+	height:80px;
+	line-height:80px;
+	background:#4c9ed9;
+	color:#f5f5f5;
+	font-family:"Microsoft YaHei", '微软雅黑', '宋体'; font-size:14px;
+}
+
+
+.s_btn{
+/* 	width:100px; */
+	height:32px;
+	color:white;
+	font-size:15px;
+	letter-spacing:1px;
+	background:#3385ff;
+	border:1px solid #2d78f4;
+	outline:medium;
+	
+}
+.s_ipt_wr{
+	height:32px;
+	border:1px solid #b6b6b6;
+	background:#fff;
+	display:inline-block;
+	vertical-align:top;
+	width:65%;
+	margin-right:-4px;
+	border-right-width:0;
+	border-color:#b8b8b8 transparent #ccc #b8b8b8;
+	overflow:hidden;
+}
+.s_ipt{
+	width:100%;
+	height:23px !important;
+	/*
+	font:16px/18px arial;
+	*/
+	/* padding:0; */
+	padding:0 10px;
+	background:transparent;
+	border:0px !important;
+	outline:0;
+}
+.fix-layout{
+	position:fixed;
+	right:20px;
+	bottom:20px;
+	z-index:20;
+	width:45px;
+}
+
+.Doing_btn_c{
+	border:1px solid #f5f5f5;
+	background:#fff;
+	color:red;
+}
+
+.other_icon_style{
+	margin-top:15px;padding-top:19px;padding-bottom:8px;
+}
+
+/*------------------------------------右侧悬浮--------------------------*/
+div#flydiv{width:100px; height:auto;padding:2px;padding-right:0px;display: block;right:1px;top:-8%; position:fixed;z-index:999;}
+div#mainBody div#flydiv{width:100px; height:auto;padding:2px;display: block;right:1px; position:fixed;top: -5%;}
+div#flydiv>div{float:right;width:120px;height:auto;margin-top:10px;margin-left:15px;margin-top:280px;color:red;}
+div#flydiv .btn {background:url(../../../image/form/btnBack.png);height:40px;width:90px;font-size:14px; color:#FFFFFF; font-weight:bold; border:0px;cursor:pointer;margin-bottom:7px;}
+div#flydiv div.Classbj{background:#f4f4f4;color:#0CB828;text-align:center;margin-bottom:5px;font-weight:bold;cursor:pointer;}
+.shlxClass{display:none;position:absolute;top:313px;left:120px;z-index:9999;background-color:#6FA5DA;height:80px;width:170px;padding-left:10px;}
+.paddingL52{padding-left:58px; }
+.color_white_weight_bold{color:#ffffff;font-weight:bold;}
+
+/************************问题交流********************************/
+.answerTd_text{ border:1px dashed #c8c8c8;text-align:center;}
+.answer_textarea{margin-top:8px;margin-bottom:8px;width:90%;height:50px;}
+.answer_span{font-size:13px;font-weight:bold;}
+.answer_i{font-size:14px; font-weight:bold;color:#00B0D2;}
+.pageStyle{background:url("../../../image/formBackground.png") repeat scroll !important;width:100%;}
+
+
+
+
+@media (min-width: 1000px){
+	.logoImg{
+	width:340px;}
+}
+@media (max-width: 1000px){
+	.logoImg{
+	width:100%;
+	}
+	
+	#Navigation ul li{
+	width: 75px;
+	height:100px;
+	}
+	#Navigation .iconfont{
+	    font-size: 25px;
+		 width: 54px;
+	    line-height: 54px;
+	    height: 54px;
+	}
+	.iconClass span {
+		font-size:12px;
+	
+	}
+	.rightBOX .iconfont{
+	    font-size: 25px;
+		 width: 54px;
+	    line-height: 54px;
+	    height: 54px;
+	}
+	.rightBOX span{
+		font-size:12px;
+	}
+	.email span,.doing span,.datePre span,.notice span{
+	font-size:12px;
+	}
+	.datePre .vertical_align_m,.notice .vertical_align_m{
+		margin-top:-8px;
+	}
+}

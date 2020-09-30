@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>企业中心</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+</head>
+
+
+<body class="formpage_bj">
+
+<!--内容-->
+<div class="formpage_area">
+    <div class="formpage_area_title">工作日程详细</div>
+    <div class="main">
+        <div class="block_title">
+            <ul class="nav nav-tabs block_tab">
+                <li class="active" for="base"><a href="#">基本信息</a></li>
+                <li for="rest"><a href="#">我方其他人员</a></li>
+            </ul>
+        </div>
+        <!-- Tab 内容区域-->
+        <div id="tabContext">
+            <div id="base">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="formpage_table mt_10">
+                    <tr>
+                        <td width="18%" class="title">信访人姓名：</td>
+                        <td width="29%"><input class="form_input" style="width:230px;" type="text" name="textfield"
+                                               id="textfield"/></td>
+                        <td width="18%" class="title">性别：</td>
+                        <td width="35%"><input class="form_input" style="width:230px;" type="text" name="textfield2"
+                                               id="textfield2"/></td>
+                    </tr>
+                    <tr>
+                        <td class="title">民族：</td>
+                        <td><input class="form_input" style="width:230px;" type="text" name="textfield3" id="textfield3"/></td>
+                        <td class="title">出生日期：</td>
+                        <td><input class="form_input" style="width:230px;" type="text" name="textfield4" id="textfield4"/></td>
+                    </tr>
+                    <tr>
+                        <td class="title">备注：</td>
+                        <td colspan="3"><textarea class="form_textarea" style="width:87%;" name="textarea2" id="textarea2"
+                                                  cols="45" rows="5"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="title">是否保密：</td>
+                        <td colspan="3"><textarea class="form_textarea" style="width:87%;" name="textarea" id="textarea"
+                                                  cols="45" rows="5"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="title">我方人数：</td>
+                        <td><input class="form_input" style="width:230px;" type="text" name="textfield3"/></td>
+                        <td class="title">对方人数：</td>
+                        <td><input class="form_input" style="width:230px;" type="text" name="textfield4"/></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="rest" class="hidden">
+                <table width="90%" border="0" cellspacing="0" cellpadding="0" class="center table_add mt_10">
+                    <tbody>
+                        <tr class="title">
+                            <td>&nbsp;</td>
+                            <td>姓名</td>
+                            <td>单位</td>
+                            <td>职务</td>
+                            <td>参与性质</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="checkbox"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield5"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield6"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield7"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield8"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="checkbox"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield5"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield6"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield7"/></td>
+                            <td><input class="form_input" style="width:90%;" type="text" name="textfield8"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<div style="padding-bottom: 30px; text-align: center;">-->
+<!--<a class="form_btn_orange form_btn_area_btn" href="#">保存</a> -->
+<!--<a class="form_btn_green form_btn_area_btn" href="#">提交</a> -->
+<!--<a class="form_btn_blue form_btn_area_btn" href="#">办结提案</a> -->
+<!--<a class="form_btn_grey form_btn_area_btn" href="#">关闭</a> -->
+<!--</div>-->
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/static/core/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript">
+    $(".block_tab").find('li').unbind('click').bind('click',function(){
+        $(this).addClass('active').siblings('li').removeClass('active');
+        var id =  $(this).attr('for');
+        $("#tabContext").children('div').addClass('hidden');
+        $("#"+id).removeClass('hidden');
+    })
+</script>
+</body>
+</html>

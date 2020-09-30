@@ -1,0 +1,47 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "jkrmc": "法律法规资料",
+        "bz": "法律法规",
+        "bt": "国务院",
+        "ywlx": "国务院",
+        "zczlfl": "张三",
+        "pw": "2018-05-05",
+         "yp": "XXXXXX",
+          "sp": "XXXXXX",
+           "fj": "XXXXXX",
+        "cz": "update,delete"
+      },
+      {
+        "id": 2,
+        "jkrmc": "规章制度资料",
+        "bz": "规章制度",
+        "bt": "国务院",
+        "ywlx": "国务院",
+        "zczlfl": "李四",
+        "pw": "2018-05-04",
+         "yp": "XXXXXX",
+          "sp": "XXXXXX",
+           "fj": "XXXXXX",
+        "cz": "update,delete"
+      },
+      {
+        "id": 3,
+        "jkrmc": "内部规章资料",
+        "bz": "内部规章",
+        "bt": "国务院",
+        "ywlx": "国务院",
+        "zczlfl": "王五",
+        "pw": "2018-05-03",
+         "yp": "XXXXXX",
+          "sp": "XXXXXX",
+           "fj": "XXXXXX",
+        "cz": "update,delete"
+      }
+    ]
+  }
+}

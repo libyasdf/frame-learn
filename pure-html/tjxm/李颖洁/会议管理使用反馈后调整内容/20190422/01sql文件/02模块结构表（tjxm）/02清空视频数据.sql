@@ -1,0 +1,15 @@
+delete from video_column;
+delete from video_column_fb_user;
+delete from video_content;
+delete from video_video_and_pdf;
+delete from history_record;
+delete from programa_fb_dept;
+delete from programa_fb_group;
+delete from programa_fb_zwqx;
+delete from programa_fb_dept_zwqx;
+delete from programa_fb_dept_zwqx_list;
+delete from video_fb_dept;
+delete from video_fb_group;
+delete from video_fb_zwqx;
+delete from video_fb_dept_zwqx;
+delete from video_fb_dept_zwqx_list;

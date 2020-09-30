@@ -1,0 +1,3 @@
+--考勤管理新增资源（模块【考勤统计】）
+insert into sys_resource (ID, TREE_ID, RESOURCETYPE_ID, RESOURCE_NAME, SUB_ID, TIME, AUTHER, MODIFIY_TIME, MODIFIER, CONTENT, RESOURCE_EXT, MEMO, RESOURCE_ORDER, DISCRIPTION, SUPER_ID, S_NAVIGATION, IS_SHOW, IS_CONTROL_SUB, SUB_IDS, STATUS, FLAG, IS_PORTAL, RTYPE_ID, FORM_URL)
+values ('4028da0669471a7401697f6796351008', '0052000100040013', '97210', '考勤统计', '97206', '2019-03-15 11:31:28', '1', '2019-03-15 11:31:28', '1', '/modules/zhbg/kqgl/statistics/attendanceStatsList.html', '<CLOB>', null, 303, null, '1000041', '1', '0', '0', '', '1', '', '0', '1', null);

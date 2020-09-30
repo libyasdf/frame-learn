@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理class_20191203"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<fileset id="wanglei" dir="../../../../">
+
+		<!--修改的内容有：
+		1.传统借阅-档案检索时，档案不显示
+		2.Q2档案新增时，案卷号一直为1000，不能自动加一
+		3.档案借阅制度页面，页数文本框调小，题名文本框调大
+		4.单位预立库中分类目录显示错误，（这个问题添加了日志，再次查看）
+		-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/dao/VirtualClassDaoImpl.class"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/services/BmglServiceImpl.class"/>
+
+		<include name="WebContent/modules/dagl/bmgl/js/indexDangAnFind.js"/>
+		<include name="WebContent/modules/dagl/daly/borrow/apply/borrowApplyEditForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/apply/borrowApplyReadOnlyForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/js/onLineLoanEdit.js"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/js/traditionalRegisterEdit.js"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/onLineLoanEditForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/onLineLoanReadOnlyForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterEditForm.html"/>
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/traditionalRegisterReadOnlyForm.html"/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

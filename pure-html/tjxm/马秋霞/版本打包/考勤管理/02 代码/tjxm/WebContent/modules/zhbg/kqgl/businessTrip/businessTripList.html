@@ -1,0 +1,247 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+
+                            <label class="col-md-1 control-label"> 请假时间：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="timeRange" />
+                            </div>
+                            
+                            <label class="col-md-1 control-label"> 申请人：</label>
+                            <div class="col-md-3">
+                                <input class="form-control"  type="text" name="textfield2"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 单位：</label>
+                            <div class="col-md-3">
+                                <input class="form-control"  type="text" name="textfield2"/>
+                            </div>
+                        </div>
+                        
+                            
+                          
+
+                        
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 审批状态：</label>
+                            <div class="col-md-3">
+	                            <select class="form-control" id="subflag" name="subflag" >
+									<option value="">--请选择--</option>
+									<option value="1">审批中</option>
+									<option value="6">通过</option>
+									<option value="7">未通过</option>
+									<option value="0">已撤办</option>
+								</select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table1')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table1')"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+            <div class="list_button_area">
+                
+                <button class="list_table_btn2"
+                        onclick="exportDate()">
+                    <span class="glyphicon glyphicon-chevron-right"></span> 导出
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table1"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '编号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        ,formatter: function (value, row, index) {
+        	//计算序号，并存放业务ID，及已办事项ID
+        	var pageSize=$('#right_table1').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table1').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'businessTripTitle'
+        , title: '标题'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'creUserName'
+        , title: '申请人'
+        , width: '9%'
+        , align:"center"
+    }, {
+        field: 'startTime'
+        , title: '出差日期'
+        , width: '25%'
+        , align:"center"
+    }, {
+        field: 'applicationUnitName'
+        , title: '单位'
+        , width: '10%'
+        , align:"center"
+    },  {
+        field: 'longTime'
+        , title: '请假时长'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+    },{
+        field: 'destination'
+        , title: '目的地'
+        , width: '6%'
+        , align:"center"
+    },{
+        field: 'subflag'
+        , title: '流程状态'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        	, formatter: function (value, row, index) {
+               	if(value == Config.subflag){
+               		return "审批中";
+               	}else if(value == Config.approvalflag){
+               		return "审批通过";
+               	}else if(value == Config.noApprovalflag){
+               		return "审批未通过";
+               	}else if(value == Config.removeflag){
+               		return "已撤办";
+               	}else if(value == Config.startflag){
+               		return "草稿";
+               	}  
+        	}        	
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+            	 if (opt[i] == "add") {
+
+                 } else if (opt[i] == "update") {
+                     html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                 } else if (opt[i] == "delete") {
+                     html += "<i class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+                 }
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table1",
+            url:"/zhbg/kqgl/businessTrip/getlistBootHql",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+            	 params.title = $("#title").val();
+                // params.timeRange = $("#timeRange").val();
+                 params.subflag = $("#subflag").val();
+                 return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+                  //取消事件冒泡 end
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+//                    取消事件冒泡 end
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/kqgl/businessTrip/businessTripReadOnlyForm.html',title:'只读'});
+                });
+            }
+        });
+    });
+
+//    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/kqgl/businessTrip/businessTripEditForm.html?id='+id+ "&oper=EDIT",
+                title:"修改"
+            })
+        },
+        deleteFun:function(id){
+        	 MyLayer.deleteOpt({
+                 url: '/zhbg/kqgl/businessTrip/deleteBusinessTrip?id=' + id,
+                 tableId: 'right_table1'
+             })
+        }
+    }
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+        // alert("fdsddsf");
+        layer.confirm("是否导出查询的所有信息？");
+    };
+</script>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html ang="en" ng-app="App">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>文字式流程</title>
+		<!-- Bootstrap -->
+		<style type="text/css">
+			.tabEffects {
+				float: left;
+				list-style: none;
+				width: 100px;
+				padding-left: 12px;
+				padding-top: 3px;
+				height: 35px;
+				font-size: 14px;
+				font-family: "微软雅黑";
+			}
+			
+			.tabChecked {
+				background: url(/ciebanktImage/news_tab.png) no-repeat left -65px;
+				color: #FFFFFF;
+			}
+			
+			.tabNoChecked {
+				background: url(/ciebanktImage/news_tab.png) no-repeat left top;
+				color: #000000;
+			}
+			
+			table {
+				border-color: #f5f5f5
+			}
+			
+			table tr td {
+				border-color: #ffffff;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			
+			.onetrclass{
+				background-color: #EEEEEE;font-size:13px;
+			}
+			
+			.twotrclass{
+				background-color:#F5F5F5;font-size:13px;
+			}
+		</style>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			  <script src="../plugins/html5/html5shiv.min.js"></script>
+			  <script src="../plugins/html5/respond.js"></script>
+			  <script src="../plugins/html5/jquery.placeholder.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<!--<ul>
+		   <li id="id1" class="tabEffects tabChecked" >流程记录</li>
+		   <li id="id2" class="tabEffects tabNoChecked" >授权记录</li>
+		</ul>-->
+		<div id="tab1" style="display: block;5">
+			<table id="flowcourse_table" width="98%" cellspacing="0" cellpadding="0" border="1" bordercolor="#c4cacd" style=" border-collapse:collapse; line-height:35px; margin:-14px auto;" class="tdheight" align="center" id="table">
+				<tr style="background-color: #3B8FCF;font-size: 14px;color: white;font-weight: bold;height: 30px" height='21'>
+					<td height="20" width="5%" align="center" valign="middle" class="listtitle">序号</td>
+					<td height="20" width="15%" align="center" valign="middle" class="listtitle">发送时间</td>
+					<td height="20" width="20%" align="center" valign="middle" class="listtitle">发送人</td>
+					<td height="20" align="center" valign="middle" class="listtitle">接收人</td>
+					<td height="20" width="10%" align="center" valign="middle" class="listtitle">经过的路由</td>
+					<td height="20" width="15%" align="center" valign="middle" class="listtitle">节点操作</td>
+					<td height="20" width="10%" align="center" valign="middle" class="listtitle">停留时间</td>
+				</tr>
+			</table>
+		</div>
+		<script src="../plugins/jquery/jquery-1.11.2.min.js" type="text/javascript"></script>
+		<script src="../js/common/getrequest.js"></script>
+		<script src="../js/common/getCook.js"></script>
+		<script src="../js/flowcourse.js" type="text/javascript"></script>
+	</body>
+</html>

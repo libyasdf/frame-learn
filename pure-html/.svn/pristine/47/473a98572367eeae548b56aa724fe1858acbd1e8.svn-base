@@ -1,0 +1,27 @@
+{
+	"flag":"1",
+	"data":[{
+		"name":"外卖信息列表",
+		"url":"/modules/mypage/diningmenu/takeOutList.html",
+		"style":"/static/images/ico_write.png",
+		"id":"001001001"
+	},
+	{
+        "name":"我的订单",
+        "url":"/modules/mypage/diningmenu/myOrderList.html",
+        "style":"/static/images/ico_write.png",
+        "id":"001001002"
+    },
+   {
+       "name":"失信名单",
+       "url":"/modules/mypage/diningmenu/loseCreditList.html",
+       "style":"/static/images/ico_write.png",
+       "id":"001001003"
+   },
+   {
+       "name":"系统配置",
+       "url":"/modules/mypage/diningmenu/taskOutConfig.html",
+       "style":"/static/images/ico_write.png",
+       "id":"001001004"
+   }]
+}

@@ -1,0 +1,3 @@
+--会议管理新增资源（模块【会议安排一览】）
+insert into sys_resource (ID, TREE_ID, RESOURCETYPE_ID, RESOURCE_NAME, SUB_ID, TIME, AUTHER, MODIFIY_TIME, MODIFIER, CONTENT, RESOURCE_EXT, MEMO, RESOURCE_ORDER, DISCRIPTION, SUPER_ID, S_NAVIGATION, IS_SHOW, IS_CONTROL_SUB, SUB_IDS, STATUS, FLAG, IS_PORTAL, RTYPE_ID, FORM_URL)
+values ('4028da0669471a740169b7b9897d16e7', '005200020007', '97210', '会议安排一览', '97206', '2019-03-26 09:59:43', '1', '2019-03-26 09:59:43', '1', '/modules/zhbg/hygl/meetingNotice/meetingAllInfoList.html', '<CLOB>', null, 205, null, '1000008', '1', '0', '0', null, '1', null, '0', '1', null);

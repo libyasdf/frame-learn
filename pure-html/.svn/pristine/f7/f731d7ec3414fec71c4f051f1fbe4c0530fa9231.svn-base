@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	 <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <!-- <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/> -->
+	<head>
+		<meta charset="UTF-8">
+		<title>座位票打印页面</title>
+		<style type="text/css">
+			/* a4纸尺寸 210mm*297mm  */
+			
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			body {
+				font-family: "Microsoft YaHei";
+				font-size: 14px;
+				color: #333;
+			}
+			
+			li {
+				list-style: none;
+			}
+			
+			.fl {
+				float: left;
+			}
+			
+			.fr {
+				float: right;
+			}
+			
+			.clearfix {
+				zoom: 1;
+			}
+			
+			.clearfix:after {
+				content: ".";
+				width: 0;
+				height: 0;
+				visibility: hidden;
+				display: block;
+				clear: both;
+				overflow: hidden;
+			}
+			
+			.content {
+				width: 1000px;
+				margin: 0 auto;
+				padding-bottom: 50px;
+			}
+			
+			.cardList {
+				width: 1200px;
+				margin: 0 auto;
+				margin-left: -50px;
+				margin-bottom: 20px;
+			}
+			
+			.cardList li {
+				float: left;
+				width: 380pt;
+				height: 240pt;
+				margin-top: 50pt;
+				border: 1pt solid #b8b8b8;
+				box-sizing: border-box;
+				padding: 15pt;
+			}
+			
+			.cardList li+li {
+				margin-left: 70pt;
+			}
+			
+			.cardBox {
+				border: 1pt solid #7f7f7f;
+				height: 100%;
+				position: relative;
+			}
+			
+			.title {
+				font-weight: bold;
+				text-align: center;
+				line-height: 30pt;
+				font-size: 20pt;
+				padding: 15pt 0 15pt 0;
+			}
+			
+			.position {
+				line-height: 18pt;
+				font-size: 15pt;
+				text-align: center;
+			}
+			
+			.lineBoder {
+				display: inline-block;
+				width: 20pt;
+				text-align: center;
+				border-bottom: 1pt solid #000;
+				margin: 0 2pt;
+			}
+			
+			.inforP {
+				padding: 0 20pt;
+				line-height: 20pt;
+			}
+			
+			.inforP .meetingNotice {
+				width: 250pt;
+			}
+			
+			.marginTop {
+				margin-top: 30pt;
+			}
+			
+			.flower {
+				position: absolute;
+				background-color: #fff;
+				left: -6pt;
+				top: 60pt;
+				padding: 5pt 0 5pt 0;
+			}
+			
+			.flowerR {
+				left: 340pt;
+				top: 60pt;
+			}
+		</style>
+		 <style type="text/css" media="print">
+            .noprint { display:none;}
+              @page { margin: 0; }
+        </style>	
+	</head>
+
+	<body>
+		<div class="rowGroup" style='color:red;text-align:center'>
+		       <label class="col-sm-2 control-label"> <b style="color: red;"></b></label>
+		       <div class="col-sm-10" >
+		              <div style='text-align:center; position:relative; top:30px'>
+		                 	<span style='color:red;text-align:left'>
+		                 			 温馨提示：1.打印座位票时需要在页面设置中设为横向打印。2.页眉和页脚下拉选项全部选择“空”。3.取消浏览器的兼容性设置
+		                 	</span> 
+		              </div>
+		       </div>
+         </div>
+		
+		
+		<!--startprint1-->
+			<div class="content" id="ul">
+				
+			</div>
+		<!--endprint1-->
+	   <!-- 按钮区 -->
+	    <div class="form_btn_area" style="text-align: center;" >
+	        <button id="sendFLow" class="btn btn-large btn-primary form_btn_area_btn2 noprint" style="background-color:#428bca;border-color:#357ebd;margin: auto;margin-top: 5px;" onclick="publishForm();" >
+	            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" ></span>
+	            打&nbsp;印
+	        </button>
+	
+	    </div>
+	    <!-- 按钮区结束 -->
+	</body>
+	
+	 <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/seatTicket.js"></script>
+ <script type="text/javascript" src="/common/js/getrequest.js"></script>
+</html>

@@ -1,0 +1,191 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 填写日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="time"
+                                       id="time" />
+                            </div>
+                            <label class="col-md-1 control-label">姓名：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="name"
+                                       id="name" />
+                            </div>
+                            <label class="col-md-1 control-label">目的党组织名称：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="aimName"
+                                       id="aimName" />
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2" onclick="MyLayer.layerOpenUrl({url:'/modules/dwgl/dygl/dyzmx/dyzmxAipFrom.html',title:'党证明信',width:'90%',height:'90%'})">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 开具证明信
+                </button>
+
+            </div>
+        </div>
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center"
+    },
+        {
+            field : 'name',
+            sortable : true,
+            title : '姓名',
+            width : '15%',
+            align : "center"
+        },
+        {
+            field : 'timeRange',
+            sortable : true,
+            title : '填写日期',
+            width : '15%',
+            align : "center"
+
+        },
+        {
+            field : 'proveNumber',
+            sortable : true,
+            title : '证明信编号',
+            width : '15%',
+            align : "center"
+        },
+        {
+            field : 'aimName',
+            sortable : true,
+            title : '目的党组织名称',
+            width : '15%',
+            align : "center"
+        },
+        {
+            field: 'partyType',
+            sortable: true,
+            title: '党员类型',
+            width: '15%',
+            align: "center"
+        },
+        {
+            field: 'cz'
+            , title: '操作'
+            , width: '18%'
+            , align:"center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var html = "";
+                html +="<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun("+row.id+")\'></i>&nbsp;&nbsp;"
+                 html += "<i class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+
+                return html;
+            }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mock/dwgl/dygl/dyzmx/dyzmxList.json",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.xname = $('#queryDiv input[name=\'textfield2\']').val();
+                params.xage = $('#queryDiv input[name=\'textfield2\']').val();
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+                    MyLayer.layerOpenUrl({url:'/modules/dwgl/dygl/dyzmx/dyzmxOnlyAipFrom.html',title:'查看党员证明信',width:'90%',height:'90%'});
+                });
+            }
+        });
+    });
+
+    //    表格数据项的操作url:'/modules/dwgl/dygl/dyzmx/dyzmxAipFrom.html',title:'党证明信',width:'95%',height:'90%'}
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'/modules/dwgl/dygl/dyzmx/dyzmxAipFrom.html',
+                title:'修改党员证明信'
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'/index.html?id=' + id,
+                tableId:'right_table'
+            })
+        }
+    }
+
+</script>

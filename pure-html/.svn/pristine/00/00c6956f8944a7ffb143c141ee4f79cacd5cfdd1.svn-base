@@ -1,0 +1,40 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "meetingRoom": "第一会议室",
+        "meetingName": "关于保密第四次会议",
+        "startTime": "2018-03-04 09:00:00 - 2018-03-01 11:00:00",
+        "status":"草稿",
+        "cz": "update"
+      },
+      {
+        "id": 2,
+        "meetingRoom": "第一会议室",
+        "meetingName": "关于保密第三次会议",
+        "startTime": "2018-03-03 09:00:00 - 2018-03-03 11:00:00",
+        "status":"草稿",
+        "cz": "update"
+      },
+      {
+        "id": 3,
+        "meetingRoom": "第一会议室",
+        "meetingName": "关于保密第二次会议",
+        "startTime": "2018-03-02 09:00:00 - 2018-03-02 11:00:00",
+        "status":"已发布",
+        "cz": "cuiban"
+      },
+      {
+        "id": 4,
+        "meetingRoom": "第一会议室",
+        "meetingName": "关于保密第一次会议",
+        "startTime": "2018-03-01 09:00:00 - 2018-03-01 11:00:00",
+        "status":"已发布",
+        "cz": "cuiban"
+      }
+    ]
+  }
+}

@@ -1,0 +1,138 @@
+/* 蓝色 主题色 rgb(34, 160, 245) */
+/******************************************** 二级页面 ********************************************/
+/* 修改右侧区域背景 */
+.right_wrapper {
+    background: #ffffff;
+}
+.panel-default  {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+input[disabled] {
+    pointer-events: none;
+    opacity: 0.6;
+}
+.panel-default > .panel-heading {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    background-color: #ffffff;
+    border-left: 4px solid rgb(34, 160, 245);
+}
+.panel-body {
+    /*padding-bottom: 0;*/
+}
+.panel-body .form-group:last-child {
+    /*background-color: #eee;*/
+    padding: 10px 0;
+    margin-top: 30px;
+    margin-bottom: 0px !important;
+}
+.btn-primary:nth-child(1),.btn-primary:nth-child(1):active {
+    color: #fff;
+    background-color: rgb(34, 160, 245);
+    border:0;
+    border-radius: 4px;
+}
+.btn-primary:nth-child(2),.btn-primary:nth-child(2):active {
+    color: #000;
+    border: 1px solid #ccc;
+    background: #ffffff;
+}
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+    outline:none;
+}
+
+/* 按钮样式 */
+.list_button_area {
+    padding-left: 15px !important;
+    border-left: 4px solid rgb(34, 160, 245) !important;
+}
+
+/* table隔行换色 */
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #eee;
+}
+/*  table 鼠标悬浮样式 */
+/*#right_table > tbody > tr:hover {*/
+    /*color: #ffffff ;*/
+    /*background-color: rgb(87, 160, 237) ;*/
+/*}*/
+/*#right_table > tbody > tr:hover a{*/
+    /*color: #ffffff;*/
+/*}*/
+/* 档案管理-档案归还 修改鼠标移入table表格中的子表时的样式 */
+/*#right_table > tbody > .detail-view :hover {*/
+    /*color: #000000 !important;*/
+/*}*/
+/*#right_table > tbody > .detail-view tbody tr:hover {*/
+    /*color: #ffffff !important;*/
+    /*background-color: rgb(87, 160, 237) ;*/
+/*}*/
+/*#right_table > tbody > .detail-view tbody tr td:hover {*/
+    /*color: #ffffff !important;*/
+/*}*/
+
+
+.panel-controls > i.showSelect {
+    z-index: 0;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    color:#000000 !important;
+    font-size: 10px !important;
+    text-align: center;
+    border: 1px solid #cccccc;
+    border-radius: 50%;
+}
+/*  三级页面头部  */
+.layui-layer-title {
+    color: #ffffff !important;
+    background-color: rgb(58,132,210) !important;
+}
+
+#type2 {
+    border: 1px solid rgb(169, 169, 169);
+}
+/* 按钮鼠标悬浮效果 */
+.list_table_btn2:hover {
+    color:#000000;
+    background: none;
+    border-color:rgb(34, 160, 245);
+}
+
+.pagination > .active > a {
+    background-color: rgb(34, 160, 245);
+    border-color: rgb(34, 160, 245);
+}
+/* 解决系统管理-常用工具页面 鼠标拖动时文字变色问题 */
+.reorder_rows_onDragClass td {
+    background-color: rgb(87, 160, 237) !important;
+    -webkit-box-shadow: 11px 5px 12px 2px #333, 0 1px 0 #ccc inset, 0 -1px 0 #ccc inset;
+    -webkit-box-shadow: 6px 3px 5px #555, 0 1px 0 #ccc inset, 0 -1px 0 #ccc inset;
+    -moz-box-shadow: 6px 4px 5px 1px #555, 0 1px 0 #ccc inset, 0 -1px 0 #ccc inset;
+    -box-shadow: 6px 4px 5px 1px #555, 0 1px 0 #ccc inset, 0 -1px 0 #ccc inset;
+}
+/*  考勤表-修改信息悬浮框样式 */
+.popover {
+    color: #000;
+}
+
+/* 文件管理-收文-修改弹出框input样式 */
+.layui-layer-content  input {
+    line-height: 18px;
+    border-width: 1px;
+    border-style: inset;
+    border-color: #cccccc;
+}
+
+.fixed-table-container {
+    color:#000000;
+}

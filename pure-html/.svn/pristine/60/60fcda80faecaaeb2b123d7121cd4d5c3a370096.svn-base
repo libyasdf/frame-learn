@@ -1,0 +1,9 @@
+{
+	"flag":"1",
+	"data":[{
+		"name":"局长发信列表",
+		"url":"/modules/ldztc/jzztc/sendMailList.html",
+		"style":"/static/images/ico_write.png",
+		"id":"001001001"
+	}]
+}

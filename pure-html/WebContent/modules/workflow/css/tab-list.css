@@ -1,0 +1,216 @@
+@charset "utf-8";
+
+/* CSS Document */
+body {
+	font-family: "宋体";
+	font-size: 12px;
+	color: #000000;
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	line-height: 130%;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #000;
+	text-decoration: none;
+}
+
+/*对齐方式*/
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
+
+/*背景颜色*/
+.bgwhite {
+	background: #fff;
+}
+
+.bggray {
+	background: #f0f0f0
+}
+
+.bgblue {
+	background: #ebf7fe;
+}
+
+.bgsilver {
+	background: #f0f4f6;
+}
+
+/*链接字颜色*/
+.Ablue a {
+	color: #00f;
+}
+
+.Awhite a {
+	color: #fff;
+}
+
+/*翻页字色*/
+.number-red {
+	color: #ff0100;
+	padding-left: 8px;
+	padding-right: 2px;
+}
+
+.list-bodybg {
+	background: #e9f4fa url(../../images/middle/list_bodybg.gif) repeat-x;
+	padding-top: 30px;
+}
+
+/*文字类型*/
+.Cred {
+	color: #ff0100;
+}
+
+.Cgray {
+	color: #9c9fa2;
+}
+
+.Cblue {
+	color: #346699;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+/*表单*/
+.input-search {
+	border: solid 1px #b7b8ba;
+	height: 18px;
+	background: #fff;
+}
+
+.input-line {
+	border: solid 1px #000;
+	border-width: 0px 0px 1px 0px;
+	height: 18px;
+}
+
+.input-box {
+	border: solid 1px #81aecb;
+}
+
+.textarea {
+	border: solid 1px #9ec3dd;
+}
+
+/*查询*/
+.search {
+	background: #c1c2c4;
+	margin-bottom: 5px;
+}
+
+.search_title {
+	background: url(../../images/middle/search_bg.gif) repeat-x;
+	height: 20px;
+}
+
+.search_bg {
+	background: #f2f2f2;
+	padding: 3px;
+}
+
+.search_submit {
+	background: url(../../images/middle/search_submit.gif) repeat-x;
+	padding: 1px 3px 0px 3px;
+	border: solid 1px #a0a9ae;
+}
+
+/*右边列表页*/
+.main_list {
+	background: #a6abcb;
+}
+
+.main_list td {
+	padding: 1px 3px;
+}
+
+.main_tabtitle {
+	background: url(/images/middle/main_listtitle.gif) repeat-x;
+	border: solid 1px #a6abcb;
+	border-bottom: 0px;
+}
+
+.main_listtdbg {
+	background: url(../../images/middle/main_listtd.gif) repeat-x;
+}
+
+.main_title {
+	font-weight: bold;
+	color: #57628d;
+	background: url(../../images/middle/pic1.gif) no-repeat left;
+	padding-left: 20px;
+}
+
+/*弹出列表页*/
+.poplist_tab {
+	background: #366b97;
+}
+
+.poplist_tab td {
+	padding: 1px 3px;
+}
+
+.poplist_title {
+	background: url(../../images/middle/pic2.gif) no-repeat left;
+	padding-left: 20px;
+	color: #000105;
+	font-weight: bold;
+}
+
+.poplist_bg {
+	border: solid 1px #366b97;
+	padding: 5px;
+	background: #fff;
+}
+
+.poplist_list {
+	background: #bebebc;
+	margin-bottom: 5px;
+}
+
+.poplist_listtd {
+	background: #eaeae8;
+	border: solid 1px #bebebc;
+}
+
+.poplist_listbg {
+	background: url(../../images/middle/poplist_listbg.gif) repeat-x bottom;
+}
+
+.poplist_graybg {
+	background: #fff url(../../images/middle/poplist_graybg.gif) repeat-x
+		bottom;
+	border: solid 1px #fff;
+	line-height: 16pt;
+}
+
+.poplist_bottomright {
+	border: solid 1px #bebebc;
+	border-width: 0px 1px 1px 0px
+}
+
+.poplist_bottom {
+	border: solid 1px #bebebc;
+	border-width: 0px 0px 1px 0px
+}
+
+.poplist_right {
+	border: solid 1px #bebebc;
+	border-width: 0px 1px 0px 0px
+}
+
+.poplist_page {
+	background: url(../../images/middle/poplist_page.gif) repeat-x bottom;
+}

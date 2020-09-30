@@ -1,0 +1,14 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "jkrmc": "开始名称",
+        "bz": "考试分类",
+        "cz": "update,delete"
+      }
+    ]
+  }
+}

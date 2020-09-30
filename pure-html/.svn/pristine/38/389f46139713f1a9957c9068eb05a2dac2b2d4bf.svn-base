@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+	<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd"> 
+	<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'> 
+	    <!-- 控制台打印的内容 -->
+		<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender"> 
+			<layout class="org.apache.log4j.PatternLayout"> 
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %p ] - %m%n"/>
+			</layout> 
+		</appender> 
+	    <!-- 将DEBUG级别的日志打印到对应文件中 -->
+		<appender name="DEBUG" class="org.apache.log4j.RollingFileAppender"> 
+			<param name="File" value="/cfs/servicefile/tjxm/logs/debug.log"/> 
+			<param name="Append" value="true"/> 
+			<param name="MaxFileSize" value="10240KB"/> 
+			<param name="MaxBackupIndex" value="2"/> 
+			<layout class="org.apache.log4j.PatternLayout"> 
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/> 
+			</layout> 
+			<filter class="org.apache.log4j.varia.LevelRangeFilter"> 
+				<param name="LevelMin" value="DEBUG" /> 
+				<param name="LevelMax" value="DEBUG" /> 
+			</filter> 
+		</appender> 
+	    <!-- 将INFO级别的日志打印到对应文件中 -->
+		<appender name="INFO" class="org.apache.log4j.RollingFileAppender"> 
+			<param name="File" value="/cfs/servicefile/tjxm/logs/info.log"/> 
+			<param name="Append" value="true"/> 
+			<param name="MaxFileSize" value="10240KB"/> 
+			<param name="MaxBackupIndex" value="2"/> 
+			<layout class="org.apache.log4j.PatternLayout"> 
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/> 
+			</layout> 
+			<filter class="org.apache.log4j.varia.LevelRangeFilter"> 
+				<param name="LevelMin" value="INFO" /> 
+				<param name="LevelMax" value="INFO" /> 
+			</filter> 
+		</appender> 
+	    <!-- 将WARN级别的日志打印到对应文件中 -->
+		<appender name="WARN" class="org.apache.log4j.RollingFileAppender"> 
+			<param name="File" value="/cfs/servicefile/tjxm/logs/warn.log"/> 
+			<param name="Append" value="true"/> 
+			<param name="MaxFileSize" value="10240KB"/> 
+			<param name="MaxBackupIndex" value="2"/> 
+			<layout class="org.apache.log4j.PatternLayout"> 
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/> 
+			</layout> 
+			<filter class="org.apache.log4j.varia.LevelRangeFilter"> 
+				<param name="LevelMin" value="WARN" /> 
+				<param name="LevelMax" value="WARN" /> 
+			</filter> 
+		</appender> 
+	    <!-- 将ERROR级别以上的日志打印到文件中 -->
+		<appender name="ERROR" class="org.apache.log4j.RollingFileAppender"> 
+			<param name="File" value="/cfs/servicefile/tjxm/logs/error.log"/> 
+			<param name="Append" value="true"/> 
+			<param name="MaxFileSize" value="10240KB"/> 
+			<param name="MaxBackupIndex" value="2"/> 
+			<layout class="org.apache.log4j.PatternLayout"> 
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/> 
+			</layout> 
+			<filter class="org.apache.log4j.varia.LevelRangeFilter"> 
+				<param name="LevelMin" value="ERROR" /> 
+			</filter> 
+		</appender>
+
+		<!-- 新增webscoket的日志打印到对应文件中 -->
+		<appender name="WEBSCOKETLOG" class="org.apache.log4j.RollingFileAppender">
+			<param name="File" value="/cfs/servicefile/tjxm/logs/webscoket.log"/>
+			<param name="Append" value="true"/>
+			<param name="MaxFileSize" value="10240KB"/>
+			<param name="MaxBackupIndex" value="10"/>
+			<layout class="org.apache.log4j.PatternLayout">
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/>
+			</layout>
+		</appender>
+		<logger name="WEBSCOKET" additivity="false">
+			<level value="INFO"/>
+			<appender-ref ref="WEBSCOKETLOG"/>
+		</logger>
+
+		<!-- 新增学习考核发送待办的日志打印到对应文件中 -->
+		<appender name="TESTMANAGETLOG" class="org.apache.log4j.RollingFileAppender">
+			<param name="File" value="/cfs/servicefile/tjxm/logs/testmanage.log"/>
+			<param name="Append" value="true"/>
+			<param name="MaxFileSize" value="10240KB"/>
+			<param name="MaxBackupIndex" value="10"/>
+			<layout class="org.apache.log4j.PatternLayout">
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/>
+			</layout>
+		</appender>
+		<logger name="TESTMANAGE" additivity="false">
+			<level value="INFO"/>
+			<appender-ref ref="TESTMANAGETLOG"/>
+		</logger>
+
+		<!-- 新增auditlog的日志打印到对应文件中 -->
+		<appender name="AUDITLOG" class="org.apache.log4j.RollingFileAppender">
+			<param name="File" value="/cfs/servicefile/tjxm/logs/auditlog.log"/>
+			<param name="Append" value="true"/>
+			<param name="MaxFileSize" value="10240KB"/>
+			<param name="MaxBackupIndex" value="10"/>
+			<layout class="org.apache.log4j.PatternLayout">
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/>
+			</layout>
+		</appender>
+        <appender name="console" class="org.apache.log4j.RollingFileAppender">
+            <layout class="org.apache.log4j.PatternLayout">
+                <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %p ] - method:%l  %m%n"/>
+            </layout>
+        </appender>
+		<logger name="auditLog" additivity="false">
+			<level value="ALL"/>
+			<appender-ref ref="AUDITLOG"/>
+            <appender-ref ref="console"/>
+		</logger>
+
+		<!-- 新增ALL级别的日志打印到对应文件中 -->
+		<appender name="REQLOG" class="org.apache.log4j.RollingFileAppender">
+			<param name="File" value="/cfs/servicefile/tjxm/logs/SSOFilter.log"/>
+			<param name="Append" value="true"/>
+			<param name="MaxFileSize" value="10240KB"/>
+			<param name="MaxBackupIndex" value="5"/>
+			<layout class="org.apache.log4j.PatternLayout">
+				<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] - method:%l  %m%n"/>
+			</layout>
+		</appender>
+		<logger name="REQLOGGER" additivity="false">
+			<level value="INFO"/>
+			<appender-ref ref="REQLOG"/>
+		</logger>
+	<!-- ### set log levels level优先级分别为FATAL、ERROR、WARN、INFO、DEBUG 5个级别 ### -->
+		<root> 
+			<priority value="INFO"/> 
+			<appender-ref ref="STDOUT"/> 
+			<appender-ref ref="DEBUG"/> 
+			<appender-ref ref="INFO"/> 
+			<appender-ref ref="WARN"/> 
+			<appender-ref ref="ERROR"/>
+		</root>
+</log4j:configuration> 

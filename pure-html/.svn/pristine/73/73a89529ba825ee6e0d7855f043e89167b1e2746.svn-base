@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+</head>
+<body class="formpage_bj">
+<form class="form-horizontal" id="form" autocomplete="off">
+    <!-- resId -->
+    <input name="resId" id="resId" type="hidden" value="">
+    <input name="id" id="id" type="hidden" value="">
+    <!-- 流程字段-->
+    <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">编研信息</span>
+                    <b style="color: red;">* 请先填写完编研信息保存后，再进行分发信息操作</b>
+                </div>
+
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label class="col-md-2 control-label"><b style="color: red;">*</b> 文件标题：</label>
+                        <div class="col-md-4">
+                            <input class="form-control" name="title" id="title">
+                        </div>
+                    </div>
+                    <div class="rowGroup">
+                        <label class="col-md-2 control-label"><b style="color: red;">*</b> 年份：</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="year" name="year">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">分发信息</span>
+                    <b style="color: red;">* 在选择处室添加分发信息时，选择处室的顺序将影响分发信息及汇总信息的内容顺序，请合理选择处室顺序</b>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12 p-f-60">
+                <!-- 功能按钮区域-->
+                <div style='margin-bottom: 3px'>
+                    <textarea id="chushiName" name="chushiName" onclick="checkMain();" class="form-control" rows="3" placeholder="可在这里批量选择处室进行添加！" onchange="addRows()"></textarea>
+                    <input hidden id="chushiId" name="chushiId" /><!-- 处室ID隐藏域 -->
+                </div>
+                <div style='margin-bottom: 3px'>
+                    <button class="list_table_btn2 allDelete" type="button" id="deleteId">
+                        <span class="glyphicon glyphicon-remove"></span> 删除
+                    </button>
+                </div>
+                <div class="table__scrollable-y">
+                    <div class="table__header-wrapper">
+                        <table class="table table-hover table-striped m-b-0">
+                            <thead>
+                            <tr>
+                                <th style="width: 50px;" class="text-center">
+                                    <input type="checkbox" id="checkboxSuccess" value="option1">
+                                </th>
+                                <th style="width: 50px;" class="text-center">
+                                    序号
+                                </th>
+                                <th style="width: 200px;" data-field="chushiName" class="text-center">
+                                    <span class="required" style="color: red;">*</span>
+                                    处室
+                                </th>
+                                <th style="width: 450px;" data-field="fj" class="text-center">
+                                    <span class="required" style="color: red;">*</span>
+                                    附件
+                                    <span class="glyphicon glyphicon-exclamation-sign userTitle"
+                                          data-toggle="tooltip"
+                                          data-placement="bottom"
+                                          title="附件名称不可重复！">
+                                        </span>
+                                </th>
+                                <th style="width: 200px;" data-field="cz" class="text-center">
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="table_body-wrapper">
+                        <table class="table table-hover table-striped table-reset js-disk-row" id="otherPeople"
+                               style="border: 0px">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="commitForm()"><span
+            class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存
+    </button>
+    <button id="subflow" class="btn btn-primary form_btn_area_btn2" onclick="sendWaitNoflow()"><span
+            class="glyphicon glyphicon-send" aria-hidden="true"></span> 发送
+    </button>
+    <!--<button id="approval" class="btn btn-primary form_btn_area_btn2" style="display: none"
+            onclick="finishFlow(Config.approvalflag);"><span class="glyphicon glyphicon-ok"
+                                                             aria-hidden="true"></span> 通过
+    </button>
+    <button id="noApproval" class="btn btn-primary form_btn_area_btn2" style="display: none"
+            onclick="finishFlow(Config.noApprovalflag);"><span class="glyphicon glyphicon-remove"
+                                                               aria-hidden="true"></span> 不通过
+    </button>-->
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 引入自己模块功能的js -->
+<script type="text/javascript" src="/modules/dagl/bygl/js/studyingForm.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="/modules/dagl/bygl/js/studuingValidator.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<script type="text/javascript" src="/static/core/nodetpl.min.js"></script>
+<script type="text/javascript" src="/static/core/jquery-serializejson/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="/modules/dagl/bygl/js/jquery-util.js"></script>
+<script type="text/javascript" src="/modules/dagl/bygl/js/checkFoem.js"></script>
+<!--附件上传-->
+<!--文件上传js-->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/modules/dagl/bygl/js/myfilupload.js"></script>
+
+<script name="main" type="text/template">
+    <?for(var i = 0; i < @data.length; i++) {?>
+    <tr id="<?=@data[i].id?>">
+        <td class="text-center" style="width: 50px;">
+            <input type="checkbox" name="checkboxName" value="option1">
+            <input type="hidden" id="id<?=(i+1)?>" name="id" value="<?=@data[i].id ?>">
+        </td>
+        <td class="text-center" name="numName" style="width: 50px;"><?=(i+1)?></td>
+
+        <td class="text-center" style="width: 200px;"><?=@data[i].recChushiName ?>
+        	<input hidden id="chushiName<?=(i+1)?>" name="chushiName" value="<?=@data[i].recChushiName ?>"/>
+            <input hidden id="chushiId<?=(i+1)?>" name="chushiId" value="<?=@data[i].recChushiId ?>"/><!-- 处室ID隐藏域 -->
+        </td>
+
+        <td class="text-center" style="width: 450px;">
+            <div class="files row">
+                <div id="<?=(i+10001)?>" class="col-md-10" name="fj" style="margin: 0 auto;width: 450px;">
+                </div>
+            </div>
+        </td>
+
+        <td class="text-center" style="width: 200px;">
+            <span class="btn btn-primary fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>选择文件...</span>
+                <input id="fileupload<?=(i+10001)?>" type="file" name="cz" multiple>
+            </span>
+        </td>
+    </tr>
+    <?}?>
+</script>
+<script type="text/javascript">
+
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#year'
+        ,type: 'year'
+        ,done : function(value, date, endDate) {
+            $('#year').val(value).change()
+        }
+    });
+
+    scrollTop.init();
+</script>
+</body>
+</html>

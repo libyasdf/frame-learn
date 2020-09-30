@@ -1,0 +1,355 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css" href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+      <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <input type="hidden" id="associativeUnitId" name="associativeUnitId" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div class="vertify-panel vertify-details" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 奖励日期：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="rewardTime" name="rewardTime" value=""/>
+                                </div>
+                                <label class="col-md-2 control-label"> 奖励内容：</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="rewardContent" name="rewardContent" >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 奖励原因：</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="rewardReason" name="rewardReason" >
+                                    </select>
+                                </div>
+                                <label class="col-md-2 control-label" id="labelId"> 姓名：</label>
+                                <div class="col-md-3" id="user">
+                                    <div class="input-group">
+                                        <input type="text" id="partyMember"  unselectable="on"  name="partyMember" class="form-control" onclick="openSelectZtree({'id':'userId','name':'partyMember','type':'1','asyn':false,'isMulti':'1','deptId':$('#associativeUnitId').val(),'url':'/system/component/tree/deptAndUserTree'});">
+                                        <input type="hidden" id="userId" name="userId" /><!-- 人员ID隐藏域 -->
+                                                    <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-user" onclick="openSelectZtree({'id':'userId','name':'partyMember','type':'1','asyn':false,'isMulti':'1','deptId':$('#associativeUnitId').val(),'url':'/system/component/tree/deptAndUserTree'});"></span>
+                                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="addType('1')">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<!--
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+-->
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/dwgl/common/dzzTree.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+
+    <!-- 页面获取参数 -->
+<!--<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>-->
+    <script type="text/javascript">
+        //日期范围
+        laydate.render({
+            elem: '#rewardTime'
+            , range: true
+        });
+        var resource = {
+            resId : $('#left_ul').find('a.active').attr("id")
+        }
+
+        //奖励原因
+        Dictionary.init({position:"rewardReason",mark:"dwgl_dygl_jlqk_jlyy",type:"1",name:"rewardReason",domType:"select"});
+        //奖励内容
+        Dictionary.init({position:"rewardContent",mark:"dwgl_dygl_jlqk_jlnr",type:"1",name:"rewardContent",domType:"select"});
+
+        var jlnrMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_jlqk_jlnr",type:"1"});
+        var jlyyMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_jlqk_jlyy",type:"1"});
+        var pzjgMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_jlqk_pzjg",type:"1"});
+
+        //定义bootatrap-table数据列
+        //sortable：开启列排序，其他参考API
+        var right_table_col = [{
+            title: '序号'
+            , width: '2%'
+            , order: "desc"
+            , align: "center"
+            , formatter: function (value, row, index) {
+                //计算序号，并存放开关ID，及已办事项ID
+                var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+                return "<span recordid='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+            }
+        }, {
+            field: 'partyMember'
+            , title: '姓名'
+            , width: '6%'
+            , align: "center"
+        },{
+            field: 'rewardTime'
+            , title: '奖励日期'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'rewardUnit'
+            , title: '奖励机构'
+            , width: '10%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+                var val = value;
+                if(value){
+                    if(value.length>5){
+                        val = val.substring(0,5)+"...";
+                    }
+                    return "<span title='"+value+"'>" + val + "</span>";
+                }
+            }
+        },{
+            field: 'rewardContent'
+            , title: '奖励内容'
+            , width: '15%'
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return jlnrMap[value];
+            }
+        }, {
+            field: 'rewardReason'
+            , title: '奖励原因'
+            , width: '10%'
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return jlyyMap[value];
+            }
+        },{
+            field: 'approvalOrganLevel'
+            , title: '批准机关级别'
+            , width: '10%'
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return pzjgMap[value];
+            }
+        },{
+            field: 'rewardRevokeTime'
+            , title: '奖励撤销日期'
+            , width: '10%'
+            , align: "center"
+        },{
+            title: '操作'
+            , width: '7%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var html = "";
+                html += "<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+
+                return html;
+            }
+        }];
+
+    if(getcookie("rolesNo").indexOf("D478") >= 0){
+        dzzTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"user"});
+    }else{
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+            dataType: "json",
+            success: function (data) {
+                dzzTree.init({id:data.data,type:"user"});
+            },
+            error: function (data) {
+            }
+        })
+    }
+
+        var nodeId ="";
+        var nodeType ="";
+        if( $.fn.zTree.getZTreeObj("treeDemo")){
+            var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+            nodeId = node.id;
+            nodeType=node.type;
+        }
+        TableInit.init({
+            domId: "right_table",
+            url: "djgl/ddjs/dygl/dyjl/getList?id="+nodeId+"&type="+nodeType,
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.rewardTime = $("#rewardTime").val();
+                params.partyMember = $.trim($("#partyMember").val());
+                params.rewardContent = $("#rewardContent").val();
+                params.rewardReason = $("#rewardReason").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                if( $.fn.zTree.getZTreeObj("treeDemo")){
+                    var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+                    nodeId = node.id
+                    var datas = {"id":nodeId};
+                    if(node.orgType=="666"){
+                        document.getElementById("labelId").style.display='none';
+                        document.getElementById("user").style.display = "none";
+                    }else{
+                        document.getElementById("labelId").style.display='block';
+                        document.getElementById("user").style.display = "block";
+                        httpRequest("get","/djgl/ddjs/shyk/zbdydh/getOrgName",datas,function (data){
+                            var  unitId =data.data[0].ASSOCIATIVE_UNIT_ID;
+                            $("#associativeUnitId").val(unitId);
+                        });
+                    }
+                }
+                $('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+                $('tr.readOnly').find('td:not(:last)').unbind('click')
+                    .bind('click', function (e) {
+                        //取消事件冒泡
+                        var evt = e ? e
+                            : window.event;
+                        if (evt.stopPropagation) {
+                            evt.stopPropagation();
+                        } else {
+                            evt.cancelBubble = true;
+                        }
+                        //取消事件冒泡 end
+                        var id = $(this).parent().find("span[recordid]").attr("recordid");
+                        var resId = $('#left_ul').find('a.active').attr("id");
+                        MyLayer.layerOpenUrl({
+                            url: '/modules/dwgl/dygl/dyxxwh/dyxx/dyjlReadOnlyEditForm.html?id=' + id + "&resId=" + resId + "&opertation=VIEW",
+                            title: '奖励情况',
+                            width: '90%',
+                            height: '85%'
+                        });
+                    });
+            }
+        });
+
+        function refreshTable(treeNode) {
+            var opt = {
+                url:"djgl/ddjs/dygl/dyjl/getList?id="+treeNode.id+"&type="+treeNode.type,
+                pageNumber:1,
+                pageSize:10
+            };
+            $('#right_table').bootstrapTable('refresh',opt);
+        }
+
+        //表格数据项的操作
+        var list = {
+            editFun: function (id) {
+                var resId = $('#left_ul').find('a.active').attr("id");
+                MyLayer.layerOpenUrl({
+                    url: '/modules/dwgl/dygl/dyxxwh/dyxx/dyjlEditForm.html?id=' + id + "&opertation=EDIT&resId=" + resId,
+                    title: "修改党员奖励信息"
+                })
+            },
+            deleteFun: function (id) {
+                MyLayer.deleteOpt({
+                    url: '/djgl/ddjs/dygl/dyjl/deleteById?id=' + id,
+                    tableId: 'right_table'
+                })
+            }
+        }
+
+        function addType() {
+            if ($.fn.zTree.getZTreeObj("treeDemo")) {
+                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                var node = treeObj.getSelectedNodes()[0];
+                var parentNode = node.getParentNode();
+                if ("user" != node.type) {
+                    layer.msg("请选择一个需要添加奖励情况的党员！", {icon: 0});
+                    return;
+                }
+                if (parentNode != null || parentNode != "") {
+                    MyLayer.layerOpenUrl({
+                        url: '/modules/dwgl/dygl/dyxxwh/dyxx/dyjlEditForm.html?partyMember=' + encodeURI(node.name) + "&partyMemberId=" + node.id + "&partyOrganizationId=" + parentNode.id + "&partyOrganization=" + encodeURI(parentNode.name),
+                        title: "新增党员奖励"
+                    })
+                }
+            }
+        }
+        //清空查询条件
+        function clearAll(){
+            $("#rewardTime").val("");	//奖励时间
+            $("#partyMember").val("");	//党员姓名
+            $("#userId").val("");
+            $("#rewardContent").val("");	//奖励内容
+            $("#rewardReason").val("");	//奖励原因
+        }
+</script>

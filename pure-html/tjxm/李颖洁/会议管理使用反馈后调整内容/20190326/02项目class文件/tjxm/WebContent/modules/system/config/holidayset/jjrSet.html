@@ -1,0 +1,277 @@
+
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>企业中心</title>
+
+
+		
+  </head>
+
+<body style="background: #f1f1f1">
+
+<div class="jjr_window" style="width: 700px; height: 455px; margin: 10px auto; ">
+	<div class="jjr_window_title">
+		<div class="fl name"><img src="/static/images/ico_date.png" width="32" height="32" alt=""/> 节假日设置 </div>
+	</div>
+	<div class="jjr_window_main">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+		  <tbody>
+			<tr>
+			  <td width="71%" valign="top">
+				  <div class="jjr_rili" style="width: 450px; margin: 0 auto;">
+				   <div class="jjr_rili_title">
+					    <span class="rl_btn_fy"><a href="#" id="lt1" >&lt;</a></span> 
+						<span class="rl_date"><span id="year"></span>年<span  id="month"></span>月</span> 
+						<span class="rl_btn_fy"><a href="#"  id="gt1" >&gt;</a></span>
+				   </div>
+    
+    
+					<div class="jjr_rili_main">
+						<table class="table table-bordered jjr_rili_table" width="100%" border="0" cellspacing="0" id="table" cellpadding="0">
+							<tbody>
+								<tr class="title" align="center">
+									<td>日</td>
+									<td>一</td>
+									<td>二</td>
+									<td>三</td>
+									<td>四</td>
+									<td>五</td>
+									<td>六</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+							
+
+						</div>
+			  </td>
+			  <td width="29%">
+				  <div class="jjr_tushi"><span class="jjr_color_jjr" ></span> 节假日</div>
+				  <div class="jjr_tushi"><span class="jjr_color_gzr"></span> 工作日</div>
+				  <div class="jjr_tushi">&nbsp;</div>
+					
+			  		<div style="margin-top: 20px; padding-left: 30px; font-size: 16px;" onclick="setWorkDay()"> <button type="button" class="btn btn-primary" > 设置工作日</button></div>
+			  		<div style="margin-top: 20px; padding-left: 30px; font-size: 16px;" onclick="setFreeDay()"> <button type="button" class="btn btn-primary" > 设置节假日</button></div>
+			  		<div style="margin-top: 20px; padding-left: 30px; font-size: 16px;" onclick="setBack()"> <button type="button" class="btn btn-primary" >  &nbsp;恢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复&nbsp;</button></div>
+			  </td>
+			</tr>
+			
+		  </tbody>
+		</table>
+		<div>
+		<b style="color: red;">温馨提示：此页面只是设置元旦、春节、清明节、劳动节、端午节、中秋节、国庆节等法定假日的放假情况</b>
+		</div>
+	</div>
+</div>
+<script src="/common/js/commonFunction.js"></script>
+<script type="text/javascript">
+var index;
+$(function($) {
+	var curDate=getCurrentDate("yyyy-MM");
+	$("#year").text(curDate.substr(0,4))
+	var month=curDate.substr(5,1)
+	if(month==0){
+		$("#month").text(curDate.substring(6))
+	}else{
+		$("#month").text(curDate.substring(5))
+	}
+	setData($("#year").text(),parseInt($("#month").text())-1);
+});
+//设置日历数据
+function setData(year,month){
+	$("#table tr:gt(0)").remove();
+	$.post("/zhbg/kqgl/holidaySet/getlist1",{year:year,month:month} ,function(data){
+			 spellData(data);
+			 document.getElementById("lt1").onclick=submonth;
+			document.getElementById("gt1").onclick=addmonth; 
+	} );
+	
+
+	
+}
+
+//拼凑要展示的数据
+function spellData(data){
+	for(var i=0;i<data.length;i++){
+		var trHTML = "<tr>"
+			for(var j=0;j<data[i].length;j++){
+				var type;
+				//alert(data[i][j].fullDay+"---"+data[i][j].validate)
+				if(!data[i][j].validate){
+					type=" <span class='none'>" + data[i][j].day + "</span> "
+					
+					if(data[i][j].hasData && data[i][j].isHoliday=='0'){
+						//工作日
+						
+						trHTML+="<td onclick='check(this)' class='gzr' style='cursor: pointer'>" + type + "<input type='hidden' value=" + data[i][j].fullDay + " /></td>"
+					}else if(data[i][j].hasData && data[i][j].isHoliday=='1'){
+						//休息日
+							trHTML+="<td onclick='check(this)' class='jjr' style='cursor: pointer'>" + type + "<input type='hidden' value=" + data[i][j].fullDay + " /></td>"			
+					}else{
+						trHTML+="<td onclick='check(this)' style='cursor: pointer'>" + type + "<input type='hidden' value=" + data[i][j].fullDay + " /></td>"
+					}
+				}else{
+					type=data[i][j].day;
+					//alert(data[i][j].fullDay+".........."+data[i][j].isHoliday)
+					if(data[i][j].hasData && data[i][j].isHoliday=='0'){
+						//工作日
+						trHTML+="<td onclick='check(this)' class='gzr' style='cursor: pointer'>" + type + "<input type='hidden' value=" + data[i][j].fullDay + " /></td>"
+					}else if(data[i][j].hasData && data[i][j].isHoliday=='1'){
+						//休息日
+						trHTML+="<td onclick='check(this)' class='jjr' style='cursor: pointer'>" + type + "<input type='hidden' value=" + data[i][j].fullDay + " /></td>"
+					}else{
+						trHTML+="<td onclick='check(this)' style='cursor: pointer' >" + type + "<input type='hidden' value=" + data[i][j].fullDay + " /></td>"
+					}
+					
+				}
+				
+			}
+		trHTML+="</tr>"
+		//alert(trHTML)
+		$("#table tbody").append(trHTML)
+		index=i;
+	}
+	
+}
+
+//设置某个单元格被选中
+function check(obj){
+	var len = $(obj).find("span[class='xuanzhong']").length
+	if(len==0){
+		//没有选中状态
+		$(obj).append("<span class='xuanzhong'></span>")
+	}else{
+		$(obj).find("span[class='xuanzhong']").remove()
+	}
+	
+}
+//设置工作日
+function setWorkDay(){
+	var dates = hasChecked("0");
+	if(dates==''){
+		layer.msg("请选择日期", {icon: 0});
+		return;
+	}else{
+		$.post("/zhbg/kqgl/holidaySet/setWorkday", { dates: dates },function(data){
+			/* $("#table tbody tr:gt(0)").remove();
+			setData($("#year").text(),parseInt($("#month").text())-1); */
+		} );
+	}
+}
+
+//设置休息日
+function setFreeDay(){
+	var dates = hasChecked("1");
+	if(dates==''){
+		layer.msg("请选择日期", {icon: 0});
+		return;
+	}else{
+		$.post("/zhbg/kqgl/holidaySet/setFreeDay", { dates: dates },function(data){
+			/* $("#table tbody tr:gt(0)").remove();
+			setData($("#year").text(),parseInt($("#month").text())-1); */
+		} );
+	}
+}
+//恢复
+function setBack(){
+	var dates = hasChecked("2");
+	if(dates==''){
+		layer.msg("请选择日期", {icon: 0});
+		return;
+	}else{
+		$.post("/zhbg/kqgl/holidaySet/setBack", { dates: dates },function(data){
+			/* $("#table tbody tr:gt(0)").remove();
+			setData($("#year").text(),parseInt($("#month").text())-1); */
+		} );
+	}
+}
+//查看是否有日期被选中，如果有，返回被选中日期组成的串
+function hasChecked(isHoliday){
+	var dates = "";
+	$xzSpan=$("span[class='xuanzhong']")
+	var len=$xzSpan.length;
+	if(len==0){
+		return dates;
+	}else{
+		$xzSpan.each(function(){
+			dates += $(this).siblings("input[type='hidden']").val() + ",";
+			if("1"==isHoliday){
+				$(this).parent().attr("class",'jjr')
+			}else if("0"==isHoliday){
+				$(this).parent().attr("class",'gzr')
+			}else{
+				$(this).parent().removeClass();
+			}
+			$(this).remove()
+		})
+		//alert(dates)
+		dates=dates.substring(0,dates.length-1)
+		return dates
+	}
+}
+//增加一个月
+function addmonth(){
+	if(index==5){
+		index=0;
+		this.onclick=fun;
+		var year;
+		var month = parseInt($("#month").text())+1
+		if(month>12){
+			year=parseInt($("#year").text())+1;
+			$("#year").text(year)
+			$("#month").text(1)
+		}else{
+			$("#month").text(month)
+		}
+		setData($("#year").text(),parseInt($("#month").text())-1);
+	}
+	
+}
+
+//减少一个月
+function submonth(){
+	if(index==5){
+		this.onclick=fun;
+		index=0;
+		var year;
+		var month = parseInt($("#month").text())-1
+		if(month<1){
+			year=parseInt($("#year").text())-1;
+			$("#year").text(year)
+			$("#month").text(12)
+		}else{
+			$("#month").text(month)
+		}
+		setData($("#year").text(),parseInt($("#month").text())-1);
+	}
+	
+}
+var fun = function(){
+			
+		}
+</script>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+
+
+
+
+	
+</body>
+</html>

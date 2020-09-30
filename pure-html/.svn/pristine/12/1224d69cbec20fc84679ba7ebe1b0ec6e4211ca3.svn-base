@@ -1,0 +1,13 @@
+门类管理表变动：录入人存在一人多岗情况，无法正确授予权限，新增所在部门id字段，解决该问题
+
+以下代码，在tjxm库执行：
+
+alter table dagl_cate_dept_person_relation add (
+    LRR_DEPT_ID VARCHAR2(50),
+    LJDW_ADMIN_DEPT_ID VARCHAR2(50)
+    );
+    comment on column DAGL_CATE_DEPT_PERSON_RELATION.LRR_DEPT_ID
+      is '录入人所在单位id';
+    comment on column DAGL_CATE_DEPT_PERSON_RELATION.LJDW_ADMIN_DEPT_ID
+      is '立卷单位管理员所在单位id';
+    commit;

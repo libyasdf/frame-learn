@@ -1,0 +1,172 @@
+<link rel="stylesheet" href="/static/core/layui/css/layui.css"  media="all">
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<!--全局查询-->
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" id="form">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 部门：</label>
+                            <div class="col-md-3">
+                                <input style="width: 100%;" id="cx_deptid" type="hidden" data-describe ="部门id值" class="layui-input">
+                                <input style="width: 100%;" id="cx_deptname" type="text" onfocus="onfocus_deptid()"  data-describe ="部门中文名" class="layui-input">
+                            </div>
+                            <label class="col-md-2 control-label"> 姓名：</label>
+                            <div class="col-md-3">
+                                <input style="width: 100%;" type="text" class="layui-input cx_name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 职责书年度：</label>
+                            <div class="col-md-3">
+                                <input style="width: 100%;" type="text" class="layui-input" id="zh_qc_draft_time">
+                            </div>
+                            <div class="col-md-3 col-md-offset-2">
+                                <button id="zzsQcDraftRefTable" type="button" class="btn btn-primary zzsQcDelectEvent"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button id="zzsQcDraftClearAll" type="button" class="btn btn-primary zzsQcDelectEvent"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+
+<!--<script type="text/javascript" src="/static/js/common/tablelist.js"></script>-->
+<script type="text/javascript">
+    function onfocus_deptid(){
+        $("#cx_deptid").val("");//部门id
+        $("#cx_deptname").val("");
+        openSelectZtree({'id':'cx_deptid','name':'cx_deptname','type':'2','select':true,'asyn':true,'level':'8','deptId':getcookie("orgid"),'url':'/system/component/tree/deptTree'})
+    }
+    (function(){
+        //<!--查询框初始化-->
+        $('.panel-heading').unbind('click').bind('click',function(){
+            if($(this).find('.showSelect').hasClass('glyphicon-minus')){
+                $('.panel-body').hide();
+                $(this).find('.showSelect').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+            }else{
+                $('.panel-body').show();
+                $(this).find('.showSelect').removeClass('glyphicon-plus').addClass(' glyphicon-minus');
+            }
+        })
+
+        //时间初始化
+        laydate.render({
+            elem: '#zh_qc_draft_time',
+            type: 'year',
+            value: new Date().getYear()+1900	//默认值
+        });
+        //解绑事件
+        $(".zzsQcDelectEvent").off();
+        $(document).off(".zzsQc");
+        //查询点击;zzsQc表此页的标识即'职责书起草'
+        $("#zzsQcDraftRefTable").on("click",function() {
+            TableInit.refTable('right_table');
+            //$('#right_table').bootstrapTable('selectPage',1);
+        });
+        //重置点击
+        $("#zzsQcDraftClearAll").on("click",function() {
+            $('#zh_qc_draft_time').val("");
+            $('#cx_deptname').val("");
+            $('#cx_deptid').val("");
+            $('.cx_name').val("");
+        });
+
+
+        //初始化分页
+        var table_columns = [{	//即列参数处使用
+            title: '序号'//自定义列
+            ,width: '5%'
+            ,order: "desc"
+            ,align:"center"
+            ,formatter: function (value, row, index) {
+                var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;
+                var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;
+                var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+                return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+            }
+        },{
+            field: 'CRE_USER_NAME'
+            ,title: '创建人'
+            ,width: '10%'
+            ,align:"center"
+        },{
+            field: 'CRE_TIME'
+            ,title: '操作时间'
+            ,width: '20%'
+            ,sortable:true	//是否允许此列能排序(默认false不允许排序)
+            ,order: "desc"	//排序方式(默认asc(升序))
+            ,align:"center"
+        },{
+            field: 'ZZS_YEAR'
+            ,title: '职责书年度'
+            ,width: '20%'
+            ,align:"center"
+        },{
+            field: 'VERSION_NUMBER'
+            ,title: '版本'
+            ,width: '10%'
+            ,align:"center"
+        }];
+        TableInit.init({
+            domId: "right_table",
+            url:"/djglPostManagementController/rangeQuery",
+            columns:table_columns,
+            queryParams:function(params){
+                params.zzsYear =$.trim($('#zh_qc_draft_time').val());//年份
+                var cx_deptid=$("#cx_deptid").val();
+                if(!cx_deptid){
+                    params.bol=true;//是否是查询全部
+                }
+                params.cxDeptid=cx_deptid;//部门id
+                params.creUserName=$(".cx_name").val();//姓名
+                params.creUserId=getcookie("userid");
+
+                return params;
+            },onClickRow:function( row, $element, field){
+                if(field!="cz"){
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    MyLayer.layerOpenUrl({
+                        url:'/modules/dwgl/gwzzs/qc/draft/zzsQcFlowPath.html?page=3&id='+row.ID+'&oper=VIEW&resId=' + resId,
+                        title:'岗位职责书只读页'
+                    })
+
+                }
+            }
+        });
+    })();
+</script>

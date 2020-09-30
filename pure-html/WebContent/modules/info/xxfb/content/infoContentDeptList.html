@@ -1,0 +1,317 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-details" >
+            <form class="form-horizontal">
+                <div class="modal-body selectjs">
+                    <div class="selectjs_block" style="height: auto;">
+                        <div class="title_tab">
+                            <ul class="nav nav-tabs">
+                                <li for="formpage1" id="page1" style="width: 33.33%;display: none">
+                                    <a href="#" data-toggle="tab">
+                                        维护页面
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="main" style="height: auto;">
+                            <div id="formpage1" class="hidden">
+                                <form class="form-horizontal" id="form1">
+                                    <!-- 维护页面 -->
+                                    <div class="row">
+                                        <div class="col-md-12 ">
+                                            <div class="panel panel-default toggle">
+                                                <div class="panel-heading" style="cursor: pointer;">
+                                                    <h3 class="panel-title">查询项</h3>
+                                                    <div class="panel-controls ">
+                                                        <i class="glyphicon glyphicon-plus showSelect"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body" style="display: none;">
+                                                    <!--查询项输入框选择框等开始-->
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 control-label"> 文章标题：</label>
+                                                        <div class="col-md-3">
+                                                            <input class="form-control" type="text" name="title1" id="title1"/>
+                                                        </div>
+                                                        <label class="col-md-2 control-label"> 创建时间：</label>
+                                                        <div class="col-md-3">
+                                                            <input class="form-control" type="text" name="creTime1" id="creTime1"/>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询项输入框选择框等结束-->
+                                                    <!--查询重置等按钮-->
+                                                    <div class="form-group">
+                                                        <div class="col-md-12" style="text-align: center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                    onclick="TableInit.refTable('right_table1');"> 查&nbsp;&nbsp;询
+                                                            </button>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                                                重&nbsp;&nbsp;置
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询重置等按钮 end-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row m-t-15">
+                                        <div class="col-md-12">
+                                            <div class="list_button_area">
+                                                <button type="button" class="list_table_btn2" onclick="addContent()">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 起草
+                                                </button>
+                                                <!--<button type="button" class="list_table_btn2" onclick="layer.msg('导出成功！', {icon: 1})">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 导出
+                                                </button>-->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <!--bootstrap-table表格-->
+                                            <table id="right_table1"></table>
+                                        </div>
+                                    </div>
+                                    <!-- 维护页面 -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript">
+    scrollTop.init();
+    //获取url中的参数，封装成json对象
+    var url = $("#left_ul").find("a.active").attr("url");
+    var paramJson = new GetParameter(url);
+    var noticeType = paramJson.noticeType;
+
+    var resId = $('#left_ul').find('a.active').attr("id");
+
+    //根据登录人判断是否显示标签页
+    $(function () {
+        debugger;
+        var rolesNo = getcookie("rolesNo");
+        if(rolesNo.indexOf("C616") != -1 || rolesNo.indexOf("D616") != -1 ){
+            $("#page1").show();
+            $("#formpage1").removeClass('hidden');
+        }
+    });
+
+    //刷新方法，流程中需要回调
+    function refreshPage(id){
+        if(id == 'formpage1'){
+            TableInit.refTable("right_table1");
+        }
+    }
+
+    //清空查询条件
+    function clearAll(){
+        $("#title1").val("");	//内容
+        $("#creTime1").val("");	//时间
+        $("#subflag").val("");
+        //$("#noticeType option[value='']").prop("selected",true);	//通知公告类型
+        $(":radio[name=isBack][value='']").prop("checked",true);	//是否需要反馈
+    }
+
+
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#timeRange',
+        range: true
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col1 = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize = $('#right_table1').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table1').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'title'
+        , title: '文章标题'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'creTime'
+        , title: '创建时间'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'fbTime'
+        , title: '发布时间'
+        , width: '15%'
+        , align: "center"
+    },  {
+        field: 'subflag'
+        , title: '状态'
+        , width: '10%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='0'){
+                return "草稿";
+            }
+            if(value=='1'){
+                return "流程中";
+            }
+            if(value=='2'){
+                return "已发布";
+            }
+            if(value=='3'){
+                return "退回";
+            }
+        }
+    }, {
+        field: 'isZd'
+        , title: '是否置顶'
+        , width: '8%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='' || value == null || value == undefined){
+                return "否";
+            }
+            if(value!='' && value != null && value != undefined){
+                return "是";
+            }
+        }
+    }, {
+        title: '操作'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            if(row.subflag == '0' || row.subflag == '2'){
+                var html = "";
+                html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+                return html;
+            }
+        }
+    }];
+
+
+    //维护页面
+    $(document).ready(function (e) {
+        //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        typeTree.init();
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        var columnId = "";
+        if (nodes.length > 0) {
+            $("#columnId").val(nodes[0].id);
+        }
+        //初始化表格
+        TableInit.init({
+            domId: "right_table1",
+            url: "/info/content/getContnetList",
+            columns: right_table_col1,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = resId;
+                params.columnId =$("#columnId").val();
+                params.title = $("#title1").val();
+                params.creTime = $("#creTime1").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/info/xxfb/content/infoContentReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "信息发布查看"});
+                });
+            }
+        });
+    });
+
+    // 新增
+    function addContent() {
+        // 判断是否已经选择了某个节点
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        if (nodes.length == 0) {
+            layer.msg('请选择栏目!', {icon: 0});
+            return false;
+        } else {
+            var columnId = nodes[0].id;//栏目id
+            if(columnId == "001"){
+                layer.msg('不能在根目录下新增内容!', {icon: 0});
+                return false;
+            }
+            var url = "/modules/info/xxfb/content/infoContentAddForm.html?columnId="+columnId+"&oper=NEW&resId="+resId;
+            var title = "新增内容";
+            layer.open({
+                type: 2,
+                shadeClose: true,
+                content: url,
+                area: ['90%', '90%'],
+                title: [title, 'font-size:16px;font-weight:bold;']
+            })
+        }
+    }
+
+
+    //表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/info/xxfb/content/infoContentAddForm.html?id='+id+'&columnId='+$("#columnId").val()+'&oper=EDIT&resId='+resId,
+                title: "修改"
+            })
+        },
+        deleteFun: function (id) {
+            MyLayer.deleteOpt({
+                url: '/info/content/delete?ids='+id+'&resId='+resId,
+                tableId: 'right_table1'
+            });
+        }
+    }
+
+
+</script>

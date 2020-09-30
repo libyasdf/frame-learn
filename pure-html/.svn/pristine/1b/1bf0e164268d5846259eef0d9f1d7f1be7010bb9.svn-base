@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+initLogoImg();
+$(document).ready(function() {
+	getuser();
+});
+
+/**
+ * 刷新个人消息消息
+ */
+function getuser() {
+	alert(111);
+	var str = "";
+	$.ajax({
+		type: 'post',
+		url: basePath + '/user/view',
+		async: false,
+		success: function(data) {
+			if (data!=null) {
+				var _msgcount =  getMsgCount();
+				if (_msgcount == 0) {
+					str = "<li><a href='javascript:void(0)'>欢迎，" 
+						+ data.userNickName+"</a></li>" 
+						+ "<li><a href='javascript:void(0)' onclick='setUrl(\"message\")'>" 
+						+ "<span class='glyphicon glyphicon-envelope' style='color:#808080'></span>&nbsp;消息&nbsp;"
+						+ "</a></li>"
+						+ "<li><a href='"+path+"/logout?gotoURL="+path+"/main.html'  class=\"\" >退出</a></li>";
+				} else {
+					 str = "<li><a href='javascript:void(0)'>欢迎，" 
+						+ data.userNickName+"</a></li>" 
+						+ "<li><a href='javascript:void(0)' onclick='setUrl(\"message\")'>" 
+						+ "<span class='glyphicon glyphicon-envelope' style='color:red'></span>&nbsp;消息&nbsp;"
+						+ "<span style='color:red'>" + _msgcount +"</a></li>"
+						+ " <li><a href='"+path+"/logout?gotoURL="+path+"/main.html'  class=\"\" >退出</a></li>";
+				}
+			} 
+		},
+		error: function() {
+			str = "获取异常...";
+		}
+	});
+	$("#msgCountId").html(str);
+	//一秒刷新一次显示时间
+}
+function getMsgCount() {
+	var str = "";
+	var count;
+	$.ajax({
+		type: 'post',
+		url: basePath + '/notity/msgcount',
+		dataType: "json",
+		async: false,
+		success: function(data) {
+			if (data.status == "ok") {
+				count= data.msgCount
+			} else {
+				count = 0;
+			} /* showurl('/login.html') */
+		},
+		error: function() {
+			str = "获取异常...";
+		}
+	});
+	return count;
+}
+</script>
+</head>
+<body>
+<header class="header1280 headerzfzx">
+	<div class="container">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#defaultNavbar72">
+						<span class="sr-only">Toggle navigation</span><span
+							class="icon-bar"></span><span class="icon-bar"></span><span
+							class="icon-bar"></span>
+					</button>
+					<img id="logoimg" src="" alt="" />
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="defaultNavbar72">
+						<ul id="msgCountId" class="nav navbar-nav navbar-right njdltc">
+						</ul>
+					</div>
+					<!-- /.navbar-collapse -->
+				</div>
+			</div>
+			<!-- /.container-fluid -->
+		</nav>
+	</div>
+</header>
+</body>
+</html>

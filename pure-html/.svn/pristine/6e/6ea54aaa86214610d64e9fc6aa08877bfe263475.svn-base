@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link href="/static/core/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <!--固定表头所需css-->
+    <link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/form-public.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+
+    <script src="/static/js/common/url.js" type="text/javascript"></script>
+</head>
+
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <input class="form-control" type="text" id="cruChushiId" style="display: none;"/>
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" autocomplete="off">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;" onclick="resetView();">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 题名：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="mainTitle"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 立卷单位：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id=basefolder_unit name="basefolder_unit">
+                                    <option value="">---请选择---</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label"> 档号：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="archive_no"
+                                       name="archive_no" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 门类名称：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="category_name"
+                                       name="category_name" />
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+
+</div>
+<div class="form_btn_area" style="text-align: center;">
+    <button id="borrow" style="display: none;" class="btn btn-primary form_btn_area_btn2" onclick="borrowData();" ><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> 借阅</button>
+    <button id="import" style="display: none;" class="btn btn-primary form_btn_area_btn2" onclick="importData();" ><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> 确定导入</button>
+    <button class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭 </button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<!--这里是单独引用的自己的js，因为应用公用的js固定表头会出现问题-->
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--行内编辑所需js-->
+<script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script type="text/javascript" src="/static/core/lhgdialog/lhgcore.lhgdialog.min.js?self=true&skin=iblack"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<!-- 发送消息js -->
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+<script type="text/javascript" src="/common/js/index.js"></script>
+<script type="text/javascript">
+    // 获取值班表的id
+    var theRequest = GetRequest();
+    var type = theRequest.type ? theRequest.type : "";//TestId
+
+    if("borrow" == type){
+        document.getElementById("borrow").style.display ="inline";
+    }else if("import" ==type){
+        document.getElementById("import").style.display ="inline";
+    }
+
+    $("#cruChushiId").val(getcookie("chuShiId"));
+
+    Dictionary.init({
+        mark:'dagl_ljdw',
+        type:'1',
+        position:"basefolder_unit",
+        domType:"select",
+        hasSelect:true});
+
+    //清空查询条件
+    function clearAll(){
+        $("#mainTitle").val("");	//标题
+        $("#basefolder_unit").each(function (i, j) {
+            $(j).find("option:selected").attr("selected", false);
+        });
+        $("#archive_no").val("");	//时间
+        $("#category_name").val("");		//流程状态
+    }
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [/*{
+        field: 'selectAll',
+        title: "",
+        width: '3%',
+        align: "center",
+        checkbox:"true"
+    },*/{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.recid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'mainTitle'
+        , title: '题名'
+        , width: '28%'
+        , align:"center"
+    }, {
+        field: 'basefolderUnit'
+        , title: '立卷单位'
+        , width: '7%'
+        , align:"center"
+    }, {
+        field: 'archiveNo'
+        , title: '档号'
+        , width: '15%'
+        , align:"center"
+    }, {
+        field: 'categoryName'
+        , title: '门类名称'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'securityClass'
+        , title: '密级'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'pageNum'
+        , title: '页数'
+        , width: '10%'
+        , align: "center"
+    },{
+            field: 'cz'
+            , title: '操作'
+            , width: '8%'
+            , align:"center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var html = "";
+                html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+                return html;
+            }
+        }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/dagl/daly/shoppingtrolley/getShoppingTrolleyListOfUser",
+            columns:right_table_col,
+            pagination:false,	//不分页
+            height:480,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.mainTitle = $("#mainTitle").val();
+                params.ljdwMark = $("#basefolder_unit").val();
+                params.archiveNo = $("#archive_no").val();
+                params.categoryName = $("#category_name").val();
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+                });
+            }
+        });
+    });
+
+    //展开查询项列表不对齐
+    function resetView(){
+        $("#right_table").bootstrapTable('resetView');
+    }
+
+    //表格数据项的操作
+    var list = {
+        deleteFun: function (id) {
+            MyLayer.deleteOpt({
+                url: '/dagl/daly/shoppingtrolley/deleteShoppingTrolleyOfUser?ShoppingTrolleyIds=' + id,
+                tableId: 'right_table'
+            })
+        }
+
+    }
+
+    //借阅，替换页面初始化页面时查询数据回填子表，加参数识别
+    //获取列表数据/dagl/daly/shoppingtrolley/getShoppingTrolleyListOfUser 返回的是Json，ajax获取就可以。不需要参数
+    function borrowData(){
+        var resId = $('#left_ul').find('a.active').attr("id");
+        var allTableData = $("#right_table").bootstrapTable('getData');//获取表格的所有内容行
+        var dataArr = [];
+        for (var j=0; j<allTableData.length; j++) {
+            allTableData[j].id="";
+            dataArr.push(JSON.stringify(allTableData[j]));
+        }
+        if(dataArr.length>0){
+            sessionStorage.setItem('daglBorrowData',dataArr.join('$$$'));
+            window.location.replace("/modules/dagl/daly/borrow/apply/borrowApplyEditForm.html?oper=NEW&type=borrow&resId=" + resId);
+        }else{
+            layer.msg("收集列表为空，请先添加数据再借阅！", {icon: 0});
+        }
+
+    }
+
+    //导入，直接关闭页面走查询，回填子表
+    //删除的url：/dagl/daly/shoppingtrolley/deleteShoppingTrolleyOfUser，同样ajax请求就好，不传参时，删除本人的所有收集，传id根据id删除。
+    function importData(){
+        var allTableData = $("#right_table").bootstrapTable('getData');//获取表格的所有内容行
+        var dataArr = [];
+        for (var j=0; j<allTableData.length; j++) {
+            allTableData[j].id="";
+            dataArr.push(JSON.stringify(allTableData[j]));
+        }
+        if(dataArr.length>0){
+            sessionStorage.setItem('daglImportData',dataArr.join('$$$'));
+            window.parent.getImportData();
+            MyLayer.closeOpen();
+        }else{
+            layer.msg("收集列表为空，请先添加数据再导入！", {icon: 0});
+        }
+
+    }
+
+
+
+</script>
+</body>
+</html>

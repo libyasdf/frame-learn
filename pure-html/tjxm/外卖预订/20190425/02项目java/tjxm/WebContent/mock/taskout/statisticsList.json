@@ -1,0 +1,52 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "deadlineDate": "2019-04-05 5:00:00",
+        "orderLimt": "1",
+        "isStop": "0",
+        "showDate": "2019-04-08 - 2019-04-12",
+        "orderPersonNum":"25",
+        "status":"0",
+        "userName":"张三",
+        "cz": "update,delete,fabu"
+      },
+      {
+        "id": 1,
+        "deadlineDate": "2019-04-05 8:00:00",
+        "orderLimt": "3",
+        "isStop": "1",
+        "showDate": "2019-04-01 - 2019-04-05",
+        "orderPersonNum":"42",
+        "status":"0",
+         "userName":"微微儿",
+        "cz": "queren"
+      },
+      {
+        "id": 1,
+        "deadlineDate": "2019-03-27 8:00:00",
+        "orderLimt": "2",
+        "isStop": "0",
+        "showDate": "2019-03-26 - 2019-03-29",
+        "orderPersonNum":"35",
+        "status":"1",
+         "userName":"杜蒙蒙",
+        "cz": "queren"
+      },
+      {
+        "id": 1,
+        "deadlineDate": "2019-03-22 10:00:00",
+        "orderLimt": "1",
+        "isStop": "1",
+        "showDate": "2019-03-19 - 2019-03-22",
+        "orderPersonNum":"28",
+        "status":"1",
+         "userName":"李四",
+        "cz": "queren"
+      }
+    ]
+  }
+}

@@ -1,0 +1,279 @@
+<style type="text/css">
+    body {
+        background: #eeeeee;
+    }
+    #left {
+        background: #ffffff;
+    }
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+    content { width:1000px;
+height:500px;
+border:#000000 1px solid;
+}
+.div_td {
+    width:48%;
+    padding:20px 3%;
+    margin-left: 1.5%;
+    margin-bottom: 20px;
+    height:450px;
+    float:left;
+    color:#FF0000;
+    text-align:center;
+    background: #ffffff;
+}
+
+    .view-wrapper {
+        width: 98%;
+        margin: 30px auto;
+        background: #cccccc;
+    }
+    .view-wrapper .view-item {
+        float: left;
+        width: 18%;
+        margin-right: 2.5%;
+        margin-bottom: 25px;
+        text-align: center;
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        box-shadow:1px 1px 10px #cccccc;
+        box-sizing: border-box;
+    }
+
+    .view-wrapper .view-item:nth-of-type(1){
+        border: 1px solid #d3a60c;
+        box-shadow:1px 1px 10px #d3a60c;
+    }
+    .view-wrapper .view-item:nth-of-type(2){
+        border: 1px solid darkgreen;
+        box-shadow:1px 1px 10px darkgreen;
+    }
+    .view-wrapper .view-item:nth-of-type(3){
+        border: 1px solid #ff2222;
+        box-shadow:1px 1px 10px #ff2222;
+    }
+    .view-wrapper .view-item:last-child {
+        margin-right:0
+    }
+    .view-wrapper .view-item:hover {
+        border: 1px solid #cccccc;
+        box-shadow:1px 1px 10px #cccccc;
+    }
+    .view-item .view-text {
+        margin: 15px 0;
+    }
+    .view-text .view-value {
+        font-size: 28px;
+    }
+    .view-text .view-name {
+        font-size: 16px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+     <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group" style="text-align: center;">
+                          <label class="col-md-2 control-label form-view"> 查询类型：</label>
+                         	<div class="col-md-5 control-label" style="text-align:left;">
+                           		<input type="radio" name="dateType" value="0" id="accordingYear"><span style="margin-right:30px;">按年查询</span></input>
+                           		<input type="radio" name="dateType"   value="1" checked id="accordingMonth" ><span style="margin-right:30px;">按月查询</span></input>
+                           		<input type="radio" name="dateType" value="2"   id="accordingWeek"><span style="margin-right:30px;">按周查询</span></input>
+                            </div>
+                            <div class="col-md-4 " >
+                           		<div class="input-group" id="year" >
+	                                <span class="input-group-addon input-group-addon1" onclick="">
+	                                	<span id="leftImage" class="btn-both leftbtn"></span> 
+	                                 </span>
+	                                <input class="form-control" type="text" class="a"  style=" display:none" id="yearDate" />
+	                                 <input class="form-control" type="text" id="monthdate"/>
+	                                  <input class="form-control" type="text" class="a"  style=" display:none"  id="weekDate" />
+	                                 <div id="dateLogWeek" style="margin-top:25px"></div>
+	                                <span class="input-group-addon" onclick="">
+	                                	<span id="rightImage" class="btn-both rightbtn"></span>
+	                                </span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                     <button type="button" class="btn btn-primary"
+                                            onclick="getMeetCount()"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <button type="button" class="btn btn-primary"
+                                            onclick="clearAll()"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!--查询结束-->
+        <div class="content">
+        <div id="containernone" style="display:none;text-align:center">
+            <span id ="noData" >暂无数据！ </span>
+        </div>
+            <div class="view-wrapper">
+                <div class="view-item view-1">
+                    <div class="view-text">
+                        <span class="view-value">100</span>件
+                        <p class="view-name">督办事件</p>
+                    </div>
+                </div>
+                <div class="view-item view-1">
+                    <div class="view-text">
+                        <span class="view-value">50</span>件
+                        <p class="view-name">按期办结</p>
+                    </div>
+                </div>
+                <div class="view-item view-1">
+                    <div class="view-text">
+                        <span class="view-value">20</span>件
+                        <p class="view-name">逾期办结</p>
+                    </div>
+                </div>
+                <div class="view-item view-1">
+                    <div class="view-text">
+                        <span class="view-value">10</span>件
+                        <p class="view-name">任务取消</p>
+                    </div>
+                </div>
+                <div class="view-item view-1">
+                    <div class="view-text">
+                        <span class="view-value">12</span>件
+                        <p class="view-name">正在办理</p>
+                    </div>
+                </div>
+            </div>
+            <div id="container0" class="div_td container0" ></div>
+            <div id="container1" class="div_td container1" ></div>
+            <div id="container2" class="div_td container2" style="padding-left:4%" ></div>
+            <div id="container3" class="div_td container3" style="padding-left:4%;" ></div>
+            <div id="container4" class="div_td container4" style="padding-left:4%" ></div>
+            <div id="container5" class="div_td container5" style="padding-left:4%;" ></div>
+        </div>
+    </div>
+</div>
+
+<!--<script src="/js/plugs/echarts/echarts.js"></script>-->
+<script src="/static/core/echarts.js"></script>
+<script src="/modules/zhbg/hygl/statistics/js/chartsConfig.js"></script>
+
+<script type="text/javascript">
+//获取当前日期所在周的最后一天和上周的周一
+var weekDate;
+$.post("/zhbg/hygl/statistics/getWeekDate", {date: curDate },function(data){
+	weekDate = data.startDate + " - " + data.endDate;
+	$("#weekDate").val(weekDate);
+
+} );
+$("#accordingYear").click( function () {
+	$("#yearDate").val(prevYear+' - '+curYear);	
+	$("#monthdate").hide();
+	 $("#yearDate").show(); 
+	 $("#weekDate").hide(); 
+});
+$("#accordingMonth").click( function () {
+	$("#monthdate").val(curYear+'-01 - '+curMonth);	
+	$("#yearDate").hide();
+	 $("#monthdate").show(); 
+	 $("#weekDate").hide(); 
+	 
+});
+$("#accordingWeek").click( function () { 
+	$("#monthdate").hide();
+	 $("#weekDate").show(); 
+	 $("#yearDate").hide(); 
+	 $("#weekDate").val(weekDate);
+	
+});
+
+laydate.render({
+	  elem: '#yearDate'
+	  ,type: 'year'
+	  ,range: true
+	  ,btns: ['confirm']
+});
+laydate.render({
+	  elem: '#weekDate'
+	  ,type: 'date'
+	  ,range: true
+	  ,btns: ['confirm']
+});
+function clearAll(){
+	 $("input[type='radio']").removeAttr("checked");
+	$("#accordingMonth").prop("checked", true);
+	$("#monthdate").val(curYear+'-01 - '+curMonth);	
+	$("#monthdate").show();
+	$("#weekDate").hide();
+	$("#yearDate").hide();
+	$("#weekDate").val(weekDate);
+	$("#yearDate").val(prevYear+' - '+curYear);	
+}
+	
+var curDate = getCurrentDate("yyyy-MM-dd")
+var curYear = curDate.substr(0,4)
+var curMonth = curDate.substr(0,7)
+var prevYear = parseInt(curYear)-1;//去年时间
+    laydate.render({
+		elem: '#monthdate'
+		,btns:	['confirm']
+		,type:'month'
+		,range: true
+	});    
+	$(function () {
+		      $('[data-toggle="tooltip"]').tooltip()
+		      $('[data-toggle="popover"]').popover({
+		        trigger:"hover"
+		      })
+  })
+    $(document).ready(function (e) {
+    	TableInit.init();
+    });
+    var arr = new Array();
+    var arr1 = new Array();
+    var arr2 = new Array();
+    var arr3 = new Array();
+    var arr4 = new Array();
+ $(function () {
+  /* if (!$.fn.highcharts) {
+ 		var script = document.createElement("script"); 
+ 		script.type = "text/javascript"; 
+ 		script.src = "/modules/zhbg/hygl/statistics/js/highcharts.js"; 
+ 		document.body.appendChild(script); 
+ 	}  */
+	 getMeetCount();
+    });
+    function getMeetCount(){
+    	$("#container0").empty();
+    	$("#container1").empty();
+    	$("#container2").empty();
+    	$("#container3").empty();
+    }
+</script>

@@ -1,0 +1,49 @@
+{"flag":"1","data":[{
+	"name": "面食",
+	"id": "1",
+	"pid": "0",
+	"childrenList":[
+		{
+			"name": "馒头",
+			"id": "2",
+			"pid": "1",
+			"childrenList":[]
+		},{
+			"name": "包子",
+			"id": "3",
+			"pid": "1",
+			"childrenList":[]
+		},{
+				"name": "饺子",
+				"id": "4",
+				"pid": "1",
+				"childrenList":[]
+			}  
+	]
+}, 
+ 
+ {
+	"name": "炒菜",
+	"id": "5",
+	"pid": "0",
+	"childrenList":[
+		{
+			"name": "西红柿炒鸡蛋",
+			"id": "6",
+			"pid": "5",
+			"childrenList":[]
+		},{
+			"name": "鱼香肉丝",
+			"id": "7",
+			"pid": "5",
+			"childrenList":[]
+		},{
+			"name": "西葫芦",
+			"id": "8",
+			"pid": "5",
+			"childrenList":[]
+		}    
+	]
+   }
+]
+}

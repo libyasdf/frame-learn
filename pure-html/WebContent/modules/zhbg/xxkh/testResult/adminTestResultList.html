@@ -1,0 +1,224 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 考试名称：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="name" value=""/>
+                            </div>
+                            <!-- <label class="col-md-1 control-label"> 考试类型：</label>
+                            <div class="col-md-3">
+                                <select class="form-control">
+                                    <option>---请选择---</option>
+                                    <option>法制法规</option>
+                                    <option>政治理论</option>
+                                    <option>保密</option>
+                                </select>
+                            </div> -->
+                            <label class="col-md-2 control-label"> 考试时间范围：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="timeRange" value=""/>
+                            </div>
+                        </div>
+                        
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="chongzhi()"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript">
+//搜索按钮
+	　$(document).keydown(function(event){
+		　　　if(event.keyCode == 13){
+		　　　　　//sousuo();
+			TableInit.refTable('right_table');
+		　　　　}
+		　});
+
+function chongzhi(){
+	$("#name").val("");
+	$("#timeRange").val("");
+}
+
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , align: "center"
+        ,formatter : function(value, row, index) {
+        	var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span recordId='"+row.id+"'>" + orderNum + "</span>";//计算序号
+		}
+    }, {
+        field: 'name'
+        , title: '考试名称'
+        , width: '15'
+        , align: "center"
+        ,formatter : function(value, row, index) {
+        	var data = value;
+        	if(value.length>20){
+        		value=value.substring(0,20)+"..."
+        	}
+			return "<span title='"+data+"'>" + value + "</span>";//计算序号
+		}
+    }, {
+        field: 'fullScore'
+        , title: '总分'
+        , width: '9%'
+        , sortable: true
+        , align: "center"
+    }, {
+        field: 'maxScore'
+        , title: '考试最高分'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'minScore'
+        , title: '考试最低分'
+        , width: '10%'
+        , sortable: true
+        , align: "center"
+    }, 
+   /*  {
+        field: 'avgSvore'
+        , title: '平均分'
+        , sortable: true
+        , width: '10%'
+        , align: "center"
+    },  */
+    {
+        field: 'passPeople'
+        , title: '及格人数'
+        , sortable: true
+        , width: '10%'
+        , align: "center"
+    },{
+        field: 'sumPeople'
+        , title: '应参加考试人数'
+        , sortable: true
+        , width: '10%'
+        , align: "center"
+    },{
+        field: 'submitPeople'
+        , title: '实际参加考试人数'
+        , sortable: true
+        , width: '10%'
+        , align: "center"
+
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '5%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "<i title='查看' class='glyphicon glyphicon-search' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+            return html;
+        }
+    }];
+	var parameter;
+	var juId ="";
+	var resId;
+    $(document).ready(function (e) {
+    	
+     	var url = $("#left_ul").find("a.active").attr("url");
+    	resId = $("#left_ul").find("a.active").attr("id");
+    	parameter = new GetParameter(url);
+    	if(parameter.treeType.indexOf("ju")!=-1){
+    		juId = getcookie("juId");
+    	}
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/zhbg/xxkh/gradesearch/getScoreInquiry?type="+parameter.treeType+"&resId="+resId+"&creJuId="+juId,
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+            	params.name = $("#name").val();
+				params.timeRange = $("#timeRange").val();               
+                return params;
+            },
+            readOnlyFn:function(){
+            	$('tr.readOnly').find('td:not(:last)').css("cursor","default");
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/zhbg/xxkh/testResult/adminTestResultDetail.html?id='+id+'&type='+parameter.treeType+"&resId="+resId,
+                title: "考试成绩列表"
+            })
+        }
+    }
+
+</script>

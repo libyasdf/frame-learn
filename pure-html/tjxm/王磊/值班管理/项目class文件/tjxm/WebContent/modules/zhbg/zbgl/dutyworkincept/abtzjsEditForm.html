@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>表单页面</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+   <style type="text/css">
+   		#right_table td {
+  			vertical-align:middle;
+		}
+        span{ white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;text-align:left}
+   </style>
+</head>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+    	<!-- 隐藏域 -->
+        <input type="hidden" id="noticeId">
+        <input type="hidden" id="total">
+        <input type="hidden" id="yxq">
+        <input type="hidden" id="detailId">
+        <input type="hidden" id="opertation">
+        <input type="hidden" id="userId">
+        <input type="hidden" id="report">
+        <input type="hidden" id="checkOne">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">通知信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">值班标题：</label>
+                <div class="col-md-4 form-view">
+                    <span  id= "title" name="title"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">安保时间：</label>
+                <div class="col-md-4 form-view">
+                    <span name="yxq"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">通知内容：</label>
+                <div class="col-md-10  form-view">
+                    <span id= "noticeText" name="noticeText"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">备注：</label>
+                <div class="col-md-10  form-view">
+                    <span name="remark"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">附件：</label>
+                <div class="col-md-10 form-view">
+                	<div class="files row">
+				        <div id="files" class="col-md-12 p-f-30">
+				        </div>
+	    			</div>
+                </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </form>
+    <!--部门上报的值班附件上传-->
+    <form class="form-horizontal" id="form2">
+	    <div class="row">
+	        <div class="col-md-12 ">
+	            <div class="block_title">
+	                <span class="name">值班表附件</span>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="row m-t-15">
+	    <div class="form-group">
+                  <label for="" class="col-md-2 control-label"><b style="color: red;" >*</b> 附件：</label>
+                  <div class="col-md-10 form-view" >
+			        <span class="btn btn-primary fileinput-button" id="selectFile" style="display: none;">
+		                <i class="glyphicon glyphicon-plus"></i>
+		                <span>选择文件...</span>
+		                <input id="fileupload2" type="file" name="files[]" multiple>
+		            </span>
+		            <div class="files row">
+				        <div id="files2" class="col-md-12 p-f-30" CK_type="checkOne" CK_info="上传附件和填写表格">
+				        </div>
+				    </div>
+                  </div>
+              </div>
+         </div>
+	    <!-- 部门上报的值班附件 结束 -->
+	    <!-- 部门上报的值班具体信息  -->
+	    <!--<div class="row" id="zbxq" >
+	            <div class="col-md-12 ">
+	                <div class="block_title">
+	                    <span class="name">值班详情</span>
+	                </div>
+	            </div>
+	     </div>
+	     <div class="row m-t-15" id="zbxq" >
+	      <div class="col-md-12">
+	            <div class="form-group" id="zbxq" >
+	                <label for="" class="col-md-2 control-label" id="pw" ><b style="color: red;" id="zbxq">*</b> 普网电话：</label>
+	                 <div class="col-md-4">
+	                     <input type="text" class="form-control" id="commonPhone" name="commonPhone" placeholder="普网电话" CK_type="required,phone" CK_info="普网电话">
+	                 </div>
+	                <label for="" class="col-md-2 control-label" id="zw" ><b style="color: red;" id="zbxq">*</b> 专网电话：</label>
+	                <div class="col-md-4">
+	                    <input type="text" class="form-control" id="privatePhone" name="privatePhone" placeholder="专网电话" CK_type="required,phone" CK_info="专网电话">
+	                </div>
+	            </div>
+	            &lt;!&ndash;bootstrap-table表格&ndash;&gt;
+	            <input type="hidden" id="reportId" name="zbNoticeId">
+	            <input type="hidden" id="isSecurity" name="isSecurity" value="1">
+	            <table id="right_table"></table>
+	        </div>
+	       </div>-->
+        <input type="hidden" id="reportId" name="zbNoticeId">
+        <input type="hidden" id="isSecurity" name="isSecurity" value="1">
+       </form>
+    <!-- 部门上报的值班附具体信息 -->
+</div>
+<!-- 按钮区 -->
+<div class="form_btn_area" style="text-align: center;">
+	<button id="preserveBtn" style="display: none;" class="btn btn-primary form_btn_area_btn2" onclick="closeOp();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭 </button>
+    <!--<button id="save" style="display: none;" class="btn btn-primary form_btn_area_btn2" onclick="commitForm();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>-->
+    <button id="sendFLow" style="display: none;" class="btn btn-primary form_btn_area_btn2" onclick="commitFlow();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 上报</button>
+</div>
+<!-- 按钮区结束 -->
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/common/js/cookie.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<!-- <script type="text/javascript" src="/common/js/main.js"></script> -->
+<!-- 初始化表格js -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/jquery-serializejson/jquery.serializejson.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script> 
+<script src="/static/js/common/pageEcho.js"></script>
+<script type="text/javascript" src="/static/js/common/autoCheckForm.js"></script>
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+<!-- 数据校验 -->
+<script type="text/javascript" src="js/dutyReportValidator.js"></script>
+<!--行内编辑所需js-->
+<script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script type="text/javascript" src="/static/core/lhgdialog/lhgcore.lhgdialog.min.js?self=true&skin=iblack"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<!--文件上传js-->
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--文件上传js end-->
+<!--回显js-->
+<script src="/static/js/common/editFormEcho.js"></script>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<!-- 发送消息js -->
+<script type="text/javascript">
+	
+	//参考：http://www.layui.com/laydate/
+	//绑定日期输入input
+	laydate.render({
+	    elem: '#watchDate'
+	    ,type: 'date'//指定元素
+	});
+	
+	//定义bootatrap-table数据列
+	//    sortable：开启列排序，其他参考API
+	var right_table_col = [{
+	    field: 'id'
+	    , title: '序号'
+	    , sortable: false
+	    , width: '5%'
+	    , align:"center"
+	    ,formatter: function (value, row, index) {
+	    		$("#commonPhone").val(row.commonPhone);
+	    		$("#privatePhone").val(row.privatePhone);
+	    		var v = typeof(row.id) =="undefined"?"":row.id;
+	    		var html = '<span   data-id="'+v+'">'+(index+1)+'</span>';
+	    		html += '<input type="hidden" class="form-control" id="id'+index+'" name="id"  value="'+v+'" >';
+		      return html;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+		  } 
+	},{
+	    field: 'watchDate'
+	    , title: '日期'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	    ,formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	    	var html ="<span>"+value+"</span>";
+           	html += '<input type="hidden" class="form-control" id="watchDate'+index+'" name="watchDate"  value="'+row.watchDate+'" >';
+            return html;
+        }
+	},{
+	    field: 'watchName'
+	    , title: '值班人员'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	    ,formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+           	var v = typeof(row.watchName) =="undefined"?"":row.watchName;
+           	html += '<input type="text" class="form-control" id="watchName'+index+'" name="watchName" placeholder="输入值班人" value="'+v+'" CK_type="required,chinese" CK_info="值班人姓名">';
+            return html;
+        }
+	},{
+	    field: 'phone'
+	    , title: '联系方式'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+//	    ,editable: {
+//	        type: "text",                //编辑框的类型。支持text|textarea|select|date|checklist等
+//	        disabled: false,             //是否禁用编辑
+//	        title: "联系方式",           //编辑框的标题
+//	        mode: "inline",              //编辑框的模式：支持popup和inline两种模式，默认是popup
+//	        validate: function (value) { //字段验证
+//	            if (!$.trim(value)) {
+//	                return '联系方式不能为空';
+//	            }
+//	        }
+//	    }
+		,formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            var v = typeof(row.phone)=="undefined"?"":row.phone;
+           	html += '<input type="text" class="form-control" id="phone'+index+'" name="phone" placeholder="联系方式" value="'+v+'" CK_type="required,phone,max" max="11" CK_info="联系方式">';
+            return html;
+        }
+	},{
+	    field: 'shiftLeaderName'
+	    , title: '带班领导'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+    	,formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            var v = typeof(row.shiftLeaderName) =="undefined"?"":row.shiftLeaderName;
+           	html += '<input type="text" class="form-control" id="shiftLeaderName'+index+'" name="shiftLeaderName" placeholder="输入带班领导" value="'+v+'" CK_type="required,chinese"  CK_info="带班领导">';
+            return html;
+        }
+	},{
+	    field: 'shiftLeaderPhone'
+	    , title: '带班领导电话'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	    ,formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            var v = typeof(row.shiftLeaderPhone) =="undefined"?"":row.shiftLeaderPhone;
+           	html += '<input type="text" class="form-control" id="shiftLeaderPhone'+index+'" name="shiftLeaderPhone" placeholder="输入带班领导电话" value="'+v+'" CK_type="required,phone,max" max="11" CK_info="带班领导电话">';
+            return html;
+        }
+	}];
+	$(document).ready(function (e) {
+		$(".layui-layer-close1").click(function(){
+			closeOp();
+		});
+		hide();
+		$("#checkOne").val("0");
+		var theRequest = GetRequest();
+    	var id = theRequest.attr;
+    	var inceptId = typeof(theRequest.inceptId)=="undefined"?theRequest.id:theRequest.inceptId;
+		var deptId = getCookie("chuShiId");
+		var msgId = theRequest.msgId;
+		if(typeof(msgId)=="undefined"){
+			$('#preserveBtn').unbind('click').bind('click',function(e){
+				parent.getMsgCount();
+		        parent.getMsgList();
+		        parent.refreshPage("daiban");
+		        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		        parent.layer.close(index); //再执行关闭//
+			});
+		}
+    	//将通知ID存储在隐藏域中
+        $("#noticeId").val(id);
+        $("#reportId").val(inceptId);
+        // 加载数据
+        $.ajax({
+    		url:"/zhbg/zbgl/dutywork/queryNotice",
+    		type:"get",
+    		data:{"id":id,"inceptId":inceptId},
+			dataType:"json",
+			success:function(result){
+				if(result.flag=="1"){
+					//data1  dutyWork
+					//data2 dutyWorkIncept
+					//row1 dateList
+					//row2 DutyTable list 
+					//获取此通知的创建人id，发消息通知上报情况
+					$("#userId").val(result.data.data1.creUserId);
+					$("#total").val(result.data.rows1.length);
+				 	PageEcho.parseData({
+		                data: result.data.data1
+	            	});
+				 	MyFileUpload.init({
+		    			viewParams: {"tableId":$("#noticeId").val(),"tableName":"zbgl_duty_notice"},
+		    			editOrView:"VIEW",
+		    	        maxFileSize:5*1024*1024 //5M
+		    	    });
+				 	if(result.data.data2.isReport=="1"){
+						read();
+						$("#opertation").val("VIEW");
+					    iniFileUpload();
+					}else{
+						edit();
+						$("#opertation").val("NEW");
+					    $("#reportId").val(inceptId);
+					    iniFileUpload();
+					}
+				 	 if(result.data.rows1.length!=""){
+//				 		$("#zbxq").show();
+//				 		$("#pw").append("<b style='color: red;' id='zbxq'>*</b>");
+//				 		$("#pw").text(" 普网电话:");
+//				 		$("#zw").append("<b style='color: red;' id='zbxq'>*</b>");
+//				 		$("#zw").text(" 专网电话:");
+//				 		$("#commonPhone").show();
+//				 		$("#privatePhone").show();
+//				 		 
+//				 	} 
+//				 	if(result.data.rows2.length==""){
+//				 		if(result.data.rows1.length!=""){
+//							$("#right_table").bootstrapTable({
+//								height:"500",
+//								responseHandler:function(res){
+//									return responseHandler(res);
+//								},
+//								columns:right_table_col
+//							});
+//							$("#right_table").bootstrapTable('load',result.data.rows1);
+//				 		}
+//						$("#opertation").val("NEW");
+//					    iniFileUpload();
+					}else{
+//						$("#right_table").bootstrapTable({
+//							height:"500",
+//							responseHandler:function(res){
+//								return responseHandler(res);
+//							},
+//							columns:right_table_col
+//						});
+//						$("#right_table").bootstrapTable('load',result.data.rows2);
+//						if(result.data.data2.isReport=="1"){
+//							$("input").attr("readOnly",true);
+//						}
+//					 	$("#opertation").val("VIEW");
+//					    $("#reportId").val(inceptId);
+//					    iniFileUpload();
+					}
+				}else{
+					layer.msg('加载数据失败！',{icon:2});
+				}
+			}
+    	});
+    });
+	
+	function hide(){
+		$("#zbxq").hide();
+ 		$("#pw").text("");
+ 		$("#zw").text("");
+ 		$("#commonPhone").hide();
+ 		$("#privatePhone").hide();
+	}
+	//只读页面
+    function read(){
+    	//$("#save").hide();
+    	$("#sendFLow").hide();
+    	$("#preserveBtn").show();
+    	$("#files2 i").remove();
+    	$("#selectFile").remove();
+    	//$("input").attr("readOnly",true);
+    	
+    }
+	
+	//编辑页面
+    function edit(){
+    	//$("#save").show();
+    	$("#sendFLow").show();
+    	$("#selectFile").show();
+    	//$("input").attr("readOnly",false);
+    }
+	
+    //保存值班表
+    function commitForm(){
+//    	var checkResult = aotoCheckForm.check($("#form2").find("input,select,textarea").not(':hidden'));
+    	var f = $('#files2').find('a').length ==0?true:false;
+//    	var t = false;//表格为空
+//    	$("input").not(':hidden').each(function(i,obj){
+//    		if(obj.value!=""){
+//    			t = true;//表格不为空
+//    			return false;
+//    		}
+//    	});
+   		if(!f){
+//   			if(t){
+//   				if(checkResult){
+//   					save();
+//   					saveAffx();
+//   				}
+//   			}else{
+ //  				saveAffx();
+//   			}
+   			saveAffx();
+   		}else if(f){
+//   			if(t){
+//   				if(checkResult){
+//   					save();
+//   				}
+//   			}else{
+//   				layer.msg('上传附件和填写表格：至少选择一个 ',{icon:0});
+//   			}
+   			layer.msg('上传附件：为必填项 ',{icon:0});
+   		}
+    }
+    
+    function save(){
+    	  //var listData = $("#form2").serializeJSON();
+    	  //var json = JSON.parse(JSON.stringify(listData).replace(/list/g,"dutyTables"));
+    	  var listData = getData();
+	    	$.ajax({
+	    		url:"/zhbg/zbgl/dutytable/saveList",
+	    		type:"POST",
+	    		contentType:"application/json;charsetset=UTF-8",
+	    		data:JSON.stringify(listData), 
+				dataType:"json",
+				success:function(result){
+					if(result.flag=="1"){
+						for(var i in result.data){
+							$("#id"+i).val(result.data[i].id);
+						}
+						layer.msg("保存成功！",{icon:1});
+					}else{
+						layer.msg("保存失败！",{icon:2});
+					}
+				}
+	    	});
+    }
+   	function getData(){
+   		var deviceInfo = {
+   				commonPhone : $('#commonPhone').val(),
+   				privatePhone : $('#privatePhone').val(),
+   				zbNoticeId : $('#reportId').val(),
+   				isSecurity : $('#isSecurity').val(),
+   				dutyTables : new Array()//子表1信息
+   	        };//需要提交到后台的数据
+
+   			//遍历页面中子表1信息 形成 subTableList
+   			var $subTableRows = $('#right_table').find("tbody tr");//所有子表信息行
+   			$subTableRows.each(function (i,index) {
+   			    var disk = {
+   			    		//id : $(index).find('[name="id"]').val(),
+   			    		id : $("#id"+i).val(),
+   			    		watchDate : $(index).find('[name="watchDate"]').val(),
+   			    		watchName : $(index).find('[name="watchName"]').val(),
+   			    		phone : $(index).find('[name="phone"]').val(),
+   			    		shiftLeaderName : $(index).find('[name="shiftLeaderName"]').val(),
+   			    		shiftLeaderPhone : $(index).find('[name="shiftLeaderPhone"]').val()
+   			    }
+   			    deviceInfo.dutyTables.push(disk);
+   			});
+   			//以下输出对象deviceInfo 就是完整的请求报文
+   			return deviceInfo;
+   	}
+    //保存附件
+    function saveAffx(){
+    	iniFileUpload();
+		MyFileUpload.saveDocIdToAffix({docId:$("#reportId").val(),fileListId: "files2"});
+    	//layer.msg('保存成功！',{icon:1});
+    }
+    //值班表上报
+     function commitFlow(){
+//    	var checkResult = aotoCheckForm.check($("#form2").find("input,select,textarea").not(':hidden'));
+     	var f = $('#files2').find('a').length ==0?true:false;
+//     	var t = false;//表格为空
+//     	$("input").each(function(i,obj){
+//     		if(obj.value!=""){
+//     			t = true;//表格不为空
+//     			return false;
+//     		}
+//     	});
+     	if(!f){
+//   			if(t){
+//   				if(checkResult){
+ //  					save();
+//   					saveAffx();
+//   					report();
+//   				}
+//   			}else{
+//	   			saveAffx();
+//	   			report();
+//   			}
+     		saveAffx();
+     		report();
+   		}else if(f){
+//   			if(t){
+//   				if(checkResult){
+//   					save();
+ //  					report();
+//   				}
+//   			}else{
+//   				layer.msg('上传附件和填写表格：至少选择一个 ',{icon:0});
+//   			}
+   			layer.msg('上传附件：为必填项 ',{icon:0});
+   		}
+    }
+    function report(){
+    	var theRequest = GetRequest();
+    	var inceptId = $("#reportId").val();;
+    	$.ajax({
+    		url:"/zhbg/zbgl/dutyworkincept/report",
+    		data:{"id":inceptId},
+			dataType:"json",
+			success:function(result){
+				//上报成功后把处室和科室的待办消息都删掉
+				var deptId = getCookie("chuShiId");//getCookie("chuShiId")!=getCookie("deptId")?getCookie("chuShiId"):getCookie("deptid");
+				var deptName = getCookie("chuShiName");//getCookie("chuShiId")!=getCookie("deptId")?getCookie("chuShiId"):getCookie("deptid");
+				$.ajax({
+		    		url:"/zhbg/zbgl/dutywork/deleteWaitNoflow",
+		    		data:{"inceptId":inceptId,"receiveDeptId":deptId},
+					dataType:"json",
+					success:function(result){
+						if(result.flag=="1"){
+							layer.msg('上报成功',{icon:1});
+							read();
+							$("input").attr("readOnly",true);
+						}else{
+							layer.msg('上报失败！',{icon:2});
+						}
+					}
+				}); 
+				//上报成功后也修改消息的状态
+                debugger;
+				var message = {
+						"accepterId":getcookie("userid"),
+						"senderId":Config.sysId,
+						"subject":$("#title").html(),
+						"content":$("#noticeText").html(),
+						//"status":"1"
+					};
+				//上报后更改消息的状态（考虑是打开的待办的URL）
+				$.ajax({
+		    		url:"/zhbg/zbgl/dutyworkincept/updateMessage",
+		    		data:message,
+					dataType:"json",
+					success:function(result){
+						if(result.flag=="1"){
+							//layer.msg('更改状态成功！',{icon:1});
+							parent.getMsgCount();
+							parent.getMsgList();
+						}else{
+							//layer.msg('更改状态失败！',{icon:2});
+						}
+					}
+				});
+				
+				//上报值班表后发消息
+		    	MessageUtil.sendMsg({
+					subject:"安保值班工作通知",		//消息主题
+					content:deptName+":已上报安保值班表",		//消息内容
+					accepterId:$("#userId").val()	//接收人ID
+				});
+		    	//parent.getMsgCount();
+				//parent.getMsgList();
+				var msgId = theRequest.msgId;
+				if(typeof(msgId)=="undefined"){
+			        parent.refreshPage("daiban");//刷新待办列表
+                    parent.getMsgCount();//刷新消息数量
+                    parent.getMsgList();//刷新消息列表
+				}else{
+				    alert(22);
+					parent.parent.refreshPage("daiban");//刷新待办列表
+                    parent.parent.getMsgCount();//刷新消息数量
+                    parent.parent.getMsgList();//刷新消息列表
+				}
+		    	
+			}
+    	});
+    	
+    }
+    //初始化文件上传
+    function iniFileUpload(){
+		//初始化文件上传2
+	    MyFileUpload.init({
+	    	viewParams: {"tableId":$("#reportId").val(),"tableName":"zbgl_duty_notice_incept"},
+	    	editOrView:$("#opertation").val(),
+	    	domId: "fileupload2",
+	    	fileListId: "files2",  //文件列表显示的div
+	    });
+	}
+    function closeOp(){
+      parent.parent.getMsgCount();
+      parent.parent.getMsgList();
+      parent.parent.refreshPage("daiban");
+      var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+      parent.layer.close(index); //再执行关闭//
+   	}
+
+</script>
+</body>
+</html>
+ 

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\文电管理更新class_20181221"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../">
+			
+		<!--模块内页面和js -->
+		<!--12.17 修改文电校验 -->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/js/wdglValidator.js"/>		
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglEditForm.html"/>		
+		<include name="WebContent/modules/dagl/wdgl/sendFile/js/wdglValidator.js"/>		
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendEditForm.html"/>			
+		
+		<!--12.18 修改文电导入 -->
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendlImportFileFrom.html"/>
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglImportFileFrom.html"/>
+		<!--12.21 添加文件类型的修改 -->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglList.html"/>
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendList.html"/>
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglEditForm.html"/>
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendEditForm.html"/>	
+		<!-- 模块内class文件-->
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\dagl\wdgl\controller\DaglReceiveFileController.class"/>		
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\dagl\wdgl\services\DaglReceiveFileService.class"/>		
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\dagl\wdgl\services\DaglReceiveFileServiceImpl.class"/>		
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\dagl\wdgl\controller\DaglSendFileController.class"/>		
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\dagl\wdgl\services\DaglSendFileService.class"/>		
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\dagl\wdgl\services\DaglSendFileServiceImpl.class"/>	
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

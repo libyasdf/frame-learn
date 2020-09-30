@@ -1,0 +1,195 @@
+<link rel="stylesheet" href="/static/core/layui/css/layui.css"  media="all">
+
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" id="form">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 职责书年度：</label>
+                            <div class="col-md-3">
+                                <input style="width: 100%;" type="text" class="layui-input" id="zh_qc_draft_time">
+                            </div>
+                            <div class="col-md-3">
+                                <button id="zzsQcDraftRefTable" type="button" class="btn btn-primary zzsQcDelectEvent"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button id="zzsQcDraftClearAll" type="button" class="btn btn-primary zzsQcDelectEvent"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button id="zzsQcDraft" class="list_table_btn2 zzsQcDelectEvent">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 起草
+                </button>
+
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+
+<!--<script type="text/javascript" src="/static/js/common/tablelist.js"></script>-->
+<script type="text/javascript">
+    (function(){
+        //<!--查询框初始化-->
+        $('.panel-heading').unbind('click').bind('click',function(){
+            if($(this).find('.showSelect').hasClass('glyphicon-minus')){
+                $('.panel-body').hide();
+                $(this).find('.showSelect').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+            }else{
+                $('.panel-body').show();
+                $(this).find('.showSelect').removeClass('glyphicon-plus').addClass(' glyphicon-minus');
+            }
+        })
+
+        //时间初始化
+        laydate.render({
+            elem: '#zh_qc_draft_time',
+            type: 'year',
+            value: new Date().getYear()+1900	//默认值
+        });
+        //解绑事件
+        $(".zzsQcDelectEvent").off();
+        $(document).off(".zzsQc");
+        //查询点击;zzsQc表此页的标识即'职责书起草'
+        $("#zzsQcDraftRefTable").on("click",function() {
+            TableInit.refTable('right_table');
+            //$('#right_table').bootstrapTable('selectPage',1);
+        });
+        //重置点击
+        $("#zzsQcDraftClearAll").on("click",function() {
+            $('#zh_qc_draft_time').val("");
+        });
+        //起草点击
+        $("#zzsQcDraft").on("click",function() {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:'/modules/dwgl/gwzzs/qc/draft/zzsQcFlowPath.html?page=3&oper=NEW&resId='+resId,
+                title:'岗位职责书'
+            })
+        });
+        //修改点击
+        $(document).on('click.zzsQc', '#zzsQcEditFun', function() {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            var id=$(this).attr("data-id");
+            MyLayer.layerOpenUrl({
+                url:'/modules/dwgl/gwzzs/qc/draft/zzsQcFlowPath.html?page=3&id='+id+'&oper=EDIT&resId='+ resId,
+                title:"岗位职责书"
+            })
+        });
+        //删除点击
+        $(document).on('click.zzsQc', '#zzsQcDeleteFun', function() {
+            var id=$(this).attr("data-id");
+            MyLayer.deleteOpt({//配合分页使用
+                url: '/djglPostManagementController/delete?id=' + id,
+                tableId:'right_table',
+                title:"删除"
+            })
+        });
+        //初始化分页
+        var table_columns = [{	//即列参数处使用
+            title: '序号'//自定义列
+            ,width: '5%'
+            ,order: "desc"
+            ,align:"center"
+            ,formatter: function (value, row, index) {
+                var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;
+                var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;
+                var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+                return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+            }
+        },{
+            field: 'creUserName'
+            ,title: '创建人'
+            ,width: '10%'
+            ,align:"center"
+        },{
+            field: 'creTime'
+            ,title: '创建时间'
+            ,width: '20%'
+            ,sortable:true	//是否允许此列能排序(默认false不允许排序)
+            ,order: "desc"	//排序方式(默认asc(升序))
+            ,align:"center"
+        },{
+            field: 'zzsYear'
+            ,title: '职责书年度'
+            ,width: '20%'
+            ,align:"center"
+        },{
+            field: 'versionNumber'
+            ,title: '版本'
+            ,width: '10%'
+            ,align:"center"
+        },{
+            field: 'cz'
+            ,title: '操作'
+            ,width: '10%'
+            ,align:"center"
+            ,formatter: function (value, row, index) {
+                //debugger;
+                var html = "";
+                if(value.indexOf("add")){
+                }
+                if(value.indexOf("update")!=-1){
+                    html += "<i class='glyphicon glyphicon-edit zzsQcDelectEvent' id='zzsQcEditFun' data-id='"+row.id+"' title='修改'></i>&nbsp;&nbsp;";
+                }
+                if (value.indexOf("delete")!=-1) {
+                    html += "<i class='glyphicon glyphicon-trash zzsQcDelectEvent' id='zzsQcDeleteFun' data-id='"+row.id+"' title='删除')\'></i>";
+                }
+                return html;
+            }
+        }];
+        TableInit.init({
+            domId: "right_table",
+            url:"/djglPostManagementController/list",
+            columns:table_columns,
+            queryParams:function(params){
+                params.zzsYear =$.trim($('#zh_qc_draft_time').val());
+                params.identifying=true;
+                params.creUserId=getcookie("userid");
+                return params;
+            },onClickRow:function( row, $element, field){
+                if(field!="cz"){
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    MyLayer.layerOpenUrl({
+                        url:'/modules/dwgl/gwzzs/qc/draft/zzsQcFlowPath.html?page=3&id='+row.id+'&oper=VIEW&resId=' + resId,
+                        title:'岗位职责书只读页'
+                    })
+
+                }
+            }
+        });
+    })();
+</script>

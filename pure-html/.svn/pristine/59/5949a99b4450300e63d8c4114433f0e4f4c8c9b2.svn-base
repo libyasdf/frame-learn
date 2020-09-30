@@ -1,0 +1,56 @@
+{
+  "flag": "1",
+  "data": [
+    {
+      "url": "/main.html",
+      "name": "首页",
+      "id": "000"
+    },
+    {
+      "url": "/moduleIndex.html",
+      "name": "模板",
+      "id": "00x"
+    },
+    {
+      "url": "/modules/moduleIndex.html",
+      "name": "DEMO",
+      "id": "demo"
+    },
+    {
+      "url": "/modules/moduleIndex.html",
+      "name": "待办列表",
+      "id": "waitdo"
+    },
+    {
+      "url": "/modules/moduleIndex.html",
+      "name": "档案",
+      "id": "dangan"
+    },
+    {
+      "url": "#",
+      "name": "党务管理",
+      "childrenList":[{
+        "id":"dzz",
+        "name":"党组织管理",
+        "url":"/moduleIndex.html"
+      },{
+        "id":"dygl",
+        "name":"党员管理",
+        "url":"/moduleIndex.html"
+      },{
+        "id":"bbgl",
+        "name":"报表管理",
+        "url":"/moduleIndex.html"
+      },{
+        "id":"shyk",
+        "name":"三会一课",
+        "url":"/moduleIndex.html"
+      },
+      {
+        "id":"sqrgl",
+        "name":"申请人管理",
+        "url":"/moduleIndex.html"
+      }]
+    }
+  ]
+}

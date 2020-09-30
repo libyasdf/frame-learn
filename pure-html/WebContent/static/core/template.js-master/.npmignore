@@ -1,0 +1,11 @@
+demo
+doc
+test
+node_modules
+.gitignore
+.travis.yml
+bower.json
+temp.html
+temp2.html
+CHANGELOG.md
+TODO.md

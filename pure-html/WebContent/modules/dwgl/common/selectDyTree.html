@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>企业中心</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="modal-body selectjs">
+    <div class="col-sm-6 ">
+        <div class="selectjs_block">
+            <div class="title_tab">
+                <ul class="nav nav-tabs">
+                    <li class="active" for="tree-obj">
+                        <a href="#" data-toggle="tab" class="">
+                            按党员选择
+                        </a>
+                    </li>
+                    <!-- <li for="group-obj">
+                        <a href="#" data-toggle="tab">
+                            按群组选择
+                        </a>
+                    </li> -->
+                </ul>
+            </div>
+            <div class="main">
+                <!--<div class="left_search_area">
+                    <div class="input-group">
+                        <input id="keyword" name="deptName" onkeydown="CommonUtil.keyDown(event);" type="text" class="form-control"
+                               placeholder="快速搜索">
+                        <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span>
+                    </div>
+                </div>-->
+                <div class="left_tree_area">
+                    <ul id="treeDemo" class="ztree"></ul>
+                    <!-- <ul id="group-obj" class="ztree hidden"></ul> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="selectjs_block">
+            <div class="title">已选择</div>
+            <div class="main" id="selectedDeptUser">
+                <ul class="right_del_list" style="height: 100%;overflow-y: auto;">
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="modal-footer" style="text-align: center">
+    <button type="button" class="btn btn-primary  btn-blue  bigbtn" id="close">
+        确&nbsp;&nbsp;定
+    </button>
+</div>
+<input name="id" type="hidden" id="id" />
+<input name="name" type="hidden" id="name" />
+<input name="idContext" type="hidden" id="idContext" />
+<input name="nameContext" type="hidden" id="nameContext" />
+<input name="mark" type="hidden" id="mark" />
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+
+var theRequest = GetRequest();
+var deptUrl = theRequest.url;
+var type = theRequest.type;
+var isMulti = theRequest.isMulti;
+var deptId = theRequest.deptId;
+var level = theRequest.level;
+var check = theRequest.check;
+var cancle = theRequest.cancle;
+var positionName = theRequest.positionName;
+
+
+
+var dyglTree = function(){
+    var zTreeObj = null;
+    /**
+     * ztree的初始化参数
+     */
+    var setting = {
+        edit: {
+            enable: true,
+            showRemoveBtn: false,
+            showRenameBtn: false
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+          /*  onClick: onClick,*/
+            onDblClick: function(event, treeId, treeNode){
+                CommonUtil.zTreeOnDblclick(event, treeId, treeNode);
+            },
+            onCheck : function(event, treeId, treeNode){
+                CommonUtil.zTreeOnCheck(event, treeId, treeNode);
+            }
+
+        },
+        view:{
+            selectedMulti:false
+        },
+        check: {
+            enable: true,
+            autoCheckTrigger: true,
+            chkStyle: "checkbox",
+            chkboxType: {"Y":check,"N":cancle}
+        }
+    };
+
+
+    /**
+     * 点击事件，展示字典项
+     */
+    function onClick(event, treeId, treeNode) {
+        /*$("#right_table").bootstrapTable('destroy');*/
+    }
+
+    /**
+     * 初始化左侧字典类型树
+     */
+    var init = function (json) {
+        $.ajaxSettings.async = false;
+        $.getJSON("/djgl/ddjs/dzz/dzzgl/getTree?type=user&id="+deptId, function (json) {
+            if(json.length > 0){
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, json);
+                CommonUtil.echoData(zTreeObj);
+            }
+        });
+        $.ajaxSettings.async = true;
+    }
+
+    /**
+     * 增加节点
+     */
+    var addNode = function (json) {
+        var ztree = $.fn.zTree.getZTreeObj("treeDemo");
+        var parentNode = ztree.getNodeByParam("id",json.pId);
+        ztree.addNodes(parentNode, json);
+    }
+
+    /**
+     * 更新节点
+     */
+    var updateNode = function(data,nodeId){
+        var ztree = $.fn.zTree.getZTreeObj("treeDemo");
+        var node = ztree.getNodeByParam("id", nodeId, null);
+        if(node){
+            node.id = data.data.orgId;
+            node.pId = data.data.superId;
+            node.name = data.data.orgName;
+        }
+        ztree.updateNode(node);
+        onClick(null, ztree.setting.treeId,ztree.getSelectedNodes()[0]);//调用事件
+
+    }
+
+    /**
+     * 删除节点
+     */
+    var deletNode = function(nodeId){
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var node = treeObj.getNodeByParam("id", nodeId, null);
+        treeObj.removeNode(node);
+    }
+
+    /**
+     * 根据节点名称模糊查询节点并触发点击事件
+     */
+    var searchNodes = function(nodeName){
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getNodesByParamFuzzy("name", nodeName, null);
+        if (nodes.length > 0) {
+            treeObj.selectNode(nodes[0]);
+            onClick(null, treeObj.setting.treeId, nodes[0]);//调用事件
+        }
+    }
+
+    return {
+        init:function (json) {
+            init(json);
+        },
+        addNode:function (json) {
+            addNode(json);
+        },
+        updateNode:function(json,nodeId){
+            updateNode(json,nodeId);
+        },
+        delNode:function(nodeId){
+            deletNode(nodeId);
+        },
+        searchNodes:function(nodeName){
+            searchNodes(nodeName);
+        },
+        getZTreeObj:function(){
+                return zTreeObj;
+        }
+    }
+}();
+var CommonUtil = {
+    /**
+     * 回显数据
+     * @return {[type]} [description]
+     */
+    echoData:function(zTreeObj){
+        var ids = $("#idContext").val();
+        var treeNodes = zTreeObj.getNodes();
+        var nodes = zTreeObj.transformToArray(treeNodes);
+        if(ids){
+            var idArr = ids.split(",");
+            for(var i=0;i<nodes.length;i++){
+                for(var j=0;j<idArr.length;j++){
+                    if(idArr[j] == nodes[i].id){
+                        var node = zTreeObj.getNodeByTId(nodes[i].tId);
+                        zTreeObj.checkNode(node,true,true);
+                    }
+                }
+            }
+        }
+    },
+    zTreeOnDblclick:function(event, treeId, treeNode){
+        if (treeNode && !treeNode.isParent) {
+            if(treeNode.checked){//如果选中了
+                id = treeNode.id;
+                node = dyglTree.getZTreeObj().getNodeByParam("id",id,null);
+                if(node){
+                    dyglTree.getZTreeObj().checkNode(node,false,true);
+                    $('.right_del_list').find('li').each(function() {
+                        if($(this).attr('id') == node.id){
+                            $(this).remove();
+                        }
+                    });
+                }
+            }else{//如果没有选中
+                dyglTree.getZTreeObj().checkNode(treeNode,true,false);
+                var deptNode1 = dyglTree.getZTreeObj().getNodeByParam("id",treeNode.id, null).getParentNode();
+                var html = CommonUtil.joinHtml(treeNode.id, treeNode.name,deptNode1.id,deptNode1.name);
+                if($('.right_del_list').find('li#'+treeNode.id).length == 0){
+                    $('.right_del_list').append(html);
+                }else{
+                    console.log('节点已添加,不可重复添加！');
+                }
+            }
+        }
+    },zTreeOnCheck:function(event, treeId, treeNode){
+        var id ="" , node = null , node_g =null, nodeHtml = [];
+
+        /**** 如果在部门树中改变勾选状态同时也在群组树修改勾选状态  ****/
+        //如果是取消
+        if(treeNode && !treeNode.isParent && !treeNode.checked){
+            id = treeNode.id;
+            node = dyglTree.getZTreeObj().getNodeByParam("id",id,null);
+            if(node){
+                dyglTree.getZTreeObj().checkNode(node,false,true);
+                $('.right_del_list').find('li').each(function() {
+                    if($(this).attr('id') == node.id){
+                        $(this).remove();
+                    }
+                });
+            }
+        }
+        //选中
+        if(treeNode && !treeNode.isParent && treeNode.checked && treeNode.type == "user"){
+            id = treeNode.id;
+            node = dyglTree.getZTreeObj().getNodeByParam("id",id,null);
+            if(node){
+                dyglTree.getZTreeObj().checkNode(node,true,true);
+                nodeHtml.push(CommonUtil.joinHtml(node.id,node.name));
+            }
+        }
+
+        var deptNodes = [], nodes = {};
+        if(dyglTree.getZTreeObj()){
+            deptNodes = dyglTree.getZTreeObj().getCheckedNodes(true);
+        }
+
+        if(nodeHtml.length > 0){
+            $('.right_del_list').append(nodeHtml.join(''));
+        }
+        $('.right_del_list li').find('img').unbind('click').bind('click',function(){
+            var obj = $(this).parents('li');
+            var id = $(obj).attr('id')
+            $(obj).remove();
+            if(dyglTree.getZTreeObj){
+                var deleteNodes = dyglTree.getZTreeObj().getNodesByParam("id",id,null);
+                for(var j in deleteNodes){
+                    dyglTree.getZTreeObj().checkNode(deleteNodes[j],false,true);
+                }
+
+            }
+        })
+    },
+    /**
+     * 回显右侧用户选择的数据
+     * @return {[type]} [description]
+     */
+    eachSelectData:function(){
+        var idsStr = $("#idContext").val();
+        var namesStr = $("#nameContext").val();
+        var ids = [], names = [], html = [];
+        if(idsStr){
+            ids = idsStr.split(",");
+            names = namesStr.split(",");
+            for(var i=0; i<ids.length;i++){
+                html.push(CommonUtil.joinHtml(ids[i],names[i]));
+            }
+            $('.right_del_list').append(html.join(''));
+
+            // 添加删除
+            CommonUtil.deleteElement();
+        }
+    },   /**
+     * 拼接字符串
+     * @return {[type]} [description]
+     */
+    joinHtml:function(id,name){
+        var html = [];
+        html.push('<li id="' + id + '" class="list-group-item" data-id="'+id+'" data-name="'+name+'">');
+        html.push('<span class="pull-right">');
+        html.push('');
+        html.push('<img src="/static/images/ico_del2.png" width="24" height="24" alt=""/>');
+        html.push('');
+        html.push('</span>' + name + '');
+        html.push('</li>');
+        return html.join('');
+    }/*,
+    joinBorderHtml:function(ids,names,id,name){
+        var html = [];
+        html.push('<ol>');
+        for(var i=0; i<ids.length; i++){
+            html.push('<li class="item" id="'+ids[i]+'" > ');
+            html.push(names[i]+'<span forId="'+id+'" forName="'+name+'" onclick="deleteThisNode(this)" class="glyphicon glyphicon-remove"></span>');
+            html.push('</li>');
+        }
+        html.push('</ol>');
+        return html.join('');
+    }*/,
+    deleteElement:function(){
+    $('.right_del_list li img').unbind('click').bind('click', function () {
+
+        var deleteNodes = dyglTree.getZTreeObj().getNodesByParam("id",$(this).parents('li').attr('id'),null);
+        for(var j in deleteNodes){
+            dyglTree.getZTreeObj().checkNode(deleteNodes[j],false,true);
+        }
+        $(this).parents('li').remove();
+    })
+},
+    bindFun:function(){
+        /**
+         * 绑定搜索按钮事件
+         */
+        $("#search-bt").unbind('click').bind('click', function () {
+            deptZtree.filter();
+        });
+
+        /**
+         *
+         * 确定按钮事件
+         */
+        $("#close").unbind('click').bind('click', function () {
+            parent.putBackData();
+        })
+    },
+    saveSelectedData:function(){
+        var ids = [], names = [], res = {}, parentIds = [], parentNames = [];
+        //判断是否可多选
+        var $selectedLi = $('#selectedDeptUser .list-group-item[data-id][data-name]');
+        if(isMulti == '1' && $selectedLi.length > 1){
+            layer.alert("只能选择一个");
+            return;
+        }
+        // 回显数据
+        $('.right_del_list li').each(function(i,item){
+            ids.push($(this).attr('id'));
+            names.push($(this).text());
+        });
+        $.each(ids,function(i,id){
+            var deptNode = dyglTree.getZTreeObj().getNodeByParam("id", id, null).getParentNode();
+            parentIds.push(deptNode.id);
+            parentNames.push(deptNode.name);
+        });
+        res.ids = ids.join(",");
+        res.names = names.join(",");
+        res.parentIds = parentIds.join(",");
+        res.parentNames = parentNames.join(",");
+        if($('#mark').val() != ""){
+            var id = $('#id').val();
+            var name = $('#name').val();
+            var html = CommonUtil.joinBorderHtml(ids,names,id,name);
+            res.mark = html;
+        }
+        return res;
+    }
+}
+
+</script>
+</body>
+</html>

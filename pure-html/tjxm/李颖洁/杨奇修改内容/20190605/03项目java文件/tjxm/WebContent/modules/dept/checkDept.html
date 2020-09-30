@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>选择部门</title>
+<link href="../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	.select_dept_wrapper {
+		padding:30px 50px;
+	}
+	.depts-list {
+		padding:0;
+		max-height: 420px;
+	}
+	.depts-list li {
+		 position: relative;
+		 list-style: none;
+		 margin-bottom: 15px;
+		 padding:15px 15px 15px 100px;
+		 height: 100px;
+		 background: rgb(230,229,235);
+		 border:4px solid rgb(0,157,238);
+		 border-radius: 6px;
+		cursor: pointer;
+	}
+	.depts-list .mask{
+		display: block;
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 0;
+		height: 100%;
+		background: rgb(0,157,238);
+		transition: all 0.5s;
+	}
+	.depts-list li:hover {
+		color: #ffffff;
+	}
+	.depts-list li:hover .mask{
+		width: 100%;
+	}
+	.depts-list  .left-bar {
+		display: block;
+		position: absolute;
+		left: -22px;
+		top: 25px;
+		padding:10px 10px 10px 20px;
+		width: 92px;
+		height: 59px;
+		font-size: 20px;
+		color: rgb(0,157,238);
+		background: url("./images/sort-bg.png") no-repeat;
+		z-index: 10;
+	}
+	.depts-list .text {
+		font-size: 16px;
+		position: absolute;
+		left: 100px;
+		z-index: 10;
+	}
+	.depts-list h2 {
+		margin-top: 0;
+		font-size: 24px;
+	}
+</style>
+
+
+<script type="text/javascript" src="../../plugins/jquery/jquery-1.11.2.min.js"></script>
+<script src="/common/js/getrequest.js" ></script>
+<script src="/product/workflow/js/common/getCook.js" ></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        getDepts();
+    })
+    function getDepts(){
+        var view = "";
+        $.ajax({
+            type: "POST",
+            url: basePath+"/user/getDepts",
+            async: false,
+            dataType: "json",
+            success: function(data) {
+                var arr = data.depts;
+                for ( var i in arr) {
+                    var oDept =  arr[i];
+                    var deptNm = arr[i].note;
+                    var labelName = '';
+                    // console.log(deptNm = '资金交易科室1/资金交易处/资金局')
+                    var deptNmArr = [];
+                    if (deptNm) {
+                        deptNmArr = deptNm.split('/');
+                        var department1 = deptNmArr[0];
+                        var department2 = '';
+                        deptNmArr.forEach(function (dept,index) {
+                            if (index==1) {
+                                department2 = dept;
+                            }else if (index > 1) {
+                                department2 = department2 +'/' + dept;
+                            }
+                        })
+                        if (oDept.treeId.length/4 == 1 ) {
+                            labelName = '局'
+						}else if (oDept.treeId.length/4 == 2){
+                            labelName = '部门'
+						}else if (oDept.treeId.length/4 == 3) {
+                            labelName = '处室'
+						} else if (oDept.treeId.length/4 == 4){
+                            labelName = '科室'
+						}
+                       
+                        // view += "<option id='"+arr[i].deptid+"'>"+arr[i].deptname+"</option>";
+                        view += '<li class="dept"  data-value="'+ deptNm +'"  data-deptid="'+ arr[i].deptid +'">\n' +
+                            '\t\t\t\t<span class="left-bar">'+ labelName +'</span>\n' +
+                            '\t\t\t\t<div class="text">\n' +
+                            '\t\t\t\t\t<h2>'+ department1 +'</h2>\n' +
+                            '\t\t\t\t\t<span>'+ department2 +'</span>\n' +
+                            '\t\t\t\t</div>\n' +
+                            '\t\t\t\t<span class="mask"></span>\n' +
+                            '\t\t\t</li>'
+                    }
+
+                }
+            }
+        });
+        // $("#deptSelect").html(view);
+		$('#depts-list').html(view);
+    }
+
+    function getChooseDept(){
+        var json = {
+            deptid:$("#deptSelect option:selected").attr("id"),
+            deptnm:$("#deptSelect").val()
+        };
+        return json;
+    }
+
+    function getDefaultDept(){
+        var arr = $("#deptSelect").children();
+        var json = {
+            deptid:$(arr[0]).attr("id"),
+            deptnm:$(arr[0]).val()
+        };
+        return json;
+    }
+    
+    
+</script>
+</head>
+<body>
+	<div class="select_dept_wrapper" >
+		<!--<label>部门：</label>-->
+		<!--<select id="deptSelect" style="width: 270px;display: inline-block;" class="form-control"></select>-->
+		<ul  class="depts-list" id="depts-list">
+		</ul>
+	</div>
+</body>
+</html>

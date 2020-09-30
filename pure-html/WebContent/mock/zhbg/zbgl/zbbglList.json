@@ -1,0 +1,26 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "zbdw": "2017-12",
+        "sbzt": "已上报",
+        "cz": "update,report"
+      },
+      {
+        "id": 2,
+        "zbdw": "2017-11",
+        "sbzt": "已上报",
+        "cz": "update,report"
+      },
+      {
+        "id": 3,
+        "zbdw": "2017-11",
+        "sbzt": "未上报",
+        "cz": "update,report"
+      }
+    ]
+  }
+}

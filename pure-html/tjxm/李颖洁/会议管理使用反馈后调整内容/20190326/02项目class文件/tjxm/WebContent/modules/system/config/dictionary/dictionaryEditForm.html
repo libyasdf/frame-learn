@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <form id="form" class="form-horizontal" style="margin-top: 15px;">
+                    <input type="hidden" id="type" name="type" value="">
+                    <input type="hidden" id="pId" name="pId" value="">
+                    <input type="hidden" id="id" name="id" value="">
+                    <!--查询项输入框选择框等开始-->
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 字典名称：</label>
+                        <div class="col-sm-7">
+                        	<textarea id="name" class="form-control" rows="3" name="name"></textarea>
+                        	<!-- <input class="form-control" type="text" name="name" id="name"> -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 唯一标识：</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" name="mark" id="mark" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 字典值：
+                        </label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" name="code" id="code">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label"> 是否启用：</label>
+                        <div class="col-sm-7">
+                            <label class="radio-inline">
+                                <input type="radio" name="flag" value="1" checked>
+                                启用
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="flag" value="0">
+                                禁用
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label"> 备注：</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" rows="3" name="remark"></textarea>
+                        </div>
+                    </div>
+                    <!--查询项输入框选择框等结束-->
+
+                    <!--查询重置等按钮-->
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align: center">
+                            <button type="button" class="btn btn-primary" onclick="saveDictionary()">
+                                保&nbsp;&nbsp;存
+                            </button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary" onclick="closeIfram();">
+                                关&nbsp;&nbsp;闭
+                            </button>
+                        </div>
+                    </div>
+                    <!--查询重置等按钮 end-->
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script type="text/javascript" src="/modules/system/config/dictionary/js/dictionaryValidator.js"></script>
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <script type="text/javascript" src="/common/js/commonFunction.js"></script>
+    <script type="text/javascript" src="/static/js/common/displayData.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // 初始化参数
+            var theRequest = GetRequest();
+            $("#id").val(theRequest.id ? theRequest.id : "");
+            $("#type").val(theRequest.type ? theRequest.type : "");
+            $("#pId").val(theRequest.pId ? theRequest.pId : "");
+            $("#mark").val(theRequest.mark ? theRequest.mark : "");
+            if ($("#type").val() == "0" && $("#id").val() == "") {
+                $("#mark").removeProp("readonly");
+            }
+
+            if ($("#id").val() != "") {
+                var datas = { "id": $("#id").val() };
+                httpRequest("get", "/system/config/dictionary/view", datas, function (data) {
+                    DisplayData.playData({ data: data });
+                });
+            }
+        })
+
+        // 提交
+        function saveDictionary() {
+            var bootstrapValidator = $("#form").data('bootstrapValidator');
+            //手动触发验证
+            bootstrapValidator.validate();
+            if (bootstrapValidator.isValid()) {
+                $.ajax({
+                    type: "POST",
+                    url: "/system/config/dictionary/save",
+                    data: $("#form").serialize(),
+                    async: false,
+                    dataType: "json",
+                    success: function (data) {
+                        if ('1' == data.flag) {
+                            layer.msg("保存成功！", { icon: 1, time: 1000 }, function (index) {
+                                if (data.data.type == '0') {
+                                    if ($("#id").val() != "") {
+                                        parent.typeTree.updateNode(data);
+                                    } else {
+                                        parent.typeTree.addNode({ id: data.data.id, pId: data.data.pId, name: data.data.name, mark: data.data.mark });// 在ztree中增加新保存的节点
+                                    }
+                                } else if (data.data.type == '1') {
+                                    window.parent.refresh();
+                                    // $("#right_table", parent.document).bootstrapTable("refresh");
+                                }
+                                //关闭当前窗口
+                                closeIfram();
+                            });
+                        }
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            }
+            //@ sourceURL=editForm.html
+        }
+
+        //关闭当前窗口
+        function closeIfram() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            window.parent.refresh();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<link href="/product/workflow/plugins/bootstrap/bootstrap.css" rel="stylesheet">
+<link href="/product/workflow/css/formAndWorkflow.css" rel="stylesheet">
+<link rel="stylesheet" href="/product/workflow/plugins/zTree/zTreeStyle.css">
+<style type="text/css">
+.style1{
+	min-height:380px;
+}
+
+.select-row {
+	padding:15px 0!important;
+}
+
+.select-row .btn-group > button{
+    height: 30px;
+    width: 208px;
+    border-radius:0!important;
+}
+
+.dropdown-toggle.btn-default{
+	background-color: #fff!important;
+}
+
+.select-row .btn-group.open .dropdown-toggle,
+.select-row .btn-group.open .dropdown-toggle:active{
+	 box-shadow:none!important;
+}
+
+.select-row .btn-select-name{
+    float:left;
+}
+
+.select-row .caret{
+	float: right;
+    margin-top: 7px;
+    margin-right: 0px;
+}
+
+.select-row .dropdown-menu {
+	width: 208px;
+	padding:0;
+	margin:0;
+	max-height: 300px;
+    overflow-y: auto;
+    border-radius:0;
+}
+
+.select-row .dropdown-menu > li:hover{
+	 background-color: #e9e9e9;
+}
+
+.select-row .dropdown-menu > li > a{
+	font-size:12px;
+	color:#333;
+	padding: 0 10px;
+    height: 36px;
+    line-height: 36px;
+    border-bottom:1px dashed #ddd;
+}
+
+.select-row .dropdown-menu > li > a:hover,
+.select-row .dropdown-menu > li > a:focus {
+    text-decoration: none;
+    background-color: #e9e9e9;
+}
+
+.tab-title {
+	height: 48px;
+    line-height: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #e0e0e0;
+}
+.tab-title0 {
+	position:relative;
+}
+.tab-title0:after {
+	position: absolute;
+    content: '';
+    width: 1px;
+    height: 30px;
+    background: #e0e0e0;
+    right: 1px;
+    top: 8px;
+}
+
+.title-icon-img {
+	position:relative;
+	top:-3px;
+}
+
+.choose_user_list {
+	padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background-color: #f6f6f6;
+    overflow: auto;
+    height: 210px;
+    list-style: none;
+    padding-left: 20px;
+}
+
+.choose_user_list > li:not(:last-child) {
+	margin-bottom:20px;
+}
+
+.choose_user_list > li{
+	color:#333;
+	font-size:12px;
+}
+
+label {
+	color:#333;
+	font-weight:normal;
+}
+</style>
+</head>
+<body>
+	<div class=" modal-pt width820 ">
+		<!--<div class="modal fade modal-pt" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+-->
+		<div class="">
+			<div class="modal-content style1">
+				<div class="modal-body">
+					<div id="radiodiv"></div>
+
+					<div class="row select-row">
+						<div class="col-xs-6 text-center">
+							<form class="form-inline">
+							  <div class="form-group">
+							    <label for="hjmc">环节名称：</label>
+							    <div class="btn-group">
+									<button type="button" class="btn btn-default dropdown-toggle"
+										data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false">
+										 <span class="btn-select-name js-hjmc-name">退回</span>
+										 <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu js-hjmc-dropdown-menu">
+									</ul>
+								</div>
+							  </div>
+							</form>
+						</div>
+						<div class="col-xs-6 text-center">
+							<form class="form-inline">
+							  <div class="form-group">
+							    <label for="hjmc">办理类型：</label>
+							    <div class="btn-group">
+									<button type="button" class="btn btn-default dropdown-toggle"
+										data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false">
+										 <span class="btn-select-name js-bllx-name"></span>
+										 <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu js-bllx-dropdown-menu">
+									</ul>
+								</div>
+							  </div>
+							</form>
+						</div>
+					</div>
+					<table width="100%" border="0">
+						<tbody id="deptArea">
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+		<div style="display: none;" id="data"></div>
+	</div>
+	<script src="/product/workflow/plugins/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/product/workflow/js/common/getrequest.js"></script>
+	<script src="/product/workflow/js/storages.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/product/workflow/js/common/getCook.js"></script>
+	<script src="/product/workflow/plugins/bootstrap/bootstrap.js"></script>
+	<script src="/product/workflow/plugins/lhgdialog/lhgdialog.min.js"></script>
+	<script src="/product/workflow/plugins/zTree/jquery.ztree.core.js"></script>
+	<script src="/product/workflow/plugins/zTree/jquery.ztree.excheck.js"></script>
+	<script src="/product/workflow/plugins/zTree/jquery.ztree.exedit.js"></script>
+	<script src="/common/js/json2.js"></script>
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+	<script >
+		//var request = GetRequest();
+		var idea ;
+		var routeType ;
+		var node ;
+		var flag ;
+		var data ;
+		
+		function fuzhi(){
+			data = $.parseJSON($("#data").text());
+			routeType = data.routeType;
+			node = data.node;
+			flag = data.flag;
+			idea = data.idea;
+			//alert(node[0].id);
+		}
+		
+		var $tr = $("<tr>");
+		var $tdLeft =$("<td>").attr({
+			"width":"50%",
+			"valign":"top"
+		});
+		var $tdRight =$("<td>").attr({
+			"width":"50%",
+			"valign":"top"
+		});
+		$tr.append($tdLeft.append($("<div><img src='/product/workflow/image/no_do.png' class='title-icon-img'/>下一节点办理人</div>").attr({"class":"tab-title  tab-title0"}))).append($tdRight.append($("<div><img src='/product/workflow/image/done.png' class='title-icon-img'/>已选办理人</div>").attr({"class":"tab-title"})));
+		
+		var zTree;
+		var selectuserlist = {}; //用户
+		var selectdeptlist = {}; //部门
+		var subuserlist = {}; //子流程用户
+		var subdeptlist = {};//子流程部门
+		var toFlowData = [];
+
+		/**
+		 * 初始化页面
+		 */
+		function initIfram(){
+			initRouteSelect();
+			if(routeType == 'selectdept'){//多个路由节点
+				getSelectRoute();
+				toFlow();
+			}else if(routeType == 'flowinstance'){//只有一个路由节点
+				initChooseUserPage(data);
+			}
+		}
+
+		//生成树
+		function tree(zNodes, n,isOnlyUser) {
+			var setting = {
+				check : {
+					enable : true,
+					chkboxType : {
+						"Y" : "",
+						"N" : ""
+					}
+				},
+				data : {
+					simpleData : {
+						enable : true,
+						idKey:"id",
+						pIdKey:"pid",
+						rootPId:"0"
+					}
+				},
+				callback : {
+				    onDblClick:zTreeOnDblclick,
+					onCheck : zTreeOnchange
+				}
+			};
+		
+			// 加载树
+			zTree = $.fn.zTree.init($("#tree_" + n), setting, zNodes);
+			zTree.expandAll(true);
+			if(!isOnlyUser){
+				zTree.checkAllNodes(false);
+			}
+			// 树加载完成后执行一次
+			buildArry();
+		}
+		//复选框change
+		function zTreeOnchange() {
+			//清空原有的数据 
+			clearData();
+			// 添加数据
+			buildArry();
+		}
+		//双击效果
+		function zTreeOnDblclick(event,treeId,treeNode){
+		    if(treeNode!=null){
+				//清空原有的数据
+				clearData();
+				// 添加数据
+				buildArry2(event,treeId,treeNode);
+            }
+		}
+		function buildArry(){
+			var nodes = zTree.getCheckedNodes();
+			for ( var n in nodes) {
+				var opId = nodes[n]['opId'];
+				var html = addToArry(nodes[n], zTree);
+				$(html).appendTo($("#ul_" + opId));
+			}
+		}
+        function buildArry2(event,treeId,treeNode){
+          if(treeNode!=null && !treeNode.isParent){
+              if(treeNode.checked){
+                  zTree.checkNode(treeNode,false,false);
+			  }else{
+                  zTree.checkNode(treeNode,true,false);
+			  }
+			  var nodes = zTree.getCheckedNodes();
+              for(var n in nodes){
+                  var opId = nodes[n]['opId'];
+                  var html = addToArry(nodes[n],zTree);
+                  $(html).appendTo($("#ul_"+opId));
+			  }
+		  }
+        }
+		function clearData() {
+			$('#deptArea tr td:eq(1) ul').each(function() {
+				$(this).html("");
+			});
+			selectuserlist = {}; //用户
+			selectdeptlist = {}; //部门
+			subuserlist = {}; //子流程用户
+			subdeptlist = {};//子流程部门
+		}
+
+		//把选中的节点放在相应的数组中 
+		function addToArry(treeNode, zTree) {
+			var operateId = treeNode.opId.replace(".", "\\.");
+			var html = "";
+			if (treeNode.type == "user") {//用户
+				treeNode.user = treeNode.pid+'*'+treeNode.id;
+				var isOnly = isCanAdd(treeNode);
+				if (isOnly) {
+					if (treeNode.flag == "sub") {//子流程
+						var subUser = subuserlist[treeNode.opId];
+						if (typeof (subUser) == "undefined" || subUser == null
+								|| treeNode.checktype == "radio") {
+							subuserlist[treeNode.opId] = [ treeNode.user ];
+						} else {
+							subUser.push(treeNode.user);
+							subuserlist[treeNode.opId] = subUser;
+						}
+					} else {
+						var selectUser = selectuserlist[treeNode.opId];
+						if (typeof (selectUser) == "undefined"
+								|| selectUser == null
+								|| treeNode.checktype == "radio") {
+							selectuserlist[treeNode.opId] = [ treeNode.user ];
+						} else {
+							selectUser.push(treeNode.user);
+							selectuserlist[treeNode.opId] = selectUser;
+						}
+					}
+					var parentNode = zTree.getNodeByParam("id", treeNode.pid);
+
+					html = "<li id='user_"+treeNode.id+"' title='"+treeNode.name+"/"+parentNode.name+"' c='"+treeNode.user+"' type='"+treeNode.type+"' flag='"+treeNode.flag+"' opid='"+treeNode.opId+"' >"
+					+ treeNode.name + "/" + parentNode.name + "</li>";
+				} else {
+					treeNode.checked = false;
+					alert("每个部门只能选择一个用户");
+				}
+
+			} else {//部门
+				if (treeNode.flag == "sub") {//子流程
+					var subDept = subdeptlist[treeNode.opId];
+					if (typeof (subDept) == "undefined" || subDept == null
+							|| treeNode.checktype == "radio") {
+						subdeptlist[treeNode.opId] = [ treeNode.user ];
+					} else {
+						subDept.push(treeNode.user);
+						subdeptlist[treeNode.opId] = subDept;
+					}
+				} else {
+					var selectDept = selectdeptlist[treeNode.opId];
+					if (typeof (selectDept) == "undefined"
+							|| selectDept == null
+							|| treeNode.checktype == "radio") {
+						selectdeptlist[treeNode.opId] = [ treeNode.user ];
+					} else {
+						selectDept.push(treeNode.user);
+						selectdeptlist[treeNode.opId] = selectDept;
+					}
+				}
+				html = "<li id='dept_"+treeNode.id+"' c='"+treeNode.user+"' type='"+treeNode.type+"' flag='"+treeNode.flag+"' opid='"+treeNode.opId+"'>"
+						+ treeNode.name + "</li>";
+			}
+			return html;
+		}
+
+		/**
+		 * 判断每个部门只能选择一个用户
+		 */
+		function isCanAdd(treeNode) {
+			var addFlag = true;
+			if (treeNode.only == true) {
+				var subUser;
+				if (treeNode.flag == "sub") {
+					subUser = subuserlist[treeNode.opId];
+				} else {
+					subUser = selectuserlist[treeNode.opId];
+				}
+				if (subUser != null) {
+					for (var i = 0; i < subUser.length; i++) {
+						if (subUser[i].split("*")[0] == treeNode.uupid) {
+							addFlag = false;
+						}
+					}
+				}
+			}
+			return addFlag;
+		}
+
+		//生成办理选择项 
+		function buildBanLi(node) {
+			$('.js-bllx-dropdown-menu').empty();
+			//node 节点是路由节点信息
+			var banliTypeList = node.examinetag;
+			for(var i=0;i<banliTypeList.length;i++){
+				if(banliTypeList[i].selected == 'true'){
+					$('.js-bllx-name').attr('data-value',banliTypeList[i].type).text(banliTypeList[i].name);
+				}
+				$('.js-bllx-dropdown-menu')
+				.append('<li title="'+banliTypeList[i].tip+'"><a href="javascript:;" data-value="'+banliTypeList[i].type+'">'+banliTypeList[i].name+'</a></li>');
+			}
+			
+			//办理类型下拉选择框绑定选择事件
+			$('.js-bllx-dropdown-menu >li ').click(function(){
+				$('.js-bllx-name').attr('data-value',$(this).children().eq(0).attr('data-value'))
+				.text($(this).children().eq(0).text());
+			})
+		}
+		//生成办理时限
+		function buildBlsx(node) {
+			var blsx = $("<div>").attr({"class":"form-group"});
+			var input = $("<input>").attr({
+				"type" : "text",
+				"class" : "form-control",
+				"onkeyup" : "if(isNaN(this.value)){this.value='';this.focus();}"
+			});
+			var label = $("<label>办理时限：</label>").attr({"class":"control-label pull-left"});
+			
+			
+			var div = blsx.clone(true).attr({"class":"pull-left blsx"});
+			
+			
+			var div1 = blsx.clone(true);
+			div1.append("<label for='firstname' class=' control-label'>工作日</label>");
+			div1.append($(input).attr({
+				"id" : "wd_" + node['uuid']
+			}));
+			var div2 = blsx.clone(true);
+			div2.append("<label for='firstname' class=' control-label'>天</label>");
+			div2.append($(input.clone(true)).attr({
+				"id" : "d_" + node['uuid']
+			}));
+			var div3 = blsx.clone(true);
+			div3.append("<label for='firstname' class=' control-label'>小时</label>");
+			div3.append($(input.clone(true)).attr({
+				"id" : "h_" + node['uuid']
+			}));
+			div.append(div1).append(div2).append(div3);
+			
+			blsx.append(label);
+			blsx.append(div);
+			return blsx;
+		}
+		//生成提醒 
+		function buildRemind(node) {
+			console.log(node);
+			var remindHtml = $("<div>").append("<label>提醒方式：</label>");
+			remindHtml.append('<label class="checkbox-inline"><input type="checkbox" name="remindtype" value="1" checked >消息</label>');
+			return remindHtml;
+			//return "";
+		}
+
+		//生成提醒
+		function buildRemindNew() {
+			var remind = $("<div>")
+					.attr({
+						"class" : "form-group"
+					})
+					.css({
+						'position' : 'absolute',
+						'padding-top' : '30px'
+					})
+					.append(
+							$("<label for='' class='control-label  pull-left'>提醒方式：</label>"));
+			var input = $("<input>").attr({
+				"type" : "checkbox",
+				"id" : "remind_" + node['uuid'],
+				"name" : "remind_" + node['uuid'],
+				"value" : "0",
+				"checked" : "checked"
+			});
+			remind.append($(input));
+			remind.append("<span> 短信 </span>");
+			return remind;
+		}
+
+		//点确定，生成的json串
+		function toCreateWrite() {
+			var deptid = "";
+			var nodes = node;
+			for ( var i in nodes) {
+				var node = nodes[i]['nodes'];
+				for ( var ii in node) {
+					var nodee = node[ii]['nodes'];
+					deptid = nodee[0]['id'];
+				}
+			}
+			//messagePush(deptid, "全流程政务协同平台", "您有一条新的待办", "1");//1:用户
+
+			//获取所有选中人员节点
+			var checkedDeptNodes = [];
+			var checkedUserNodes = zTree.getCheckedNodes(true);
+			//遍历人员节点 获取人员节点的部门信息
+			for (var i = 0; i < checkedUserNodes.length; i++) {
+				var userNode = checkedUserNodes[i];
+				var deptNode = userNode.getParentNode();
+				var isHasDept = false;
+				for (var j = 0; j < checkedDeptNodes.length; j++) {
+					if (checkedDeptNodes[j].id == deptNode.id) {//部门已经存在
+						checkedDeptNodes[j].nodes.push({
+							id : userNode.id,
+							name : userNode.name,
+							status : userNode.status
+						});
+						isHasDept = true;
+					}
+				}
+				if (!isHasDept) {//已选部门中还没有该部门 则追加该部门
+					checkedDeptNodes.push({
+						deptName : deptNode.deptName,
+						deptType : deptNode.deptType,
+						fileTypeId : deptNode.fileTypeId,
+						flag : deptNode.flag,
+						id : deptNode.id,
+						name : deptNode.name,
+						nextWfleveId : deptNode.nextWfleveId,
+						type : 'user',
+						nodes : [ {
+							id : userNode.id,
+							name : userNode.name,
+							status : userNode.status
+						} ]
+					});
+
+				}
+			}
+			toFlowData.node[0].nodes = checkedDeptNodes;
+			toFlowData.node[0].examinetag = $(".js-bllx-name").attr(
+					'data-value');
+			toFlowData.node[0].remind = {
+				content : toFlowData.title,//公文标题
+				remindType : [],//1 提醒 则值为提醒方式的value
+				isRemind : '0'//0 不提醒   1 提醒
+			};
+			//生成提醒方式的数据
+			var $remindChecked = $('[name="remindtype"]:checked');
+			//toFlowData.remindtype = $remindChecked.val();	//添加提醒方式
+			if ($remindChecked.length > 0) {
+				var remindTypeList = [];
+				$remindChecked.each(function(i, item) {
+					remindTypeList.push(item.value);
+				})
+				toFlowData.node[0].remind.remindType = remindTypeList;
+				toFlowData.node[0].remind.isRemind = '1';
+			}
+
+			toFlowData.node[0].limit = {};
+			toFlowData.idea = data.idea;
+			TempCache.setItem("formData", JSON.stringify(toFlowData));
+
+		}
+		function createSelectUserList(noderode) {
+			var suserlist = [];
+			for ( var opId in selectuserlist) {
+				var operateId = opId.replace(".", "\\.");
+				if (selectuserlist[opId] != null && selectuserlist[opId] != "") {
+					var selectUser = "";
+					var value = $("#ul_" + operateId + " li").length;
+					for (var i = 0; i < value; i++) {
+						var Element = $("#ul_" + operateId + " li")[i]
+								.getAttribute("c");
+						if (selectUser == "") {
+							selectUser = Element;
+						} else {
+							selectUser += "|$|" + Element;
+						}
+					}
+					var opUser = "|$|" + selectUser + "|$|";
+					var limit = "wd*" + $("#wd_" + operateId).val() + "|d*"
+							+ $("#d_" + operateId).val() + "|h*"
+							+ $("#h_" + operateId).val();
+					var remindType = "";
+					$('input[name="remind_' + operateId + '"]:checked').each(
+							function() {
+								if (remindType == "") {
+									remindType = $(this).val();
+								} else {
+									remindType = remindType + "|"
+											+ $(this).val();
+								}
+							});
+
+					var examinetag = $(".js-bllx-name").attr('data-value');
+					suserlist.push(opId + "=" + opUser + "#" + remindType + "#"
+							+ limit + "#" + examinetag);
+				}
+			}
+			console.log(suserlist);
+			return suserlist.join(",");
+		}
+
+		function createSelectDeptList(noderode) {
+			var sdeptlist = [];
+			for ( var opId in selectdeptlist) {
+				var operateId = opId.replace(".", "\\.");
+				if (selectdeptlist[opId] != null) {
+					var selectDept = "";
+					var value = $("#ul_" + operateId + " li").length;
+					for (var i = 0; i < value; i++) {
+						var Element = $("#ul_" + operateId + " li")[i]
+								.getAttribute("c");
+						if (selectDept == "") {
+							selectDept = Element;
+						} else {
+							selectDept += "|$|:|$|" + Element;
+						}
+					}
+					var opUser = "|$|" + selectDept + "|$|";
+					var limit = "wd*" + $("#wd_" + operateId).val() + "|d*"
+							+ $("#d_" + operateId).val() + "|h*"
+							+ $("#h_" + operateId).val();
+					var remindType = "";
+					$('input[name="remind_' + operateId + '"]:checked').each(
+							function() {
+								if (remindType == "") {
+									remindType = $(this).val();
+								} else {
+									remindType = remindType + "|"
+											+ $(this).val();
+								}
+							});
+					var examinetag = $(".js-bllx-name").attr('data-value');
+					sdeptlist.push(opId + "=" + opUser + "#" + remindType + "#"
+							+ limit + "#" + examinetag);
+				}
+			}
+			console.log(sdeptlist);
+			return sdeptlist.join(",");
+		}
+
+		function createSubflowList(noderode) {
+			var sub_user = [];
+			for ( var opId in subuserlist) {
+				var operateId = opId.replace(".", "\\.");
+				if (subuserlist[opId] != null && subuserlist[opId] != "") {
+					var subUser = "";
+					var value = $("#ul_" + operateId + " li").length;
+					for (var i = 0; i < value; i++) {
+						var Element = $("#ul_" + operateId + " li")[i]
+								.getAttribute("c");
+						if (subUser == "") {
+							subUser = Element;
+						} else {
+							subUser += "|$|" + Element;
+						}
+					}
+					var opUser = "|$|" + subUser + "|$|";
+					var limit = "wd*" + $("#wd_" + operateId).val() + "|d*"
+							+ $("#d_" + operateId).val() + "|h*"
+							+ $("#h_" + operateId).val();
+					var remindType = "";
+					$('input[name="remind_' + operateId + '"]:checked').each(
+							function() {
+								if (remindType == "") {
+									remindType = $(this).val();
+								} else {
+									remindType = remindType + "|"
+											+ $(this).val();
+								}
+							});
+					var opNode = zTree.getNodeByParam("id", opId);
+					var examinetag = $(".js-bllx-name").attr('data-value');
+					sub_user.push(opNode.id + "=" + opUser + "#" + remindType
+							+ "#" + limit + "#" + examinetag);
+				}
+			}
+			console.log(sub_user);
+			return sub_user.join(",");
+		}
+		
+		/**
+		 * 形成路由选择下拉框
+		 */
+		function initRouteSelect() {
+			if (routeType == 'flowinstance') {
+				var id = node[0].id, name = node[0].name;
+
+				$('.js-hjmc-name').attr('data-value', id).text(name);
+				var $li = $('<li><a hred="javascript:;" data-value="'+id+'">' + name
+						+ '</a></li>')
+				$li.appendTo($(".js-hjmc-dropdown-menu"));
+			} else if (node) {
+				//路由ID String opName = opObj.get(“opName”);//路由名称 String memo = opObj.get(“memo”);//备注 String isSelect= opObj.get(“isSelect”);//是否允许选择 String disable=””; If(isSelect.equals(“false”)){ Disable =”disabled=\"disabled\"”;
+				var nodes = node;
+				$('.js-hjmc-name').attr('data-value', nodes[0]['id']).text(
+						nodes[0]['name']);
+				for ( var i in nodes) {
+					var $li = $('<li><a hred="#" data-value="'+nodes[i]['id']+'">'
+							+ nodes[i]['name'] + '</a></li>')
+					$li.appendTo($(".js-hjmc-dropdown-menu"));
+				}
+			}
+
+			if (routeType == 'selectdept') {//多个节点时  路由选择选项增加绑定事件
+				$(".js-hjmc-dropdown-menu > li").click(
+					function() {
+						$('.js-hjmc-dropdown-menu > li').addClass('active')
+								.siblings().removeClass('active');
+						$('.js-hjmc-name').attr('data-value',
+								$(this).children().attr('data-value'))
+								.text($(this).children().text());
+
+						selectuserlist = {}; //用户
+						selectdeptlist = {}; //部门
+						subuserlist = {}; //子流程用户
+						subdeptlist = {};//子流程部门
+
+						getSelectRoute();
+						toFlow();
+					});
+			}
+		}
+
+		//获取选中的路由节点
+		function getSelectRoute() {
+			var formData = JSON.parse(TempCache.getItem("formData"));
+			formData['wfoperateid'] = $('.js-hjmc-name').attr('data-value');
+			formData['flag'] = flag;
+			TempCache.setItem("formData", JSON.stringify(formData));
+		}
+
+		// 如果是多个路由节点 则默认初始化第一个路由节点的人员信息
+		function toFlow() {
+			var data = JSON.parse(TempCache.getItem("formData"));
+			var idVal = data['pkValue'];
+			var idea = $("#idea").val();//获取意见域的值
+			$.ajax({
+				url : basePath + '/flowService/toFlow',
+				type : "post",
+				data : {
+					"flag" : data['flag'],
+					"oper" : data['oper'],
+					"pkValue" : idVal,
+					"idea" : idea,
+					"attr" : data['attr'],
+					"attr1" : data['attr1'],
+					"sysid" : data['subId'],
+					"filetypeid" : data['filetypeid'],
+					"workflowid" : data['workflowid'],
+					"workitemid" : data['workitemid'],
+					"deptid" : data['deptid'],
+					"userid" : data['userid'],
+					"title" : data['title'],
+					"wfleveid" : data['wfleveid'],
+					"wfoperateid" : data['wfoperateid'],
+					"selectuserlist" : data['selectuserlist'],
+					"remindtype" : data['remindtype']
+				},
+				async : true,
+				cache : true,
+				dataType : "json",
+				success : function(data) {
+					toFlowData = data;
+					initChooseUserPage(data);
+				},
+				error : function(error) {
+					console.log(error);
+				}
+			});
+		}
+
+        /**
+         * 判断应用程序是否可以访问，如果可以正常加载，如果不可以不加载
+         */
+        function yingYong(callback){
+            var formData = JSON.parse(TempCache.getItem("formData"));
+            if(formData['wfoperateid']){
+                $.ajax({
+                    url:"/workflow/getOprateInfo",
+                    data:{
+                        wfOperateId:formData['wfoperateid']
+                    },
+                    success:function(json){
+                        console.log("json",json);
+                        if(json.flag == "1"){
+                            //不为空，表示有应用程序
+                            if(json.data.deptLevel){
+                                var url = json.data.eventPath;
+                                var context = {};
+                                $.ajax({
+                                    url:url,
+                                    data:{
+                                        context:context
+                                    },
+                                    success:function(){
+                                        if(callback){
+                                            callback();
+                                        }
+                                    },
+                                    error:function(){
+                                        layer.alert("应用程序加载失败，请联系管理员！");
+                                    }
+                                })
+                            }else{
+                                //没有应用程序，继续加载数据
+                                if(callback){
+                                    callback();
+                                }
+                            }
+                        }else{
+                            layer.alert("查询操作数据失败，请联系管理员！");
+						}
+                    },
+                    error:function(){
+                        layer.alert("查询操作数据失败，请联系管理员！");
+                    }
+                })
+			}
+        }
+
+		//初始选择办理人页面信息
+		function initChooseUserPage(data) {
+            yingYong(function(){
+			toFlowData = data;
+			setTimeout(
+				function() {
+					var node = data.node;
+					$("#deptArea").empty();
+					if($.isEmptyObject(node)){
+						layer.alert("初始化失败，" + data.exception,function(index){
+							//关闭当前层
+							/*var indexSelf = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+							parent.layer.close(indexSelf); //再执行关闭*/
+							layer.close(index);
+						});
+					}
+					for ( var n in node) {
+						var banli = buildBanLi(node[n]);//办理
+						//var blsx = buildBlsx(node[n]);
+						var blsx = "";
+						var remind = buildRemind(node[n]);//提醒
+
+						var tr = $tr.clone(true);
+						tr.attr({
+							"id" : "tr_" + n
+						});
+						$("<div>").append($("<ul>").attr({
+							"id" : "tree_" + n,
+							"class" : "ztree",
+							"style" : 'height:240px;overflow:auto'
+						})).css("padding", "20px").appendTo(
+								tr.children("td:eq(0)"));
+						tr.appendTo($("#deptArea"));
+						$("<div>")
+								.css("padding", "20px")
+								.append($(blsx))
+								./* append($("<br/>")).append($("<br/>")). */append(
+										$("<div>").append($("<ul>").attr({
+											"id" : "ul_" + node[n]['id'],
+											"class" : "choose_user_list"
+										}))).append($(banli)).append(
+										$(remind)).appendTo(
+										tr.children("td:eq(1)"));
+
+						//把所有节点放在zNodes中
+						var zNodes = new Array();
+						node[n].nocheck = true;
+						zNodes.push(node[n]);
+						var deptData = node[n].nodes;
+						var personsize = 0;//可选参与者个数
+						if(deptData && deptData.length == 1 && deptData[0].nodes && deptData[0].nodes.length === 1){
+							personsize = 1;
+						}
+						for ( var i in deptData) {
+							deptData[i].pid = node[n].id;
+							var datas = {"deptId":deptData[i].id};
+							var superId = "";
+							httpRequest("get","/dept/getSuperIdByDeptId",datas,function (data){
+								if(data.flag=="1"){
+									superId = data.data[0].super_id;//获取外层循环的部门的父id(子部门)
+								}
+							});
+							for(var i1 in deptData){//再次循环
+								var pDeptId = deptData[i1].id; //获取内存循环的部门id（父部门）
+								if(superId == pDeptId){//如果外层的包含内层的
+									deptData[i].pid = deptData[i1].id;//将内层的deptid，复制给外层的pid
+								}
+							}
+							deptData[i].nocheck = true;
+							zNodes.push(deptData[i]);
+
+							var userData = [];
+							if (deptData[i].user !== undefined) {
+								userData = deptData[i].user;
+							} else {
+								userData = deptData[i].nodes;
+							}
+
+							if (personsize == 1) {
+								var oneuserdata = userData[0];
+								oneuserdata.checked = true;
+								oneuserdata.pid = deptData[i].id;
+								oneuserdata.opId = node[0].id;
+								oneuserdata.type = 'user';
+								zNodes.push(oneuserdata);
+							} else {
+								for ( var j in userData) {
+									userData[j].pid = deptData[i].id;
+									userData[j].opId = node[0].id;
+									//选择“参与人是否自动选中”
+									userData[j].checked = userData[j].selected;
+									userData[j].type = 'user';
+									zNodes.push(userData[j]);
+								}
+							}
+
+						}
+						tree(zNodes, n,true);
+					}
+				}, 0);
+            });
+		}
+	</script>
+</body>
+</html>

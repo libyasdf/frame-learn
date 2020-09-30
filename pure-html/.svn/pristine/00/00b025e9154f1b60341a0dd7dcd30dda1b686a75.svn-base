@@ -1,0 +1,35 @@
+{
+	"flag": "1",
+	"data": {
+		"total": 300,
+		"rows": [
+			{
+				"id": "1",
+				"name": "张三",
+				"timeRange":"2018年05月05日",
+				"proveNumber":"0000001",
+				"aimName":"天津市中心党支部",
+				"partyType":"党员",
+				"cz":""
+
+			},{
+				"id": "2",
+				"name": "李四",
+				"timeRange":"2018年05月05日",
+				"proveNumber":"0000002",
+				"aimName":"天津市中心党支部",
+				"partyType":"预备党员",
+				"cz":""
+			},{
+				"id": "3",
+				"name": "王五",
+				"timeRange":"2018年05月05日",
+				"proveNumber":"0000003",
+				"aimName":"天津市中心党支部",
+				"partyType":"党员",
+				"cz":""
+			}
+
+		]
+	}
+}

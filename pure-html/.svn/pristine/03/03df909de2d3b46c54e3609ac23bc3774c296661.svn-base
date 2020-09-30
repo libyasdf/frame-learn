@@ -1,0 +1,195 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<script type="text/javascript">
+//在焦点离开年限列表的天数输入框时，校验是否为数字
+function check(index,data){
+	var val=$("#dayNumber"+index).val();
+	 if(isNaN(val)){
+		 return false
+	  }else{
+		  return true;
+	  }
+}
+//保存方法
+function save(){
+
+	var flag=false;
+	var inputs=$("input");
+	for(var i=0;i<inputs.length;i++){
+		if(inputs[i].value==null || inputs[i].value==''){
+			layer.msg("第"+(i+1) +"行的天数不能为空", {icon: 0});
+			 $("#dayNumber"+i).focus()
+			 flag=false;
+			 break;
+		}
+		 flag=check(i,inputs[i].value)
+		 if(!flag){
+			 layer.msg("第"+(i+1) +"行的天数必须为数字", {icon: 0});
+			 $("#dayNumber"+i).focus()
+			 break;
+		 }
+	}
+
+		if(!flag){
+			//校验未通过，
+			return;
+		}
+	
+	
+	//获取列表数据和请假天数保存到后台
+	var data=$('#right_table').bootstrapTable('getData');
+	 var jsonStr = JSON.stringify(data);
+	 var arry=new Array()
+	 $("input").each(function(i){
+		 arry.push($(this).val())
+	 });
+	$.post("/zhbg/kqgl/xtpz/njgz/saveAll", {data: jsonStr,dayNumbers:arry.toString()} ,function(data){
+		if(data.flag=="1"){
+			layer.msg("保存成功！", {icon: 1});
+			//showDialogAlert("保存成功")
+		}else{
+			layer.msg("保存失败！", {icon: 0});
+			//showDialogAlert("保存失败")
+		}
+	});
+}
+
+</script>
+<div class="container-fluid">
+    <div class="row">
+        
+        <div class="col-md-12">
+			<form class="form-horizontal" id="form">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+    	 <div class="col-md-12">
+			
+            <!--bootstrap-table表格-->
+        </div>
+    </div>
+     <div class="row">
+         <div class="col-md-12" style="text-align: center">
+             <div class="col-md-12" style="text-align: center">
+                   <button type="button" class="btn btn-primary" onclick="save();"> 保&nbsp;&nbsp;存
+                   </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </div>
+          </div>
+          
+      </div>
+</div>
+
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '编号'
+        , width: '3%'
+        , order: "desc"
+        , align:"center"
+    }, {
+        field: 'ageLimit'
+        , title: '年限'
+        , width: '20%'
+        , align:"center"
+        ,formatter: function (value, row, index) {
+        	if(value=="10"){
+        		return "0年-10年"
+        	}else if(value=="20"){
+        		return "10年-20年"
+        	}else if(value=="100"){
+        		return "20年以上"
+        	}else{
+        		return value+"年";
+        	}
+        }
+    },{
+        field: 'dayNumber'
+        , title: '天数'
+        , width: '20%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            if(value!='' && value!=null)
+                html+= '<input type="text" style="text-align: center" id="dayNumber' + index + '"  name="dayNumber" onblur="check('+index+','+value+')" value="'+value+'">' + '天';
+             else
+            	 html+= '<input type="text" style="text-align: center" id="dayNumber' + index + '"  name="dayNumber"  >' + '天';
+              return html;
+        }
+    }];
+    $(document).ready(function (e) {
+        //初始化表格
+
+        $('#right_table').bootstrapTable({
+            rowStyle: function (row, index) {
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            },//自定义行样式
+            striped: true,//隔行变色
+            columns: right_table_col,
+        });
+        $.ajax({
+            url:"/zhbg/kqgl/xtpz/njgz/getlistBootHql1",
+            type:"get",
+            dataType:"json",
+            success:function (res) {
+                if (res.flag==="1"){
+                    $('#right_table').bootstrapTable("load",res.data);
+                }else {
+                    layer.msg("请求失败，请重试！");
+                }
+            }
+            }
+        )
+       
+    });
+
+//    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/kqgl/xtpz/njgzEditForm.html?id='+id,
+                title:"修改",width:'70%',height:'60%'
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'../index.html?id=' + id,
+                tableId:'right_table'
+            })
+        }
+    }
+
+</script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>

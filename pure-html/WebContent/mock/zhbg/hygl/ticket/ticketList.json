@@ -1,0 +1,44 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "meetingRoom": "第一会议室",
+        "meetingName": "第四会议",
+        "startTime": "2018-03-03 09:00:00",
+        "endTime": "2018-03-03 11:00:00",
+        "status":"未反馈",
+        "cz": "update,delete"
+      },
+      {
+        "id": 2,
+        "meetingRoom": "第一会议室",
+        "meetingName": "第三会议",
+        "startTime": "2018-03-02 09:00:00",
+        "endTime": "2018-03-02 11:00:00",
+        "status":"已反馈",
+        "cz": "update,delete"
+      },
+      {
+        "id": 3,
+        "meetingRoom": "第一会议室",
+        "meetingName": "第二会议",
+        "startTime": "2018-03-01 09:00:00",
+        "endTime": "2018-03-01 11:00:00",
+        "status":"逾期反馈",
+        "cz": "update,delete"
+      },
+      {
+        "id": 4,
+        "meetingRoom": "第一会议室",
+        "meetingName": "第一会议",
+        "startTime": "2018-03-01 15:00:00",
+        "endTime": "2018-03-01 17:00:00",
+        "status":"已反馈",
+        "cz": "update,delete"
+      }
+    ]
+  }
+}

@@ -1,0 +1,275 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    .vertify-details2 {
+        height: 100%;
+        width: 100%;
+        border: 0px solid gray;
+    }
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+       <<div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div class="folderBar">
+                    <label class="radio-checkbox">
+                        <input type="checkbox" value="1"> 显示党员数
+                    </label>
+                </div>
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div class="vertify-panel vertify-details" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 姓名：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text"/>
+                                </div>
+                                <label class="col-md-2 control-label"> 性别：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 名族：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text"/>
+                                </div>
+                                <label class="col-md-2 control-label"> 学历：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 民主党派：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text"/>
+                                </div>
+                                <label class="col-md-2 control-label"> 单位隶属关系：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text"/>
+                                </div>
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="addType('1')">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                    <button class="list_table_btn2" onclick="exportData()">
+                        <span class="glyphicon glyphicon-chevron-right"></span> 导出excel
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+    <script src="/static/js/common/jquery.tablednd.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+    <script src="/modules/dwgl/common/dzzTree.js"></script>
+    <!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <script type="text/javascript">
+
+
+        //定义bootatrap-table数据列
+        //sortable：开启列排序，其他参考API
+        var right_table_col = [{
+            title: '序号'
+            , width: '5%'
+            , order: "desc"
+            , align: "center"
+            , formatter: function (value, row, index) {
+                return "<span recordId='"+row.id+"'>"+(index + 1)+"</span>";//计算序号
+            }
+        }, {
+            field: 'zzmc'
+            , title: '组织名称'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'name'
+            , title: '姓名'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'xb'
+            , title: '性别'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'mz'
+            , title: '名族'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'csd'
+            , title: '出生地'
+            , width: '7%'
+            , align: "center"
+        },{
+            field: 'gzsj'
+            , title: '工作时间'
+            , width: '7%'
+            , align: "center"
+        },{
+            field: 'jg'
+            , title: '籍贯'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'csrq'
+            , title: '出生日期'
+            , width: '7%'
+            , align: "center"
+        },{
+            field: 'xl'
+            , title: '学历'
+            , width: '7%'
+            , align: "center"
+        },{
+            field: 'mzdp'
+            , title: '民主党派'
+            , width: '7%'
+            , align: "center"
+        },{
+            field: 'ggdw'
+            , title: '工作单位'
+            , width: '7%'
+            , align: "center"
+        },{
+            field: 'lsgx'
+            , title: '单位属性'
+            , width: '7%'
+            , align: "center"
+        },{
+            title: '操作'
+            , width: '7%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var html = "";
+                html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                html += "<i class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+
+                return html;
+            }
+        }];
+        
+        $(document).ready(function (e) {
+
+            dzzTree.init();
+
+            //初始化表格
+            TableInit.init({
+                domId: "right_table",
+                url: "/mock/dwgl/dyxxwh/ybdyList.json",
+                pagination: false,	//不分页
+                columns: right_table_col,
+                queryParams: function (params) {
+                    //这里将各个查询项添加到要传递的参数中
+                    //可以做一些校验
+                    params.name = $("#name").val();
+                    params.code = $("#code").val();
+                    return params;
+                },
+                readOnlyFn: function () {
+                }
+            })
+        });
+
+        //表格数据项的操作
+        var list = {
+            editFun: function (id) {
+                MyLayer.layerOpenUrl({
+                    url: '/modules/dwgl/dygl/dyxxwh/ybdy/ybdyEditForm.html',
+                    title: "修改党员基本信息"
+                })
+            },
+            setFun: function (id) {
+                MyLayer.layerOpenUrl({
+                    url: '/modules/dwgl/dzzgl/dwglList.html',
+                    title: "单位管理"
+                })
+            },
+            deleteFun: function (id) {
+                MyLayer.deleteOpt({
+                    url: '/system/config/dictionary/deleteItem?ids=' + id,
+                    tableId: 'right_table'
+                })
+            }
+        }
+
+        function addType(type){
+            MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/dygl/dyxxwh/ybdy/ybdyEditForm.html',
+                title: "新增党员基本信息"
+            })
+        }
+
+        function exportData(){
+        }
+
+    </script>

@@ -1,0 +1,208 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css" href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <!-- <div class="folderBar">
+                     <label class="radio-checkbox">
+                         <input type="checkbox" value="1"> 显示党员数
+                     </label>
+                 </div>-->
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details" >
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 时间：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="annual" name="annual"/>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="clearAll()"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <div class="col-md-12">
+
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/dwgl/common/dzzTree.js"></script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#annual'
+        ,type: 'year'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+       /* , sortable: true
+        , order: "desc"*/
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'annual'
+        , title: '时间'
+        , width: '9%'
+        , sortable: true
+        , order: "desc"
+        , align:"center"
+    },{
+        field: 'superName'
+        , title: '上级党组织'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'partyOrganizationName'
+        , title: '党组织'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'actualReport'
+        , title: '实际开会次数'
+        , width: '10%'
+        , align:"center"
+    }];
+
+
+    if(getcookie("rolesNo").indexOf("D478") >= 0){
+        dzzTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"org"});
+    }else{
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+            dataType: "json",
+            success: function (data) {
+                dzzTree.init({id:data.data,type:"org"});
+            },
+            error: function (data) {
+            }
+        })
+    }
+
+    var nodeId ="";
+    if( $.fn.zTree.getZTreeObj("treeDemo")){
+        var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+        nodeId = node.id
+    }
+        TableInit.init({
+            domId:"right_table",
+            url:"/djgl/ddjs/shyk/zbdydh/getHytjStatistics?OrgIdVal=" + nodeId,
+            columns:right_table_col,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为箭头
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":""}
+                };
+            },
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.annual = $('#annual').val();
+                params.tableName = "DDJS_SHYK_PARTYCONGRESS";
+                return params;
+            },
+            readOnlyFn:function(){
+
+            }
+        });
+    function refreshTable(node) {
+        var opt = {
+            url:"/djgl/ddjs/shyk/zbdydh/getHytjStatistics?OrgIdVal=" + node.id,
+            pageNumber:1,
+            pageSize:10
+        };
+        $('#right_table').bootstrapTable('refresh',opt);
+    }
+
+    //    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'/modules/dwgl/shyk/shyk/shykEditForm.html',
+                title:'修改'
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'/index.html?id=' + id,
+                tableId:'right_table'
+            })
+        }
+    }
+    function clearAll() {
+        $("#annual").val("");
+    }
+</script>

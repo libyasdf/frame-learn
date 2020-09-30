@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\10.10"></property>
+
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>7
+
+	<fileset id="maqiuxia" dir="../../../../">
+
+		<!--值班管理 定时新增下月基础配置的修改-->
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/zbgl/config/"/>
+
+		<!--值班管理 普网专网电话校验后台-->
+		<include name="src/com/sinosoft/sinoep/modules/zhbg/zbgl/dutytable/services/DutyTableServiceImpl.java"/>
+
+		<!--值班管理-普网专网电话前台修改 -->
+		<include name="WebContent/modules/zhbg/zbgl/dutytable/"/>
+
+	</fileset>
+
+	<target name="all">
+		<mkdir dir="${export.dir.root}/cqqx"/>
+		<copy todir="${export.dir.root}/cqqx" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	<!--删除上次导出文件-->
+	<target name="deleteOldFile" >
+		<delete verbose="true" includeemptydirs="true" failonerror="false" >
+			<fileset dir="${export.dir.root}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="default" depends="deleteOldFile,mqx">
+		<exec executable="cmd" failonerror="false">
+			<arg line='/c explorer "${export.dir.root}\"' />
+		</exec>
+	</target>
+</project>

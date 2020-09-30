@@ -1,0 +1,439 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+
+    /* 周日期css */
+    .input-group-addon1{
+	   	background-color: #fff;
+		border: none;
+    }
+    .btn-both{
+     	display:inline-block;
+     	width:24px;
+     	height:24px;
+    }
+    .leftbtn{
+    	background: url("/static/images/worklog/left.png")  no-repeat;
+    }
+	.leftbtn:hover{
+		background: url("/static/images/worklog/left-hover.png") no-repeat;
+	}
+	.rightbtn{
+		background: url("/static/images/worklog/right.png") no-repeat;
+	}
+	.rightbtn:hover{
+		background: url("/static/images/worklog/right-hover.png")  no-repeat;
+	}
+	 .selectTime {
+        width: 120px;
+        text-align: center;
+    }
+    .input-group-addon1 {
+        width: auto;
+    }
+    .list_wrapper table thead{display: block;}
+    .list_wrapper table tbody{display: block; height: 300px; overflow: auto;}
+    .list_wrapper table tr{display: table;width:100% }
+    .table_header {
+        position: absolute;
+        top: -20px;
+        right: 0;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+    }
+    .btns_right {
+        position: absolute;
+        right: 15px;
+        /*top: -20px;*/
+    }
+    .btns_right > span {
+        margin-left: 15px;
+    }
+    .btns_right .selected {
+        display: inline-block;
+    }
+    .takeUp {
+        color:#428bca;
+    }
+    .apply {
+        color:#ec856e;
+    }
+    .selected {
+        display: none;
+        color: green;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                        </div>
+                    </div>
+                    <div class="panel-body" >
+                        <div class="form-group" >
+                            <label class="col-md-5 control-label"> 日期：</label>
+                            <div class="col-md-4">
+                            <div class="input-group" >
+                            	<span style="cursor:pointer;"class="input-group-addon input-group-addon1" onclick="lastDay()">
+	                            	<span id="leftImage" class="btn-both leftbtn"></span>
+	                            </span>
+	                            <input class="form-control selectTime" stype="text"  id="selectTime"  />
+	                            <span style="cursor:pointer;"class="input-group-addon input-group-addon1" onclick="nextDay()">
+	                            	<span id="rightImage" class="btn-both rightbtn"></span>
+	                            </span>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+            <div class="col-md-12" style="padding-top:10px">
+                <div class="table_header">
+                    <div class="btns_right">
+                        <span><i class="takeUp glyphicon glyphicon-exclamation-sign"></i> 已占用 </span>
+                        <!-- <span><i class="selected glyphicon glyphicon-ok-sign"></i> 选中 </span> -->
+                        <span><i class="apply glyphicon glyphicon-adjust"></i> 申请中 </span>
+                    </div>
+                </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+
+<script type="text/javascript">
+var curDate = getCurrentDate("yyyy-MM-dd")
+//前一天
+function lastDay(){
+
+	var lastDay = getBeforeDate($('#selectTime').val(),1)
+	$('#selectTime').val(lastDay)
+	selectDate()
+}
+//后一天
+function nextDay(){
+	var nextDay = getBeforeDate($('#selectTime').val(),-1)
+	$('#selectTime').val(nextDay)
+	selectDate()
+}
+
+laydate.render({
+    elem: '#selectTime'
+    ,btns:	['now', 'confirm']
+    ,done:function(){
+    	selectDate()
+    }
+});
+var	right_table_col = [
+	    {
+	        field: 'meetingRoomName'
+	        , title: '会议室'
+	        , align: "center"
+	        , formatter: function (value, row, index) {
+	            // console.log(value, row, index)
+	            return "<span class='' data-index='"+ index +"' data-mrId='"+ row.meetingRoomId +"'>"+ row.meetingRoomName +"</span>";
+	        }
+	    }, {
+	        field: 'content'
+	        , title: '容纳人数/人'
+	        , width: '10%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            return "<span class='' data-index='"+ index +"' data-mrId='"+ row.meetingRoomId +"'>"+ row.content +"</span>";
+	        }
+	    },{
+	        field: 'equipment'
+	        , title: '设备情况'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            return "<span class='' data-index='"+ index +"' data-mrId='"+ row.meetingRoomId +"'>"+ row.equipment +"</span>";
+	        }
+	    },
+	    {
+	        field: 'noneToTenState'
+	        , title: '9:00-10:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	           // return "<span class='' data-index='"+ index +"' data-mrId='"+ row.meetingRoomId +"'></span>";
+	            //console.log(setData(value,row,index,'noneToTenState'))
+	            var oTimeNum = { min:9, max:10 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	    {
+	        field: 'tenToElevenState'
+	        , title: '10:00-11:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:10, max:11 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	    {
+	        field: 'elevenToTwelveState'
+	        , title: '11:00-12:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:11, max:12 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	    {
+	        field: 'twelveToThirteenState'
+	        , title: '12:00-13:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:12, max:13 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	    {
+	        field: 'thirteenToFourteenState'
+	        , title: '13:00-14:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:13, max:14 };
+	            return setData(value,row,index,oTimeNum )
+	        }
+	    },
+	    {
+	        field: 'fourteenToFifteenState'
+	        , title: '14:00-15:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:14, max:15 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	    {
+	        field: 'fifteenToSixteenState'
+	        , title: '15:00-16:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:15, max:16 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	    {
+	        field: 'sixteenToSeventeenState'
+	        , title: '16:00-17:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:16, max:17 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	    {
+	        field: 'seventeenToEighteenState'
+	        , title: '17:00-18:00'
+	        , width: '5%'
+	        , align: "center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var oTimeNum = { min:17, max:18 };
+	            return setData(value,row,index,oTimeNum)
+	        }
+	    },
+	];
+
+	//执行查询
+	function selectDate(){
+
+		//TableInit.refTable('right_table');
+		//销毁表
+		$('#right_table').bootstrapTable('destroy');
+		//重新加载表
+		TableInit.init({
+            domId:"right_table",
+            striped:false,//去除隔行变色
+            classes: 'table',//去除悬浮变色
+            pagination:false,	//不分页
+            url:"/zhbg/hygl/meetingRoomUseInfo/getMeetingRoomUseList",
+            columns:right_table_col,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+				//可以做一些校验
+                params.date = $('#selectTime').val();
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+                    //MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingApply/meetingRoomApplyReadOnlyForm.html',title:'只读'});
+                });
+
+                try {
+                    mergeTableRow("meetingroomName");
+                }catch (e) {}
+            }
+        });
+
+
+	}
+    // 设置data项
+    var num=0;
+    function setData(value,row,index,oTimeNum){
+        num++;
+        var apply = 'apply glyphicon glyphicon-adjust'; // 申请中
+        var takeUp = 'takeUp glyphicon glyphicon-exclamation-sign'; // 已占用
+        var selected = 'selected glyphicon glyphicon-ok-sign'; // 已选择
+
+        var html = "";
+        if (value == "0") {
+            html += "<span class='"+ selected +"'  data-time-min='"+ oTimeNum.min +"'  data-time-max='"+ oTimeNum.max +"' data-index='"+ num +"' data-mrName='"+ row.meetingRoomName +"' data-mrId='"+ row.meetingRoomId +"'></span>";
+        } else if (value == "1") {
+            html += "<span class='"+ apply +"' data-index='"+ index +"' data-mrId='"+ row.meetingRoomId +"'></span>";
+        } else if (value == "2") {
+            html += "<span class='"+ takeUp +"' data-index='"+ index +"' data-mrId='"+ row.meetingRoomId +"'></span>";
+        }else{
+            html += "<span class='' data-index='"+ index +"' data-mrId='"+ row.meetingRoomId +"'></span>";
+        }
+        return html;
+    }
+
+	//下一周
+	function nextWeek(){
+		var selectTime = $("#selectTime").val()
+		var startDate = selectTime.substr(0,10);
+		var endDate = selectTime.substr(13,10);
+		startDate = getBeforeDate(startDate,-7)
+		endDate = getBeforeDate(endDate,-7)
+		selectTime = startDate + ' - ' + endDate;
+		$("#selectTime").val(selectTime);
+		//执行查询
+		selectDate()
+	}
+
+	// data 日期  n 数字   return 日期的前n天
+    function getBeforeDate(date,n) {
+        var n = n;
+        var d = new Date(date);
+        var year = d.getFullYear();
+        var mon = d.getMonth() + 1;
+        var day = d.getDate();
+        if(day <= n) {
+            if(mon > 1) {
+                mon = mon - 1;
+            } else {
+                year = year - 1;
+                mon = 12;
+            }
+        }
+        d.setDate(d.getDate() - n);
+        year = d.getFullYear();
+        mon = d.getMonth() + 1;
+        day = d.getDate();
+        s = year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day);
+        return s;
+    }
+
+
+
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+        , type: 'datetime'
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+
+
+    $(document).ready(function (e) {
+    	$("#selectTime").val(curDate)
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            striped:false,//去除隔行变色
+            classes: 'table',//去除悬浮变色
+            pagination:false,	//不分页
+            url:"/zhbg/hygl/meetingRoomUseInfo/getMeetingRoomUseList",
+            columns:right_table_col,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+				//可以做一些校验
+                params.date = $('#selectTime').val();
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+                    //MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingApply/meetingRoomApplyReadOnlyForm.html',title:'只读'});
+                });
+
+                try {
+                	//合并单元格
+                    //mergeTableRow("meetingroomName");
+                }catch (e) {}
+            }
+        });
+    });
+
+
+
+
+</script>

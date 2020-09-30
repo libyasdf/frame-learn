@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area" style="margin-bottom: 130px;">
+    <form class="form-horizontal" id="form">
+        <!-- resId -->
+        <input name="resId" id="resId" type="hidden" value="">
+        <!-- 流程字段-->
+		<input name="id" id="id" type="hidden" value=""/><!-- 工作项ID -->
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label"> 发放月份：</label>
+	                    <div class="col-md-10">
+	                         <input type="text" name="saMonth" class="form-control" id="saMonth" >
+	                    </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">部门名称：</label>
+	                    <div class="col-md-4 form-view">
+	                    	
+	                    	 <span name="saDeptName" id="saDeptName"   ></span>
+	                    </div>
+                    </div>
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">职员姓名：</label>
+	                    <div class="col-md-4 form-view">
+	                    	 <span name="saUserName" id="saUserName"   ></span>
+	                    </div>
+                    </div>
+                </div>
+                 <div class="form-group">
+                 		<div class="rowGroup">
+		                     <label for="" class="col-md-2 control-label">身份证号码：</label>
+		                    <div class="col-md-4">
+		                    	 <input type="text" name="idCarNo" class="form-control" id="idCarNo" placeholder="">
+		                    </div>
+                    	</div>
+                </div>
+                <div class="form-group">
+                	<div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">职务工资：</label>
+	                    <div class="col-md-4">
+	                    		<input type="text" name="jobSalary" class="form-control" id="jobSalary" placeholder="">
+	               
+	                    </div>
+	                </div>
+	                <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label"> 级别工资：</label>
+	                    <div class="col-md-4">
+	                    		<input type="text" name="levelSalary" class="form-control" id="levelSalary" placeholder="">
+	         
+	                    </div>
+	            	</div>
+                </div>
+                
+                <div class="form-group">
+                	<div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">警衔工资：</label>
+	                    <div class="col-md-4" >
+	                    	 <input type="text" name="policeRankSalary" class="form-control" id="policeRankSalary" placeholder="">
+	                    </div>
+                    </div>
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">工作津贴：</label>
+	                    <div class="col-md-4" >
+	                    	 <input type="text" name="workSalary" class="form-control" id="workSalary" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                
+               
+                
+                <div class="form-group">
+                	<div class="rowGroup">
+	                	<label for="" class="col-md-2 control-label">生活补贴：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="lifeSalary" class="form-control" id="lifeSalary" placeholder="">
+	                    </div>
+	                  </div>
+	                  <div class="rowGroup">
+		                    <label for="" class="col-md-2 control-label">执勤津贴：</label>
+		                    <div class="col-md-4">
+		                    	 <input type="text" name="dutySalary" class="form-control" id="dutySalary" placeholder="">
+		                    </div>
+		                 </div>
+                    
+                </div>
+                
+                 <div class="form-group">
+                 	 <div class="rowGroup">
+	                 	<label for="" class="col-md-2 control-label">副食补贴：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="fooSalary" class="form-control" id="fooSalary" placeholder="">
+	                    </div>
+	                  </div>
+	                  <div class="rowGroup">
+		                    <label for="" class="col-md-2 control-label">回民补贴：</label>
+		                    <div class="col-md-4">
+		                    	 <input type="text" name="huiSalary" class="form-control" id="huiSalary" placeholder="">
+		                    </div>
+                   </div>
+                </div>
+                
+                <div class="form-group">
+                	 <div class="rowGroup">
+		                	 <label for="" class="col-md-2 control-label">房屋补贴：</label>
+		                    <div class="col-md-4">
+		                    	 <input type="text" name="houseSalary" class="form-control" id="houseSalary" placeholder="">
+		                    </div>
+		              </div>
+		               <div class="rowGroup">
+		                    <label for="" class="col-md-2 control-label">独子费：</label>
+		                    <div class="col-md-4">
+		                    	 <input type="text" name="onlyChildSalary" class="form-control" id="onlyChildSalary" placeholder="">
+		                    </div>
+                   		</div>
+                </div>
+                <div class="form-group">
+                	<div class="rowGroup">
+	                	 <label for="" class="col-md-2 control-label">值班费：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="dutyFee" class="form-control" id="dutyFee" placeholder="">
+	                    </div>
+                    </div>
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">警察加班费：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="policeOvertimePay" class="form-control" id="policeOvertimePay" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                	<div class="rowGroup">
+	                	 <label for="" class="col-md-2 control-label">应发工资：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="shouldSalary" class="form-control" id="shouldSalary" placeholder="">
+	                    </div>
+                    </div>
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">公积金：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="accumulationSalary" class="form-control" id="accumulationSalary" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                
+                 <div class="form-group">
+					 <div class="rowGroup">
+						 <label for="" class="col-md-2 control-label">大额医保：</label>
+						 <div class="col-md-4">
+							 <input type="text" name="bigMedicalInsurance" class="form-control" id="bigMedicalInsurance" placeholder="">
+						 </div>
+					 </div>
+                 	 <div class="rowGroup">
+	                 	<label for="" class="col-md-2 control-label">医保：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="medicalInsurance" class="form-control" id="medicalInsurance" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                
+                 <div class="form-group">
+					 <div class="rowGroup">
+						 <label for="" class="col-md-2 control-label">养老年金：</label>
+						 <div class="col-md-4">
+							 <input type="text" name="pensionAnnuity" class="form-control" id="pensionAnnuity" placeholder="">
+						 </div>
+					 </div>
+                 	<div class="rowGroup">
+	                 	<label for="" class="col-md-2 control-label">房租：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="rentSalary" class="form-control" id="rentSalary" placeholder="">
+	                    </div>
+	                 </div>
+                </div>
+                
+                 <div class="form-group">
+					 <div class="rowGroup">
+						 <label for="" class="col-md-2 control-label">扣款：</label>
+						 <div class="col-md-4">
+							 <input type="text" name="buckleSalary" class="form-control" id="buckleSalary" placeholder="">
+						 </div>
+					 </div>
+                 	<div class="rowGroup">
+	                 	<label for="" class="col-md-2 control-label">会费：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="duesSalary" class="form-control" id="duesSalary" placeholder="">
+	                    </div>
+	                  </div>
+                </div>
+                
+                 <div class="form-group">
+					 <div class="rowGroup">
+						 <label for="" class="col-md-2 control-label">扣贷款：</label>
+						 <div class="col-md-4">
+							 <input type="text" name="buckleLoan" class="form-control" id="buckleLoan" placeholder="">
+						 </div>
+					 </div>
+                 	<div class="rowGroup">
+	                 	 <label for="" class="col-md-2 control-label">个人所得税：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="personalIncomeTax" class="form-control" id="personalIncomeTax" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+					<div class="rowGroup">
+						<label for="" class="col-md-2 control-label">实发工资：</label>
+						<div class="col-md-4">
+							<input type="text" name="actualSalary" class="form-control" id="actualSalary" placeholder="">
+						</div>
+					</div>
+                 	<div class="rowGroup">
+	                 	 <label for="" class="col-md-2 control-label">物业费：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="propertyFee" class="form-control" id="propertyFee" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                
+                 <div class="form-group">
+					 <div class="rowGroup">
+						 <label for="" class="col-md-2 control-label">采暖补贴：</label>
+						 <div class="col-md-4">
+							 <input type="text" name="heatingSubsidies" class="form-control" id="heatingSubsidies" placeholder="">
+						 </div>
+					 </div>
+                 	<div class="rowGroup">
+	                 	 <label for="" class="col-md-2 control-label">交通补贴：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="travelAllowance" class="form-control" id="travelAllowance" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                <div class="form-group">
+					<div class="rowGroup">
+						<label for="" class="col-md-2 control-label">通讯补贴：</label>
+						<div class="col-md-4">
+							<input type="text" name="phoneAllowance" class="form-control" id="phoneAllowance" placeholder="">
+						</div>
+					</div>
+                 	<div class="rowGroup">
+	                 	 <label for="" class="col-md-2 control-label">公务交通：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="publicTransportation" class="form-control" id="publicTransportation" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+				<div class="form-group">
+					<div class="rowGroup">
+						<label for="" class="col-md-2 control-label">专项附加扣除：</label>
+						<div class="col-md-4">
+							<input type="text" name="deductSurcharges" class="form-control" id="deductSurcharges" placeholder="">
+						</div>
+					</div>
+					<div class="rowGroup">
+						<label for="" class="col-md-2 control-label">未休假补贴：</label>
+						<div class="col-md-4">
+							<input type="text" name="unpaidLeaveAllowance" class="form-control" id="unpaidLeaveAllowance" placeholder="">
+						</div>
+					</div>
+				</div>
+                
+                <div class="form-group">
+                 	<div class="rowGroup">
+	                 	 <label for="" class="col-md-2 control-label">双薪：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="doublePay" class="form-control" id="doublePay" placeholder="">
+	                    </div>
+                    </div>
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">绩效奖：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="meritPay" class="form-control" id="meritPay" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+                
+                 <div class="form-group">
+                 	<div class="rowGroup">
+	                 	 <label for="" class="col-md-2 control-label">防暑降温费：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="heatstrokePreventionSubsidy" class="form-control" id="heatstrokePreventionSubsidy" placeholder="">
+	                    </div>
+                    </div>
+                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label">冬季采暖补贴：</label>
+	                    <div class="col-md-4">
+	                    	 <input type="text" name="winterHeatingSubsidy" class="form-control" id="winterHeatingSubsidy" placeholder="">
+	                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </form>
+</div>
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="save();"><span class="glyphicon glyphicon-floppy-disk"
+            aria-hidden="true"></span> 保存</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+
+
+<!-- 数据校验 -->
+<script type="text/javascript" src="/modules/zhbg/salary/js/salaryValidator.js"></script>
+<script type="text/javascript" src="/modules/zhbg/salary/js/salaryEdit.js"></script>
+
+<!--文件上传js end-->
+<script type="text/javascript">
+laydate.render({
+    elem: '#saMonth'
+    ,type: 'month'
+
+}); 
+    scrollTop.init();
+    
+
+</script>
+</body>
+</html>

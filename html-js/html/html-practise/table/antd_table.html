@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>table</title>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <!-- <script src="./static/jquery.iframe-transport.js"></script> -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- <script type="text/javascript" src="./static/react/dist/react.development.js" type="text/javascript" defer="defer"></script> -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <!-- <script type="model" src="./static/react/dist/react-dom.development.js" type="text/javascript" defer="defer" crossorigin></script> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+  <!-- <script type="model" src="./static/babel/dist/browser.min.js" type="text/javascript"></script>
+  <script type="model" src="./static/babel/dist/babel.min.js" type="text/javascript" defer="defer"></script> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.2.0/antd.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.2.0/antd.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="../libaiyi.css">
+
+  <script type="model" src="./like_button.js"></script>
+<script type="text/javascript" src='./data.json'>
+
+</script>
+
+  <script type="text/babel">
+  const dataSource = [
+  {
+    key: '1',
+    name: '1',
+    age: '2',
+    address: '3',
+  },
+  {
+    key: '2',
+    name: '胡彦祖',
+    age: 42,
+    address: '西湖区湖底公园1号',
+  },
+];
+
+
+const { Button, Table } = antd;
+// const  {columns, PI, sum, mult}  = './like_button.js';
+// const liby = './path/data.json';
+const columns = [];//liby.zx;
+// $.ajax({
+//   type:"GET",
+//   url:"./data.json",
+//   dataType:"json",
+//   success:function(result){
+//         console.log(result);
+//     }});
+
+$(function(){
+    //请求参数
+    var list = {};
+    //
+    $.ajax({
+        //请求方式
+        type : "GET",
+        //请求的媒体类型
+        contentType: "application/json;charset=UTF-8",
+        //请求地址
+        url : "./data.json",
+        //数据，json字符串
+        data : JSON.stringify(list),
+        //请求成功
+        success : function(result) {
+            console.log(result);
+        },
+        //请求失败，包含具体的错误信息
+        error : function(e){
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    });
+});
+
+// console.log(columns);
+// import {columns as liby} from './like_button.js';
+ // 创建类
+//  class MessageBox extends React.Component {
+//    halderClick() {
+//      message.info('你刚才点了我一下!!!');
+//    }
+//
+//    render() {
+//      return (
+//        <div style={{ padding: 24 }}>
+//          <h2 style={{ font: 'red' }}>你好世界！！！</h2>
+//          <Button type="primary" onClick={this.halderClick} style={{ margin: 24 }}>
+//            测试
+//          </Button>
+//        </div>
+//      );
+//    }
+//  // 渲染
+//  ReactDOM.render(
+//    <MessageBox />,
+//    document.getElementById('like_button_container')
+//  );
+// }
+var Text = <Table columns={columns} dataSource={dataSource} bordered pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />;
+     ReactDOM.render(
+         Text,
+         document.getElementById('like_button_container')
+     );
+
+  </script>
+</head>
+
+<body>
+  <div>
+    <div><a>统计周期内扣减加班补贴和执勤岗位津贴明细表（2019年9月1日至10月15日）</a></div>
+    <div><a>填表说明：请如实填写《明细表》列7至列20，列22；21、23、24为自动计算项，无需填写。</a></div>
+    <div><a>盖章：</a><a>填表人：</a></div>
+    <div id="like_button_container"></div>
+
+  </div>
+
+</body>
+
+<script type="text/javascript">
+//   const dataSource = [];
+//   for (let i = 0; i < 1000; i++) {
+//     dataSource.push({
+//       key: i,
+//       serial_number:i,
+//       company_name: `Edward King ${i}`,
+//       staff_name: 32,
+//       address: `London, Park Lane no. ${i}`,
+//     });
+//   }
+  // 1_5系统直接导入
+  // 扣减执行标准：执勤津贴1500，扣减标准101.6；执勤津贴1040，扣减标准80.4；
+  // 7——16、17——19、20、22手动填写
+  // 16列/4 全部向下取整
+  // 扣减项目7——15，保留小数点后一位
+  // 21 = 20*标准一（5）
+  // 23 = 22*标准二（6）
+  // 24 = 21+23
+// const columns = [{
+//                     title: '序号',//1
+//                     dataIndex: 'serial_number',
+//                     key: 'serial_number',
+//                   },{
+//                     title: '单位民称',//2
+//                     dataIndex: 'company_name',
+//                     key: 'company_name',
+//                   }, {
+//                     title: '职员姓名(按拼音排序)', //3
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                   }, {
+//                     title: '', //4
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                   },{
+//                     title: '证件号码(此信息隐藏)', //wu
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                   }, {
+//                     title: '人员ID', //5 唯一标志
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                   },{
+//                     title: '扣减执行标准',
+//                     dataIndex: 'address',
+//                     key: 'address',
+//                     children: [{
+//                         title: '2019年9月1日至30日',//5
+//                         dataIndex: 'data_start',
+//                         key: 'companyAddress',
+//                       },{
+//                         title: '2019年10月1日至30日',//6
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       }
+//                     ],
+//                   },{
+//                     title: '扣减项目 单位：天',
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                     children: [{
+//                         title: '病假',//7
+//                         dataIndex: 'data_start',
+//                         key: 'companyAddress',
+//                       },{
+//                         title: '事假',//8
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       },{
+//                         title: '探亲假',//9
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       },{
+//                         title: '产假',//10
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       }, {
+//                         title: '陪产假',//11
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       }, {
+//                         title: '哺乳假',//12
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       }, {
+//                         title: '婚假',//13
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       }, {
+//                         title: '丧假',//14
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       }, {
+//                         title: '参加脱产全日制学历教育',//15
+//                         dataIndex: 'data_end',
+//                         key: 'companyName',
+//                       }
+//                     ],
+//                   },{
+//                     title: '迟到早退 (单位：次)', //16
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                   },{
+//                     title: '其他情况 单位：天',
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                     children: [{
+//                       title: '加班',//17
+//                       dataIndex: 'data_start',
+//                       key: 'companyAddress',
+//                     }, {
+//                       title: '倒休',//18
+//                       dataIndex: 'data_start',
+//                       key: 'companyAddress',
+//                     }, {
+//                       title: '干休假',//19
+//                       dataIndex: 'data_start',
+//                       key: 'companyAddress',
+//                     } ]
+//                   },{
+//                     title: '2019年9月1日至30日',
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                     children: [{
+//                       title: '扣减天数（选项）',//20
+//                       dataIndex: 'data_start',
+//                       key: 'companyAddress',
+//                     }, {
+//                       title: '小记金额',//21
+//                       dataIndex: 'data_start',
+//                       key: 'companyAddress',
+//                     } ]
+//                   },{
+//                     title: '2019年10月1日至15日',
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                     children: [{
+//                       title: '扣减天数（选项）',//22
+//                       dataIndex: 'data_start',
+//                       key: 'companyAddress',
+//                     }, {
+//                       title: '小记金额',//23
+//                       dataIndex: 'data_start',
+//                       key: 'companyAddress',
+//                     }]
+//                   },{
+//                     title: '总金额', //24
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                   },{
+//                     title: '备注', //25
+//                     dataIndex: 'staff_name',
+//                     key: 'staff_name',
+//                   }];
+
+// var get_table = document.getElementById('like_button_container');
+// var node = document.createElement("LI");
+// var textnode = document.createTextNode("Water");
+// node.appendChild(textnode);
+// get_table.appendChild(node);
+// var Text =  <antd.Table columns={columns} dataSource={dataSource} bordered pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />;
+//      ReactDOM.render(
+//          Text,
+//          document.getElementById('like_button_container')
+//      );
+</script>
+
+</html>

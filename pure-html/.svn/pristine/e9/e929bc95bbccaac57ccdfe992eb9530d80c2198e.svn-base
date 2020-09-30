@@ -1,0 +1,494 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    .vertify-details2 {
+        height: 100%;
+        width: 100%;
+        border: 0px solid gray;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <!--<div class="folderBar">
+                    <label class="radio-checkbox">
+                        <input type="checkbox" value="1" id="ckb"> 显示党员数
+                    </label>
+                </div>-->
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <input type="hidden" id="associativeUnitId" name="associativeUnitId" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div class="vertify-panel vertify-details" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 性别：</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="sex" name="sex" >
+                                        <option valuse="">--请选择--</option>
+                                        <option valuse="01">男</option>
+                                        <option valuse="02">女</option>
+                                    </select>
+                                </div>
+                                <label class="col-md-2 control-label"> 民族：</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="nation" name="nation" >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" id="labelId"> 姓名：</label>
+                                <div class="col-md-3" id="user">
+                                    <div class="input-group" >
+                                        <input type="text" id="name"  unselectable="on"  name="name" class="form-control" onclick="openSelectZtree({'id':'userId','name':'name','type':'1','asyn':false,'isMulti':'1','deptId':$('#associativeUnitId').val(),'url':'/system/component/tree/deptAndUserTree'});">
+                                        <input type="hidden" id="userId" name="userId" /><!-- 人员ID隐藏域 -->
+                                                    <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-user" onclick="openSelectZtree({'id':'userId','name':'name','type':'1','asyn':false,'isMulti':'1','deptId':$('#associativeUnitId').val(),'url':'/system/component/tree/deptAndUserTree'});"></span>
+                                                    </span>
+                                    </div>
+                                </div>
+                                <label class="col-md-2 control-label"> 学历：</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="ryEducation" name="ryEducation" >
+                                    </select>
+                                </div>
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+            <div class="col-md-12">
+                <div class="list_button_area">
+                  <!--  <button class="list_table_btn2" onclick="addType('1')">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>-->
+                  <!--  <button class="list_table_btn2" onclick="exportData()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 导出excel
+                    </button>-->
+                    <button class="list_table_btn2" onclick="dyjl()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 预备党员审议
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/dwgl/common/dzzTree.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<!-- 页面获取参数 -->
+
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript">
+    var resource = {
+        resId : $('#left_ul').find('a.active').attr("id")
+    }
+    var nationMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_mz",type:"1"});
+    var nativePlaceMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_jg",type:"1"});
+    var ryEducationMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_xl",type:"1"});
+    var nationMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_ryjbqk_mz",type:"1"});
+    var dyTypeMap = Dictionary.getNameAndCode({mark:"dwgl_dygl_dylx",type:"1"});
+    //初始化字典项--民族
+    Dictionary.init({position:"nation",mark:"dwgl_dygl_ryjbqk_mz",type:"1",name:"nation",domType:"select"});
+    //初始化字典项--学历
+    Dictionary.init({position:"ryEducation",mark:"dwgl_dygl_ryjbqk_xl",type:"1",name:"ryEducation",domType:"select"});
+
+    laydate.render({
+        elem: '#dateOfBirth' //指定元素
+        ,done: function(value, date, endDate){
+            $('#dateOfBirth').val(value).change()
+        }
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [
+        {
+            field:'superId',
+            checkbox:true,
+            clickToSelect: true,
+            singleSelect: true
+        },{
+            field: 'id'
+            , title: '序号'
+            , width: '5%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                //计算序号，并存放开关ID，及已办事项ID
+                var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+                return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+            }
+        }, {
+            field: 'partyOrganizationName'
+            , title: '组织名称'
+            , width: '9%'
+            , align: "center"
+            , order: "desc"
+            , align: "center"
+        }, {
+            field: 'name'
+            , title: '姓名'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'sex'
+            , title: '性别'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'nation'
+            , title: '民族'
+            , width: '9%'
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return nationMap[value];
+            }
+        }, {
+            field: 'birthplace'
+            , title: '出生地'
+            , width: '9%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+                var val = value;
+                if(value!=null&&value.length>5){
+                    val = val.substring(0,5)+"...";
+                }
+                if(value==null){
+                    val ="-";
+                }
+                return "<span title='"+value+"'>" + val + "</span>";
+            }
+        },{
+            field: 'workingTime'
+            , title: '工作时间'
+            , width: '9%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+        },{
+            field: 'nativePlace'
+            , title: '籍贯'
+            , width: '7%'
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return nativePlaceMap[value];
+            }
+        }, {
+            field: 'dateOfBirth'
+            , title: '出生日期'
+            , width: '9%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+        },{
+            field: 'ryEducation'
+            , title: '学历'
+            , width: '7%'
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return ryEducationMap[value];
+            }
+        },/*{
+         field: 'democraticParties'
+         , title: '民主党派'
+         , width: '7%'
+         , align: "center"
+         },*/{
+            field: 'workingUnit'
+            , title: '工作单位'
+            , width: '9%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+                var val = value;
+                if(value!=null&&value.length>5){
+                    val = val.substring(0,5)+"...";
+                }
+                if(value==null){
+                    val ="-";
+                }
+                return "<span title='"+value+"'>" + val + "</span>";
+            }
+        }, {
+            field: 'typeOfPersonnel'
+            , title: '人员类型'
+            , width: '7%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+                return dyTypeMap[value];
+            }
+        }, {
+            title: '操作'
+            , width: '7%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var html = "";
+                html += "<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+
+                return html;
+            }
+        }];
+
+    if(getcookie("rolesNo").indexOf("D478") >= 0){
+        dzzTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"org"});
+    }else{
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+            dataType: "json",
+            success: function (data) {
+                dzzTree.init({id:data.data,type:"org"});
+            },
+            error: function (data) {
+            }
+        })
+    }
+
+    var nodeId ="";
+    if( $.fn.zTree.getZTreeObj("treeDemo")){
+        var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+        nodeId = node.id;
+    }
+        TableInit.init({
+            domId: "right_table",
+            url: "djgl/ddjs/dygl/dyxx/getList?id=" + nodeId,
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.type = "01";
+                params.typeOfPersonnel = "03";
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.name = Trim($("#name").val());
+                if($("#sex").val()!="--请选择--"){
+                    params.sex = Trim($("#sex").val());
+                }
+                params.nation = $("#nation").val();
+                params.ryEducation = $("#ryEducation").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                if( $.fn.zTree.getZTreeObj("treeDemo")){
+                    var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+                    nodeId = node.id
+                    var datas = {"id":nodeId};
+                    if(node.orgType=="666"){
+                        document.getElementById("labelId").style.display='none';
+                        document.getElementById("user").style.display = "none";
+                    }else{
+                        document.getElementById("labelId").style.display='block';
+                        document.getElementById("user").style.display = "block";
+                        httpRequest("get","/djgl/ddjs/shyk/zbdydh/getOrgName",datas,function (data){
+                            var  unitId =data.data[0].ASSOCIATIVE_UNIT_ID;
+                            $("#associativeUnitId").val(unitId);
+                        });
+                    }
+                }
+                if(getcookie("rolesNo").indexOf("D478") == -1 && getcookie("rolesNo").indexOf("D488") == -1 && getcookie("rolesNo").indexOf("C433") == -1){
+                    $('#right_table').bootstrapTable('hideColumn', 'cz');
+                    $('.list_button_area').hide();
+                }
+                $('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+                $('tr.readOnly').find('td:not(:last)').unbind('click')
+                        .bind('click', function (e) {
+
+                            //                    取消事件冒泡
+                            var evt = e ? e
+                                    : window.event;
+                            if (evt.stopPropagation) {
+                                evt
+                                        .stopPropagation();
+                            } else {
+                                evt.cancelBubble = true;
+                            }
+                            //                    取消事件冒泡 end
+                            var id = $(this).parent().find("span[data-id]").attr("data-id");
+                            var resId = $('#left_ul').find('a.active').attr("id");
+                            MyLayer
+                                    .layerOpenUrl({
+                                        url: '/modules/dwgl/sqrgl/jjfz/jjfzReadOnlyEditForm.html?id=' + id + "&resId=" + resId + "&opertation=VIEW",
+                                        title: '发展对象信息',
+                                        width: '90%',
+                                        height: '85%'
+                                    });
+                        });
+            }
+        })
+    function refreshTable(node) {
+        var opt = {
+            url: "djgl/ddjs/dygl/dyxx/getList?id=" + node.id,
+            pageNumber:1,
+            pageSize:10
+        };
+        $('#right_table').bootstrapTable('refresh',opt);
+    }
+
+    //表格数据项的操作
+    var list = {
+       /* editFun: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/sqrgl/sqrxx/sqrxxEditForm.html',
+                title: "修改党员基本信息"
+            })
+        },*/
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/sqrgl/jjfz/jjfzEditForm.html?id='+id+"&resId="+resId,
+                title: "修改发展对象基本信息"
+            })
+        },
+        setFun: function (id) {
+            MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/dzzgl/dwglList.html',
+                title: "单位管理"
+            })
+        },
+        deleteFun:function(id){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url:'/djgl/ddjs/dygl/dyxx/deleteById?id='+ id+"&resId="+resId,
+                tableId:'right_table'
+            })
+        }
+    }
+
+    function addType(type){
+        MyLayer.layerOpenUrl({
+            url: '/modules/dwgl/sqrgl/sqrxx/sqrxxEditForm.html',
+            title: "发展对象基本信息"
+        })
+    }
+
+    function dyjl(){
+        var rows = $("#right_table").bootstrapTable('getSelections');
+        var id = "";
+        var name ="";
+        var partyOrganizationName ="";
+        var typeOfPersonnel ="";
+        if(rows.length == 0){
+            layer.msg("请选择一条数据！",{icon:7});
+            return;
+        }else{
+            if(rows.length > 1){
+                layer.msg("只能选择一条数据",{icon:7});
+                return;
+            }
+            for(var i=0;i < rows.length;i++){
+                id = rows[i]['id'];
+                name = rows[i]['name'];
+                partyOrganizationName = rows[i]['partyOrganizationName'];
+                typeOfPersonnel = rows[i]['typeOfPersonnel'];
+            }
+        }
+        var treeObj=$.fn.zTree.getZTreeObj("treeDemo");
+        var node = treeObj.getSelectedNodes()[0];
+        var parentNode = node.getParentNode();
+        if("631"!= node.orgType){
+            layer.msg(node.name +"不能添加预备党员审议！",{icon:7});
+            return;
+        }
+        MyLayer.layerOpenUrl({
+            url: '/modules/dwgl/sqrgl/fzdx/ybdysyEditForm.html?superId='+id+'&partyOrganizationName='+encodeURI(encodeURI(partyOrganizationName))+'&name='+encodeURI(encodeURI(name)) +'&typeOfPersonnel='+typeOfPersonnel,
+            title: "预备党员审议"
+        })
+    }
+
+    function clearAll() {
+        $("#name").val("");
+        $("#nation").val("");
+        $("#userId").val("");
+        $("#sex").val("--请选择--");
+        $("#ryEducation").val("");
+    }
+
+    //显示人员数
+    $("#ckb").off('change').on('change', function (e) {
+        var treeObj=$.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.transformToArray(treeObj.getNodes());
+        if($('#ckb').is(':checked')){
+            for(var i = 0;i<nodes.length;i++){
+                nodes[i].sname = nodes[i].name;
+                nodes[i].name = nodes[i].name+"("+nodes[i].count+")";
+                treeObj.updateNode(nodes[i]);
+            }
+        }else{
+            for(var i = 0;i<nodes.length;i++){
+                nodes[i].name = nodes[i].sname;
+                treeObj.updateNode(nodes[i]);
+            }
+        }
+    })
+
+    //去空格
+    function Trim(str)
+    {
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
+</script>

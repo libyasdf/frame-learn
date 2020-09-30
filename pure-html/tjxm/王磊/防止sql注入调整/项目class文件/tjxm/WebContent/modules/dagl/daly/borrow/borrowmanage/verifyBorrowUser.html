@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <link rel="stylesheet" type="text/css"
+          href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <!--<link type="text/css" rel="stylesheet" href="/modules/dagl/xtpz/contrastingrelations/css/metroStyle/metroStyle.css">-->
+
+</head>
+
+<body>
+        <!-- resId -->
+        <input type="text" id="resId" name="resId" value="" hidden="true">
+        <!-- 基本信息 -->
+        <!--<div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name" >基本信息</span>
+                </div>
+            </div>
+        </div>-->
+        <!--查询项输入框选择框等开始-->
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <div style="text-align:center">
+                            <img id="userImg" src="/static/images/login_user.png" width="200" height="200" alt="" style="border-radius:50%;" />&nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <div style="text-align:center">
+                            <strong >门禁卡号：</strong><strong name="entranceGuardCard" id="entranceGuardCard">门禁卡号：</strong>
+                        </div>
+                    </div>
+                </div>
+                <!--查询项输入框选择框等结束-->
+
+                <!--查询重置等按钮-->
+                <div class="form-group">
+                    <div class="col-sm-12" style="text-align: center">
+                        <button type="button" class="btn btn-primary" onclick="verify()">
+                            确&nbsp;&nbsp;认
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" onclick="closeIfram();">
+                            关&nbsp;&nbsp;闭
+                        </button>
+                    </div>
+                </div>
+        <!--查询重置等按钮 end-->
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--下拉存放树形结构的js-->
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.all.js"></script>
+<script type="text/javascript" src="/modules/dagl/xtpz/contrastingrelations/js/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/modules/dagl/xtpz/contrastingrelations/js/MultipleTreeSelect.js"></script>
+
+
+<script type="text/javascript">
+
+
+    var theRequest = GetRequest();
+    var resId = theRequest.resId ? theRequest.resId : "";
+    var userId = theRequest.userId ? theRequest.userId : "";
+    var date = new Date();
+
+    getUserImg();
+    getUserCardNumByUserId();
+    /**
+     * 获取用户头像
+     */
+    function getUserImg(){
+        $.ajax({
+            type: 'get',
+            url: '/user/getUserImg?userId='+userId,
+            dataType: "json",
+            success: function(data) {
+
+                if (data.flag) {
+                    $("#userImg").prop("src",data.path);
+                } else {
+                    $("#userImg").prop("src","/static/images/login_user.png");
+                }
+            },
+            error: function() {
+                $("#userImg").prop("src","/static/images/login_user.png");
+            }
+        });
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 获取门禁卡号
+     * @Date 2019/3/5 19:50
+     **/
+    function getUserCardNumByUserId(){
+        $.ajax({
+            type: 'get',
+            url: '/dagl/daly/borrow/getUserCardNumByUserId?userId='+userId,
+            dataType: "json",
+            success: function(data) {
+                $("#entranceGuardCard").text(data.data[0].card_number);
+            },
+            error: function() {
+                layer.msg("获取门禁卡号失败！",{icon:0,time:1000});
+            }
+        });
+    }
+
+    //确认
+    function verify(){
+        closeIfram();
+        parent.selectReturnDate();
+    }
+
+    //关闭当前窗口
+    function closeIfram(){
+        var index=parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+
+</script>
+</body>
+</html>

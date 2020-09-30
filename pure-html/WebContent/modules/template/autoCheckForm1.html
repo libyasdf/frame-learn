@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/table.css">
+</head>
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">项目名称：</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="项目名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">立项人：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="creUserId" name="creUserId" placeholder="立项人">
+                    </div>
+                    <label for="" class="col-md-2 control-label">立项时间：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="standTime" name="standTime" placeholder="立项时间">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 正序表格，末行添加 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">正序表格，末行添加</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12 p-f-60">
+               <!-- 功能按钮区域-->
+               <div style='margin-bottom: 3px'>
+                   <!--<button type="button" class="btn btn-default" id='addId'>添加一行</button>
+                   <button type="button" class="btn btn-default" id="deleteId">删除所选行</button>-->
+                   <button class="list_table_btn2 addTR" type="button" id='addId'>
+                       <span class="glyphicon glyphicon-plus-sign"></span> 添加
+                   </button>
+                   <button class="list_table_btn2 allDelete" type="button" id="deleteId">
+                       <span class="glyphicon glyphicon-remove"></span> 删除
+                   </button>
+               </div>
+               <div class="table__scrollable-y">
+                   <div class="table__header-wrapper">
+                        <table class="table  table-hover table-striped m-b-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%"  class="text-center">
+                                        <input type="checkbox" id="checkboxSuccess" value="option1">
+                                    </th>
+                                    <th style="width: 8%"  class="text-center">
+                                        编号
+                                    </th>
+                                    <th style="width: 15%"  class="text-center">
+                                        <span class="required">*</span>
+                                        姓名
+                                    </th>
+                                    <th style="width: 15%" data-field="age" class="text-center">
+                                        年龄
+                                    </th>
+                                     <th style="width: 15%" data-field="sex" class="text-center">
+                                        性别
+                                    </th>
+                                    <th class="text-center">
+                                        地址
+                                        <span class="glyphicon glyphicon-exclamation-sign userTitle"
+                                                data-toggle="tooltip" 
+                                                data-placement="bottom" 
+                                                title="张三 二室管理员权限申请">
+                                        </span>
+                                    </th>
+                                    <th style="width: 10%"  class="text-center">
+                                        操作
+                                    </th>
+                                    <th style='width:17px;'></th>
+                                </tr>
+                            </thead>
+                        </table>
+                   </div>
+                   <div class="table_body-wrapper">
+                       <table class="table table-hover table-striped table-reset js-disk-row" id="otherPeople" style="border: 0px">
+                            <tbody>
+                                <tr class="no-records-found">
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                                <tr class="no-records-found">
+                                    <td class="text-center">2</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                                <tr class="no-records-found">
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                                <tr class="no-records-found">
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">张三</td>
+                                    <td class="text-center">18</td>
+                                    <td>北京大兴龙天桥西34号</td>
+                                    <td class="text-center">
+                                        <input type="checkbox" name="checkboxName" value="option1">
+                                    </td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                 <!-- 功能说明区域-->
+                <p class="bg-info" style="margin-top: 20px;">
+                    简单的 HTML 表格由 table 元素以及一个或多个 tr、th 或 td 元素组成。
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/jquery-serializejson/jquery.serializejson.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/core/nodetpl.min.js"></script>
+<script type="text/javascript" src="/static/js/common/jquery-util.js"></script>
+<script type="text/javascript" src="/static/core/layer/layer.js"></script>
+<script type="text/javascript" src="/static/js/common/autoCheckForm.js"></script>
+<script name="main" type="text/template">
+    <?for(var i = 0; i < @data.length; i++) {?>
+    <tr>
+        <td class="text-center" style="width: 10%">
+            <input type="checkbox" name="checkboxName" value="option1">
+        </td>
+        <td class="text-center" name="numName" style="width: 8%"><?=(i+1)?></td>
+        <td class="text-center" style="width: 15%">
+            <select name="list[][userName]" class="form-control" CK_type="required"  CK_info="姓名">
+            <? for(var j=0; j< @data[i].names.length; j++) {?>
+                <?if (@data[i].name == @data[i].names[j].id) {?>
+                    <option selected value="<?=@data[i].names[j].id?>"><?=@data[i].names[j].name?></option>
+                <?} else {?>
+                    <option value="<?=@data[i].names[j].id?>"><?=@data[i].names[j].name?></option>
+                <?}?>
+            <?}?>
+            </select>
+        </td>
+        <td class="text-center" style="width: 15%">
+            <input type="text" name="list[][age]" class="form-control" CK_type="required"  CK_info="年纪"  placeholder="输入年纪" value="<?=@data[i].age?>">
+        </td>
+        <td class="text-center" style="width: 15%">
+            <input type="text" name="list[][sex]" class="form-control" CK_type="required"  CK_info="性别"  placeholder="请输入性别" value="<?=@data[i].sex?>">
+            <!--<label class="radio-inline" style="position: relative;">
+              <input type="radio" name="inlineRadioOptions" CK_type="required" value="option1"> 男
+            </label>
+            <label class="radio-inline" style="position: relative;">
+              <input type="radio" name="inlineRadioOptions" value="option2"> 女
+            </label>-->
+        </td>
+        <td class="text-center">
+            <textarea class="form-control" name="list[][address]" CK_type="required,chinese"  CK_info="地址" ><?=@data[i].addr?></textarea>
+        </td>
+        <td class="text-center" style="width: 10%">
+            <span class="glyphicon glyphicon glyphicon-ok" onclick="saveData()"></span>
+        </td>
+    </tr>
+  <?}?>
+</script>
+<script type="text/javascript">
+
+    var subTableLineNum = $("#otherPeople").find("tr").length;
+    $(document).ready(function($) {
+        // 消息提示
+        $('[data-toggle="tooltip"]').tooltip()
+
+        // 模拟数据
+        var data = [{
+            names: [{
+                name: '--请选择--',
+                id: ''
+            },{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '',
+            age: '',
+            sex: '男',
+            addr: '北京大兴龙天桥西一号'
+        },{
+            names: [{
+                name: '--请选择--',
+                id: ''
+            },{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '001',
+            age: '20',
+            sex: '男',
+            addr: '北京大兴龙天桥西二号'
+        },{
+            names: [{
+                name: '--请选择--',
+                id: ''
+            },{
+                name: '张三',
+                id: '001'
+            },{
+                name: '李四',
+                id: '002'
+            }],
+            name: '002',
+            age: '30',
+            sex: '男',
+            addr: '北京大兴龙天桥西三号'
+        }]
+        var html = $('[name=main]').html();
+        nodetpl.render(html, {data:data}, function(html) {
+            $('#otherPeople').find('tbody').empty().append(html);
+            // 全选
+            var check = new CheckAll('checkboxSuccess','checkboxName');
+            // 动态增加
+            new AddTr({
+                'tableId': 'otherPeople',
+                'addId':'addId',
+                'deleteId':'deleteId',
+                'numName':'numName',
+                'bottom': 'true',
+                'isNumber': 'true',
+                'numSort': 'asc',
+                'addTrFn':function(obj){
+                    alert("子表行号变更前值subTableLineNum: " + subTableLineNum);
+                    subTableLineNum ++;
+                    layer.msg("子表行号变更后值subTableLineNum: " + subTableLineNum);
+                    /*var tr = "";
+                    tr += '<tr class="no-records-found">';
+                    tr += '<td class="text-center">1</td>';
+                    tr += '<td class="text-center">张三</td>';
+                    tr += '<td class="text-center">18</td>';
+                    tr += '<td>北京大兴龙天桥西34号</td>';
+                    tr += '<td class="text-center"><input type="checkbox" name="checkboxName" value="option1"></td>';
+                    tr += '<td class="text-center"><span class="glyphicon glyphicon-minus"></span></td>\n';
+                    tr += '</tr>';
+                    return tr;*/
+                    var trCustom = "";
+                    trCustom += '<tr>';
+                    trCustom += '<td class="text-center" style="width: 10%"><input type="checkbox" name="checkboxName" value="option1"></td>';
+                    trCustom += '<td class="text-center" name="numName" style="width: 8%">10</td>';
+                    trCustom += '<td class="text-center" style="width: 15%">';
+                    trCustom += '<select name="names" class="form-control" CK_type="required"  CK_info="姓名"> <option value="001">zdd </option> <option value="001">zdd </option> </select>';
+                    trCustom += '</td>';
+                    trCustom += '<td class="text-center" style="width: 15%">';
+                    trCustom += '<input type="text" name="age" id="userid_' + subTableLineNum + '" class="form-control" CK_type="required"  CK_info="年纪"  placeholder="输入年纪" value="' + subTableLineNum + '">';
+                    trCustom += '</td>';
+                    trCustom += '<td class="text-center" style="width: 15%"><input type="text" name="sex" class="form-control" CK_type="required"  CK_info="性别"  placeholder="请输入性别" value=""></td>';
+                    trCustom += '<td class="text-center"><textarea class="form-control" name="address" CK_type="required,chinese"  CK_info="地址" ></textarea></td>';
+                    trCustom += '<td class="text-center" style="width: 10%"><span class="glyphicon glyphicon glyphicon-ok" onclick="saveData()"></span></td>';
+                    trCustom += '</tr>';
+                    return trCustom;
+                }
+            })
+        });
+        var subTableLineNum = $("#otherPeople").find("tr").length;
+    });
+
+    // 保存按钮事件
+    function saveData(){
+//        aotoCheckForm.check($('[name="inlineRadioOptions"]'));
+        var checkResult = aotoCheckForm.check($("#otherPeople").find("tr").find("input,select,textarea").not(':hidden'));
+        getFormData2();
+        if(checkResult){
+            getFormData2();
+        }
+    }
+
+    //将主子表数据封装为json格式
+    function getFormData2(){
+        var data = $("form").serializeJSON();
+        //以下输出对象deviceInfo 就是完整的请求报文
+        alert(JSON.stringify(data));
+        console.log(data);
+    }
+</script>
+</body>
+</html>

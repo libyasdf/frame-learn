@@ -1,0 +1,21 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 600,
+    "rows": [
+      {
+        "id": 1,
+        "applicantUnitName": "张三",
+        "sickLeave": "6",
+        "casualLeave": "6",
+        "beLate": "6",
+        "leaveEarly": "6",
+        "absentWork": "6",
+        "businessTripe": "6",
+        "goOut": "6",
+        "overTime1": "6",
+        "overTime2": "6"
+      }
+    ]
+  }
+}

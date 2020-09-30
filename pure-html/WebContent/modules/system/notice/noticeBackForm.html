@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<style type="text/css">
+    span{ 
+    	white-space:pre-wrap;
+    	word-wrap : break-word ;
+    	overflow: hidden ;
+    	text-align:left
+    }
+    .block_title .nameNotes{
+		display: inline-block;
+		font-size: 12px;
+		color: red;
+	}
+</style>
+<body class="formpage_bj">
+    <form class="form-horizontal" id="form">
+        <!-- 隐藏域 -->
+        <input id="id" type="hidden" value="">
+        <input id="backId" type="hidden" value="">
+        <input id="oper" type="hidden" value="">
+        <input id="isBack" name="isBack" type="hidden" value=""/><!-- 是否需要反馈 -->
+        <input id="noticeType" name="noticeType" type="hidden" value="">
+        
+        <div class="container-fluid formpage_area" style="margin-bottom: 50px">
+            <!-- 通知信息 -->
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="block_title">
+                        <span class="name">通知信息</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-15">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="rowGroup">
+                            <label class="col-md-2 control-label">标题：</label>
+                            <div class="col-md-10 form-view">
+                                <span id="title" name="title"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="rowGroup">
+                            <label class="col-md-2 control-label">发布日期：</label>
+                            <div class="col-md-4 form-view">
+                               <span id="publishTime" name="publishTime"></span>
+                            </div>
+                        </div>
+                        <div class="rowGroup">
+                            <label class="col-md-2 control-label">来源：</label>
+                            <div class="col-md-4 form-view">
+                               <span id="source" name="source"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="rowGroup">
+                            <label class="col-md-2 control-label">发布人：</label>
+                            <div class="col-md-4 form-view">
+                            	<input type="hidden" name="creUserId" id="creUserId"/>
+                            	<span id="creUserName" name="creUserName"></span>
+                            </div>
+                        </div>
+                        <div class="rowGroup">
+                            <label class="col-md-2 control-label">发布部门：</label>
+                            <div class="col-md-4 form-view">
+                               <input type="hidden" name="creDeptId" id="creDeptId"/>
+                               <span id="pubDeptName" name="pubDeptName"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="rowGroup">
+	                        <label class="col-md-2 control-label">通知内容：</label>
+	                        <div class="col-md-10 form-view">
+	                            <span name="content" id="content"></span>
+	                        </div>
+                        </div>
+                    </div>
+                    <!-- 通知附件 -->
+		            <div class="form-group">
+		                 <label class="col-md-2 control-label">通知附件：</label>
+		                 <div class="col-md-10 form-view">
+		                   <!--文件上传-->
+		                   <div class="files row">
+		                       <div id="files" class="col-md-10">
+		                       </div>
+		                   </div>
+		                 </div>
+		             </div>
+                </div>
+            </div>
+            <!-- 通知信息结束 -->
+            
+            <!-- 反馈信息 -->
+            <div class="row backDiv" style="display: block;">
+                <div class="col-md-12 ">
+                    <div class="block_title">
+                        <span class="name">反馈信息</span>
+                        <span class="nameNotes">* 本通知需要进行反馈，请在下方填写反馈信息</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-15 backDiv" style="display: block;">
+                <div class="col-md-12">
+		            <div class="form-group">
+		                <div class="rowGroup">
+		                 <label class="col-md-2 control-label"><b style="color: red;">*</b> 反馈信息：</label>
+		                 <div class="col-md-10 form-view">
+		                     <textarea name="backContent" id="backContent" class="form-control" rows="3"></textarea>
+		                 </div>
+		                </div>
+		            </div>
+		            <!-- 反馈的附件 -->
+		            <div class="form-group">
+		                 <label class="col-md-2 control-label">反馈附件：</label>
+		                 <div class="col-md-10">
+			            <!--文件上传-->
+				        <span class="btn btn-primary fileinput-button">
+			                <i class="glyphicon glyphicon-plus"></i>
+			                <span>选择文件...</span>
+			                <input id="fileupload2" type="file" name="files[]" multiple>
+			            </span>
+			            <div class="files row">
+					        <div id="files2" class="col-md-10">
+					        </div>
+					    </div>
+		                 </div>
+		             </div>
+				</div>
+			</div>
+			<!-- 反馈信息结束 -->
+        </div>
+    </form>
+	<div class="form_btn_area" style="text-align: center;">
+		<button id="backBtn" class="btn btn-primary form_btn_area_btn2" onclick="saveBack();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 反馈</button>
+	    <button class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+	</div>
+	<!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+	<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+	
+	<script src="/static/core/laydate/laydate.js"></script>
+	<!-- 流程相关 -->
+	<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+	<script type="text/javascript" src="/common/js/config.js"></script>
+	<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+	<!-- 获取cookie值 -->
+	<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<!-- 数据回显 -->
+	<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+	<!--点击折叠展开-->
+	<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+	<!--业务js-->
+	<script type="text/javascript" src="/modules/system/notice/js/noticeBack.js"></script>
+	<!--文件上传js-->
+	<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+	<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+	<script src="/static/js/common/myfilupload.js"></script>
+	<!--文件上传js end-->
+	<script type="text/javascript">
+	    scrollTop.init();
+	</script>
+</body>
+</html>

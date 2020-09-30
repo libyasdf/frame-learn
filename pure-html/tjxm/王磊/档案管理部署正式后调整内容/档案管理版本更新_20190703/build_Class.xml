@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理class_20190703"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+		<!--拼接sql让杜建松导出和报表打印使用 -->
+		<!-- 汇总时将项目号，案卷号赋值给下层档案-->
+		<!-- 只有档案实体状态为【已移交待汇总】的数据可以汇总-->
+		<!--批量勾选修改/替换功能-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+		<!-- 添加档案管理员退回档案两个操作（退回不归档、退回修改）-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/controller/"/>
+		<!-- 调整档案实体状态：待提交-》待移交，已提交待归档-》已移交待汇总，添加已退回待处置状态-->
+		<!-- 新增： 文件位置：01：文件管理；02：中转库；03：已经归档到了单位预立库 -->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/constant/"/>
+
+		<!-- 文件管理到中转库；中转库到单位预立库功能书写 -->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/wdgl/"/>
+		<!-- 解决bug36035 虚拟分类没有显示在门类下，跟全宗同级-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/dao/"/>
+
+		<!--数据录入界面,全宗号应该显示编号（03）其他地方也一样（除了树全都显示编号）-->
+		<!--如果滨海下面没有门类,就不要显示滨海的全宗。-->
+		<!--文件形成日期应默认为空,归档日期应默为当前日期,如果汇总改为汇总日期。-->
+		<!--1.文书简中没有“业务资料”门类(类别号）（改成数据字典，可选所有的类别号）
+			2.档案门类不应完全对照实体库设置,例如文书传统、文书简化、文书滨海只是实体库的概念,他们中档案类别应该都是“文书档案（W）和资料档案(L)”。
+			3.文书简化类别无法改为W
+			这三个，统一把类别号改为了使用数据字典。其他的没变，我自己测着没发现问题。-->
+		<!--分类目录维护中，年度下应可以添加类别（文书档案、业务资料）应去掉密级档案实体状态。-->
+		<!--2019/07/09部署之后的修改内容-->
+		<!--录入人在预立库中屏蔽“档案调整”操作-->
+		<!--顺序调整,希望输入序号自动补齐编号位数-->
+		<!--案卷级进行顺序调整后,其卷内文件无变化，未按照调整顺序重新生成档号;勾选第一层，上移下移第二层的案卷信息，点击确认调整之后；第二层关联的第三层档案数据没变;这两个BUG-->
+		<!--组合查询添加'不等于'和'不包含'-->
+		<!--两层表，第一层的文件开始时间和文件结束时间根据第二层的数据变化而变化：变化的情况有：第二层数据的新增，删除，修改；第一层数据的档案调整，调整第二层档案，调入调出-->
+		<!--值继承，如果某个字段为值继承字段，那么，下一次新增的时候，自动回填录入人在某个表（某层）最后添加的数据字段信息；-->
+		<!-- 添加档案管理员退回档案两个操作（退回不归档、退回修改）并给创建人发消息；档案移交给档案管理员发消息-->
+		<!-- 修改单位预立库、按门类、按立卷单位修改、删除、移交提示信息为更新后的档案实体状态；删除、移交、汇总、退回添加“处理中，请稍等”的动画-->
+		<!-- 门类树代码中添加注释-->
+		<include name="WebContent/modules/dagl/bmgl/"/>
+		<include name="WebContent/modules/dagl/tree/"/>
+		<include name="WebContent/modules/dagl/daly/shoppingtrolley/js/"/>
+		<include name="WebContent/modules/dagl/daly/shoppingtrolley/shoppingTrolleyIndex.html"/>
+		<!--门类管理-系统配置添加了一项是否值继承的列，这里只是实现的属性的设置，功能暂未实现20190709-->
+		<include name="WebContent/modules/dagl/xtpz/mlgl/js/table.js"/>
+
+		<!--文件管理到中转库；中转库到单位预立库功能书写-->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglTidyRecode.html"/>
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendTidyRecode.html"/>
+		<include name="WebContent/modules/dagl/wdgl/transferrepository/"/>
+
+		<!--梦瑶提的档案的BUG-->
+		<!--连红提的BUG-->
+		<!--根据部门和业务角色查询的人员树，顶级设置默认展开-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/system/component/tree/services/"/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

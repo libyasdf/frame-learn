@@ -1,0 +1,22 @@
+{
+  "time": "3",
+  "data": [{
+    "id": "1",
+    "realName": "张梅",
+    "headUrl": "href='teacherDetail.html'",
+    "img": "src='images/teacher.jpg'",
+    "introduction": "热情大方。"
+  }, {
+    "id": "2",
+    "realName": "张三",
+    "headUrl": "href='teacherDetail.html'",
+    "img": "src='images/teacher.jpg'",
+    "introduction": "热情大方。"
+  }, {
+    "id":"3",
+    "realName": "李斯",
+    "headUrl": "href='teacherDetail.html'",
+    "img": "src='images/teacher.jpg'",
+    "introduction": "热情大方"
+  }]
+}

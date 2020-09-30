@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DatasourceManager xmlVersion="20170720" releaseVersion="9.0.0">
+<ConnectionMap>
+<Connection name="tjxm" class="com.fr.data.impl.JDBCDatabaseConnection">
+<DatabaseAttr/>
+<JDBCDatabaseAttr url="jdbc:oracle:thin:@192.168.90.137:1521/sinoepuias" driver="oracle.jdbc.driver.OracleDriver" user="tjxm" password="___0067002400720062" encryptPassword="true">
+<DBCPAttr/>
+</JDBCDatabaseAttr>
+</Connection>
+</ConnectionMap>
+</DatasourceManager>

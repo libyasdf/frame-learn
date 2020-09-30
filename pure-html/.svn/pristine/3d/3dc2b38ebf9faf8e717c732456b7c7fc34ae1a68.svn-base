@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\会议管理_19.5.30"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		<!-- 会议管理:5.30日天津反馈的问题 -->
+		<!-- 会议管理:撤办添加给会务服务人员和参会人员发消息-->
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/meetingAllInfoList.html"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingApply/controller/MeetingApplyController.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingApply/service/**"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingNoticeBack/services/**"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingServiceNotice/service/**"/>
+		
+		<!-- 会议管理:会议通知反馈人员的长度添加校验-->
+		<include name="WebContent/modules/zhbg/hygl/meetingNoticeBack/js/**"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNoticeBack/meetingFeedbackEditForm.html"/>
+		
+		<!-- 履历管理:2019.5.30日注释掉个人所属部门字段-->
+		<include name="WebContent/modules/mypage/record/js/recordValidator.js"/>
+		<include name="WebContent/modules/mypage/record/recordEditForm.html"/>
+		<include name="WebContent/modules/mypage/record/recordList.html"/>
+		<include name="WebContent/modules/mypage/record/recordReadOnlyForm.html"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/mypage/record/services/RecordServiceImp.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/mypage/record/services/RecordServiceImp$1.class"/>
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

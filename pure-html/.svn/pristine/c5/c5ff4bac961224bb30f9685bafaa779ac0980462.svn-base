@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Untitled Document</title>
+	<link href="../plugins/bootstrap/bootstrap.css" rel="stylesheet">
+	<link href="../css/formAndWorkflow.css" rel="stylesheet">
+	
+	<script src="../plugins/jquery/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript">
+	var api = frameElement.api;W = api.opener;
+	window.onload = function() {
+		if (api.data['node']) {
+			var nodes = api.data['node'];
+			for ( var i in nodes) {
+				var opName = nodes[i]['opName'];
+				var receiveName = nodes[i]['receiveName'];
+				$("#sendbody").text(opName);
+				$("#nextbody").text(receiveName);
+			}
+		}
+	};
+</script>		
+<style type="text/css">
+.width463 .modal-content, .width820 .modal-content {
+    box-shadow: 0 0 0 0;
+    border: 0;
+    border-radius: 0;
+    /* border-bottom-left-radius: 8px; */
+    /* border-bottom-right-radius: 8px; */
+}
+.style1{
+min-height:250px;
+}
+</style>
+  </head>
+  <body>
+  <div class=" modal-pt width463">
+<!--<div class="modal fade modal-pt" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+--><div class="" >
+		<div class="modal-content fscg style1">
+			<div class="modal-header">
+			</div>
+			<div class="modal-body ">
+                <div class="row title02">
+                                                                            发送成功!
+                   
+                </div>
+                <div class="row dh02 ">
+                   <p>下一步：<span id="sendbody"></span></p>
+				   <p>下一步办理人：<span id="nextbody"></span></p>
+               </div>
+            </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+  </body>
+</html>

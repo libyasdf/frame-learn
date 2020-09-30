@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\平台公共问题20190123Class"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="fengchao"/>
+		</copy>
+	</target>
+	
+	
+	<fileset id="fengchao" dir="../../../">
+
+		<!--1.学习考核-查询是否含有上报人员的方法的修改 -->
+		<include name="WebContent/modules/system/config/dictionary/dictionaryList.html"/>
+
+
+		<!--2.	一人多岗用户，点击不能切换部门
+				这个BUG，利广在天津修改的，希望能整理出来修改的文件进行部署
+		-->
+
+		<!--3.	发送成功显示用户昵称
+				大同的同事修改接口到时候统一部署
+		-->
+
+		<!--4.	选择一般涉密人员或者正处长这样的发送流程，可选择人员。
+			修改的SQL，查看了这边所有的流程，需要改的只有考勤管理，需要改的数据，详见SQL
+		-->
+		<include name="build/classes/com/sinosoft/sinoep/workflow/service/WorkFlowClientServiceImpl.class"/>
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/cqqx"/>
+			<copy todir="${export.dir.root}/cqqx" overwrite="true">
+				<fileset refid="fengchao"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,mqx">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

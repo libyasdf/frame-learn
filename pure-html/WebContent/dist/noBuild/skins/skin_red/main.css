@@ -1,0 +1,64 @@
+/* 主题色 rgb(234, 84, 85); */
+
+/******************************************** 公用样式 ********************************************/
+.selected {
+    color: rgb(234, 84, 85);
+}
+.btn_prev:hover,.btn_next:hover{
+    opacity: 1;
+    color: rgb(234, 84, 85)
+}
+/******************************************** 顶部内容 ********************************************/
+.header_wrapper {
+    /* 背景渐变色 */
+    background:rgb(234,84,85);  /* IE9兼容 */
+    background: -webkit-linear-gradient(left, rgb(234,84,85  ) , rgb(255,153,51)); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, rgb(234,84,85  ) , rgb(255,153,51)); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, rgb(234,84,85  ) , rgb(255,153,51)); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, rgb(234,84,85  ) , rgb(255,153,51)); /* 标准的语法（必须放在最后） */          
+}
+.hd_info .Portal_info {
+    background:rgb(221, 56, 42);
+}
+.personal_info .business_card {
+    background: rgb(255, 117, 16);
+}
+
+/******************************************** 左侧内容 ********************************************/
+.left_wrapper{
+    border-right:2px solid rgb(234, 84, 85);
+}
+
+.menu_level_1 .selected {
+    background: rgb(234, 84, 85);
+}
+.menu_leverl .menu_name {
+    border-bottom:1px solid rgb(234, 84, 85);
+}
+.menu_wrapper .menu_list li:hover,.selected_menu {
+    color: rgb(234, 84, 85);
+}
+
+.menu_wrapper .menu_level_2-5 {
+    border-right:2px solid rgb(234, 84, 85);
+}
+
+
+/******************************************** 右侧内容 ********************************************/
+
+.wrapper_header .header_item_active {
+    border-bottom: 2px solid rgb(234, 84, 85);
+}
+
+.date_list .today {
+    color: rgb(234, 84, 85)
+}
+.date_list .icon_dot {
+    background: rgb(234, 84, 85)
+}
+
+.app_Nav .app_Nav_header {
+    background: rgb(234, 84, 85);
+}
+
+/******************************************** 二级页面 ********************************************/

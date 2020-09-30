@@ -1,0 +1,857 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+
+<input type="hidden" id="columnId" name="columnId" value="">
+<input type="hidden" id="isFirst" name="isFirst" value="">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div class="folderBar">
+                    <i class="glyphicon" onclick="showSearchFrame()" style="font-size:18px;cursor: pointer;" title="查询栏目"></i>
+                </div>
+                <div id="searchDiv" class="input-group input-group-sm" style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo1" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details" >
+            <form class="form-horizontal">
+                <div class="modal-body selectjs">
+                    <div class="selectjs_block" style="height: auto;">
+                        <div class="title_tab">
+                            <ul class="nav nav-tabs">
+                                <li for="formpage1" id="page1" style="width: 33.33%">
+                                    <a href="#" data-toggle="tab">
+                                        维护页面
+                                    </a>
+                                </li>
+                                <li for="formpage2" id="page2" style="width: 33.33%">
+                                    <a href="#" data-toggle="tab">
+                                        管理页面
+                                    </a>
+                                </li>
+                                <li for="formpage3" id="page3" style="width: 33.33%;">
+                                    <a href="#" data-toggle="tab">
+                                        置顶排序
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="main" style="height: auto;">
+                            <div id="formpage1" class="active">
+                                <form class="form-horizontal" id="form1">
+                                    <!-- 维护页面 -->
+                                    <div class="row">
+                                        <div class="col-md-12 ">
+                                            <div class="panel panel-default toggle">
+                                                <div class="panel-heading" style="cursor: pointer;">
+                                                    <h3 class="panel-title">查询项</h3>
+                                                    <div class="panel-controls ">
+                                                        <i class="glyphicon glyphicon-plus showSelect"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body" style="display: none;">
+                                                    <!--查询项输入框选择框等开始-->
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 control-label"> 视频标题：</label>
+                                                        <div class="col-md-3">
+                                                            <input class="form-control" type="text" name="title1" id="title1"/>
+                                                        </div>
+                                                        <label class="col-md-2 control-label"> 创建时间：</label>
+                                                        <div class="col-md-3">
+                                                            <input class="form-control" type="text" name="creTime1" id="creTime1"/>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询项输入框选择框等结束-->
+                                                    <!--查询重置等按钮-->
+                                                    <div class="form-group">
+                                                        <div class="col-md-12" style="text-align: center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                    onclick="TableInit.refTable('right_table1');"> 查&nbsp;&nbsp;询
+                                                            </button>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                                                重&nbsp;&nbsp;置
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询重置等按钮 end-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row m-t-15">
+                                        <div class="col-md-12">
+                                            <div class="list_button_area">
+                                                <button type="button" class="list_table_btn2" onclick="addContent()">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 起草
+                                                </button>
+                                                <!--<button type="button" class="list_table_btn2" onclick="layer.msg('导出成功！', {icon: 1})">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 导出
+                                                </button>-->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <!--bootstrap-table表格-->
+                                            <table id="right_table1"></table>
+                                        </div>
+                                    </div>
+                                    <!-- 维护页面 -->
+                                </form>
+                            </div>
+                            <div id="formpage2" class="hidden">
+                                <form class="form-horizontal" id="form2">
+                                    <!-- 管理页面 -->
+                                    <div class="row">
+                                        <div class="col-md-12 ">
+                                            <div class="panel panel-default toggle">
+                                                <div class="panel-heading" style="cursor: pointer;">
+                                                    <h3 class="panel-title">查询项</h3>
+                                                    <div class="panel-controls ">
+                                                        <i class="glyphicon glyphicon-plus showSelect"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body" style="display: none;">
+                                                    <!--查询项输入框选择框等开始-->
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 control-label">视频标题：</label>
+                                                        <div class="col-md-3">
+                                                            <input class="form-control" type="text" name="title2" id="title2"/>
+                                                        </div>
+                                                        <label class="col-md-2 control-label"> 创建时间：</label>
+                                                        <div class="col-md-3">
+                                                            <input class="form-control" type="text" name="creTime2" id="creTime2"/>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询项输入框选择框等结束-->
+                                                    <!--查询重置等按钮-->
+                                                    <div class="form-group">
+                                                        <div class="col-md-12" style="text-align: center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                    onclick="TableInit.refTable('right_table2');"> 查&nbsp;&nbsp;询
+                                                            </button>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                                                重&nbsp;&nbsp;置
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!--查询重置等按钮 end-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row m-t-15">
+                                        <div class="col-md-12">
+                                            <div class="list_button_area">
+                                                <button type="button" class="list_table_btn2" onclick="updateZd('0')">
+                                                    <span class="glyphicon glyphicon-upload"></span> 置顶
+                                                </button>
+                                                <button type="button" class="list_table_btn2" onclick="updateZd('')">
+                                                    <span class="glyphicon glyphicon-download"></span> 取消置顶
+                                                </button>
+                                              <!--   <button type="button" class="list_table_btn2" onclick="addContent()">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 起草
+                                                </button> -->
+                                                <!--<button type="button" class="list_table_btn2" onclick="layer.msg('导出成功！', {icon: 1})">
+                                                    <span class="glyphicon glyphicon-plus-sign"></span> 导出
+                                                </button>-->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <!--bootstrap-table表格-->
+                                            <table id="right_table2"></table>
+                                        </div>
+                                    </div>
+                                    <!-- 管理页面 -->
+                                </form>
+                            </div>
+                            <div id="formpage3" class="hidden">
+                                <form class="form-horizontal" id="form3">
+                                    <div class="row m-t-15">
+                                        <div class="col-md-12">
+                                        <!--bootstrap-table表格-->
+                                            <table id="right_table3" data-use-row-attr-func="true" data-reorderable-rows="true"></table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b style="color: red;">
+                                            <h4>温馨提示：选中需要排序的数据，上下拖拽即可完成排序</h4>
+                                        </b>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/video/background/content/js/videoContentTree.js"></script>
+
+<script src="/product/workflow/js/common/getCook.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/modules/video/background/displayVideoAndPdf/js/displayVideoAndPdf.js"></script>
+<script type="text/javascript">
+    scrollTop.init();
+    laydate.render({
+        elem: '#creTime1'
+    });
+    laydate.render({
+        elem: '#creTime2'
+    });
+    var resId = $('#left_ul').find('a.active').attr("id");
+    /**
+     * 判断管理页面显示不显示
+     */
+    function isShowPage() {
+    	var nodes = $.fn.zTree.getZTreeObj("treeDemo1").getSelectedNodes();
+    	var isFirst =  $("#isFirst").val()
+    
+        var columnId = $("#columnId").val();
+        var datas={"columnId":columnId,"isFirst":isFirst};
+        var isGly = "";
+        httpRequest("get","video/background/column/getShowPage",datas,function (data){
+        	 if('1'== data.isShowGlPage){
+                 isGly = "1";
+             }
+        	 var rolesNo = getcookie("rolesNo");
+             if(rolesNo.indexOf(Config.videoRolesNoLocate)>0 || isGly == '1' || rolesNo.indexOf(Config.videoRolesNoSection)>0 ){ //如果当前是信息发布一级管理员或者是栏目管理员则可以新增删除和修改
+            	 $("#page2").show();
+                 $("#page3").show();
+             }else{
+            	 $("#page2").hide();
+                 $("#page3").hide();
+             }
+          
+        });
+    }
+    function isShowPages() {
+    	
+        var columnId = $("#columnId").val();
+        var isFirst =  $("#isFirst").val()
+        var datas={"columnId":columnId,"isFirst":isFirst};
+        var isGly = "";
+        httpRequest("get","video/background/column/getShowPage",datas,function (data){
+        	 if('1'== data.isShowGlPage){
+                 isGly = "1";
+             }
+        	 var rolesNo = getcookie("rolesNo");
+             if(rolesNo.indexOf(Config.videoRolesNoLocate)>0 || isGly == '1' || rolesNo.indexOf(Config.videoRolesNoSection)>0 ){ //如果当前是信息发布一级管理员或者是栏目管理员则可以新增删除和修改
+            	 $("#page2").show();
+                 $("#page3").show();
+             }else{
+            	 $("#page2").hide();
+                 $("#page3").hide();
+             }
+          
+        });
+    }
+    //标签页切换
+    $(function () {
+    	$('.nav-tabs > li:first').attr("class","active")
+        $('.nav-tabs > li').unbind('click').bind('click',function(){
+            var id = $(this).attr('for');
+            $('.main').children().addClass('hidden');
+            $('#'+id).removeClass('hidden');
+            refreshPage();
+        });
+    	
+    	//isShowPages();
+    });
+
+    //查询栏目
+    function searchType(){
+        typeTree.searchNodes($("#typeName").val());
+    }
+    // 查询窗口
+    function showSearchFrame() {
+        var search = $("#searchDiv");
+        if (search.is(":hidden")) {
+            search.show();
+            $("#typeName").focus();
+        } else {
+            search.hide();
+        }
+    }
+    //刷新方法，流程中需要回调
+    function refreshPage(){
+        TableInit.refTable("right_table1");
+        TableInit.refTable("right_table2");
+        TableInit.refTable("right_table3");
+    }
+
+    //清空查询条件
+    function clearAll() {
+        $("#title1").val("");
+        $("#creTime1").val("");
+        $("#title2").val("");
+        $("#creTime2").val("");
+    }
+
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col1 = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize = $('#right_table1').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table1').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'title'
+        , title: '视频标题'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'creTime'
+        , title: '创建时间'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'fbTime'
+        , title: '发布时间'
+        , width: '15%'
+        , align: "center"
+    },  {
+        field: 'subflag'
+        , title: '状态'
+        , width: '10%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='0'){
+                return "草稿";
+            }
+            if(value=='1'){
+                return "流程中";
+            }
+            if(value=='2'){
+                return "已发布";
+            }
+            if(value=='3'){
+                return "退回";
+            }
+        }
+    }, {
+        field: 'isZd'
+        , title: '是否置顶'
+        , width: '8%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='' || value == null || value == undefined){
+                return "否";
+            }
+            if(value!='' && value != null && value != undefined){
+                return "是";
+            }
+        }
+    }, {
+        title: '操作'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            if(row.subflag == '0' || row.subflag == '2'){
+                var html = "";
+                html += "<i style='cursor:pointer;' class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                html += "<i style='cursor:pointer;' class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                html += "<i style='cursor:pointer;' class='glyphicon glyphicon-eye-open' title='预览' onclick=\'list.preView(\"" + row.id + "\",\""+row.title+"\")\'></i>";
+                return html;
+            }
+        }
+    }];
+    var right_table_col2 = [{
+        field:'check',
+        width: '5%',
+        checkbox:true,
+        clickToSelect: true,
+        singleSelect: true
+    },{
+        field:'id',
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize = $('#right_table2').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table2').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'title'
+        , title: '视频标题'
+        , width: '20%'
+        , align: "center"
+    }, {
+        field: 'creTime'
+        , title: '创建时间'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'fbTime'
+        , title: '发布时间'
+        , width: '15%'
+        , align: "center"
+    },  {
+        field: 'subflag'
+        , title: '状态'
+        , width: '10%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='0'){
+                return "草稿";
+            }
+            if(value=='1'){
+                return "流程中";
+            }
+            if(value=='2'){
+                return "已发布";
+            }
+            if(value=='3'){
+                return "退回";
+            }
+        }
+    }, {
+        field: 'isZd'
+        , title: '是否置顶'
+        , width: '8%'
+        , align: "center"
+        ,formatter:function (value,row,index) {
+            if(value=='' || value == null || value == undefined){
+                return "否";
+            }
+            if(value!='' && value != null && value != undefined){
+                return "是";
+            }
+        }
+    }, {
+        title: '操作'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            if(row.subflag == '0' || row.subflag == '2'){
+                var html = "";
+                html += "<i style='cursor:pointer;' class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                html += "<i style='cursor:pointer;' class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                html += "<i style='cursor:pointer;' class='glyphicon glyphicon-eye-open' title='预览' onclick=\'list.preView(\"" + row.id + "\",\""+row.title+"\")\'></i>";
+                return html;
+            }
+        }
+    }];
+
+    var right_table_col3 = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize = $('#right_table3').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table3').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    }, {
+        field: 'title'
+        , title: '视频标题'
+        , width: '30%'
+        , align: "center"
+    }];
+    //维护页面
+    $(document).ready(function (e) {
+        //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        typeTree.init();
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo1").getSelectedNodes();
+        var columnId = "";
+        if (nodes.length > 0) {
+            $("#columnId").val(nodes[0].id);
+        }
+       
+        //初始化表格
+        TableInit.init({
+            domId: "right_table1",
+            url: "/video/content/getContnetList",
+            columns: right_table_col1,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = resId;
+                params.columnId =$("#columnId").val();
+                params.title = $("#title1").val();
+                params.creTime = $("#creTime1").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $("#right_table1").find('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+                $("#right_table1").find('tr.readOnly').find('td:last').css("cursor","default");
+                $("#right_table1").find('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    //MyLayer.layerOpenUrl({url: '/modules/video/background/content/videoContentReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "视频发布查看"});
+                    MyLayer.layerOpenUrl({
+                        url: '/modules/video/background/content/videoContentReadOnlyForm.html?id='+id+'&flag=1&columnId='+$("#columnId").val()+'&oper=EDIT&resId='+resId,
+                        title: "视频发布查看"
+                    })
+                });
+            }
+        });
+    });
+    //管理页面
+    $(document).ready(function (e) {
+        //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo1").getSelectedNodes();
+        var columnId = "";
+        if (nodes.length > 0) {
+            $("#columnId").val(nodes[0].id);
+        }
+        //初始化表格
+        TableInit.init({
+            domId: "right_table2",
+            url: "/video/content/getFbList",
+            pagination:true,	//分页
+            columns: right_table_col2,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = resId;
+                params.columnId =$("#columnId").val();
+                params.title = $("#title2").val();
+                params.creTime = $("#creTime2").val();
+                return params;
+            },
+            readOnlyFn: function () {
+            	$("#right_table2").find('tr.readOnly').find('td:first').find('input').css("cursor","pointer");
+            	$("#right_table2").find('tr.readOnly').find('td:not(:last,:first)').attr("title", "点击查看详情");
+            	$("#right_table2").find('tr.readOnly').find('td:last,td:first').css("cursor","default");
+            	$("#right_table2").find('tr.readOnly').find('td:not(:last,:first)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    //MyLayer.layerOpenUrl({url: '/modules/video/background/content/videoContentReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "视频发布查看"});
+                    MyLayer.layerOpenUrl({
+                        url: '/modules/video/background/content/videoContentReadOnlyForm.html?id='+id+'&flag=1&columnId='+$("#columnId").val()+'&oper=EDIT&resId='+resId,
+                        title: "视频发布查看"
+                    })
+                });
+            }
+        });
+    });
+
+    //置顶排序
+    $(document).ready(function (e) {
+    	  var nodes = $.fn.zTree.getZTreeObj("treeDemo1").getSelectedNodes();
+          var columnId = "";
+          if (nodes.length > 0) {
+              $("#columnId").val(nodes[0].id);
+          }
+        //初始化表格
+        TableInit.init({
+            domId: "right_table3",
+            url: "/video/content/getZdList1",
+            pagination:false,
+            columns: right_table_col3,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = resId;
+                params.columnId =$("#columnId").val();
+                return params;
+            },
+            readOnlyFn: function () {
+            },
+            onReorderRowsDrag: function (table, row) {
+                //当选中行，拖拽时的哪行数据，并且可以获取这行数据的上一行数据和下一行数据
+                return false;
+            },
+            onReorderRowsDrop: function (table, row) {
+                //拖拽完成后的这条数据，并且可以获取这行数据的上一行数据和下一行数据
+                var tableBs = $(table);
+                //选中行的index
+                var selectedIndex = row.id.split("_")[1];
+                //拖曳结束后，相同位置行的index
+                var afterIndex = table.tBodies[0].rows[selectedIndex].id.split("_")[1];
+                //alert("排序后相同位置行的index == "+afterIndex);
+                //alert("选中行的index == "+selectedIndex);
+                /**
+                *	选中行的index != 拖曳后相同位置行的index，则说明改变了行顺序，则进行重新排序
+                *	例如选中第三行selectedIndex=2，将第三行向上拖动一行，则拖曳后第三行afterIndex将变为原第二行的index=1
+                 */
+                if(selectedIndex != afterIndex){
+                    var ids = [];
+                    for (var i = 0; i < table.tBodies[0].rows.length; i++) {
+                        var cruRow = $(table.tBodies[0].rows[i]);
+                        var recordId = $(cruRow).find("span[data-id]").attr("data-id");
+                        ids.push(recordId);
+                    }
+                    var idStr = ids.join(",");
+                    $.ajax({
+                        type:"post",
+                        url:"/video/content/orderZd?ids=" + idStr,
+                        dataType:"json",
+                        success:function(res){
+                            if(res.flag == "1"){
+                                layer.msg("排序成功！",{icon:1});
+                            }else{
+                                layer.msg("排序失败！",{icon:2});
+                            }
+                            //刷新列表
+                            $(table).bootstrapTable('refresh');
+                        },
+                        error:function(){
+                            layer.msg("排序异常，请刷新重试！",{icon:2});
+                        }
+                    })
+                }
+                return false;
+            },
+            onReorderRow: function (newData) {
+                //当拖拽结束后，整个表格的数据
+                return false;
+            }
+        });
+    });
+    // 新增
+    function addContent() {
+        // 判断是否已经选择了某个节点
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo1").getSelectedNodes();
+        console.log("nodes: "+JSON.stringify(nodes))
+        if (nodes.length == 0) {
+            layer.msg('请选择栏目!', {icon: 0});
+            return false;
+        } else {
+            var columnId = nodes[0].id;//栏目id 去除空格
+            var nodeLevel=nodes[0].nodeLevel.replace(/(^\s*)|(\s*$)/g,"");
+            if(nodeLevel =='1'){
+                layer.msg('不能在根目录下新增内容!', {icon: 0});
+                return false;
+            }
+            
+            var url = "/modules/video/background/content/videoContentAddForm.html?columnId="+columnId+"&oper=NEW&resId="+resId+"&classId="+nodes[0].code;
+            var title = "新增内容";
+            layer.open({
+                type: 2,
+                shadeClose: true,
+                content: url,
+                area: ['90%', '90%'],
+                title: [title, 'font-size:16px;font-weight:bold;']
+            })
+        }
+    }
+
+    //表格数据项的操作
+    var list = {
+        editFun: function (id) {
+        	var nodes = $.fn.zTree.getZTreeObj("treeDemo1").getSelectedNodes();
+            MyLayer.layerOpenUrl({
+                url: '/modules/video/background/content/videoContentUpdateForm.html?id='+id+'&flag=0&columnId='+$("#columnId").val()+'&oper=EDIT&resId='+resId+"&classId="+nodes[0].code,
+                title: "修改"
+            })
+        },
+        deleteFun: function (id) {
+           /*  MyLayer.deleteOpt({
+                url: '/video/content/delete?ids='+id+'&resId='+resId,
+                tableId: 'right_table1',
+                tableIds:'right_table2'
+            }); */
+            layer.confirm('确定删除吗？', 
+    				{
+    					icon:3
+    					//,title:'删除'
+    					,btn: ['确定','取消'] //按钮
+    					,btn1:function(index){
+    						$.ajax({
+    							type: "get",
+    							url:'/video/content/delete?ids='+id+'&resId='+resId,
+    							async: false,
+    							success:function(data){
+    								if(data.flag=="1"){
+    									layer.msg("删除成功！", {icon: 1});
+    									TableInit.refTable('right_table1');
+    									TableInit.refTable('right_table2');
+    									TableInit.refTable('right_table3');
+    									//删除该内容在音视频中所有文件-开始
+    									var nodes = $.fn.zTree.getZTreeObj("treeDemo1").getSelectedNodes();
+    									//当前类别在海比系统中的类别id
+    									var hBId = nodes[0].code;
+    									//根据资料获得该资料对应的所有文件
+    									var jsonData = getFilesByInfoId(id);
+    									console.log("infoId="+id);
+    									//遍历删除
+    									for(var i=0;i<jsonData.length;i++){
+    										var fileId = jsonData[i].fileIdNum;
+    										//根据hBId和fileId在海比系统中删除文件
+    										deleteFileInHB(fileId,hBId);
+    									}
+    									//删除该资料在音视频中所有文件-结束
+    								}else{
+    									layer.msg("删除文件异常，请稍后再试！", {icon: 0});
+    								}
+    							},
+    							error:function(data){
+    								layer.msg("音视频系统删除文件异常，请稍后再试！", {icon: 0});
+    							}
+    						});
+    					},btn2:function(){
+    						//取消什么都不做
+    					}	
+    				});
+        },
+        preView: function (id,title){
+        	//根据内容的id查找视频在音视频服务器中的相关信息
+        	var fileList = getFilesByInfoId(id);
+        	//先判断当前视频是否有内容
+        	if(fileList!=null && fileList.length>0){
+        		//调用播放视频的方法
+            	//for(var i=0;i<fileList.length;i++){
+            		bfVideo(fileList[0].fileId,fileList[0].fileName,id,title);
+            		//displayFile(fileList[i].fileId,fileList[i].fileName,"videos",'0');	
+            	//}	
+        	}else{
+        		layer.msg("请上传视频后预览！",{icon:7});
+        	}
+        	//window.open("/modules/video/background/content/preViewVideo.html");
+        	/*  layer.open({
+                type: 2,
+               // maxmin:_arg.maxmin,
+               // zIndex:_arg.zIndex,//layer默认19891014 	dialog默认值为1976
+                content:url,
+                area: ['80%', '80%'],
+                title: ['视频预览', 'font-size:16px;font-weight:bold;']
+            });  */
+        	
+        }
+    }
+    
+    function bfVideo(fileUuid,fileFullName,id,title){
+    	var getVideoUrl = Config.hBServerIp+"/api/v1/load_balancer/vod_play_url?AccessToken="+Config.AccessToken
+		+"&OriginalFileUuid="+fileUuid+"&ServiceType=vod_http&FileExtName=.mp4";
+	$.ajax({
+		type:"GET",
+		url:getVideoUrl,
+		async: true,
+		//dataType:"json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		success:function(data){
+			//获取播放地址并转码
+			var videoUrl = encodeURIComponent(data[0].Url);
+			layer.open({
+                type: 2,
+                //maxmin:true,
+                scrollbar:false,
+                zIndex:3600,
+                shadeClose: true,
+               //zIndex:19891014,//layer默认19891014 	dialog默认值为1976
+               ///modules/video/playVideo/index.html
+                content:"/modules/video/background/content/preViewVideo2.html?videoUrl="+videoUrl+"&infoId="+id+"&infoName="+encodeURIComponent(title)+"&fileFullName="+encodeURIComponent(fileFullName),
+                area: ['80%', '90%'],
+                title:false
+                //title: ['视频预览', 'font-size:16px;font-weight:bold;']
+            });
+			//window.open("/modules/video/background/displayVideoAndPdf/playVideo.html?videoUrl="+videoUrl+"&infoId="+$("#id").val()+"&infoName="+encodeURIComponent($("span#dataName").text())+"&fileFullName="+encodeURIComponent(fileFullName));
+		},
+		error:function(data){
+			layer.msg("视频还未转码成功，稍后再试！", {icon: 0});
+		}
+	});
+    }
+
+    function updateZd(isZd) {
+        var contentIds = "";
+        var rows = $("#right_table2").bootstrapTable('getSelections');
+        if(rows.length == 0){
+            layer.msg("请选择一条数据！",{icon:7});
+            return;
+        }
+        for(var i=0;i < rows.length;i++){
+            contentIds = contentIds + rows[i]['id']+",";
+            var subflag = rows[i]['subflag'];
+            if(subflag != '2'){
+                layer.msg("只能置顶已发布的信息",{icon:7});
+                return;
+            }
+        }
+        var datas = {"contentIds":contentIds,"isZd":isZd,"math":Math.random(),"resId":$("#resId").val()};
+        httpRequest("get","/video/content/updateZd",datas,function (data){
+            var msg = "";
+            if(isZd != ""){
+                msg = "置顶"
+            }else{
+                msg = "取消置顶"
+            }
+            if(data.flag == "1"){
+                layer.msg(msg+"成功！",{icon:1});
+            }else{
+                layer.msg(msg+"失败！",{icon:0});
+            }
+            TableInit.refTable("right_table2");
+        });
+    }
+
+</script>

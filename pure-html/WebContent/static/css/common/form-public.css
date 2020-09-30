@@ -1,0 +1,60 @@
+/**
+ * bootstrap 样式重置
+ */
+.table-bordered > thead > tr > td, .table-bordered > thead > tr > th{
+    border-bottom-width: 1px !important;
+}
+td{
+    vertical-align: middle !important;
+}
+.form-group{
+    margin-bottom: 5px !important;
+}
+
+/**
+ * 工具类
+ */
+
+.m-t-15{
+	margin-top: 15px;
+}
+.m-t-5{
+	margin-top: 5px;
+}
+.m-b-5{
+	margin-bottom: 5px;
+}
+.p-f-60{
+	padding-left:60px;
+}
+.p-a-0{
+	padding: 0;
+}
+.b-b-d-1{
+	border-bottom: 1px dashed #ddd
+}
+.p-l-10{
+	padding-left: 10px;
+}
+/**
+ * 通用类
+ */
+
+body{
+	padding-bottom: 40px;
+}
+
+.formpage_right_btn_area{
+	right: 10px; 
+	top: 20px; 
+	position: fixed;
+}
+
+.form-view{
+	text-align: left;
+    padding-top:7px;
+}
+
+.gw_form_block_title img{
+	margin-right:10px;
+}

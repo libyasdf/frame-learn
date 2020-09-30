@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理java_20190423"></property>
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+		<!-- 模块内页面和js -->
+		<!-- 第一层表列表页面（带分页）及调整序号页面-->
+		<include name="WebContent/modules/dagl/bmgl/firstLevelDataList.html"/>
+		<include name="WebContent/modules/dagl/bmgl/adjustFirstLevelForm.html"/>
+		
+		<!-- 
+		1.单位预立库、归档库操作下添加顺序调整按钮。
+		2.单位归档库只能进行查询操作。
+		3.操作下拉的“q2变更”改为“Q2变更”。
+		4.添加操作下拉的操作提示，例如移交、汇总、档案调整、顺序调整等。
+		-->
+		<include name="WebContent/modules/dagl/bmgl/index.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexMl.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexforLJ.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexForUnit.html"/>
+		<include name="WebContent/modules/dagl/bmgl/indexForAdmin.html"/>
+		<include name="WebContent/modules/dagl/bmgl/js/index.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForAdmin.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForUnit.js"/>
+		
+		<!-- 代码规范调整-->
+		<include name="WebContent/modules/dagl/xtpz/mlgl/categoryAddForm.html"/>
+		
+		<!-- 
+		1.Q2变更新主管单位从Q2的授权立卷单位来，如果没有授权任何立卷单位，则取所有立卷单位。
+		2.新主管单位校验调整。
+		-->
+		<include name="WebContent/modules/dagl/daly/qtwo/Q2EditForm.html"/>
+		<include name="WebContent/modules/dagl/daly/qtwo/js/wdglValidator.js"/>
+
+		
+		
+		
+		
+		<!-- 模块内java文件 注:为了避免内部类存在，导致有多个编译文件的存在。凡是修改后台文件，直接打包文件所在包-->
+		<!-- 添加门类第一层表数据查询方法、第一层表顺序调整功能-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/controller/"/>
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/entity/DangAnEntity.java"/>
+		
+		<!-- 添加获取Q2变更可用立卷单位的方法-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/daly/change/controller/"/>
+		<include name="src/com/sinosoft/sinoep/modules/dagl/xtpz/categorymanage/services/"/>
+		
+		
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		<!-- 档案管理表名中存在英文的下划线_，去掉英文下划线。此文件需要手动调整代码，已经整理到配置说明里-->
+		<!--<include name="WebContent/static/js/common/tablelist.js"/>-->
+		
+		
+		
+		<!-- 公共java-->
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

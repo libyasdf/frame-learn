@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理class_20181225"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../">
+
+		<!-- 模块内页面和js -->
+		<!-- 单位预立库、预立库（按门类）、预立库（按立卷单位）、归档库操作列放到全选后边-->
+		<!-- 新增表单的日期类型表单项默认日期为当前日期-->
+		<!-- 树添加全宗，全宗和门类回填form表单-->
+		<!--确认录入人只在一个立卷单位时，新增页面的立卷单位数据项能自动带出来且不能下拉选择；-->
+		<!--勾选父级数据，新增时关联数据；-->
+		<!--组卷标识如果是表单项的话，只读-->
+		<!--所有的表单，表单内容根据设置的列宽展示内容时超出部分用...展示，以防内容换行，倒追表格表头和内容错位-->
+		<!--列表展示顺序列排序的统一，根据表描述的COLUMN_LIST_ORDER字段排序-->
+		<!--去掉单位预立库，预立库（按门类），预立库（按立卷单位）操作中的排序功能-->
+		<!--修改页面，门类code和全宗code的回填-->
+		<!--档案调整调入时获取档号的字段调整，三层且第一层时item_folder_no 其他folder_no-->
+		<!-- 门类管理设置不为列表项时，调整列表顺序为Empty-->
+		<!--门类管理下删除门类时，门类下如果有数据提示不能删除；-->
+		<!--删除门类之后默认选中第一个门类-->
+		<include name="WebContent/modules/dagl/bmgl/"/>
+		<include name="WebContent/modules/dagl/tree/js/"/>
+		<include name="WebContent/modules/dagl/daly/shoppingtrolley/js/"/>
+		<include name="WebContent/modules/dagl/xtpz/mlgl/"/>
+		<!-- 归档配置改为归档门类-->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglTidyRecode.html"/>
+		<!-- 1.收发文归档前判断勾选记录是否包含状态为已归档的文件；2.收发文归档配置改为归档门类-->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglList.html"/>
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglTidyRecode.html"/>
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendList.html"/>
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendTidyRecode.html"/>
+		<!--利用目的改为文本域，最多输入200字符（新增、修改、只读页面，需要排查一下还有那些页面，别改漏了）。
+		2.解决子表全部删除后，点击保存或者发送后子表竟然又有数据了
+		3.bug33875页数可点开，但文字问英文
+		-->
+		<include name="WebContent/modules/dagl/daly/borrow/"/>
+
+		<!-- 调整收发文表单中文件编号最大长度为50-->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglEditForm.html"/>
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendEditForm.html"/>
+
+		<!-- 20190419-->
+		<!-- 分页页数、总条数显示英文-->
+		<include name="WebContent/modules/dagl/daly/borrow/borrowmanage/recordList.html"/>
+		<!-- 点击整理编目下模块后，在点击对照和档号规则，两个页面列表出不来-->
+		<include name="WebContent/modules/dagl/xtpz/contrastingrelations/relationsList.html"/>
+		<include name="WebContent/modules/dagl/xtpz/partynumrule/ruleList.html"/>
+
+
+
+
+		<!-- 模块内java文件 注:为了避免内部类存在，导致有多个编译文件的存在。凡是修改后台文件，直接打包文件所在包-->
+		<!-- 1.列表根据档号升序排列;2.汇总时，调整单位预立库中数据的归档日期为当前日期-->
+		<!--1.勾选父级数据，新增时关联数据；
+			2.删除归档库数据时，同时删除收集列表和借阅子表的数据；-->
+		<!--组卷标识，档案实体状态不是表单项时的默认值；-->
+		<!--档案调整未组卷的档案排序，正序-->
+		<!--档号规则不是必填项时，保存表单，如果不填，数据库应该存空字符串，而不是"null"-->
+		<!--归档库新增判断档号是否重复不需要加创建人的过滤-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/controller/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+		<!--全宗的实体类-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bmgl/entity/DaglGeneralArchive.class"/>
+		<!--门类的实体添加全宗code-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/xtpz/filenumberrule/entity/DaglCategoryTable.class"/>
+		<!--编目管理树的修改-->
+		<!--1.门类管理下删除门类时，门类下如果有数据提示不能删除；
+		2.门类管理设置不为列表项时，调整列表顺序为Empty
+		3.sql条件含有visible的改为使用常量类
+		4.新建门类时，添加门类下层表时根据递归的顺序来，防止第二层做第一层的父节点bug34147
+		5.预立库（按立卷单位），立卷单位下人员重复
+		-->
+
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/xtpz/categorymanage/controller/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/xtpz/categorymanage/services/"/>
+		<!-- 调整文电-》档案后，文电的文件状态和档案试题状态为“待提交”-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/constant/DAGLCommonConstants.class"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/wdgl/controller/"/>
+		<!-- 添加删除文件时，更新收发文文件状态为：已退回待处置-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/wdgl/services/"/>
+		<!--平台各种id改为字符串，sql拼接加单引号-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bygl/services/StudyingServiceImpl.class"/>
+
+		<!--.删除归档库数据时，同时删除收集列表和借阅子表的数据；-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/daly/borrow/services/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/daly/shoppingtrolley/services/"/>
+
+		<!-- 20190419-->
+		<!-- 编研管理发不走流程待办：改为按照处室和业务角色编号来发送-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/bygl/controller/"/>
+		<!-- 调整文电-》档案数据对照的数据类型转化-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/dagl/wdgl/services/"/>
+
+		<!-- 公共class-->
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

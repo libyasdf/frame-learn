@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>print</title>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <style type="text/css">
+    body {
+      width: 210mm;
+      height: 297mm;
+      margin: 11mm 17mm 17mm 17mm;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      right: var(--ft_right_gap, 100px);
+      font-size: 9px;
+      color: #f00;
+    }
+    .middle_content {
+      clear:both;
+    }
+    .middle_content>div {
+      display: inline-block;
+      /* width: 50%; */
+    }
+    .scoll_div{
+      overflow: hidden;
+      /* overflow-y:hidden;
+      overflow-x:hidden; */
+      text-overflow: clip;
+      font-size: 21px;
+    }
+  </style>
+   <style media="print">
+    @page {
+      size: A4 portrait;
+      margin: 11mm 17mm 17mm 17mm;
+    }
+
+    @media print {
+      footer {
+        position: fixed;
+        bottom: 0;
+        right: var(--ft_right_gap, 100px);
+        page-break-after: avoid;
+      }
+
+      .content_block {
+        //防止破裂
+        page-break-inside: avoid;
+      }
+
+      html,
+      body {
+        width: 210mm;
+        height: 297mm;
+        --ft_right_gap: 100px; //页脚的右侧距离
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- <div style="position: relative;display:inline-block;"> -->
+
+    <div id="line_height" contenteditable="true" class="scoll_div" style="text-align: center;max-height: 100px;height:100px;margin:20px 0 20px 0;">
+      <div id="block_p" style="text-indent: 4rem;width: 110px;height: 20px;float: left;"></div>
+      当我沉默着的时候,我觉得充实;我将开口,同时感到空虚。 过去的生命已经死亡。我对于这死亡有大欢喜,因为我借此知道它曾经存活。死亡的生命已经朽
+    </div>
+  <!-- </div> -->
+
+  <div class="middle_content">
+    <div style="float:left;width:45%;">
+      <div id="get_advise" contenteditable="true" class="scoll_div" style="height:100px;max-height:100px;padding:4px 0 2px 0">
+        <div style="width: 100px;height: 20px;float:left;"></div>
+        承办意见：着的时候,我觉为我借此知道它曾得充实;我将开口,同时感到空虚。 过去的生命已经死亡。
+      </div>
+      <div contenteditable="true" class="scoll_div" style="margin-top:15px;height:200px;max-height:200px;">
+        <div style="width: 100px;height: 20px;float: left;"></div>
+        审核意见：
+      </div>
+      <div contenteditable="true" class="scoll_div" style="text-indent:20px;margin-top:15px;height:60px;max-height:60px;">
+        <div style="width: 60px;height: 20px;float: left;"></div>
+        备注：
+      </div>
+    </div>
+    <div contenteditable="true" class="scoll_div" style="text-indent: 30px;padding-left: 5%;width:50%;height:590px;max-height:590px;">
+      <div style="width: 70px;height: 20px;float: left;"></div>
+      桔皮丝：我沉默着的时候,我觉得充实;我将开口,同时感到空虚。 过去的生命已经死亡。我对于这死亡有大欢喜,因为我借此知道它曾
+    </div>
+  </div>
+
+  <div style="display:none">
+    <div>liby</div>
+    <div style="display:inline">asd</div>
+  </div>
+
+  <footer class="content_block">
+    <div><img src="../cssup/img/2.jpg" alt="" style="width:180px;height:55px;"></div>
+    <div>liby.com</div>
+  </footer>
+</body>
+
+<script type="text/javascript">
+  console.log("start");
+  var placeholder = document.getElementById("block_p");
+  placeholder.disabled = true;
+  var catch_advise = document.getElementById("get_advise");
+  // 承办意见
+if(true) {//ie
+  $("#get_advise").on("keyup",function(es){
+    console.log("keyup:",es);
+      var fix_height = catch_advise.offsetHeight;//offsetHeight不会变动
+      console.log("fix_height:",fix_height);
+      var change_top = catch_advise.scrollTop;
+      console.log("scrollTop:",change_top);
+      var level = catch_advise.scrollHeight;
+      console.log("scrollHeight:",level);
+      if ( level > fix_height || change_top !== 0) {
+            catch_advise.style.setProperty("font-size","18px");
+            console.log(catch_advise.style.fontSize);
+      }
+      if (level <= fix_height ) {//change_top
+            catch_advise.style.setProperty("font-size","21px");
+            console.log(catch_advise.style.fontSize);
+      }
+      if (catch_advise.style.fontSize !== '18px' && level!==fix_height ) {
+           catch_advise.style.setProperty("font-size","18px");
+       }
+  })
+}
+
+if (false) {
+  catch_advise.addEventListener('input',function(e){
+    console.log("e:",e);
+    var fix_height = catch_advise.offsetHeight;//offsetHeight不会变动
+    console.log("fix_height:",fix_height);
+    var change_top = catch_advise.scrollTop;
+    console.log("scrollTop:",change_top);
+    var level = catch_advise.scrollHeight;
+    console.log("scrollHeight:",level);
+    console.log("boundingClientRect:",catch_advise.clientHeight);
+    if ( (e.data !== null && (e.inputType === "insertText" || e.inputType === "insertCompositionText") ) || e.inputType === "insertFromPaste" || e.inputType === "deleteContentBackward") {
+      if ( level > fix_height || change_top !== 0) {
+        // catch_advise.style.fontSize = "18px";
+        catch_advise.style.setProperty("font-size","18px");
+        console.log(catch_advise.style.fontSize);
+      }
+    }
+    if(e.inputType === "deleteContentBackward" || e.inputType === "deleteByCut") {
+      // catch_advise.style.setProperty("font-size","18px");
+      if (level <= fix_height ) {//change_top
+        catch_advise.style.setProperty("font-size","21px");
+        console.log(catch_advise.style.fontSize);
+      }
+    }
+    // if (catch_advise.style.fontSize !== '18px' && level!==fix_height && e.inputType === "deleteContentBackward") {
+    //     catch_advise.style.setProperty("font-size","18px");
+    // }
+  })
+}
+  // 文件名称
+  var catch_line = document.getElementById('line_height');
+  line_height.addEventListener('input',function(e){
+    // normal
+
+  })
+</script>
+
+</html>

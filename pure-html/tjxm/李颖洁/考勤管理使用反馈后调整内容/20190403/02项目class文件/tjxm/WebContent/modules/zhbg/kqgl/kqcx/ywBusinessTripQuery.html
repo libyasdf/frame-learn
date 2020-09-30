@@ -1,0 +1,299 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+</style>
+<link rel="stylesheet" type="text/css"
+	  href="/static/css/common/Loading.css">
+<link rel="stylesheet" type="text/css"
+	  href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+	  href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+	  href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid">
+	<div class="row">
+
+		<div class="vertify-panel vertify-tree x-unselectable"
+			 role="presentation">
+			<div class="inner">
+				<div id="searchDiv" class="input-group input-group-sm"
+					 style=" padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+					<input id="keyword" name="deptName" onkeydown="CommonUtil.keyDown(event);" type="text" class="form-control"
+						   placeholder="快速搜索">
+					<span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt" onclick="search()">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span>
+				</div>
+				<ul id="tree-obj" class="ztree" style="margin-top: 10px; height:510px; overflow:auto;"></ul>
+			</div>
+		</div>
+		<div class="vertify-panel vertify-details">
+			<!--查询-->
+			<form id="dmForm">
+				<div class="col-md-12">
+					<div class="panel panel-default toggle">
+						<div class="panel-heading" style="cursor: pointer;">
+							<h3 class="panel-title">查询项</h3>
+							<div class="panel-controls ">
+								<i class="glyphicon glyphicon-plus showSelect"></i>
+							</div>
+						</div>
+						<div class="panel-body" style="display: none;">
+							<div class="form-group">
+								<input id="resId" name="resId" type="hidden"/>
+								<input id="iftjj" name="iftjj" value="1" type="hidden"/>
+								<input id="cruDeptId" name="cruDeptId" type="hidden"/>
+								<input id="type" name="type" type="hidden" value="1"/>
+								<input id="userId" name="userId" type="hidden"/>
+								
+								<label class="col-md-2 control-label"> 出差日期：</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" id="timeRange" name="timeRange"/>
+								</div>
+								<input type="hidden" class="form-control" type="text" name="busiTripType" value='0'/>
+								<label class="col-md-2 control-label"> 流程状态：</label>
+								<div class="col-md-3">
+									<select id="subflag" name="subflag" class="form-control"></select>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-12">
+									<div class="col-md-12" style="text-align: center">
+										<button type="button" class="btn btn-primary"
+												onclick="TableInit.refTable('right_table')">
+											查&nbsp;&nbsp;询</button>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<button type="button" class="btn btn-primary"
+												onclick="clearAll()">
+											重&nbsp;&nbsp;置</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<!--查询结束-->
+
+			<div class="col-md-12">
+				<div class="list_button_area">
+					<button class="list_table_btn2" onclick="exportDate()">
+						<span class="glyphicon glyphicon-chevron-right"></span> 导出
+					</button>
+				</div>
+				<table id="right_table"></table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript"
+	src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script src="/static/core/layer/layer.js"></script>
+
+<script type="text/javascript">
+
+    //用于存放选择的id刷新列表
+    var userIds = "";
+
+Dictionary.init({mark:'kqcx_lczt',type:'1',position:"subflag",domType:"select",name:"subflag"});
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+    function clearAll() {
+		$("#userName").val(""); //类型
+		$("#subflag").val("");
+		$("#timeRange").val(""); //时间
+	}
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        ,formatter: function (value, row, index) {
+        	//计算序号，并存放业务ID，及已办事项ID
+        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";   
+       }
+    },
+    /* {
+    field: 'businessTripTitle'
+    , title: '标题'
+    , width: '10%'
+    , align:"center"
+    }, */
+    {
+        field: 'creUserName'
+            , title: '申请人'
+            , width: '9%'
+            , align:"center"
+    },
+    {
+        field: 'applicationUnitName'
+        , title: '单位'
+        , width: '10%'
+        , align:"center"
+    }, 
+    {
+        field: 'tripColleague'
+        , title: '同行人员'
+        , width: '10%'
+        , align:"center"
+    },
+    {
+        field: 'startTime'
+        , title: '出差日期'
+        , width: '20%'
+        , align:"center"
+        ,formatter:function(value,row,index){
+        	if(row.endTime!=""){
+        		return value+" - "+row.endTime;
+        	}else{
+        		return value;
+        	}
+          }
+    }, 
+    {
+        field: 'busiTripType'
+            , title: '出差类型'
+            , width: '10%'
+            , align:"center",
+            formatter:function(value,row,index){
+            	if(value=='0'){
+            		return "业务出差";
+            	}
+    			if(value=='1'){
+    			    return "行政出差";    		
+    			        	}
+                }
+     },
+     {
+        field: 'longTime'
+        , title: '出差时长(d)'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+    },
+    {
+        field: 'destination'
+        , title: '目的地'
+        , width: '6%'
+        , align:"center"
+    },
+	{
+		field : 'subflag',
+		title : '流程状态',
+		width : '8%',
+		order : "desc",
+		align : "center"
+	}];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/kqgl/kqcx/ccQuery/getlistBootHql",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+            	 params.userId = userIds;
+                 params.timeRange = $("#timeRange").val();
+                 params.subflag = $("#subflag").val();
+                 params.busiTripType='0';
+                 params.iftjj='1';
+                 params.resId = $('#left_ul').find('a.active').attr("id");
+                 return params;
+            },
+            readOnlyFn:function(){
+            	$('tr.readOnly').attr("title","点击查看详情");
+                $('tr.readOnly').find('td').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+                  //取消事件冒泡 end
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					//var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+//                    取消事件冒泡 end
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/kqgl/businessTrip/businessTripReadOnlyForm.html?id='+id+ "&oper=VIEW",title:'只读详情'});
+                });
+            }
+        });
+    });
+    /**
+ 	 * 导出按钮的事件
+ 	 */
+ 	function exportDate() {
+ 		$("#resId").val($('#left_ul').find('a.active').attr("id"));
+        $("#userId").val(userIds);
+ 		layer.confirm("是否导出查询的所有信息？", function(e) {
+ 			layer.close(e);
+ 			$.ajax({
+ 				url : "/zhbg/kqgl/kqcx/ccQuery/getCcData",
+ 				data : {
+ 					resId:$("#resId").val(),
+ 					timeRange : $("#timeRange").val(), //时间
+ 					busiTripType:'0',
+ 					userId:$("#userId").val(),
+                    subflag:$("#subflag").val(),
+                    iftjj:'1'
+ 				},
+ 				type : "post",
+ 				success : function(date) {
+ 					if (date.flag == '0') { //0 查询有数据， 可导出
+ 						$('#dmForm').attr('action','/zhbg/kqgl/kqcx/ccQuery/export');
+ 						$('#dmForm').attr('method', 'get');
+ 						$("#dmForm").submit();
+ 					} else {
+ 						if(date.msg.indexOf("您没有操作权限")!=-1){
+							MyLayer.layerOpenUrl({
+								url:'/modules/errorMsg/noPagePermission.jsp'
+							})
+						}else{
+							layer.msg('暂无可导出信息！', {
+								icon : 0
+							}); //没有数据时弹出提示信息
+						}
+ 					}
+ 				}
+ 			});
+
+ 		});
+
+ 	};
+</script>
+<!--部门人员树，放在最后的原因是放在前边获取不到$("#cruDeptId").val()的值-->
+<script src="/modules/zhbg/kqgl/kqcx/js/tree.js"></script>

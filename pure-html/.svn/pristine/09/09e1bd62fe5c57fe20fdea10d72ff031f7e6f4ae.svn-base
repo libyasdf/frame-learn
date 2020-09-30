@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+	<head>
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-store, must-revalidate" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<title>添加常用意见</title>
+	</head>
+	<style>
+		input.txt {
+			color: #333;
+			width: 150px;
+			height: 20px;
+			font-family: "微软雅黑";
+			font-size: 14px;
+			line-height: 20px;
+			background-color: #F5F5F5;
+			border: none;
+			border-bottom: 1px solid #565656;
+            height: 39px;
+            border: 1px solid #ccc;
+            margin: 2px 0;
+		}
+	</style>
+	<script type="text/javascript" src="../../../plugins/jquery/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="../../../plugins/lhgdialog/lhgdialog.min.js"></script>
+	<!-- 提交表单验证 -->
+	<script type="text/javascript" src="../../../common/js/checkForm/autocheckform.js"></script>
+	<script type="text/javascript" src="../../../common/js/checkForm/checkform.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="../../../common/js/getrequest.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script>
+		$(function() {
+			$("#notioneditimg").attr("src",basePath + "/static/images/notion_edit.png");
+			
+			$.ajax({
+				type: "post",
+				url: basePath + "/commonNotion/list",
+				dataType: "json",
+				success: function(data) {
+					var list = data.list;
+					if(null == list || list == "") {
+						var spanL = $("#ideaList span").length;
+						if(spanL == 0) {
+							$("#ideaList").append("<span id='noList'>暂无常用意见!</span>");
+						}
+					} else {
+						$.each(list, function(i, v) {
+							var nodes = "<span id='" + list[i].id + "'>";
+							nodes += "<div style='float: left;margin-top: 2px;height:16px;wight:16px;vertical-align: middle;display: inline;word-wrap:break-word'>" + list[i].notion + "</div>";
+							nodes += "<div style='margin-top:4px;float:left;height:16px;wight:16px;display: inline;'>&nbsp;<img style='cursor: pointer;' src='"+basePath+"/static/images/delete_notion.png' onclick=\"del('" + list[i].id + "')\"/></div>";
+							nodes += "&nbsp;&nbsp;&nbsp;</span>";
+							$("#ideaList").append(nodes);
+						});
+					}
+				}
+			});
+			var notion = UrlParm.parm("notion");
+			if("" == $.trim(notion) || "undefined" == notion || null == notion || "null" == notion) {
+				notion = "";
+			}
+			$("#idea").val(notion);
+			//屏蔽回车键
+			document.onkeydown = function(e) {
+				var ev = window.event || e;
+				var code = ev.keyCode || ev.which;
+				if(code == 13) {
+					if(ev.preventDefault) {
+						ev.preventDefault();
+					} else {
+						ev.keyCode = 0;
+						ev.returnValue = false;
+					}
+				}
+			}
+
+		});
+
+		function notionAdd() {
+			var $idea = $("#idea");
+			if($idea.val() == "" || $idea.val() == "请填写常用意见...") {
+				$idea.val("请填写常用意见...");
+				return false;
+			}
+			var length = $idea.val().length;
+			if(length > 50) {
+				layer.msg("长度不能超过50");
+				return false;
+			}
+			$.ajax({
+				type: "post",
+				url: basePath + "/commonNotion/add",
+				data: {
+					notion: $idea.val()
+				},
+				dataType: "json",
+				async: false,
+				success: function(data) {
+					var model = data.model;
+					$("#noList").remove();
+					var nodes = "<span id='" + model.id + "'>";
+					nodes += "<div style='height:16px;wight:16px;vertical-align: middle;display: inline;float: left;margin-top: 1px;'>" + $idea.val() + "</div>";
+					nodes += "<div style='margin-top:3px;float:left;height:16px;wight:16px;display: inline;'>&nbsp;<img style='cursor: pointer;' src='"+basePath+"/static/images/delete_notion.png' onclick=\"del('" + model.id + "')\"/></div>";
+					nodes += "&nbsp;&nbsp;&nbsp;</span>";
+					$("#ideaList").append(nodes);
+					$idea.val("");
+				}
+			});
+			return true;
+		}
+
+		function onInp() {
+			var $idea = $("#idea");
+			if($idea.val() == "请填写常用意见...") {
+				$idea.val("");
+			}
+		}
+
+		function del(sid) {
+			$.post(basePath + "/commonNotion/delete?id=" + sid, function(data) {
+				if($.trim(data.result) == "success") {
+					$("#" + sid).remove();
+					var spanL = $("#ideaList span").length;
+					if(spanL == 0) {
+						$("#ideaList").append("<span id='noList'>暂无常用意见!</span>");
+					}
+				}
+			});
+		};
+		UrlParm = function() { // url参数
+			var data, index;
+			(function init() {
+				data = [];
+				index = {};
+				var u = window.location.search.substr(1);
+				if(u != '') {
+					var parms = decodeURIComponent(u).split('&');
+					for(var i = 0, len = parms.length; i < len; i++) {
+						if(parms[i] != '') {
+							var p = parms[i].split("=");
+							if(p.length == 1 || (p.length == 2 && p[1] == '')) {
+								data.push(['']);
+								index[p[0]] = data.length - 1;
+							} else if(typeof(p[0]) == 'undefined' || p[0] == '') {
+								data[0] = [p[1]];
+							} else if(typeof(index[p[0]]) == 'undefined') { // c=aaa
+								data.push([p[1]]);
+								index[p[0]] = data.length - 1;
+							} else { // c=aaa
+								data[index[p[0]]].push(p[1]);
+							}
+						}
+					}
+				}
+			})();
+			return {
+				// 获得参数,类似request.getParameter()
+				parm: function(o) { // o: 参数名或者参数次序
+					try {
+						return(typeof(o) == 'number' ? data[o][0] : data[index[o]][0]);
+					} catch(e) {}
+				},
+				//获得参数组, 类似request.getParameterValues()
+				parmValues: function(o) { //  o: 参数名或者参数次序
+					try {
+						return(typeof(o) == 'number' ? data[o] : data[index[o]]);
+					} catch(e) {}
+				},
+				//是否含有parmName参数
+				hasParm: function(parmName) {
+					return typeof(parmName) == 'string' ? typeof(index[parmName]) != 'undefined' : false;
+				},
+				// 获得参数Map ,类似request.getParameterMap()
+				parmMap: function() {
+					var map = {};
+					try {
+						for(var p in index) {
+							map[p] = data[index[p]];
+						}
+					} catch(e) {}
+					return map;
+				}
+			}
+		}();
+	</script>
+
+	<body style="background-color: #F5F5F5;">
+		<form id="frm" name="frm" method="post" action="">
+			<table style="width: 100%">
+				<tr style="background-color: #3B8FCF;font-size: 13px;color: white;font-weight: bold;height: 30px;">
+					<td width="100%">
+						<div style="display: inline;width: 24px;height: 24px;"><img id="notioneditimg" src="" style="float: left"/></div>
+						<div style="margin-top: 3px;height: 24px;vertical-align: middle;">填写常用意见：</div>
+					</td>
+				</tr>
+				<tr style="padding-top: 20px;">
+					<td><input type="text" class="txt" onfocus="onInp()" name="idea" id="idea" style="width: 100%;"/></td>
+				</tr>
+				<tr style="background-color: #2DCC70;font-size: 12px;color: white;font-weight: bold;height: 30px;">
+					<td id="ideaList" style="vertical-align: middle;"></td>
+				</tr>
+				<tr>
+				</tr>
+			</table>
+		</form>
+	</body>
+
+</html>

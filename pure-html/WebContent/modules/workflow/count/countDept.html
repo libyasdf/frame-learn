@@ -1,0 +1,75 @@
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba no-hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths">
+	<head>
+		<title>郑州市人民政府协同办公系统</title>
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="X-UA-Compatible" content="IE=8,9,10">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script type="text/javascript" src="modules/workflow/count/js/countDept.js"></script>
+		<script type="text/javascript" src="plugins/page/page-1.0.js"></script>
+	</head>
+	<body>
+		<ol class="breadcrumb njbread" id="pathid">
+		  
+		</ol>
+		<div class="table-responsive  table_list">
+			<div class="bs-example bs-example-form " role="form">
+				<div class="row text-center  njso">
+				   	<div class="col-sm-3  njinput01">
+					<div class="form-group">
+						<label for="firm_number" class="col-sm-3 control-label njsotext">部门名称</label>
+						<div class="col-sm-9 njinput02">
+							<input type="text" class="form-control" id="title"
+								placeholder="部门名称">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 njinput01">
+					<div class="form-group">
+						<label for="firstname" class="col-sm-4 control-label njsotext">办理日期</label>
+						<div class="col-sm-8 njinput02">
+							<input type="text" class="form-control" placeholder="开始时间"
+								id="startTime" name="startTime" onclick="laydate(start5)">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 njinput01">
+					<div class="form-group">
+						<label for="firstname" class="col-sm-4 control-label njsotext">至</label>
+						<div class="col-sm-8 njinput02">
+							<input type="text" class="form-control" placeholder="结束时间"
+								id="endTime" name="endTime" onclick="laydate(end5)">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 njinput03">
+					<button id="search" class="btn btn-default njbutton02"
+						type="button" onclick="selectAll();">查询</button>
+					
+				</div>
+				</div>
+			</div>
+			<div class="table-responsive">
+		    <table class='table table-striped table-hover njtable01 '>
+		    	<thead>
+					<tr>
+						<th>序号</th>
+						<th>部门名称</th>
+					    <th>文件总数</th>
+						<th>未办结</th>
+						<th>已办结</th>
+					</tr>
+				</thead>
+				<tbody id="content">
+					
+				</tbody>
+		    </table>
+		</div>
+			<div class="text-center">	
+		   <div id="pageDiv" class="invest-content" style="width: 100%;">
+  		   </div>
+		</div>
+		
+	</body>
+
+</html>

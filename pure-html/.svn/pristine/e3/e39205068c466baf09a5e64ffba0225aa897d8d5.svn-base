@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\会议、考勤_20190114"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+			
+		
+	     <!--模块页面和js-->
+	     <!-- 19.1.14 添加流程节点提示信息和配置保存发送按钮显示隐藏功能（外出和补签的流程没有打包）-->
+		<!-- 加班申请 -->
+ 		<include name="WebContent/modules/zhbg/kqgl/overTime/overTimeDraftList.html"/>
+ 		<include name="WebContent/modules/zhbg/kqgl/overTime/overTimeEditForm.html"/>
+ 		<include name="WebContent/modules/zhbg/kqgl/overTime/js/overTimeEdit.js"/>
+
+		<!-- 会议室申请 -->
+ 		<include name="WebContent/modules/zhbg/hygl/meetingApply/js/meetingApplyForm.js"/>
+ 		<include name="WebContent/modules/zhbg/hygl/meetingApply/meetingRoomApplyEditForm.html"/>
+		 
+		<!-- 请假申请 -->
+	 	<include name="WebContent/modules/zhbg/kqgl/qj/js/qjEditForm.js"/>
+	    <include name="WebContent/modules/zhbg/kqgl/qj/qjEditForm.html"/>
+		<!-- 出差申请 -->
+	    <include name="WebContent/modules/zhbg/kqgl/businessTrip/js/businessTripEdit.js"/>
+	    <include name="WebContent/modules/zhbg/kqgl/businessTrip/businessTripEditForm.html"/>
+		<!-- 迟到早退申请 -->
+	    <include name="WebContent/modules/zhbg/kqgl/comeLateLeaveEarly/js/comeLateLeaveEarlyForm.js"/>
+	    <include name="WebContent/modules/zhbg/kqgl/comeLateLeaveEarly/comeLateLeaveEarlyForm.html"/>
+		
+	
+	     <!--模块Class文件-->
+	
+	     <!--公共页面和js-->
+	     
+	
+	     <!--公共Class文件-->
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

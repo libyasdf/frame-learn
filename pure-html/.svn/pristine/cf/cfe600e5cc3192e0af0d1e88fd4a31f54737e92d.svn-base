@@ -1,0 +1,75 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 4,
+    "rows": [
+      {
+        "id": 1,
+        "orderNum": "E10001",
+        "creJuName": "办公厅",
+        "creChuShiName": "综合处",
+        "creDeptName": "科室1",
+        "orderPersonNum":"4",
+        "jine":"45",
+        "shangpin":"鱼",
+        "className":"炒菜",
+        "shangpins":"地三鲜、西湖炒鸡蛋",
+         "shangpins1":"板面",
+        "shuliang1":"20份",
+        "status":"0",
+        "userName":"张三",
+        "cz": "update,delete,fabu"
+      },
+      {
+        "id": 1,
+        "orderNum": "E10001",
+        "creJuName": "资金局",
+        "creChuShiName": "科室1",
+        "creDeptName": "资金交易科室1",
+        "orderPersonNum":"4",
+        "jine":"53",
+          "shangpin":"鱼",
+          "className":"面食",
+           "shangpins1":"馒头",
+          "shangpins":"鱼，馒头",
+        "shuliang1":"50个",
+        "status":"0",
+         "userName":"张三",
+        "cz": "queren"
+      },
+      {
+        "id": 1,
+        "orderNum": "E10003",
+        "creJuName": "测试5部",
+        "creChuShiName": "6处",
+        "creDeptName": "科室2",
+        "orderPersonNum":"35",
+        "jine":"8",
+        "status":"1",
+         "userName":"杜蒙蒙",
+         "shangpin":"馒头",
+         "className":"炒菜",
+         "shangpins":"包子、小米粥、鸡蛋",
+          "shangpins1":"饺子",
+          "shuliang1":"15份",
+        "cz": "queren"
+      },
+      {
+        "id": 1,
+        "orderNum": "E10004",
+        "creJuName": "评审局",
+        "creChuShiName": "评审综合处",
+        "creDeptName": "科室3",
+        "orderPersonNum":"28",
+        "jine":"15",
+        "status":"2",
+         "userName":"李四",
+         "shangpin":"肘子",
+         "className":"面食",
+         "shangpins1":"包子",
+        "shuliang1":"23提",
+        "cz": "queren"
+      }
+    ]
+  }
+}

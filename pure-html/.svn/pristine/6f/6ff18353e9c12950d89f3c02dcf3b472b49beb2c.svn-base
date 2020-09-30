@@ -1,0 +1,1 @@
+alter table video_content add STATUS VARCHAR2(2)

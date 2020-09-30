@@ -1,0 +1,35 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 3,
+    "rows": [
+      {
+       "id": 1,
+        "meetingService": "摄影",
+        "userName": "李世名",
+        "userDept": "信息部",
+        "phone": "18395636999",
+        "isOrNot": "1",
+        "remarks": "照相机坏了"
+      },
+      {
+        "id": 1,
+        "meetingService": "茶水",
+        "userName": "张三",
+        "userDept": "办公室",
+        "phone": "18395636998",
+        "isOrNot": "0",
+        "remarks": ""
+      },
+      {
+        "id": 1,
+        "meetingService": "卫生",
+        "userName": "张三",
+        "userDept": "办公室",
+        "phone": "18395636998",
+        "isOrNot": "0",
+        "remarks": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\考勤管理_19.3.27"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		 <!--考勤查询下各查询的导出功能失效的问题-->
+		<!--加班查询-->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/overTimeQuery.html"/>
+		<!--出差查询-->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/businessTripQuery.html"/>
+		<!--迟到早退查询-->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/comeLateLeaveEarlyQuery.html"/>
+		<!--请假查询-->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/qjQuery.html"/>
+		<!--行政出差查询-->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/xzBusinessTripQuery.html"/>
+		<!--业务出差查询-->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/ywBusinessTripQuery.html"/>
+	
+		<!--会议管理打包-->
+		<!--会务服务人员选择时，获取人员角色失败问题-->
+		<include name="WebContent/modules/zhbg/hygl/basicSet/meetingService/js/meetingServiceEdit.js"/>
+		<include name="WebContent/modules/zhbg/hygl/basicSet/meetingService/meetingServiceEditForm.html"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/basicSet/meetingService/service/MeetingServiceServiceImp.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/basicSet/meetingService/entity/MeetingServiceInfo.class"/>
+		
+		
+		
+		
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

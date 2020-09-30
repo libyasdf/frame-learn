@@ -1,0 +1,347 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+    .table{
+        table-layout: fixed;
+    }
+    .table_list_box{
+        table-layout:fixed !important;
+    }
+
+    table td{
+        cursor: default !important;
+    }
+</style>
+<!--固定表头所需css-->
+<link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 借阅状态：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="borrowStatus" name="borrowStatus">
+                                    <option value="">-请选择-</option>
+                                    <option value="01">未归还</option>
+                                    <option value="02">逾期未还</option>
+                                    <option value="03">按时还</option>
+                                    <option value="04">逾期还</option>
+                                </select>
+                            </div>
+                            <label class="col-md-1 control-label"> 借阅人：</label>
+                            <div class="col-md-3">
+                                <input class="form-control"  type="text" name="borrowUserName" id="borrowUserName"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 借阅单位：</label>
+                            <div class="col-md-3">
+                                <input class="form-control"  type="text" name="borrowUnitName" id="borrowUnitName"/>
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <label class="col-md-1 control-label"> 题名：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="mainTitle" id="mainTitle"/>
+                                </div>
+                                <label class="col-md-1 control-label"> 档号：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="archiveNo" id="archiveNo"/>
+                                </div>
+                                <label class="col-md-1 control-label"> 门类：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="categoryName" id="categoryName"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-1 control-label"> 立卷单位：</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="ljdwMark" id="ljdwMark">
+                                    </select>
+                                </div>
+                                <label class="col-md-1 control-label"> 经办人：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="handleUserName" id="handleUserName"/>
+                                </div>
+                                <label class="col-md-1 control-label"> 归还经办人：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="returnHandleUserName" id="returnHandleUserName"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-1 control-label"> 借阅日期：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="borrowDate" id="borrowDate"/>
+                                </div>
+                                <label class="col-md-1 control-label"> 应还日期：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="shouldReturnDate" id="shouldReturnDate"/>
+                                </div>
+                                <label class="col-md-1 control-label"> 归还日期：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  type="text" name="returnDate" id="returnDate"/>
+                                </div>
+                            </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#borrowDate' //指定元素
+        , range: true
+    });
+    laydate.render({
+        elem: '#shouldReturnDate' //指定元素
+        , range: true
+    });
+    laydate.render({
+        elem: '#returnDate' //指定元素
+        , range: true
+    });
+
+    Dictionary.init({
+        position: "ljdwMark",
+        mark: "dagl_ljdw",
+        type: "1",
+        name: "ljdwMark",
+        domType: "select"
+    });
+    var date = new Date();
+    function DateToStringFomatter(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+    };
+
+    var today = DateToStringFomatter(date);
+
+    Dictionary.init({position:"usePurpose",mark:"dagl_usePurpose",type:"1",name:"usePurpose",domType:"select"});
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '50px'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'mainTitle'
+        , title: '题名'
+        , width: '200px'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>15){
+                    val = value.substring(0,12)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'archiveNo'
+        , title: '档号'
+        , width: '200px'
+        , align:"center"
+    }, {
+        field: 'categoryName'
+        , title: '门类'
+        , width: '150px'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>7){
+                    val = value.substring(0,6)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'basefolderUnit'
+        , title: '立卷单位'
+        , width: '100px'
+        , align:"center"
+    }, {
+        field: 'borrowStatus'
+        , title: '借阅状态'
+        , width: '100px'
+        , align:"center"
+        ,formatter:function(value,row,index){
+            if(null == row.returnDate && today <= row.shouldReturnDate){
+                return "未归还";
+            }else if(null == row.returnDate && today > row.shouldReturnDate){
+                return "逾期未还";
+            }else if(row.returnDate <= row.shouldReturnDate){
+                return "按时还";
+            }else if(row.returnDate > row.shouldReturnDate){
+                return "逾期还";
+            }
+        }
+    }, {
+        field: 'securityClass'
+        , title: '密级'
+        , width: '100px'
+        , align:"center"
+    }, {
+        field: 'pageNum'
+        , title: '页数'
+        , width: '50px'
+        , align:"center"
+    }, {
+        field: 'borrowUserName'
+        , title: '借阅人'
+        , width: '150px'
+        , align:"center"
+    }, {
+        field: 'approveUserName'
+        , title: '审批人'
+        , width: '150px'
+        , align:"center"
+    }, {
+        field: 'handleUserName'
+        , title: '经办人'
+        , width: '150px'
+        , align:"center"
+    }, {
+        field: 'returnHandleUserName'
+        , title: '归还经办人'
+        , width: '150px'
+        , align:"center"
+    },{
+        field: 'borrowDate'
+        , title: '借阅日期'
+        , width: '150px'
+        , align:"center"
+    },{
+        field: 'shouldReturnDate'
+        , title: '应还日期'
+        , width: '150px'
+        , align:"center"
+    },{
+        field: 'returnDate'
+        , title: '归还日期'
+        , width: '150px'
+        , align:"center"
+    }, {
+        field: 'borrowUnitName'
+        , title: '借阅单位'
+        , width: '150px'
+        , align:"center"
+    }, {
+        field: 'phone'
+        , title: '借阅人电话'
+        , width: '150px'
+        , align:"center"
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/dagl/daly/borrow/recordList",
+            columns:right_table_col,
+            minimumCountColumns: 2, //最少允许的列数
+            fixedColumns: true,//是否固定列
+            fixedNumber: "8", //固定列数
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.borrowDate = $("#borrowDate").val();
+                params.borrowStatus = $("#borrowStatus").val();
+                params.borrowUserName = $('#borrowUserName').val();
+                params.borrowUnitName = $('#borrowUnitName').val();
+                params.mainTitle = $('#mainTitle').val();
+                params.archiveNo = $('#archiveNo').val();
+                params.categoryName = $('#categoryName').val();
+                params.ljdwMark = $('#ljdwMark').val();
+                params.handleUserName = $('#handleUserName').val();
+                params.returnHandleUserName = $('#returnHandleUserName').val();
+                params.shouldReturnDate = $('#shouldReturnDate').val();
+                params.returnDate = $('#returnDate').val();
+                return params;
+            },
+            readOnlyFn : function() {
+
+                //复选框添加小手样式
+                $('tr.readOnly').find('td').css("cursor","default");
+            }
+        });
+    });
+
+    function keyLogin(){
+        if (event.keyCode==13)  //回车键的键值为13
+            TableInit.refTable('right_table');
+    }
+
+    // 激活操作按钮
+    $('.dropdown-toggle').dropdown();
+</script>

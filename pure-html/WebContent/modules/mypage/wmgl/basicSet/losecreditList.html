@@ -1,0 +1,250 @@
+<style type="text/css">
+	.panel-controls{
+		position: absolute;
+		right: 40px;
+		top: 10px;
+	}
+	.panel-controls > i.showSelect{
+		font-size: 16px;
+		color: #acb1b8;
+		cursor: pointer;
+	}
+	label{
+		font-weight: normal;
+	}
+	
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" >
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls " >
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+							 <label class="col-md-1 control-label"> 姓名：</label>
+							<div class="col-md-3">
+								 <input class="form-control" type="text" id="loseUserName" name="loseUserName" />
+							</div> 
+							<label class="col-md-1 control-label"> 锁定日期：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" name="timeRange" />
+							</div>
+							<label class="col-md-1 control-label"> 锁定状态：</label>
+							<div class="col-md-3">
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio1" name="state" value="" checked="checked"> 全部
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio2" name="state" value="0"> 锁定
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio3" name="state" value="1"> 解除
+								</label>
+							</div>
+						</div>
+						<!-- <div class="form-group">
+							<label class="col-md-2 control-label"> 锁定日期：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" name="timeRange" />
+							</div>
+							<<label class="col-md-4 control-label"> 解除方式：</label>
+							<div class="col-md-3">
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio1" name="relieveType" value="" checked="checked"> 全部
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio2" name="relieveType" value="1"> 手动
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio3" name="relieveType" value="0"> 自动
+								</label>
+							</div>
+						</div> -->
+						<!--查询重置等按钮-->
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center">
+								<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+								</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-primary"
+										onclick="clearAll()"> 重&nbsp;&nbsp;置
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+		<div class="col-md-12">
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript">
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'loseUserDeptName'
+        , title: '单位'
+        , width: '18%'
+        , align:"center"
+    },{
+        field: 'cardNum'
+        , title: '门禁卡号'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'loseUserName'
+        , title: '姓名'
+        , width: '12%'
+        , align:"center"
+     },{
+         field: 'loseTime'
+         , title: '锁定时间'
+         , width: '12%'
+         , align:"center"
+     },{
+         field: 'relieveTime'
+        , title: '解锁时间'
+        , width: '12%'
+        , align:"center"
+     },{
+         field: 'isManualRelieve'
+        , title: '解除方式'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+               	if(row.relieveType=='1'){
+               		return '手动'
+               	}else if(row.relieveType=='0'&&row.relieveTime<=nowdate){
+               		return '自动'
+               	}else if(row.relieveType=='0'&&row.relieveTime>nowdate){
+               		return '-'
+               	}
+        }
+     },{
+         field: 'relieveType'
+        , title: '锁定状态'
+        , width: '16%'
+        , align:"center"
+       	, formatter: function (value, row, index) {
+            	if(value=='0'&&row.relieveTime>nowdate){
+            		return '锁定'
+            	}else{
+            		return '解除'
+            	}
+          }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '16%'
+        , align: "center"
+        , formatter: function (value, row, index) {  
+            var html = "";
+           	if(row.relieveType=='0'&&row.relieveTime>nowdate){
+           	 	html += "<i style='cursor:pointer;' class='glyphicon glyphicon-ok-circle' title='解除锁定' onclick=\'list.editFun(\""+ row.id + "\")\'></i>&nbsp;&nbsp;";
+           	}
+            return html;
+        }
+    }];
+    //当前时间
+	var nowdate;
+	Date.prototype.Format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1, //月份 
+            "d+": this.getDate(), //日 
+            "H+": this.getHours(), //小时 
+            "m+": this.getMinutes(), //分 
+            "s+": this.getSeconds(), //秒 
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+            "S": this.getMilliseconds() //毫秒 
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+    $(document).ready(function (e) {
+    	nowdate = new Date().Format("yyyy-MM-dd");
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mypage/wmgl/losecredit/list",
+            columns:right_table_col,
+            queryParams:function(params){
+            	params.relieveType = $("input[name='relieveType']:checked").val();
+            	params.loseUserName = $("#loseUserName").val();
+            	params.timeRange = $("#timeRange").val();
+            	params.state = $("input[name='state']:checked").val();
+            	params.resId = $('#left_ul').find('a.active').attr("id");
+                return params;
+            },
+            rowStyle: function (row, index) {	
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            /* readOnlyFn:function(){
+            	$('tr.readOnly').find('td:not(:last)').attr('title','点击查看详情');
+            	$('tr.readOnly').find('td:last').css('cursor','default');
+            	$('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e) {
+            		var id = $(this).parent().find("span[data-id]").attr("data-id");
+                	var resId = $('#left_ul').find('a.active').attr("id");
+    				MyLayer.layerOpenUrl({url: '/modules/mypage/wmgl/basicSet/losecredReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读详情",width:"65%",height:"65%"});
+            	})
+            } */
+        });
+    });
+	
+    //清空查询数据
+    function clearAll(){
+    	$("#timeRange").val(""); 
+		$("#loseUserName").val(""); 
+		$("#inlineRadio1").prop("checked",true);
+    }
+	
+    var list = {
+			editFun : function(id) {
+				$.ajax({
+		    		url:"/mypage/wmgl/losecredit/updateType",
+		    		data:{"id":id,"resId":$('#left_ul').find('a.active').attr("id")},
+		    		success:function(json){
+		    			if(json.flag=='1'){
+		    				layer.msg("解锁成功！", {icon: 1});
+		    				parent.TableInit.refTable('right_table');
+		    			}
+		    		},
+		    		error:function(){
+		    			layer.msg("解锁失败！", {icon: 2});
+		    		}
+		    	});
+			}
+		}
+</script>

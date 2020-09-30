@@ -1,0 +1,538 @@
+<style type="text/css">
+    body {
+        background: #eeeeee;
+    }
+    #left {
+        background: #ffffff;
+    }
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+    content { width:1000px;
+height:500px;
+border:#000000 1px solid;
+}
+.div_td {
+    width:48%;
+    padding:20px 6%;
+    margin-left: 1.5%;
+    margin-bottom: 20px;
+    height:450px;
+    float:left;
+    color:#FF0000;
+    text-align:center;
+    background: #ffffff;
+}
+</style>
+<div class="container-fluid">
+    <div class="row">
+     <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group" style="text-align: center;">
+                          <label class="col-md-2 control-label form-view"> 查询类型：</label>
+                         	<div class="col-md-5 control-label" style="text-align:left;">
+                           		<input type="radio" name="dateType" value="0" id="accordingYear"><span style="margin-right:30px;">按年查询</span></input>
+                           		<input type="radio" name="dateType"   value="1" checked id="accordingMonth" ><span style="margin-right:30px;">按月查询</span></input>
+                           		<input type="radio" name="dateType" value="2"   id="accordingWeek"><span style="margin-right:30px;">按周查询</span></input>
+                            </div>
+                            <div class="col-md-4 " >
+                           		<div class="input-group" id="year" >
+	                                <span class="input-group-addon input-group-addon1" onclick="">
+	                                	<span id="leftImage" class="btn-both leftbtn"></span> 
+	                                 </span>
+	                                <input class="form-control" type="text" class="a"  style=" display:none" id="yearDate" />
+	                                 <input class="form-control" type="text" id="monthdate"/>
+	                                  <input class="form-control" type="text" class="a"  style=" display:none"  id="weekDate" />
+	                                 <div id="dateLogWeek" style="margin-top:25px"></div>
+	                                <span class="input-group-addon" onclick="">
+	                                	<span id="rightImage" class="btn-both rightbtn"></span>
+	                                </span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                     <button type="button" class="btn btn-primary"
+                                            onclick="getMeetCount()"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <button type="button" class="btn btn-primary"
+                                            onclick="clearAll()"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+      
+        
+        <div class="content">
+        <div id="containernone" style="display:none;text-align:center">
+        <span id ="noData" >暂无数据！ </span>
+        </div>
+            <div id="container0" class="div_td container0" ></div>
+            <div id="container1" class="div_td container1" ></div>
+            <div id="container2" class="div_td container2" style="padding-left:4%" ></div>
+            <div id="container3" class="div_td container3" style="padding-left:4%;" ></div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+//获取当前日期所在周的最后一天和上周的周一
+var weekDate;
+$.post("/zhbg/hygl/statistics/getWeekDate", {date: curDate },function(data){
+	weekDate = data.startDate + " - " + data.endDate;
+	$("#weekDate").val(weekDate);
+	
+} );
+$("#accordingYear").click( function () {
+	$("#yearDate").val(prevYear+' - '+curYear);	
+	$("#monthdate").hide();
+	 $("#yearDate").show(); 
+	 $("#weekDate").hide(); 
+});
+$("#accordingMonth").click( function () {
+	$("#monthdate").val(curYear+'-01 - '+curMonth);	
+	$("#yearDate").hide();
+	 $("#monthdate").show(); 
+	 $("#weekDate").hide(); 
+	 
+});
+$("#accordingWeek").click( function () { 
+	$("#monthdate").hide();
+	 $("#weekDate").show(); 
+	 $("#yearDate").hide(); 
+	 $("#weekDate").val(weekDate);
+	
+});
+
+laydate.render({
+	  elem: '#yearDate'
+	  ,type: 'year'
+	  ,range: true
+	  ,btns: ['confirm']
+});
+laydate.render({
+	  elem: '#weekDate'
+	  ,type: 'date'
+	  ,range: true
+	  ,btns: ['confirm']
+});
+function clearAll(){
+	 $("input[type='radio']").removeAttr("checked");
+	$("#accordingMonth").prop("checked", true);
+	$("#monthdate").val(curYear+'-01 - '+curMonth);	
+	$("#monthdate").show();
+	$("#weekDate").hide();
+	$("#yearDate").hide();
+	$("#weekDate").val(weekDate);
+	$("#yearDate").val(prevYear+' - '+curYear);	
+}
+	
+var curDate = getCurrentDate("yyyy-MM-dd")
+var curYear = curDate.substr(0,4)
+var curMonth = curDate.substr(0,7)
+var prevYear = parseInt(curYear)-1;//去年时间
+    laydate.render({
+		elem: '#monthdate'
+		,btns:	['confirm']
+		,type:'month'
+		,range: true
+	});    
+	$(function () {
+		      $('[data-toggle="tooltip"]').tooltip()
+		      $('[data-toggle="popover"]').popover({
+		        trigger:"hover"
+		      })
+  })
+    $(document).ready(function (e) {
+        //初始化表格
+    	 TableInit.init({
+             domId:"right_table",
+             url:"/mock/zhbg/hygl/statistics/statisticsList.json",
+             columns:right_table_col,
+             queryParams:function(params){
+                 //这里将各个查询项添加到要传递的参数中
+//                 可以做一些校验
+                 params.directorName = $('#queryDiv input[name=\'meetingRoom\']').val();
+                 params.mailName = $('#queryDiv input[name=\'rangeTime\']').val();
+                 params.status = $('#queryDiv input[name=\'meetingName\']').val();
+                 params.status = $('#queryDiv input[name=\'applyDept\']').val();
+                 return params;
+             },
+             readOnlyFn:function(){
+             }
+         });
+
+    });
+    var arr = new Array();
+    var arr1 = new Array();
+    var arr2 = new Array();
+    var arr3 = new Array();
+    var arr4 = new Array();
+ $(function () {
+  /* if (!$.fn.highcharts) {
+ 		var script = document.createElement("script"); 
+ 		script.type = "text/javascript"; 
+ 		script.src = "/modules/zhbg/hygl/statistics/js/highcharts.js"; 
+ 		document.body.appendChild(script); 
+ 	}  */
+	 getMeetCount();
+    });
+    function getMeetCount(){
+    	arr.splice(0,arr.length);
+    	arr1.splice(0,arr1.length);
+    	arr2.splice(0,arr2.length);
+    	arr3.splice(0,arr3.length);
+    	arr4.splice(0,arr4.length);
+    	$("#container0").empty();
+    	$("#container1").empty();
+    	$("#container2").empty();
+    	$("#container3").empty();
+    	if(!$("#monthdate").val()){
+    		$("#monthdate").val(curYear+'-01 - '+curMonth);	
+    	}
+    	var datas = {"flag": $('input[name="dateType"]:checked').val(),"yearDate":$("#yearDate").val(),"monthdate":$("#monthdate").val(),"weekDate":$("#weekDate").val(),"subflag":'5'};
+    	//获取统计图的数据
+    	httpRequest("get","/zhbg/hygl/statistics/getCount",datas,function (data){
+    		//alert(data.data.meettype.length);
+    		if(data.data.meettype.length<=0){
+    			$('#containernone').css("display", "block");
+    			$('#container0').css("display", "none");
+    			$('#container1').css("display", "none");
+    			$('#container2').css("display", "none");
+    			$('#container3').css("display", "none");
+    			
+    		}else{
+    			$('#containernone').css("display", "none");
+    			$('#container0').css("display", "block");
+    			$('#container1').css("display", "block");
+    			$('#container2').css("display", "block");
+    			$('#container3').css("display", "block");
+    			data.data.meetmonth.sort(function(a,b){
+    				return a.MEETTYPE.localeCompare(b.MEETTYPE);
+				    
+				});
+    			for(var i=0;i<data.data.meetmonth.length;i++){
+    				
+                    arr.push(data.data.meetmonth[i].MEETTYPE+"");
+                    arr4.push(Number(data.data.meetmonth[i].MEETCOUNT));
+        	 	}
+        	 	for(var i=0;i<data.data.meettype.length;i++){
+        	 		if(data.data.meettype[i].MEETTYPE=='0'){
+        	 			arr1.push(["一类会议",Number(data.data.meettype[i].MEETCOUNT)]);
+        	 		}else if(data.data.meettype[i].MEETTYPE=='1'){
+        	 			arr1.push(["二类会议",Number(data.data.meettype[i].MEETCOUNT)]);
+        	 		}else{
+        	 			arr1.push(["三类会议",Number(data.data.meettype[i].MEETCOUNT)]);
+        	 		}
+        	 	}
+        	 	for(var i=0;i<data.data.meetdept.length;i++){
+                    arr2.push([data.data.meetdept[i].MEETTYPE+"",Number(data.data.meetdept[i].MEETCOUNT)]);
+        	 	}
+        	 	for(var i=0;i<data.data.meetroom.length;i++){
+                    arr3.push([data.data.meetroom[i].MEETTYPE+"",Number(data.data.meetroom[i].MEETCOUNT)]);
+        	 	}
+        	 	console.info("..................................")
+        	 	console.info(arr3)
+        	 	getByMonth();
+            	getByType1();
+            	getByDept();
+            	getByRoom();
+    		}
+    	 	
+    	});
+    	 
+    }
+    //折线图
+function getByMonth(){
+    $('#container0').highcharts({
+        chart: {
+            type: 'line',
+            width:500,
+            height:400,
+
+        },
+        legend:{
+            align:'center',
+            verticalAlign:'bottom',
+            // layout:'vertical',
+            itemMarginTop:8,
+            itemMarginBottom:8
+        },
+        title: {
+            text: '按会议的申请次数统计'
+        },
+        xAxis: {
+            categories: arr
+        },
+        yAxis: {
+            allowDecimals:false,
+            title: {
+                text: '数量/次'
+            }
+        },
+        credits:{
+			enabled:false // 禁用版权信息
+		},
+		exporting: {//去掉打印功能
+            enabled:false
+		},
+		tooltip: {
+			headerFormat: '{point.x}<br/>',
+			pointFormat: '<b>次数:{point.y}</b>'
+		},
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true          // 开启数据标签
+                },
+                enableMouseTracking: false // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+            },
+            series: {
+    	        cursor: 'pointer',
+    	        enableMouseTracking : true,
+    	        events: {
+    	            legendItemClick: function(e) {
+    	                return false; // 直接 return false 即可禁用图例点击事件
+    	            }
+    	        }
+    	    }
+        },
+        series: [{
+            name: '次数',
+            data: arr4
+        }]
+    });
+}
+    function getByType1(){
+        $('#container1').highcharts({
+            chart: {
+                width:500,
+                height:400,
+            },
+            legend:{
+                align:'center',
+                verticalAlign:'bottom',
+                itemMarginTop:8,
+            },
+            title: {
+                text: '按会议类型统计'
+            },
+            tooltip: {
+            	 style : {
+     	            'fontSize' : '15px'
+     	        },
+                pointFormat: '{series.name}:{point.y}  </br>'
+            },
+            credits:{
+    			enabled:false // 禁用版权信息
+    		},
+    		exporting: {//去掉打印功能
+                enabled:false
+    		},
+            plotOptions: {
+                pie: {
+                	size:'90%',
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        style : {
+            	            'fontSize' : '15px'
+            	        }
+                        
+                    },
+                    showInLegend: true,
+         	   		enableMouseTracking: true,
+         	   	point: {
+    				events: {
+    					legendItemClick: function(e) {
+    						return false; // 直接 return false 即可禁用图例点击事件
+    					}
+    				}
+    			}
+                },
+            series: {
+    	        cursor: 'pointer',
+    	        enableMouseTracking : true,
+    	    }
+            },
+            series: [{
+                type: 'pie',
+                name: '次数',
+                data: arr1
+            }]
+        });
+    }
+
+  
+  
+  //平面饼图
+    
+    function getByDept() {
+	  
+  	  console.info("....................")
+  	  var jsonstr = JSON.stringify(arr2);
+  		  console.info(jsonstr)
+    	//$('#container2').highcharts({
+    		Highcharts.chart('container2',{
+            chart: {
+                width:550,
+                height:400,
+            },
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00','#24CBE5',
+                     '#64E572', '#FF9655', '#FFF263', '#6AF9C4','#FFCCFF',
+                     '#00FFFF','#00FF66','#9900FF','#FFFF00','#FFCC99',
+                     '#CC33FF','#CCFF33','#CCFFFF','#FF00FF','#FFCCFF'],
+            legend:{
+                align:'center',
+                verticalAlign:'bottom',
+                // layout:'vertical',
+                itemMarginTop:8,
+            },
+            title: {
+                text: '按主办单位统计'
+            },
+            tooltip: {
+            	 style : {
+     	            'fontSize' : '15px'
+     	        },
+                pointFormat: '{series.name}:{point.y}  </br>'
+            },
+            credits:{
+    			enabled:false // 禁用版权信息
+    		},
+    		exporting: {//去掉打印功能
+                enabled:false
+    		},
+            plotOptions: {
+                pie: {
+                	size:'90%',
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        style : {
+            	            'fontSize' : '15px'
+            	        }
+                        
+                    },
+                    showInLegend: true,
+         	   		enableMouseTracking: true,
+	         	   	point: {
+	    				events: {
+	    					legendItemClick: function(e) {
+	    						return false; // 直接 return false 即可禁用图例点击事件
+	    					}
+	    				}
+	    			}
+                },
+            series: {
+    	        cursor: 'pointer',
+    	        enableMouseTracking : true,
+    	    }
+            },
+            series: [{
+                type: 'pie',
+                name: '次数',
+                data: arr2
+            }]
+       });
+    }
+    function getByRoom () {
+    	
+    	if(arr3.length==0){
+    		
+    		$('#container3').html("<span>暂无数据</span>")
+    		return;
+    	}
+    	$('#container3').highcharts({
+            chart: {
+                width:550,
+                height:400,
+            },
+            legend:{
+                align:'center',
+                verticalAlign:'bottom',
+                itemMarginTop:8,
+            },
+            title: {
+                text: '按会议室统计'
+            },
+            tooltip: {
+            	 style : {
+     	            'fontSize' : '15px'
+     	        },
+                pointFormat: '{series.name}:{point.y}  </br>'
+            },
+            credits:{
+    			enabled:false // 禁用版权信息
+    		},
+    		exporting: {//去掉打印功能
+                enabled:false
+    		},
+            plotOptions: {
+                pie: {
+                	size:'90%',
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        style : {
+            	            'fontSize' : '15px'
+            	        }
+                        
+                    },
+                    showInLegend: true,
+         	   		enableMouseTracking: true,
+         	   	point: {
+    				events: {
+    					legendItemClick: function(e) {
+    						return false; // 直接 return false 即可禁用图例点击事件
+    					}
+    				}
+    			}
+                },
+            series: {
+    	        cursor: 'pointer',
+    	        enableMouseTracking : true,
+    	    }
+            },
+            series: [{
+                type: 'pie',
+                name: '次数',
+                data: arr3
+            }]
+        });
+    }
+</script>

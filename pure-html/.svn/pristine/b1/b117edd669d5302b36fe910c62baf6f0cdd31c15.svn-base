@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>企业中心</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="modal-body selectjs">
+    <div class="col-sm-6 ">
+        <div class="selectjs_block">
+            <div class="title_tab">
+                <ul class="nav nav-tabs">
+                    <li class="active" for="tree-obj">
+                        <a href="#" data-toggle="tab" class="">
+                            按模块选择
+                        </a>
+                    </li>
+                  
+                </ul>
+            </div>
+            <div class="main">
+                <div class="left_search_area">
+                     <div class="input-group">
+                         <input id="keyword" name="deptName" onkeydown="keyDown(event);" type="text" class="form-control"
+                               placeholder="快速搜索" data-deptname="" data-groupname="">
+                        <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span> 
+                    </div> 
+                </div> 
+                <div class="left_tree_area">
+                    <ul id="tree-obj" class="ztree"></ul>
+                    <ul id="group-obj" class="ztree hidden"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="selectjs_block" >
+            <div class="title" >已选择</div>
+            <div class="main" id="selectedDeptUser" >
+                <ul class="right_del_list" id="rightList" style="height: 100%;overflow-y: auto;">
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="modal-footer" style="text-align: center">
+    <button type="button" class="btn btn-primary  btn-blue  bigbtn" id="close">
+        确&nbsp;&nbsp;定
+    </button>
+</div>
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+
+var theRequest = GetRequest();
+var deptUrl = theRequest.url;
+//var type = theRequest.type;
+//var isMulti = theRequest.isMulti;
+//var orgId = theRequest.resourceId;
+
+  var ztree = function(){
+	  var zNodes=[]
+	  var zTreeObj;
+	  var ZTreeChildrenNodes = [];
+	  var hiddenNodes = [];
+	  
+	  var setting = {
+				check: {
+					enable: true
+				},
+				data: {
+					simpleData: {
+						enable: true,
+			            idKey: "id",
+			            pIdKey: "pid",
+						rootPId: 0
+					}
+				},
+				 callback: {
+		             onCheck : function(event, treeId, treeNode){
+		            	 //alert(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
+		            	 //取消
+		            	 if(treeNode && !treeNode.isParent && !treeNode.checked){
+		            		
+		            		 $("#rightList").find("li[data-id='"+treeNode.id +"']").remove()
+		            	 }
+		            	//选中
+		                 if(treeNode && !treeNode.isParent && treeNode.checked){
+		                	 var ppid="";
+		                	 var liStr;
+		                	 if(treeNode.getParentNode()){
+		                		 var ztree = $.fn.zTree.getZTreeObj("tree-obj");;
+		                		 var treeId  = treeNode.treeId.substring(0, 8);
+		                		 var parentNode =ztree.getNodeByParam("treeId", treeId, null);
+		                		 ppid = parentNode.id;
+		                		 //上一级资源
+		                		 var pNode = ztree.getNodeByParam("treeId", treeNode.treeId.substring(0, (treeNode.treeId.length-4)), null);
+		                		 var pName = pNode.name;
+		                		  liStr="<li id='"+ treeNode.id +"' class='list-group-item'  data-ppid='" + ppid + "'  data-id='" + treeNode.id +"' data-name='"+ treeNode.name +"' data-pname='"+ pName +"'>"
+		                		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24'></span>"+treeNode.name+"</li>"
+		                	 }else{
+		                		 liStr="<li id='"+ treeNode.id +"' class='list-group-item'    data-id='" + treeNode.id +"' data-name='"+ treeNode.name +"'>"
+		                		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24'></span>"+treeNode.name+"</li>"
+		                	 }
+		                	
+		                	
+		                	 
+		                	 $("#rightList").append(liStr)
+			                	$("#rightList li img").click(function(){
+			                		var obj = $(this).parents('li');
+                    				var id = $(obj).attr('id')
+                    				$(obj).remove();
+                    				//alert(id)
+                    				 var node = ztree.getZTreeObj().getNodeByParam("id",id,null);
+                    				ztree.getZTreeObj().checkNode(node,false,true)
+			                	})
+		                		 
+		                 }
+		            	
+		                
+		                 if(treeNode && treeNode.isParent && treeNode.checked){
+		                	 //选中父节点
+		                	var childs= treeNode.children;
+		            		for(var i=0;i<childs.length;i++){
+		            			check(childs[i])
+		            			
+		            		}
+		                 }
+		                 if(treeNode && treeNode.isParent && !treeNode.checked){
+		                	 //取消父节点
+		                	 uncheck(treeNode)
+		                	 
+							
+		                 }
+		             }
+		          
+		         }
+			};
+	  
+	  //加载数据
+	  $.post(deptUrl, {},function(data){
+		  console.log(data);
+		  var datas=data.data
+		  if(datas.length>0){
+			  //zNodes.push({id:orgId,name:'常用模块',pid:'0',open : true})
+		  }else{
+			  layer.msg("暂无可选常用模块，请联系管理员进行授权！", {
+  				icon : 0
+  				});
+		  }
+		  for(var i=0;i<datas.length;i++){
+			  var map={};
+			  map.id=datas[i].id;
+			  map.name=datas[i].name;
+			  map.pid=datas[i].pid;
+			  map.treeId=datas[i].treeId;
+			  var children=datas[i].childrenList;
+			 if(children.length>0){
+				  initChild(zNodes,datas[i])
+		 	 }
+		 	 if(children.length>0){
+                 zNodes.push(map)
+             }
+
+		  }
+		 //console.info(zNodes)
+		  zTreeObj=$.fn.zTree.init($("#tree-obj"), setting, zNodes);
+		  echoData(zTreeObj);
+		 
+		  
+	  } );
+	  
+
+      /**
+       * 过滤
+       * @return {[type]} [description]
+       */
+      var filter = function() {
+    	   //显示上次搜索后背隐藏的结点
+           zTreeObj.showNodes(hiddenNodes);
+
+           //查找不符合条件的叶子节点
+           function filterFunc(node) {
+               var _keywords = $("#keyword").val();
+               /* if (node.name.indexOf(_keywords) != -1) {
+                   return false;
+               }else{ */
+               if (node.isParent) {//如果是父节点，父节点下的子节点名称不包含模糊查询的名称隐藏，如果包含则不隐藏
+                   if (node.name.indexOf(_keywords) != -1) {
+                       getChildren(node);
+                       zTreeObj.expandNode(node, true, false);
+                       return false;
+                   } else {
+                       var childrenNodes = zTreeObj.getNodesByParamFuzzy("name", _keywords, node);
+                       if (childrenNodes.length == 0) {
+                           return true;
+                       } else {
+                           zTreeObj.expandNode(node, true, false);
+                           return false;
+                       }
+                   }
+               } else {
+                   if (node.name.indexOf(_keywords) != -1) {
+                       zTreeObj.expandNode(node, true, false);
+                       return false;
+                   } else {
+                       return true;
+                   }
+               }
+               //  }
+           };
+
+           function getChildren(oneNode) {
+               if (oneNode.isParent) {
+                   var ZTreeChildrenNodes1 = oneNode.children;
+                   ZTreeChildrenNodes = ZTreeChildrenNodes.concat(ZTreeChildrenNodes1);
+                   for (var obj in oneNode.children) {
+                       getChildren(oneNode.children[obj]);
+                   }
+               }
+           }
+
+           //获取不符合条件的叶子结点
+           hiddenNodes = zTreeObj.getNodesByFilter(filterFunc);
+			//alert(hiddenNodes.length)
+           //隐藏不符合条件的叶子结点
+           zTreeObj.hideNodes(hiddenNodes);
+           zTreeObj.showNodes(ZTreeChildrenNodes);
+           ZTreeChildrenNodes = [];
+      };
+     
+	  return {
+		  filter:function(){
+			  filter();
+          },
+          getZTreeObj:function(){
+              return zTreeObj;
+          }
+      }
+	  
+  }()
+
+  			/**
+             *
+             * 确定按钮事件
+             */
+            $("#close").bind('click', function () {
+            	var len=$("#rightList li").length
+            	/* if(len<=0){
+            		layer.msg("至少选中一个常用模块", {icon: 0});
+            		return;
+            	}else{ */
+            		var list=[];
+            		$("#rightList li").each(function(i){
+            			var map={};
+            			map.resourceId=$(this).attr("data-id")
+            			map.resourceName=$(this).attr("data-name")
+            			map.ppid=$(this).attr("data-ppid")
+            			//添加上一级资源名称 王磊 20191016
+            			map.pName=$(this).attr("data-pname")
+            			//map.resourceUrl=$(this).attr("data-url")
+            			//map.resourceIco=$(this).attr("data-ico")
+            			list.push(map)
+            		})
+            		/* if(list.length>6){
+            			layer.msg("最多可设置6个常用模块！", {
+            				icon : 0
+            			});
+            			return;
+            		} */
+            		var myJson = JSON.stringify(list);
+            		$.post("/mypage/oftenModel/save", { model: myJson },function(data){
+            			parent.refreshPage()
+            			parent.putBackData(data)
+            		} );
+
+            	
+            	
+            })
+            
+        //初始化节点数据    
+       function  echoData(zTreeObj) {
+	  		var treeNodes = zTreeObj.getNodes();
+	 		 var nodes = zTreeObj.transformToArray(treeNodes);
+		 	$.post("/mypage/oftenModel/getData", {  },function(data){
+		 		console.log(data);
+		 		for(var i=0;i<data.length;i++){
+		 			for(var j=0;j<nodes.length;j++){
+		 				if(data[i].resourceId==nodes[j].id){
+
+		 					var node = zTreeObj.getNodeByTId(nodes[j].tId);
+				            zTreeObj.checkNode(node,true,true);
+				            
+				            var liStr="<li id='"+ nodes[j].id +"' class='list-group-item' data-ppid='" + data[i].ppid + "' data-ico='"+ nodes[j].ico+ "' data-url='" + nodes[j].url + "' data-id='" + nodes[j].id +"' data-name='"+ nodes[j].name +"' data-pname='"+ data[i].pName +"'>"
+	                		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24' ></span>"+nodes[j].name+"</li>"
+	                		 $("#rightList").append(liStr)
+	                		 	 //给右边图标添加删除事件
+			                		 $("#rightList li img").click(function(){
+					                		var obj = $(this).parents('li');
+		                    				var id = $(obj).attr('id')
+		                    				$(obj).remove();
+		                    			      
+		                    				 var node = ztree.getZTreeObj().getNodeByParam("id",id,null);
+		                    				ztree.getZTreeObj().checkNode(node,false,true)
+			                		})
+		 				}
+		 			}
+		 		}
+		 		
+		 	} );
+		 	
+		 	
+		 	
+        }  
+  
+ 
+  
+  //选中某个节点及其子节点
+  function check(node){
+	 if(node.isParent){
+		 //alert("父节点")
+		 var childs= node.children;
+	 		for(var i=0;i<childs.length;i++){
+	 			check(childs[i])
+	 			
+	 		}
+	 }
+	 else  if(node.checked){
+         var ztree = $.fn.zTree.getZTreeObj("tree-obj");
+		 var treeId  = node.treeId.substring(0, 8);
+		 var parentNode =ztree.getNodeByParam("treeId", treeId, null);
+		 //获取叶子节点的上一级节点
+		 var pNode = ztree.getNodeByParam("treeId", node.treeId.substring(0, (node.treeId.length-4)), null);
+		 var pName = pNode.name;
+		 var ppid = parentNode.id;
+		 
+					 var liStr="<li id='"+ node.id +"' class='list-group-item'  data-ppid='" + ppid + "'  data-id='" + node.id +"' data-name='"+ node.name +"' data-pname='"+ pName +"'>"
+		 		 liStr +=" <span class='pull-right'><img src='/static/images/ico_del2.png' width='24' height='24'></span>"+node.name+"</li>"
+		 		 $("#rightList").append(liStr)
+		 		 //给右边图标添加删除事件
+		 		 $("#rightList li img").click(function(){
+		         		var obj = $(this).parents('li');
+		 				var id = $(obj).attr('id')
+		 				$(obj).remove();
+		 			      
+		 				 var node = ztree.getZTreeObj().getNodeByParam("id",id,null);
+		 				ztree.getZTreeObj().checkNode(node,false,true)
+		 		})
+ 		 
+		}
+  }
+  
+  //取消某个节点及其父节点
+  function uncheck(treeNode){
+	  var childs= treeNode.children;
+ 	 for(var i=0;i<childs.length;i++){
+ 		 if(childs[i].isParent){
+ 			uncheck(childs[i])
+ 		 }else{
+ 			$("#rightList").find("li[data-id='"+childs[i].id +"']").remove()
+ 		 }
+ 		 
+ 	  }
+  }
+  
+  //加载树时，初始化里面的孩子节点
+  function initChild(zNodes,data){
+	  var children=data.childrenList
+	  for(var j=0;j<children.length;j++){
+		  var childs=children[j].childrenList
+		  
+		   if(childs.length>0){
+			   var childmap={};
+				  childmap.id=children[j].id;
+				  childmap.name=children[j].name;
+				  childmap.pid=data.id;
+				  //childmap.url=children[j].url;
+				  childmap.ico=children[j].style;
+				  childmap.treeId=children[j].treeId;
+				  zNodes.push(childmap)
+			  initChild(zNodes,children[j]);
+		  }else{
+			  var childmap={};
+			  childmap.id=children[j].id;
+			  childmap.name=children[j].name;
+			  childmap.pid=data.id;
+			  //childmap.url=children[j].url;
+			  childmap.ico=children[j].style;
+			  childmap.treeId=children[j].treeId;
+			  zNodes.push(childmap)
+		  } 
+		 
+	  } 
+  }
+
+  
+  $(function () {
+	  $("#search-bt").unbind('click').bind('click', function () {
+		  ztree.filter();
+		});
+	});
+  
+  
+  //快速查询中直接按回车
+  function keyDown(){
+      var ev = window.event || e;
+      //13是键盘上面固定的回车键
+      if (ev.keyCode == 13) {
+          //你要执行的方法
+          if($(".nav-tabs").find('.active').attr('for') == "tree-obj"){
+        	  ztree.filter();
+          }
+
+      }
+  }
+</script>
+</body>
+</html>

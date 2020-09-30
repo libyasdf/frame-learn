@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         id="WebApp_ID" version="3.0">
+    <display-name>tjxm</display-name>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/spring-context.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>com.alibaba.dubbo.remoting.http.servlet.BootstrapListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- session监听器 -->
+    <listener>
+        <listener-class>com.sinosoft.sinoep.modules.system.login.listener.SessionListener</listener-class>
+    </listener>
+    <!-- session监听器 -->
+
+    <servlet>
+        <servlet-name>RestDispatcher</servlet-name>
+        <servlet-class>com.alibaba.dubbo.remoting.http.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RestDispatcher</servlet-name>
+        <url-pattern>/accredit/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Dispatcher</servlet-name>
+        <servlet-class>com.sinosoft.sinoep.common.servlet.SpringDispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!-- jsp转html服务 -->
+    <servlet>
+        <servlet-name>toHtml</servlet-name>
+        <servlet-class>com.key.common.utils.ToHtmlServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>toHtml</servlet-name>
+        <url-pattern>/toHtml</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReportServer</servlet-name>
+        <servlet-class>com.fr.web.ReportServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReportServer</servlet-name>
+        <url-pattern>/ReportServer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.png</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.gif</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.jpg</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.js</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.css</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>SpringOpenSessionInViewFilter</filter-name>
+        <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SpringOpenSessionInViewFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class>
+            com.sinosoft.sinoep.sso.init.InitFilterData
+        </listener-class>
+    </listener>
+    <!-- 防止脚本注入 start -->
+    <filter>
+        <filter-name>XssSqlFilter</filter-name>
+        <filter-class>com.sinosoft.sinoep.sso.filter.NewXssFilter</filter-class>
+        <init-param>
+            <param-name>fileType</param-name>
+            <param-value>.png,.gif,.jpg,.js,.css,.html,.ico,.aip,.woff,.ttf</param-value>
+        </init-param>
+        <init-param>
+            <param-name>trustedHost</param-name>
+            <param-value></param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>XssSqlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <!-- 防止脚本注入 end -->
+
+    <!-- 统一用户登录拦截器 -->
+    <filter>
+        <filter-name>ssoAuth</filter-name>
+        <filter-class>com.sinosoft.sinoep.sso.filter.SSOAuth</filter-class>
+        <init-param>
+            <!-- 认证系统服务 http://passport.com:8080/passport/ticket -->
+            <param-name>SSOService</param-name>
+            <param-value>http://192.168.90.138/sso/ticket</param-value>
+        </init-param>
+        <init-param>
+            <!-- 认证系统ticket名称 -->
+            <param-name>cookieName</param-name>
+            <param-value>TJXM_ID</param-value>
+        </init-param>
+        <init-param>
+            <!-- 认证系统系统根路径 -->
+            <param-name>SSOPageUrl</param-name>
+            <param-value>http://218.240.159.110:6680/sso/ticket</param-value>
+
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>ssoAuth</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Oauth2拦截器，用于验证接入应用的有效性 -->
+    <!-- <filter>
+      <filter-name>Oauth2Filter</filter-name>
+      <filter-class>com.sinosoft.sinoep.oauth2.filter.Oauth2Filter</filter-class>
+    </filter>
+    <filter-mapping>
+      <filter-name>Oauth2Filter</filter-name>
+      <url-pattern>/oauth2/authorize</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+      <filter-name>Oauth2Filter</filter-name>
+      <url-pattern>/oauth2/access_token</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+      <filter-name>Oauth2Filter</filter-name>
+      <url-pattern>/ticket/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+      <filter-name>Oauth2Filter</filter-name>
+      <url-pattern>/cookie/*</url-pattern>
+    </filter-mapping> -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!-- 跨域 -->
+    <filter>
+        <filter-name>ContentFilter</filter-name>
+        <filter-class>com.sinosoft.sinoep.modules.system.webFilter.WebContentFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ContentFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    <!-- 出错页面定义 start-->
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/modules/errorMsg/500.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/modules/errorMsg/500.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/modules/errorMsg/404.jsp</location>
+    </error-page>
+    <!-- 出错页面定义 end -->
+    <welcome-file-list>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
+</web-app>

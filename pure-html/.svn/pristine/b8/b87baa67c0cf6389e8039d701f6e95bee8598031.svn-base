@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\08.21.Class"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="fengchao"/>
+		</copy>
+	</target>
+	
+	
+	<fileset id="fengchao" dir="../../../../">
+			
+		<!--值班管理 后台class-->
+		<include name="build\classes\com\sinosoft\sinoep\modules\zhbg\zbgl\**"/>
+
+		<!--导出合并单元格封装的实体，存要合并的列,要合并列的开始行 -->
+		<include name="build\classes\com\sinosoft\sinoep\modules\system\component\export\excel\poi\entity\MergeCells.class"/>
+
+		<!--重新复制的导出excel方法，加合并单元 -->
+		<include name="build\classes\com\sinosoft\sinoep\modules\system\component\export\excel\poi\util\ExportDataToExcelOfMergeCells.class"/>
+
+		<!--合并单元格的Util类 -->
+		<include name="build\classes\com\sinosoft\sinoep\modules\system\component\export\excel\poi\util\PoiUtil.class"/>
+
+		<!--导入读取合并单元格的excel的Util类 -->
+		<include name="build\classes\com\sinosoft\sinoep\modules\system\component\importFile\util\ExcelReaderUtil.class"/>
+
+		<!--日期Util类 -->
+		<include name="build\classes\com\sinosoft\sinoep\common\util\DateUtil.class"/>
+
+		<!-- 流程待办的代码-->
+		<include name="build\classes\com\sinosoft\sinoep\waitNoflow\**"/>
+
+		<!--值班管理的前台页面 -->
+		<include name="WebContent/modules/zhbg/zbgl/**"/>
+
+		<!--修改了boostarp初始化表单，表单列表背景不高亮显示，列表可编辑，等-->
+		<include name="WebContent/static/js/common/tablelist.js "/>
+
+		<include name="WebContent/common/js/mergeTable.js"/>
+
+		<!--可编辑列表所用js及css样式 -->
+		<include name="WebContent/static/core/bootstrap-table-fixed-columns/** "/>
+
+		<include name="WebContent/static/core/bootstrap3-editable/** "/>
+
+		<!--excel导出合并单元格的，所需的jar包 -->
+		<include name="WebContent/WEB-INF/lib/poi-3.9.jar "/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/cqqx"/>
+			<copy todir="${export.dir.root}/cqqx" overwrite="true">
+				<fileset refid="fengchao"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,mqx">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

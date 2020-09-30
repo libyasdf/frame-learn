@@ -1,0 +1,56 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": "1",
+        "stmc": "政治理论考核题",
+        "stfl": "单选",
+        "nycd": "简单",
+        "tixing": "单选",
+        "sfjy": "1",
+        "cjr": "张三",
+        "cjsj": "2018-01-01 01:01:01",
+        "cz": "update,delete,viewsj",
+        "gouxuan": "1"
+      },
+      {
+        "id": "2",
+        "stmc": "政治理论考核题",
+        "stfl": "多选",
+        "nycd": "一般",
+        "tixing": "单选",
+        "sfjy": "0",
+        "cjr": "李四",
+        "cjsj": "2018-02-01 01:01:01",
+        "cz": "update,delete,viewsj",
+        "gouxuan": "0"
+      },
+      {
+        "id": "3",
+        "stmc": "保密考核题",
+        "stfl": "单选",
+        "nycd": "困难",
+        "tixing": "单选",
+        "sfjy": "1",
+        "cjr": "王五",
+        "cjsj": "2018-03-01 01:01:01",
+        "cz": "update,delete,viewsj",
+        "gouxuan": "0"
+      },
+      {
+        "id": "4",
+        "stmc": "规章制度考核题",
+        "stfl": "单选",
+        "nycd": "一般",
+        "tixing": "单选",
+        "sfjy": "0",
+        "cjr": "小明",
+        "cjsj": "2018-04-01 01:01:01",
+        "cz": "update,delete,viewsj",
+        "gouxuan": "1"
+      }
+    ]
+  }
+}

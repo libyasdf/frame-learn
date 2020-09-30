@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+	<head>
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-store, must-revalidate" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<title>填写意见</title>
+	</head>
+	<style>
+		.notab {
+			width: 99%;
+			margin-top: 10px;
+			border: 1px dashed #c8c8c8;
+			padding-bottom: 10px;
+			padding-bottom: 10px;
+		}
+
+		.nohead td {
+			border-bottom: 1px dashed #c8c8c8;
+			/* background:url("/ciebanktImage/m-line.png") 0px -725px repeat-x ;*/
+		}
+
+		.nohead td img {
+			float: left;
+			margin-left: 20px;
+			margin-right: 10px;
+			height: 31px;
+			margin-top: 5px;
+		}
+
+		.nitem {
+			font-size: 14px;
+			float: left;
+			width: 90px;
+			text-align: center;
+			margin-left: 5px;
+			line-height: 40px;
+			background: url("/ciebanktImage/work.png") -420px -360px;
+			height: 36px;
+			cursor: pointer;
+			color: #555555;
+		}
+
+		.nitem:hover {
+			color: #000;
+		}
+
+		.ncur {
+			background: url("/ciebanktImage/work.png") -510px -360px;
+			cursor: default;
+			color: #000;
+		}
+
+		.nointab {
+			width: 100%;
+			padding-top: 10px;
+		}
+
+		#_notionRemark {
+			font-size: 14px;
+			float: right;
+			margin-right: 5%;
+		}
+
+		.yjcheck {
+			text-align: left;
+			width: 90%;
+			padding-left: 50px;
+		}
+
+		.dow {
+			display: inline;
+			width: 100px;
+			height: 25px;
+			line-height: 20px;
+			text-align: center;
+			background-color: #E0EBF7;
+			color: #000;
+			text-decoration: none;
+			border: 1px solid #B4CCEC;
+			;
+			cursor: pointer;
+		}
+
+		.savebtn {
+			background-color: #3D9CCC;
+			color: #fff;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+
+		div.fileArea li {
+			display: block;
+			padding: 3px 0px 3px 0px
+		}
+
+		div.fileArea li:last-child {
+			margin-bottom: 10px
+		}
+
+		div.fileArea li.relatefile {
+			cursor: pointer;
+		}
+
+		li.uploadfile input.txt {
+			width: 93.5%;
+			border-bottom: 1px dashed #c8c8c8;
+			padding: 3px 0px 3px 0px
+		}
+		/*附件样式**/
+
+		li.relatefile span.txt {
+			width: 93%;
+			border-bottom: 1px dashed #c8c8c8;
+			display: inline-block;
+			padding: 3px 0px 3px 0px
+		}
+		/*公文样式**/
+
+		li.uploadfile img,
+		fieldset.totalFilefieldset table td li.relatefile img {
+			vertical-align: bottom;
+		}
+
+		img.noPointer {
+			cursor: default;
+		}
+	</style>
+	<script>
+		$(document).ready(function() {
+			$("#ideapenid").attr("src", basePath + "/product/workflow/image/pen.png");
+			getNotionNormal();
+		});
+
+		function getNotionNormal() {
+			var nodes = "<option value=''>--请选择--</option>";
+			$.ajax({
+				type: "POST",
+				url: basePath + "/commonNotion/list",
+				async: false,
+				dataType: "json",
+				success: function(data) {
+					var list = data.list;
+					for(var i in list) {
+						nodes += "<option  value='" + list[i].notion + "' title='" + list[i].notion + "'>" + list[i].notion + "</option>";
+					}
+					$("#CuOpinion").html(nodes);
+				}
+			});
+		}
+
+		function onSelect(value) {
+			if(value != "") {
+				$("#idea").val(value);
+			}
+		}
+
+		function add() {
+			var notion = $("#idea").val();
+			if(("undefined" != notion || null != notion || "null" != notion) && notion.length > 50) {
+				notion = "";
+			}
+			var lengthdialog = $('#singleBjzwform').css("visibility");
+			CIEbank.closeOrOpenOffice(true);
+			var url = basePath + '/common/html/notion/Notion_add.html?notion=' + notion;
+			$.dialog({
+				id: "notionNormal",
+				title: "添加常用意见",
+				width: "400px",
+				height: "150px",
+				content: 'url:' + encodeURI(url),
+				lock: true,
+				zIndex: 2,
+				close: function() {
+
+					getNotionNormal();
+					this.content.close();
+					if(!window.tabdialog || lengthdialog != "hidden") {
+						CIEbank.closeOrOpenOffice(false);
+					}
+				},
+				button: [{
+					name: '保存',
+					callback: function() {
+						var res = this.content.notionAdd();
+						if(res) {
+							getNotionNormal();
+						}
+						return false;
+					},
+					focus: true
+				}, {
+					name: '关闭',
+					callback: function() {
+						getNotionNormal();
+						if(!window.tabdialog || lengthdialog != "hidden") {
+							CIEbank.closeOrOpenOffice(false);
+						}
+						return true;
+					}
+				}]
+			});
+		}
+	</script>
+
+	<body>
+		<input type="hidden" name="lname" id="lname" />
+		<input type="hidden" name="lid" id="lid" />
+		<table border="0" cellpadding="0" cellspacing="0" class="notab" id="notiondiv" align="center">
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" style="text-align:left;width:100%;height: 26px;">
+						<tr class="nohead">
+							<td width="8%;"><img class="noPointer" id="ideapenid" src="" /></td>
+							<td id="leadertr"></td>
+						</tr>
+					</table>
+					<div style="text-align:center;" id="_my_Notion">
+						<form id="notion_frm" method="post" action="">
+							<table border="0" cellpadding="0" cellspacing="0" class="nointab">
+								<tr id="shownotiontr" style="border-bottom:1px dashed #c8c8c8">
+									<td align="center" style="height:80px;">
+										<input type="hidden" id="fieldName" name="fieldName" value="idea"/>
+										<textarea style="width:100%;background:#ffffff;border:1px solid #009ad6;" attrType="textarea" rows="4" id="idea" class="area" placeholder="请填写意见！"></textarea>
+									</td>
+								</tr>
+								<tr id="shownotiontrutil">
+									<td align="center">
+										<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+											<tr style="border-bottom:1px dashed #c8c8c8">
+												<td width="70" style="text-align:center;">
+													<font>常用语：</font>
+												</td>
+												<td align="left">
+													<select name="CuOpinion" onchange="onSelect(this.value)" id="CuOpinion" style="width:300px;border:1px solid #ccc"></select>
+													<input type="button" class="dow" style="width: 100px;height: 25px;" onclick="add()" value="添加常用意见" />													
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</body>
+
+</html>

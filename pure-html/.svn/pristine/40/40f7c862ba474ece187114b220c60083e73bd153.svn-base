@@ -1,0 +1,731 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+    
+
+
+ .fixed_headers td{
+ 	cursor:pointer
+ } 
+ .fixed_headers td input{
+ 	cursor:pointer
+ } 
+  .selectjs .left_tree_area{ height: 430px; overflow-y: auto; padding-left: 20px;}
+  .selectjs{ padding-left: 0px; padding-right: 0px;} 
+ 
+
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<!--   <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"> -->
+    <!-- style.css -->
+    <!-- <link href="/static/css/common/style.css" rel="stylesheet"> -->
+    <link href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<div class="container-fluid">
+    <div class="modal-body selectjs" >
+    <div class="col-sm-4 ">
+        <div class="selectjs_block" >
+            <div class="title_tab">
+                <ul class="nav nav-tabs">
+                    <li class="active" for="tree-obj">
+                        <a href="#" data-toggle="tab" class="">
+                            按部门选择
+                        </a>
+                    </li>
+ 
+                </ul>
+            </div>
+            <div class="main" style="height:480px">
+                <div class="left_search_area">
+                    <div class="input-group">
+                        <input id="keyword" name="deptName" onkeydown="CommonUtil.keyDown(event);" type="text" class="form-control"
+                               placeholder="快速搜索">
+                        <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span>
+                    </div>
+                </div>
+                <div class="left_tree_area">
+                    <ul id="tree-obj" class="ztree"></ul>
+                    <!-- <ul id="group-obj" class="ztree hidden"></ul> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8" style="padding-right: 0px">
+				<div class="container-fluid" >
+				    <div class="row ">
+				        <!--查询-->
+				        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+				                            <label class="col-md-2 control-label"> 组织：</label>
+				                             
+				                            <div class="col-md-4">
+			                            		<select id="org" name="org" class="form-control" >
+			                            		</select>
+				                            </div>
+				                             <label class="col-md-2 control-label"> 部门：</label>
+				                            <div class="col-md-4">
+				                            <input id="hiddenText1990" type="text" style="display:none" /> 
+				                            	<input class="form-control" type="text" id="department" name="department"/>
+				                            </div>
+				            </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+				        <!--查询结束-->
+				        
+				        <div class="col-md-12" >
+				             <div class="list_button_area" >
+				                <button class="list_table_btn2"
+				                        onclick="draft();">
+				                    <span class="glyphicon glyphicon-plus-sign"></span>  新增
+				                </button>
+				                 <!-- <a href="/file/工资模块.xlsx"><b style="font:green">下载模板</b></a>  -->
+				            </div>
+				            <!--bootstrap-table表格-->
+				            	<table id="right_table" class='table  table-hover coma-base-table fixed_headers' ></table>
+				        </div>
+				    </div>
+				</div>	
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<script
+	src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+ <script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+<script src="/common/js/config.js"></script> 
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+
+
+
+<script type="text/javascript">
+
+var theRequest = GetRequest();
+var deptUrl = "/system/component/tree/deptTree";
+var type = "2";
+var isMulti = "1";
+var deptId = "441";
+var level = "10";
+var check = "s";
+var cancle = "s";
+var glDeptId;
+
+    /**
+     * 注意这是zTree3.5版本，API必须在3.0版本以上，以下的版本API不对
+     * @type {Array}
+     */
+    var deptZtree = function(){
+        var hiddenNodes = [];
+        var zTreeObj = null;
+        var zNodes = null;
+        var ZTreeChildrenNodes = [];
+
+        //ztree配置选项
+        var setting = {
+            data: {
+                simpleData: {
+                	enable: true,
+    	            idKey: "id",
+    	            pIdKey: "pid",
+    				rootPId: 0
+                }
+            },
+            callback: {
+            	onClick: function(event, treeId, treeNode){
+            		glDeptId=treeNode.id;
+            		 $('#right_table').bootstrapTable('refresh');
+            	}
+            },
+            check: {
+               // enable: true,
+                autoCheckTrigger: true,
+                chkStyle: "checkbox",
+                chkboxType: {"Y":check,"N":cancle}
+            }
+        };
+
+        // 加载数据
+        var loadData = function(){
+            //获取部门
+            $.ajax({
+                async:false,
+                cache:false,
+                type: "GET",//请求方式为get
+                url:deptUrl,
+                dataType: "json", //返回数据格式为json
+                data:{"deptId":deptId,"level":level},
+                success: function(datas) {
+                    var zNodes=datas;
+                    treeNodes = datas;
+                    if (zNodes.length > 0) {
+                        zNodes[0].open = true;
+                    }
+                    for (var i = 0; i < zNodes.length; i++) {
+                        zNodes[i].id = zNodes[i].uuid;
+                        zNodes[i].pid = zNodes[i].uupid;
+                    }
+                    zTreeObj = $.fn.zTree.init($("#tree-obj"), setting, zNodes);
+                    CommonUtil.echoData(zTreeObj);
+                },
+                error: function(request) {
+                    layer.msg("数据加载失败！请刷新重试！",{icon:2});
+                }
+            });
+        }
+
+        /**
+         * 过滤
+         * @return {[type]} [description]
+         */
+        var filter = function() {
+	        	//显示上次搜索后背隐藏的结点
+	            zTreeObj.showNodes(hiddenNodes);
+	            
+	            //查找不符合条件的叶子节点
+	            function filterFunc(node) {
+	                var _keywords = $("#keyword").val();
+	                /* if (node.name.indexOf(_keywords) != -1) {
+		                return false;
+		            }else{ */
+	            	if(node.isParent){//如果是父节点，父节点下的子节点名称不包含模糊查询的名称隐藏，如果包含则不隐藏
+	            		if (node.name.indexOf(_keywords) != -1) {
+	            			getChildren (node);
+	            			return false;
+	            		}else{
+	            			var childrenNodes = zTreeObj.getNodesByParamFuzzy("name", _keywords, node);
+	                    	if(childrenNodes.length==0){
+	                    		return true;
+	                    	}else{
+	                    		return false;
+	                    	}
+	            		}
+	            	}else{
+	            		if (node.name.indexOf(_keywords) != -1) {
+	    	                return false;
+	    	            }else{
+	    	            	return true;
+	    	            }
+	            	}
+		          //  }
+	            };
+	            
+	            function getChildren (oneNode){
+		  			 if (oneNode.isParent){
+		  				var ZTreeChildrenNodes1 = oneNode.children;
+		       			ZTreeChildrenNodes = ZTreeChildrenNodes.concat(ZTreeChildrenNodes1);
+		  				for(var obj in oneNode.children){
+		  					getChildren(oneNode.children[obj]);
+		  				}
+		  			 }
+	   			}
+	
+	            //获取不符合条件的叶子结点
+	            hiddenNodes = zTreeObj.getNodesByFilter(filterFunc);
+	
+	            //隐藏不符合条件的叶子结点
+	            zTreeObj.hideNodes(hiddenNodes);
+	            zTreeObj.showNodes(ZTreeChildrenNodes);
+	            ZTreeChildrenNodes = [];
+        };
+
+        return {
+            init:function(){
+                loadData();
+            },
+            filter:function(){
+                filter();
+            },
+            getZTreeObj:function(){
+                return zTreeObj;
+            }
+        }
+    }();
+
+var CommonUtil = {
+    /**
+     * 回显数据
+     * @return {[type]} [description]
+     */
+    echoData:function(zTreeObj){
+        var ids = $("#idContext").val();
+        var treeNodes = zTreeObj.getNodes();
+        var nodes = zTreeObj.transformToArray(treeNodes);
+        if(ids){
+            var idArr = ids.split(",");
+            for(var i=0;i<nodes.length;i++){
+                for(var j=0;j<idArr.length;j++){
+                    if(idArr[j] == nodes[i].id){
+                        var node = zTreeObj.getNodeByTId(nodes[i].tId);
+                        zTreeObj.checkNode(node,true,true);
+                        node.getParentNode().open = true;
+                    }
+                }
+            }
+        }
+    },
+    zTreeOnCheck:function(event, treeId, treeNode){
+        alert(treeId)
+    },
+    zTreeOnDblclick:function(event, treeId, treeNode){
+        if (treeNode != null && !treeNode.isParent) {
+            var html = joinHtml(treeNode.id, treeNode.name);
+            if($('.right_del_list').find('li#'+treeNode.id).length == 0){
+                $('.right_del_list').append(html);
+            }else{
+                console.log('节点以添加,不可重复添加');
+            }
+
+            CommontUtil.deleteElement();
+        }
+    },
+    /**
+     * 回显右侧用户选择的数据
+     * @return {[type]} [description]
+     */
+    eachSelectData:function(){
+        var idsStr = $("#idContext").val();
+        var namesStr = $("#nameContext").val();
+        var ids = [], names = [], html = [];
+        if(idsStr){
+            ids = idsStr.split(",");
+            names = namesStr.split(",");
+            for(var i=0; i<ids.length;i++){
+                html.push(CommonUtil.joinHtml(ids[i],names[i]));
+            }
+            $('.right_del_list').append(html.join(''));
+
+            // 添加删除
+            CommonUtil.deleteElement();
+        }
+    },
+    
+    bindFun:function(){
+    	
+    	/**
+         * 绑定搜索按钮事件
+         */
+		$("#search-bt").unbind('click').bind('click', function () {
+			deptZtree.filter();
+		});
+        
+        /**
+         *
+         * 确定按钮事件
+         */
+        $("#close").unbind('click').bind('click', function () {
+        	
+    	})
+    },
+    
+    saveSelectedData:function(){
+    	var ids = [], names = [], res = {};
+        //判断是否可多选
+        var $selectedLi = $('#selectedDeptUser .list-group-item[data-id][data-name]');
+    	/*if($selectedLi.length < 1){
+    		layer.alert("至少选择一个");
+    		return;
+    	}*/
+    	if(isMulti == '1' && $selectedLi.length > 1){
+    		layer.alert("只能选择一个");
+    		return;
+    	}
+        // 回显数据
+        $('.right_del_list li').each(function(i,item){
+            ids.push($(this).attr('id'));
+            names.push($(this).text());
+        })
+        res.ids = ids.join(",");
+        res.names = names.join(",");
+        if($('#mark').val() != ""){
+        	var id = $('#id').val();
+            var name = $('#name').val();
+    		var html = CommonUtil.joinBorderHtml(ids,names,id,name);
+    		res.mark = html;
+        }
+    	return res;
+    },
+   
+    keyDown:function(){
+        var ev = window.event || e;
+        //13是键盘上面固定的回车键
+        if (ev.keyCode == 13) {
+            //你要执行的方法
+            if($(".nav-tabs").find('.active').attr('for') == "tree-obj"){
+                deptZtree.filter();
+            }
+
+        }
+    },
+    /**
+     * 拼接字符串
+     * @return {[type]} [description]
+     */
+    joinHtml:function(id,name){
+        var html = [];
+        html.push('<li id="' + id + '" class="list-group-item" data-id="'+id+'" data-name="'+name+'">');
+        html.push('<span class="pull-right">');
+        html.push('');
+        html.push('<img src="/static/images/ico_del2.png" width="24" height="24" alt=""/>');
+        html.push('');
+        html.push('</span>' + name + '');
+        html.push('</li>');
+        return html.join('');
+    },
+    joinBorderHtml:function(ids,names,id,name){
+        var html = [];
+        html.push('<ol>');
+        for(var i=0; i<ids.length; i++){
+            html.push('<li class="item" id="'+ids[i]+'" > ');
+            html.push(names[i]+'<span forId="'+id+'" forName="'+name+'" onclick="deleteThisNode(this)" class="glyphicon glyphicon-remove"></span>');
+            html.push('</li>');
+        }
+        html.push('</ol>');
+        return html.join('');
+    },
+    deleteElement:function(){
+        $('.right_del_list li img').unbind('click').bind('click', function () {
+            $(this).parents('li').remove();
+        })
+    }
+}
+
+$(function () {
+    deptZtree.init();
+    
+    $("#search-bt").unbind('click').bind('click', function () {
+		deptZtree.filter();
+	});
+});
+</script>
+</div>
+
+
+
+<script type="text/javascript">
+	 
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API glDeptId
+    var right_table_col = [
+		{
+			 title: '绑定',
+			checkbox : true,
+			width : '8%',
+			align : "center",
+			valign : "middle"
+			, formatter: function (value, row, index) {
+		        	if(row.glDeptId==glDeptId)
+		        		return {checked:true}
+		        	return {checked:false}
+		        		
+		      }
+		
+		},
+       {
+         title: '序号'
+        , width: '10%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	return "<span recordId='"+row.id+"'>"+(index + 1)+"</span>";
+         }
+    }, 
+	
+   
+    {
+        	field: 'deptName'
+            , title: '部门名称'
+            , sortable: true
+            , width: '30%'
+            , align:"center"
+     } ,
+     {
+         field: 'glDeptName'
+         , title: '绑定部门'
+       	, sortable: true
+         , width: '30%'
+         , align:"center"
+         
+     }   
+    
+  	,{
+        field: 'cz'
+        , title: '&nbsp;操作&nbsp;'
+        , width: '20%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+        	var html = "";
+            html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+            html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            return html;
+        }
+    }
+ 	
+   ];
+
+    $(document).ready(function (e) {
+    	//初始化组织的下拉框
+    	Dictionary.init({mark:'bmzztx',type:'1',position:"org",domType:"select",name:"org"});
+  		initTable();
+    });
+
+    //初始化表格数据
+    function initTable(){
+         //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url:"/system/config/orgdepmapping/getList",
+            height:420,
+            columns: right_table_col,
+            pagination:false,	//不分页
+            queryParams: function (params) {
+            	 params.resId = $('#left_ul').find('a.active').attr("id");
+	            	params.orgId = $("#org option:selected").val();
+	            	params.departmentName=$("#department").val();
+	                return params;
+            },
+            rowStyle:function (row, index) {	//默认样式：居中，鼠标为手
+            	if(index%2==0){
+            		return {
+                        classes: 'readOnly'
+                        ,css: {"text-align":"center","cursor":"pointer","background-color":"#f1f1f1"}
+                    };
+            	}else{
+            		return {
+                        classes: 'readOnly'
+                        ,css: {"text-align":"center","cursor":"pointer","background-color":"white"}
+                    };
+            	}
+                
+            },
+            readOnlyFn:function(){
+            	 $('#right_table').find("input[type='checkbox']").not(":first").each(function(i){
+            			if(i%2==0){
+            				$(this).parent().css("background-color","#f1f1f1");
+            			}else{
+            				$(this).parent().css("background-color","white");
+            			}
+            	 });
+            	
+            },
+           /*  onReorderRowsDrag: function (table, row) {
+                //当选中行，拖拽时的哪行数据，并且可以获取这行数据的上一行数据和下一行数据
+                return false;
+            }, */
+            /*  onReorderRowsDrop: function (table, row) {
+                //拖拽完成后的这条数据，并且可以获取这行数据的上一行数据和下一行数据
+                var tableBs = $(table);
+                //选中行的index
+                var selectedIndex = row.id.split("_")[1];
+                //拖曳结束后，相同位置行的index
+                var afterIndex = table.tBodies[0].rows[selectedIndex].id.split("_")[1];
+                //alert("排序后相同位置行的index == "+afterIndex);
+                //alert("选中行的index == "+selectedIndex);
+               
+                if(selectedIndex != afterIndex){
+                	var ids = [];
+	                for (var i = 0; i < table.tBodies[0].rows.length; i++) {
+	                	var cruRow = $(table.tBodies[0].rows[i]);
+	                	var recordId = $(cruRow).find("span[recordId]").attr("recordId");
+	                	ids.push(recordId);
+	                }
+	               
+	                var idStr = ids.join("&id=");
+	                $.ajax({
+	                	type:"post",
+	                	url:"/system/orgdepmapping/sort?id=" + idStr,
+	                	dataType:"json",
+	                	success:function(res){
+	                		if(res.flag == "1"){
+	                			layer.msg("排序成功！",{icon:1});
+	                		}else{
+	                			layer.msg("排序失败！",{icon:2});
+	                		}
+	                		//刷新列表
+	                		$(table).bootstrapTable('refresh');
+	                	},
+	                	error:function(){
+	                		layer.msg("排序异常，请刷新重试！",{icon:2});
+	                	}
+	                })
+                }
+                return false;
+            },  */
+          /*   onReorderRow: function (newData) {
+                //当拖拽结束后，整个表格的数据
+                return false;
+            }, */
+            onCheck : function(row, ele) {
+            	 // 判断是否已经选择了某个节点
+                var nodes = $.fn.zTree.getZTreeObj("tree-obj").getSelectedNodes();
+                if (nodes.length == 0) {
+                	$(ele).prop("checked",false);
+                	layer.msg("请在左侧部门树中选择需要绑定的部门！",{icon:0});
+                	return false;
+                }else{
+                	
+                	var msg="确定要绑定吗？";
+                	if(row.glDeptId){
+                		msg="确定要重新绑定吗？"
+                	}
+                	 layer.confirm(msg, {
+						btn : [ '确定', '取消' ],
+						 cancel: function(index, layero){ 
+							 //关闭窗口
+							 $(ele).prop("checked",false);
+						 }  
+
+					}, function() {
+						$.post("/system/config/orgdepmapping/binding", {id:row.id,glDeptId:nodes[0].id,glDeptName:nodes[0].name },function(data){
+							if(data.flag=='1'){
+								layer.msg("绑定成功！",{icon:1});
+								$('#right_table').bootstrapTable('refresh');
+							}else{
+								layer.msg("绑定失败！",{icon:0});
+							}
+						} );
+					}, function() {
+						$(ele).prop("checked",false);
+					}); 
+                }
+
+			},
+			onUncheck:function(row, ele){
+				var nodes = $.fn.zTree.getZTreeObj("tree-obj").getSelectedNodes();
+				layer.confirm("确定要解除绑定吗？", {
+					btn : [ '确定', '取消' ],
+					 cancel: function(index, layero){ 
+						 //关闭窗口
+						 $(ele).prop("checked",true);
+					 }  
+				// 按钮
+				}, function() {
+					$.post("/system/config/orgdepmapping/unbinding", {id:row.id,glDeptId:nodes[0].id },function(data){
+						if(data.flag=='1'){
+							layer.msg("解除绑定成功！",{icon:1});
+							$('#right_table').bootstrapTable('refresh');
+						}else{
+							layer.msg("绑定失败！",{icon:0});
+						}
+					} );
+				}, function() {
+					$(ele).prop("checked",true);
+				}); 
+			}
+        })
+        
+         $("input[name='btSelectAll']").hide(); 
+    }
+
+
+  //清空查询条件
+	function clearAll(){
+		$("#org option:first").prop("selected", 'selected');  
+		$("#department").val("");
+	}
+  
+//  表格数据项的操作
+    var list = {
+        editFun:function(id){
+        	  var resId = $('#left_ul').find('a.active').attr("id");
+        	  var orgName=$("#org option:selected").text();
+         
+             layer.open({
+		            type: 2,
+		            content: '/modules/system/config/orgdepmapping/otherFlowDept.html?id=' + id + "&oper=EDIT&resId=" + resId +"&orgName="+ encodeURI(orgName,"utf-8"),
+		            area: ['800px', '250px'],
+		            title: ['修改基本信息', 'font-size:16px;font-weight:bold;']
+        	})
+        },
+        deleteFun:function(id){
+        	 var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+            	url: '/system/config/orgdepmapping/delete?id=' + id+ "&resId=" + resId,
+                tableId:'right_table'
+            })
+        }
+    }
+  
+
+
+	$(function () {
+		      $('[data-toggle="tooltip"]').tooltip()
+		      $('[data-toggle="popover"]').popover({
+		        trigger:"hover"
+		      })
+  })
+  
+  	//起草
+	function draft(){
+		  var resId = $('#left_ul').find('a.active').attr("id");
+		  var orgId=$("#org option:selected").val()
+		   var orgName=$("#org option:selected").text()
+		  var optionLen = $("#org option").length;
+		 if(optionLen==1){
+			 layer.msg("请先新增组织体系！",{icon:0});
+	        	return;
+		 }else{
+			 if(orgId=='' || orgId==null){
+		        	layer.msg("请先选择组织体系！",{icon:0});
+		        	return;
+			}
+		 }
+        layer.open({
+            type: 2,
+            content: '/modules/system/config/orgdepmapping/otherFlowDept.html?oper=NEW&orgId='+orgId+'&orgName='+encodeURI(orgName,"utf-8")+'&resId=' + resId,
+            area: ['800px', '270px'],
+            title: ['新增基本信息', 'font-size:16px;font-weight:bold;']
+        })
+	
+	}
+	
+	
+
+</script>
+
+
+
+
+

@@ -1,0 +1,234 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+    
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"> 会务服务单位名称：</label>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" name="serviceDeptName" id="serviceDeptName"/>
+                                <!--没有任何意义，如果不加点击回车会跳转首页-->
+                                <input type="text" style="display:none" />
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="draft();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table" data-use-row-attr-func="true" data-reorderable-rows="true"></table>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+    <script src="/static/js/common/jquery.tablednd.js"></script>
+<script type="text/javascript">
+	var workFlowName = "会务服务单位";
+	//起草
+	function draft(){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/basicSet/meetingService/meetingServiceEditForm.html?oper=NEW&resId=' + resId,title:'新增'+workFlowName+"信息"})
+	}
+	
+	//清空查询条件
+	function clearAll(){
+		$("#serviceDeptName").val("");	//标题
+	}
+    
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+        	 return "<span recordId='"+row.id+"'>"+(index + 1)+"</span>";//计算序号
+        }
+    }, {
+        field: 'serviceDeptName'
+        , title: '会务服务单位'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            	 var html = "";
+                 html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                 html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\",\"" + row.serviceDeptName + "\")\'></i>";
+                 return html;
+        }
+    } ];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/zhbg/hygl/basicSet/serviceDept/getList",
+            columns: right_table_col,
+            pagination:false,	//不分页
+            queryParams: function (params) {
+            	params.resId = $('#left_ul').find('a.active').attr("id");
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.serviceDeptName = $("#serviceDeptName").val();
+                return params;
+            },
+            readOnlyFn: function () {
+            	$('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");
+            	$('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+					var id = $(this).parent().find("span[recordId]").attr("recordId");
+					var resId = $('#left_ul').find('a.active').attr("id");
+					//流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/zhbg/hygl/basicSet/serviceDept/serviceDeptReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: workFlowName});
+            	});
+            },
+            onReorderRowsDrag: function (table, row) {
+                //当选中行，拖拽时的哪行数据，并且可以获取这行数据的上一行数据和下一行数据
+                return false;
+            },
+            onReorderRowsDrop: function (table, row) {
+                //拖拽完成后的这条数据，并且可以获取这行数据的上一行数据和下一行数据
+                var tableBs = $(table);
+                //选中行的index
+                var selectedIndex = row.id.split("_")[1];
+                //拖曳结束后，相同位置行的index
+                var afterIndex = table.tBodies[0].rows[selectedIndex].id.split("_")[1];
+                //alert("排序后相同位置行的index == "+afterIndex);
+                //alert("选中行的index == "+selectedIndex);
+                /**
+                 *	选中行的index != 拖曳后相同位置行的index，则说明改变了行顺序，则进行重新排序
+                 *	例如选中第三行selectedIndex=2，将第三行向上拖动一行，则拖曳后第三行afterIndex将变为原第二行的index=1
+                 */
+                if(selectedIndex != afterIndex){
+                	var ids = [];
+	                for (var i = 0; i < table.tBodies[0].rows.length; i++) {
+	                	var cruRow = $(table.tBodies[0].rows[i]);
+	                	var recordId = $(cruRow).find("span[recordId]").attr("recordId");
+	                	ids.push(recordId);
+	                }
+	                var idStr = ids.join("&id=");
+	                $.ajax({
+	                	type:"post",
+	                	url:"/zhbg/hygl/basicSet/serviceDept/sort?id=" + idStr,
+	                	dataType:"json",
+	                	success:function(res){
+	                		if(res.flag == "1"){
+	                			layer.msg("排序成功！",{icon:1});
+	                		}else{
+	                			layer.msg("排序失败！",{icon:2});
+	                		}
+	                		//刷新列表
+	                		$(table).bootstrapTable('refresh');
+	                	},
+	                	error:function(){
+	                		layer.msg("排序异常，请刷新重试！",{icon:2});
+	                	}
+	                })
+                }
+                return false;
+            },
+            onReorderRow: function (newData) {
+                //当拖拽结束后，整个表格的数据
+                return false;
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	MyLayer.layerOpenUrl({
+                url: '/modules/zhbg/hygl/basicSet/meetingService/meetingServiceEditForm.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title: "修改"
+            }) 
+        },
+        deleteFun: function (id,serviceDeptName) {
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	//判断有该单位下的会务服务项目
+            MyLayer.deleteOpt({
+                url: '/zhbg/hygl/basicSet/serviceDept/delete?id=' + id + "&resId=" + resId,
+                tableId: 'right_table',
+                msg: serviceDeptName + '下的会务服务项目也会一并删除，确定要删除吗'
+            })
+        }
+    }
+    //回车
+    function keyLogin(){
+   	 if (event.keyCode==13)  //回车键的键值为13
+   	 TableInit.refTable('right_table');
+    }
+    
+    $(function () {
+	      $('[data-toggle="tooltip"]').tooltip()
+	      $('[data-toggle="popover"]').popover({
+	        trigger:"hover"
+	      })
+})
+    
+</script>
