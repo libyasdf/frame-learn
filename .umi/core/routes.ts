@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { ApplyPluginsType } from '/Users/baiyueli/.npm/_npx/5588/lib/node_modules/dumi/node_modules/@umijs/runtime';
+import { ApplyPluginsType } from '/Users/baiyueli/.npm/_npx/1186/lib/node_modules/dumi/node_modules/@umijs/runtime';
 import * as umiExports from './umiExports';
 import { plugin } from './plugin';
 
@@ -8,7 +8,7 @@ export function getRoutes() {
   const routes = [
   {
     "path": "/",
-    "component": (props) => require('react').createElement(require('../../../../.npm/_npx/5588/lib/node_modules/dumi/node_modules/@umijs/preset-dumi/lib/themes/default/layout.js').default, {
+    "component": (props) => require('react').createElement(require('../../../../.npm/_npx/1186/lib/node_modules/dumi/node_modules/@umijs/preset-dumi/lib/themes/default/layout.js').default, {
       ...{"menus":{"*":{"*":[{"path":"/","title":"目录","meta":{"order":1}},{"title":"Code style","path":"/code style","meta":{"order":2},"children":[{"path":"/code style/javascript","title":"javascript 代码风格规范","meta":{"order":2}},{"path":"/code style/typescript","title":"typescript 代码风格规范","meta":{}}]},{"title":"Theme","path":"/theme","meta":{"order":3},"children":[{"path":"/theme/theme","title":"主题","meta":{"order":1}},{"path":"/theme/color","title":"Color","meta":{"order":2}}]},{"title":"Typography","path":"/typography","meta":{},"children":[{"path":"/typography/typography","title":"排版","meta":{}}]}]}},"locales":[],"navs":{},"title":"framework-learn","mode":"doc","repoUrl":"https://github.com/libyasdf/frame-learn"},
       ...props,
     }),

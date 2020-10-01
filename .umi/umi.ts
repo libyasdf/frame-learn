@@ -4,8 +4,8 @@ import '@@/core/devScripts';
 import { plugin } from './core/plugin';
 import './core/pluginRegister';
 import { createHistory } from './core/history';
-import { ApplyPluginsType } from '/Users/baiyueli/.npm/_npx/5588/lib/node_modules/dumi/node_modules/@umijs/runtime';
-import { renderClient } from '/Users/baiyueli/.npm/_npx/5588/lib/node_modules/dumi/node_modules/@umijs/renderer-react/dist/index.js';
+import { ApplyPluginsType } from '/Users/baiyueli/.npm/_npx/1186/lib/node_modules/dumi/node_modules/@umijs/runtime';
+import { renderClient } from '/Users/baiyueli/.npm/_npx/1186/lib/node_modules/dumi/node_modules/@umijs/renderer-react/dist/index.js';
 import { getRoutes } from './core/routes';
 
 
