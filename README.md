@@ -1,18 +1,21 @@
-#### 本项目为学习测试框架使用
+# dumi app
 
-#### html-js
+## Getting Started
 
-## Doc
+Install dependencies,
 
-[Go to doc](https://libyasdf.github.io/frame-learn/)
+```bash
+$ npm i
+```
 
+Start the dev server,
 
+```bash
+$ npm start
+```
 
+Build site app,
 
-
-
-
-
-
-
-
+```bash
+$ npm run build
+```
