@@ -1,7 +1,10 @@
 import { defineConfig } from 'dumi';
 
 export default defineConfig({
-  title: 'Site Name',
-  mode: 'site',
+  title: '框架学习',
+   // 文档模式（默认值）
+  //  mode: 'doc',
+   // 站点模式
+   mode: 'site',
   // more config: https://d.umijs.org/config
 });

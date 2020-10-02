@@ -1,9 +1,11 @@
 ---
 nav:
-  title: Getting Started
+  title: 学习笔记
   order: 1
 ---
 
-# Getting Started
+# 学习笔记/第一页标题
 
-Balabala...
+第一页内容
+
+## 快到
