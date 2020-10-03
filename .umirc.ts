@@ -3,8 +3,8 @@ import { defineConfig } from 'dumi';
 export default defineConfig({
   title: '框架学习',
    // 文档模式（默认值）
-  //  mode: 'doc',
+   mode: 'doc',
    // 站点模式
-   mode: 'site',
+  //  mode: 'site',
   // more config: https://d.umijs.org/config
 });
