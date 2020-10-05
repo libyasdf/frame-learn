@@ -1,0 +1,261 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div class="vertify-panel vertify-details" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 党组织名称：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control"  id="orgName" name="orgName" type="text"/>
+                                </div>
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="reset();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12">
+                    <!--bootstrap-table表格-->
+                    <table id="right_table"></table>
+                </div>
+
+        </div>
+    </div>
+</div>
+    <script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+    <script src="/static/js/common/jquery.tablednd.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+    <script src="/modules/dwgl/common/dzzTree.js"></script>
+    <!-- 页面获取参数 -->
+    <script type="text/javascript">
+
+        //为查询条件form表单绑定submit事件，返回false,阻止当form中只有一个input时，点击回车刷新页面的问题
+        $("form.form-horizontal").unbind('submit').bind('submit',function(){return false;});
+
+        $('.panel-heading').unbind('click').bind('click',function(){
+            if($(this).find('.showSelect').hasClass('glyphicon-minus')){
+                // $('.panel-body').hide("slow");
+                $('.panel-body').hide();
+                $(this).find('.showSelect').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+            }else{
+                // $('.panel-body').show("slow");
+                $('.panel-body').show();
+                $(this).find('.showSelect').removeClass('glyphicon-plus').addClass(' glyphicon-minus');
+            }
+        })
+
+        var orgTypeMap = Dictionary.getNameAndCode({mark:"dwgl_orgType",type:"1"});
+
+        //定义bootatrap-table数据列
+        //sortable：开启列排序，其他参考API
+        var right_table_col = [{
+            title: '序号'
+            , width: '5%'
+            , order: "desc"
+            , align: "center"
+            , formatter: function (value, row, index) {
+                return index + 1;//计算序号
+            }
+        }, {
+            field: 'orgName'
+            , title: '组织名称'
+            , width: '10%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+        }, {
+            field: 'historyOrgId'
+            , title: '组织编码'
+            , width: '15%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+        }, {
+            field: 'orgType'
+            , title: '组织属性'
+            , width: '10%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+            ,formatter:function (value,row,index) {
+                return "<span orgType='"+row.orgType+"'><span partyBranchId='"+row.partyBranchId+"'>"+orgTypeMap[value];+"</span>";
+            }
+        },  {
+            field: 'contactMan'
+            , title: '联系人'
+            , width: '10%'
+            , align: "center"
+        },  {
+            field: 'contactNumber'
+            , title: '联系电话'
+            , width: '10%'
+            , align: "center"
+        },  {
+            field: 'revokeDate'
+            , title: '撤销日期'
+            , width: '10%'
+            , sortable: true
+            , order: "desc"
+            , align: "center"
+        }, {
+            field: 'revokeCode'
+            , title: '撤销文号'
+            , width: '10%'
+            , align: "center"
+        }, {
+            field: 'revokeReason'
+            , title: '撤销原因'
+            , width: '20%'
+            , align: "center"
+            , formatter: function (value, row, index) {
+                var val = value;
+                if(value!=null&&value.length>10){
+                    val = val.substring(0,10)+"...";
+                }
+                if(value==null){
+                    val="-";
+                }
+                return "<span title='"+value+"'>" + val + "</span>";
+            }
+        }];
+
+        if(getcookie("rolesNo").indexOf("D478") >= 0){
+            dzzTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"org"});
+        }else{
+            $.ajax({
+                type: "get",
+                async: false,
+                url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+                dataType: "json",
+                success: function (data) {
+                    dzzTree.init({id:data.data,type:"org"});
+                },
+                error: function (data) {
+                }
+            })
+        }
+
+        if( $.fn.zTree.getZTreeObj("treeDemo")){
+            var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+            var id = nodes[0].id;
+        }
+
+        $('#right_table').bootstrapTable({
+            url: "/djgl/ddjs/dzz/dzzgl/lslist?id="+id,
+            sidePagination:"client",
+            columns: right_table_col,
+            pagination:true,
+            striped:true,
+            classes: 'table table-hover',
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"pointer"}
+                };
+            },
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.orgName = $.trim($("#orgName").val());
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                return params;
+            },
+            onClickRow:function (row,$element,field) {
+                if(field != "cz"){
+                    var id = row.id;
+                    var orgType = row.orgType;
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    if(orgType == '666'){
+                        var partyBranchId =  row.partyBranchId;
+                        MyLayer.layerOpenUrl({url: '/modules/dwgl/dzz/dzzgl/dxzReadOnlyForm.html?id='+id+"&oper=VIEW&partyBranchId="+partyBranchId+"&resId=" + resId, title: "只读"});
+                    }else{
+                        MyLayer.layerOpenUrl({url: '/modules/dwgl/dzz/dzzgl/dzzglReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读"});
+                    }
+                }
+            },
+            onLoadSuccess:function () {
+                $('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+
+            }
+        })
+
+        function refreshTable(treeNode) {
+            var opt = {
+                url:"/djgl/ddjs/dzz/dzzgl/lslist?id="+treeNode.id,
+            };
+            $('#right_table').bootstrapTable('refresh',opt);
+        }
+
+
+        //刷新方法
+        function refreshPage(){
+            TableInit.refTable("right_table");
+        }
+
+
+
+    </script>

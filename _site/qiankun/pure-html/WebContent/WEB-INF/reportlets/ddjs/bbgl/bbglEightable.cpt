@@ -1,0 +1,1470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20170720" releaseVersion="9.0.0">
+<Report class="com.fr.report.worksheet.WorkSheet" name="sheet1">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[1136904,757936,871728,909828,682244,454660,796036,1364488,1326388,1326388,1326388,1326388,1326388,1326388,1326388,1326388,1326388,1326388,1326388,947420,947420,1136904,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[1524000,1562100,5676900,952500,4076700,3200400,3238500,3352800,1524000,1828800,1295400,2095500,3238500,3238500,3162300,3200400,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" cs="16" s="0">
+<O>
+<![CDATA[民主评议党员情况]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="1" cs="2" s="1">
+<O>
+<![CDATA[填报单位：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="1" cs="3" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="1" s="3">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="1" s="4">
+<O>
+<![CDATA[起止时间：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="1" cs="5" s="5">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="1" s="2">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="1" cs="3" s="6">
+<O>
+<![CDATA[第八表]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="2" cs="3" rs="5" s="7">
+<O>
+<![CDATA[项                目]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="2" cs="2" rs="5" s="8">
+<O>
+<![CDATA[总       数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="2" s="8">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="2" rs="5" s="7">
+<O>
+<![CDATA[建  制  村]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="2" rs="5" s="9">
+<O>
+<![CDATA[社   区\n\n（居委会）]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="2" cs="2" rs="5" s="7">
+<O>
+<![CDATA[机     关]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="2" cs="2" rs="5" s="9">
+<O>
+<![CDATA[事    业\n\n单    位]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="2" rs="5" s="10">
+<O>
+<![CDATA[公有经济\n\n控制企业]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="2" rs="5" s="10">
+<O>
+<![CDATA[非公有经\n济 控 制\n企    业]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="2" rs="5" s="7">
+<O>
+<![CDATA[社会组织]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="2" rs="5" s="7">
+<O>
+<![CDATA[其     他]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="3" s="11">
+<O>
+<![CDATA[上年 开展]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="4" rs="2" s="12">
+<O>
+<![CDATA[本年 结束]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="6" s="13">
+<O>
+<![CDATA[评    议]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="7" cs="3" s="14">
+<O>
+<![CDATA[甲]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="7" cs="2" s="14">
+<O>
+<![CDATA[A]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="7" s="14">
+<O>
+<![CDATA[B]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="7" s="14">
+<O>
+<![CDATA[C]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="7" s="14">
+<O>
+<![CDATA[D]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="7" cs="2" s="14">
+<O>
+<![CDATA[E]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="7" cs="2" s="15">
+<O>
+<![CDATA[F]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="7" s="16">
+<O>
+<![CDATA[G]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="7" s="16">
+<O>
+<![CDATA[H]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="7" s="14">
+<O>
+<![CDATA[I]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="7" s="14">
+<O>
+<![CDATA[J]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="8" cs="3" s="17">
+<O>
+<![CDATA[开  展  评  议  的  支  部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="8" s="14">
+<O>
+<![CDATA[1]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="8" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="8" s="19">
+<O>
+<![CDATA[—]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="8" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="8" s="21">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="8" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="8" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="8" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="8" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="8" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="8" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="9" s="22">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="9" cs="2" s="17">
+<O>
+<![CDATA[结 束 评 议 的 支  部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="9" s="14">
+<O>
+<![CDATA[2]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="9" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="9" s="19">
+<O>
+<![CDATA[—]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="9" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="9" s="21">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="9" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="9" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="9" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="9" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="9" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="9" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="10" cs="3" s="17">
+<O>
+<![CDATA[参  加  评  议  的  党  员]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="10" s="14">
+<O>
+<![CDATA[3]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="10" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="10" s="19">
+<O>
+<![CDATA[—]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="10" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="10" s="21">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="10" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="10" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="10" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="10" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="10" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="10" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="11" s="22">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="11" cs="2" s="17">
+<O>
+<![CDATA[结 束 评 议 的 党  员]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="11" s="14">
+<O>
+<![CDATA[4]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="11" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="11" s="19">
+<O>
+<![CDATA[—]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="11" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="11" s="21">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="11" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="11" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="11" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="11" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="11" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="11" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="12" cs="3" s="17">
+<O>
+<![CDATA[表      彰      党     员]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="12" s="14">
+<O>
+<![CDATA[5]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="12" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="12" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="12" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="12" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="12" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="12" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="12" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="12" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="12" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="12" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="13" cs="3" s="17">
+<O>
+<![CDATA[被 评 定 为“ 不合格党员 ”]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="13" s="14">
+<O>
+<![CDATA[6]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="13" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="13" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="13" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="13" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="13" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="13" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="13" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="13" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="13" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="13" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="14" rs="5" s="23">
+<O>
+<![CDATA[组\n织\n处\n置\n情\n况]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="14" cs="2" s="17">
+<O>
+<![CDATA[合                计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="14" s="14">
+<O>
+<![CDATA[7]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="14" cs="2" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="14" cs="2" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="14" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="15" cs="2" s="17">
+<O>
+<![CDATA[限    期    改    正]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="15" s="14">
+<O>
+<![CDATA[8]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="15" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="15" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="15" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="15" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="15" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="15" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="15" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="15" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="15" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="15" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="16" cs="2" s="17">
+<O>
+<![CDATA[劝               退]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="16" s="14">
+<O>
+<![CDATA[9]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="16" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="16" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="16" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="16" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="16" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="16" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="16" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="16" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="16" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="16" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="17" cs="2" s="17">
+<O>
+<![CDATA[劝  而  不 退 除 名]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="17" s="14">
+<O>
+<![CDATA[10]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="17" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="17" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="17" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="17" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="17" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="17" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="17" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="17" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="17" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="17" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="18" cs="2" s="17">
+<O>
+<![CDATA[自  行 脱  党 除 名]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="18" s="14">
+<O>
+<![CDATA[11]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="18" s="18">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="18" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="18" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="18" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="18" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="18" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="18" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="18" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="18" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="18" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="19" cs="3" s="25">
+<O>
+<![CDATA[限期改正期满仍无转变予以劝\n]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="19" rs="2" s="26">
+<O>
+<![CDATA[12]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="19" rs="2" s="27">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="19" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="19" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="19" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="19" cs="2" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="19" cs="2" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="19" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="19" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="19" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="19" rs="2" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="20" cs="3" s="29">
+<O>
+<![CDATA[退 以 及 劝 而 不 退 除 名]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="21" cs="2" s="30">
+<O>
+<![CDATA[补充资料：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="21" cs="7" s="31">
+<O>
+<![CDATA[本年民主评议党员中，发现党员违反党的纪律线索，通报纪检机关查实开除党籍的]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="21" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="21" cs="3" s="31">
+<O>
+<![CDATA[名 ， 给予其他党的纪律处分的]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="21" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="21" s="33">
+<O>
+<![CDATA[名。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+</CellElementList>
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting/>
+</ReportSettings>
+<Header reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Header>
+<Footer reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Footer>
+</ReportAttrSet>
+<PrivilegeControl/>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="true" windowPosition="1" align="0" useParamsTemplate="true"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="136"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+<Left style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Bottom style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Bottom style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" vertical_alignment="1" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3355393"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3342337"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3355393"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+<Left style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-13159"/>
+<Border>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+</StyleList>
+<DesignerVersion DesignerVersion="JAA"/>
+<PreviewType PreviewType="0"/>
+<TemplateID TemplateID="c05098c5-59f6-460c-91b3-a89e374b0aa6"/>
+<TemplateIdAttMark class="com.fr.base.iofileattr.TemplateIdAttrMark">
+<TemplateIdAttMark TemplateId="b7d88b63-a902-4b7d-8100-061f533d4733"/>
+</TemplateIdAttMark>
+</WorkBook>

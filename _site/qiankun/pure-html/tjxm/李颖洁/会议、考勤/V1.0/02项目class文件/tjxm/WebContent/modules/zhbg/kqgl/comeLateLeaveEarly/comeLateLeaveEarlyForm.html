@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+    <form class="form-horizontal" id="form">
+        <!-- resId -->
+        <input name="resId" id="resId" type="hidden" value="">
+        <!-- 流程字段-->
+		<input name="id" id="id" type="hidden" value=""/><!-- 工作项ID -->
+		<input name="ideaName" id="ideaName" type="hidden" value=""/><!-- 当前用户意见域名称-->
+		<input name="subflag" id="subflag" type="hidden" value=""/><!-- 流程状态 -->
+		<input name="filetypeid" id="filetypeid" type="hidden" value=""/><!-- 流程ID -->
+		<input name="workFlowId" id="workflowid" type="hidden" value=""/><!-- 流程唯一ID -->
+		<input name="workitemid" id="workitemid" type="hidden" value=""/><!-- 待办工作项ID -->
+		<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+		<input type="hidden" id="deptId" name="deptId" value="" /><!-- 部门id隐藏域 -->
+        <input type="hidden" id="fillmode" name="fillmode"value="2">
+        <input type="hidden" id="roleNo" name="roleNo"/>
+		<!-- 流程字段结束 -->
+        <div class="container-fluid formpage_idea">
+            <div class="gw_form_block">
+                <div class="gw_form_block_title">流程信息</div>
+                <div class="gw_form_block_main">
+                    <table width="90%" border="0" cellspacing="0" cellpadding="0" class="gw_form_block_table">
+                        <tbody>
+                            <tr>
+                                <td width="15%" class="text-right">节点操作提示：</td>
+                                <td width="85%" id="flowMemo"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="gw_form_block">
+                <div class="gw_form_block_title" onclick="showTable('yjxxTable','showOrHideImg');">
+                    意见信息
+                    <img align="right" style="margin-top: 10px" src="/static/images/icon7_down.gif" hspace="0" id="showOrHideImg" />
+                </div>
+                    <!--<div class="dh-left col-xs-1" style="width: 50px" onclick="showTable('yjxxTable','showOrHideImg');"></div>-->
+                <div class="gw_form_block_main" id="yjxxTable">
+                    <div class="table_body-wrapper">
+                        <table class="table table-hover table-reset js-disk-row" style="border: 0px">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+            <!-- 基本信息 -->
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="block_title">
+                        <span class="name">基本信息</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-13">
+                <div class="col-md-12">
+                <div class="form-group">
+					<div class="rowGroup">
+						 <label for="" class="col-md-2 control-label">申请人：</label>
+		                    <div class="col-md-4">
+		                    <input type="hidden" id="cdztTitle" name="cdztTitle"> 
+		                    <input type="text" class="form-control" id="creUserName" name="creUserName" readonly placeholder="申请人"> 
+		                    <input type="hidden" class="form-control" id="creUserId"
+								name="creUserId">
+		                    </div>
+	                   </div>
+					 <label for="" class="col-md-2 control-label"> 申请人单位：</label>
+	                    <div class="col-md-4">
+	                        <input type="text" class="form-control" id="applicantUnitName" readonly name="applicantUnitName" placeholder="申请人单位">
+	                    </div>
+				</div>
+				<div class="form-group">
+					<div class="rowGroup">
+						<label for="" class="col-md-2 control-label"> 申请时间：</label>
+	                    <div class="col-md-4">
+	                        <input type="text" name="applicationTime" class="form-control" readonly id="applicationTime"  placeholder="申请时间">
+	                    	<!-- <input type="hidden" name="applicationTime" id="applicationTime"> -->
+	                    </div>
+					</div>
+				</div>
+                   <div class="form-group">
+                   <!-- <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label"><b
+							style="color: red;">*</b> 姓名：</label>
+	                    <div class="col-md-4">
+                            	<input id="cruDeptId" name="cruDeptId" type="hidden"/>
+                            	<div class="input-group">
+	                         	<input type="text" id="cdztUserName" name="cdztUserName" placeholder="姓名" unselectable="on" onclick="openSelectZtree({'id':'cdztUserId','name':'cdztUserName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})" class="form-control" >
+		                        <input type="hidden" id="cdztUserId" name="cdztUserId" />人员ID隐藏域
+		                        <span class="input-group-addon" onclick="openSelectZtree({'id':'cdztUserId','name':'cdztUserName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})">
+                                      <span class="glyphicon glyphicon-user"></span>
+                                </span>
+                           </div>
+                        </div>
+                        </div> -->
+                        <div class="rowGroup">
+	                     <label for="" class="col-md-2 control-label"><b
+							style="color: red;">*</b> 状态：</label>
+	                    <div class="col-md-4">
+	                      		<select id='state' class="form-control" name='state' onchange="stateChange(this)">
+	                      		   <option value="">--请选择--</option>
+	                      		   <option value="0">迟到</option>
+	                      		    <option value="1">早退</option>
+	                      		</select>
+	                    </div>
+	                    </div>
+	                    <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label" ><b
+							style="color: red;">* </b><span id="dateLable">日期：</span></label>
+	                    <div class="col-md-4">
+	                       <input type="text" name="cdztDate" class="form-control" id="cdztDate" placeholder="日期">
+	                    </div>
+	                    </div>
+	                    
+                	</div>
+	                <div class="form-group">
+	                <div class="rowGroup">
+	                    <label for="" class="col-md-2 control-label"><b
+							style="color: red;">* </b> <span id="reason">原因：</span></label>
+	                    <div class="col-md-10">
+	                        <textarea name="cdztReason" id="cdztReason" class="form-control" rows="3"></textarea>
+	                    </div>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+            <!-- 基本信息结束 -->
+            
+           
+        </div>
+    </form>
+    <!--意见信息start-->
+    <div class="container-fluid gw_form_bottom_yijian" id ="ideaArea" style="display: none;margin-bottom: 50px;" >
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="gw_form_bottom_table  mt_10">
+            <tr>
+                <td width="15%" class="title">我的意见：</td>
+                <td width="85%">
+                    <table>
+                        <tr>
+                            <td rowspan="2" width="90%">
+                                <textarea name="textarea" id="idea" cols="45" rows="3" placeholder="意见最多填写200字"
+                                          class="form_textarea" style="width: 100%;" onkeyup="this.value = this.value.substring(0,200)"></textarea>
+                                <span id="idea-count" name="idea-count" value="">0</span>/200
+                            </td>
+                            <td  width="10%">
+                                <select class="btn btn-default" name="CuOpinion" id="CuOpinion" onchange="onSelect(this.value,'idea')"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <a class="white" href="#" onclick="add('idea')">+添加常用意见</a></td>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!--意见信息end-->
+<div class="gw_form_right_btn_area" style=" right: 20px; top: 20px; position: fixed;">
+    <ul>
+        <li><a href="#" onclick="openLayer('1')"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 流程记录</a></li>
+        <li><a href="#" onclick="openLayer('2')"><span class="glyphicon glyphicon-random" aria-hidden="true"></span> 流程图</a></li>
+        <li><a href="#" onclick="openLayer('3')"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 意见信息</a></li>
+    </ul>
+</div>
+<!--<div class="form_btn_area" style="text-align: center;">
+    <a href="#" id="save" onclick="commitForm();" class="form_btn_blue form_btn_area_btn" style="width: 140px"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</a>
+    <a href="#" id="sendFLow" onclick="commitFlow();" class="form_btn_blue form_btn_area_btn" style="width: 140px"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 发送</a>
+    <a href="#" id="approval" onclick="completeFlow('',Config.approvalflag)" class="form_btn_blue form_btn_area_btn" style="display: none;width: 140px"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 通过</a>
+    <a href="#" id="noApproval" onclick="completeFlow('',Config.noApprovalflag)" class="form_btn_blue form_btn_area_btn" style="display: none;width: 140px "><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不通过</a>
+    <a href="#" id="remove" onclick="removeFlow()"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> 撤办</a></li>
+    <a href="#" id="resumeFlow" onclick="resumeFlow()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> 重新启用</a></li>
+    <a href="#" id="takeBack"  onclick="takeBack()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> 收回重办</a></li>
+</div>
+btn-primary
+-->
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="commitForm();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+    <button id="subflow" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="comitFlow();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 发送</button>
+    <button id="approval" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="completeFlow('',Config.approvalflag)" ><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 通过</button>
+    <button id="noApproval" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="completeFlow('',Config.noApprovalflag);" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不通过</button>
+    <button id="remove" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="removeFlow()"  ><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> 撤办</button>
+    <button id="resumeFlow" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="resumeFlow()" ><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> 重新启用</button>
+    <button id="takeBack" class="btn btn-primary form_btn_area_btn2" style="display: none" onclick="takeBack()" ><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> 收回重用</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<!-- <script type="text/javascript" src="/product/tree/js/deptUserTree.js"></script> -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 引入自己模块功能的js -->
+<script type="text/javascript" src="js/comeLateLeaveEarlyForm.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="js/validator.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--文件上传js end-->
+<script type="text/javascript">
+$("#cruDeptId").val(getcookie("chuShiId"));
+laydate.render({
+	elem: '#cdztDate' //指定元素
+	,type:'date'
+	,done: function(value, datas){
+		$("#cdztDate").val(value).change();
+	}
+});
+function stateChange(dom){
+	var stateValue = dom.value;
+	if(stateValue=='0'){
+		$("#dateLable").text("迟到日期 :");
+		$("#reason").text("迟到原因 :")
+	}else if(stateValue=='1'){
+		$("#dateLable").text("早退日期 :")
+		$("#reason").text("早退原因 :")
+	}else{
+		$("#dateLable").text("日期 :")
+		$("#reason").text("原因 :")
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,2167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20170720" releaseVersion="9.0.0">
+<Report class="com.fr.report.worksheet.WorkSheet" name="sheet1">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[1136904,757936,727456,1061212,568452,1175004,1175004,1175004,1175004,1175004,1175004,1175004,1175004,1175004,757936,757936,757936,757936,757936,757936,757936,757936,757936,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[990600,1638300,990600,1219200,1143000,1371600,1143000,1066800,1104900,685800,838200,838200,723900,1371600,1143000,723900,1524000,723900,838200,1866900,76200,990600,990600,1828800,1981200,1562100,952500,2628900,1790700,2628900,3162300,1371600,1524000,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" cs="33" s="0">
+<O>
+<![CDATA[党的基层组织数量情况和换届情况]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="1" cs="3" s="1">
+<O>
+<![CDATA[填报单位：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="1" cs="12" s="2">
+<O>
+<![CDATA[天津局]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="1" cs="3" s="2">
+<O>
+<![CDATA[截止时间：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="18" r="1" cs="7" s="2">
+<O>
+<![CDATA[2018年12月31日]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="25" r="1" s="2">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="1" s="2">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="1" s="2">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="28" r="1" s="2">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="1" s="2">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="1" cs="3" s="3">
+<O>
+<![CDATA[第二十四表]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="2" cs="6" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="2" cs="5" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="2" cs="3" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="2" cs="3" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="2" cs="3" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="2" rs="12" s="5">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="2" cs="5" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="2" cs="3" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="2" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="2" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="2" cs="2" s="4">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="3" cs="6" s="6">
+<O>
+<![CDATA[项          目]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="3" cs="5" s="6">
+<O>
+<![CDATA[总     数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="3" cs="3" s="6">
+<O>
+<![CDATA[党    委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="3" cs="3" s="6">
+<O>
+<![CDATA[总  支  部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="3" cs="3" s="6">
+<O>
+<![CDATA[支     部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="3" cs="5" s="6">
+<O>
+<![CDATA[项          目]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="3" cs="3" s="6">
+<O>
+<![CDATA[总     数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="3" s="6">
+<O>
+<![CDATA[党   委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="3" s="6">
+<O>
+<![CDATA[总 支 部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="3" cs="2" s="6">
+<O>
+<![CDATA[支    部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="4" cs="6" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="4" cs="5" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="4" cs="3" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="4" cs="3" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="4" cs="3" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="4" cs="5" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="4" cs="3" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="4" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="4" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="4" cs="2" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="5" cs="6" s="8">
+<O>
+<![CDATA[甲]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="5" cs="5" s="9">
+<O>
+<![CDATA[A]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="5" cs="3" s="9">
+<O>
+<![CDATA[B]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="5" cs="3" s="9">
+<O>
+<![CDATA[C]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="5" cs="3" s="9">
+<O>
+<![CDATA[D]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="5" cs="5" s="10">
+<O>
+<![CDATA[甲]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="5" cs="3" s="9">
+<O>
+<![CDATA[A]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="5" s="9">
+<O>
+<![CDATA[B]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="5" s="9">
+<O>
+<![CDATA[C]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="5" cs="2" s="9">
+<O>
+<![CDATA[D]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="6" cs="6" s="10">
+<O>
+<![CDATA[党 的  基  层  组 织 数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="6" s="9">
+<O>
+<![CDATA[1]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="6" cs="4" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="6" cs="3" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="6" cs="3" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="6" cs="3" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="6" cs="5" s="10">
+<O>
+<![CDATA[事     业     单    位]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="6" s="9">
+<O>
+<![CDATA[9]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="6" cs="2" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="6" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="6" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="6" cs="2" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="7" rs="4" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="7" cs="5" s="10">
+<O>
+<![CDATA[任    届   期    满]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="7" s="9">
+<O>
+<![CDATA[2]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="7" cs="4" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="7" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="7" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="7" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="7" cs="5" s="8">
+<O>
+<![CDATA[机                  关]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="7" s="9">
+<O>
+<![CDATA[10]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="7" cs="2" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="7" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="7" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="7" cs="2" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="8" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="8" cs="4" s="8">
+<O>
+<![CDATA[本  年  换  届]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="8" s="9">
+<O>
+<![CDATA[3]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="8" cs="4" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="8" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="8" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="8" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="8" rs="4" s="7">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="8" cs="4" s="8">
+<O>
+<![CDATA[中   央    一   级]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="8" s="9">
+<O>
+<![CDATA[11]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="8" cs="2" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="8" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="8" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="8" cs="2" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="9" cs="5" s="8">
+<O>
+<![CDATA[城    市   街    道]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="9" s="9">
+<O>
+<![CDATA[4]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="9" cs="4" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="9" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="9" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="9" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="9" cs="4" s="10">
+<O>
+<![CDATA[省 （区、市） 一 级]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="9" s="9">
+<O>
+<![CDATA[12]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="9" cs="2" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="9" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="9" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="9" cs="2" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="10" cs="5" s="10">
+<O>
+<![CDATA[乡               镇]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="10" s="9">
+<O>
+<![CDATA[5]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="10" cs="4" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="10" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="10" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="10" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="10" cs="4" s="8">
+<O>
+<![CDATA[市(地、州、盟）一级]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="10" s="9">
+<O>
+<![CDATA[13]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="10" cs="2" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="10" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="10" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="10" cs="2" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="11" rs="3" s="13">
+<O>
+<![CDATA[企\n\n 业]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="11" cs="5" s="10">
+<O>
+<![CDATA[国  有  经  济 控 制]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="11" s="9">
+<O>
+<![CDATA[6]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="11" cs="4" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="11" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="11" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="11" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="11" cs="4" s="8">
+<O>
+<![CDATA[县(市、区、旗) 一级]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="11" s="9">
+<O>
+<![CDATA[14]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="11" cs="2" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="11" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="11" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="11" cs="2" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="12" cs="5" s="10">
+<O>
+<![CDATA[集  体  经  济 控 制]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="12" s="9">
+<O>
+<![CDATA[7]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="12" cs="4" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="12" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="12" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="12" cs="3" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="12" cs="5" s="8">
+<O>
+<![CDATA[其                 他]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="12" s="9">
+<O>
+<![CDATA[15]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="12" cs="2" s="11">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="12" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="12" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="12" cs="2" s="12">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="13" cs="5" s="14">
+<O>
+<![CDATA[非 公 有 经 济 控 制]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="13" s="15">
+<O>
+<![CDATA[8]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="13" cs="4" s="16">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="13" cs="3" s="17">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="13" cs="3" s="17">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="13" cs="3" s="17">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="13" cs="12" s="14">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="14" cs="2" s="18">
+<O>
+<![CDATA[补充资料：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="14" cs="2" s="19">
+<O>
+<![CDATA[1．党组]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="14" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="14" cs="7" s="21">
+<O>
+<![CDATA[个，其中中央一级机关]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="14" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="14" cs="8" s="19">
+<O>
+<![CDATA[个、省（区、市）一级机关]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="14" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="14" cs="5" s="19">
+<O>
+<![CDATA[个、市（地、州、盟）一级机关]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="14" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="14" cs="3" s="22">
+<O>
+<![CDATA[ 个、县（市、区、旗]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="15" s="23">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="15" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="15" cs="4" s="24">
+<O>
+<![CDATA[   ）一级机关]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="15" cs="2" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="15" s="24">
+<O>
+<![CDATA[个。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="16" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="18" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="19" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="25" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="28" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="15" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="32" r="15" s="27">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="16" cs="2" rs="5" s="23">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="16" cs="8" s="24">
+<O>
+<![CDATA[2．中央和各级地方党委派出工委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="16" cs="3" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="16" cs="10" s="24">
+<O>
+<![CDATA[ 个，其中省（区、市）委派出工委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="16" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="16" cs="5" s="24">
+<O>
+<![CDATA[个、省辖市（州）委派出工委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="16" s="28">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="16" cs="3" s="29">
+<O>
+<![CDATA[个、县（市、区、旗）]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="17" cs="4" s="24">
+<O>
+<![CDATA[  委派出工委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="17" cs="2" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="17" cs="2" s="24">
+<O>
+<![CDATA[个。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="17" s="30">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="17" s="30">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="17" s="30">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="17" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="17" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="17" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="16" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="18" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="19" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="25" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="28" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="17" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="32" r="17" s="27">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="18" cs="12" s="24">
+<O>
+<![CDATA[3．国务院和地方政府工作部门中有基层党组织]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="18" cs="3" s="31">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="18" cs="5" s="30">
+<O>
+<![CDATA[个，其中党委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="18" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="18" cs="2" s="30">
+<O>
+<![CDATA[个、总支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="18" s="30">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="18" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="18" s="30">
+<O>
+<![CDATA[个、支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="18" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="18" s="24">
+<O>
+<![CDATA[个。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="32" r="18" s="33">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="19" cs="5" s="24">
+<O>
+<![CDATA[4．建制村中有党组织]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="19" cs="2" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="19" cs="5" s="34">
+<O>
+<![CDATA[个，其中党委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="19" cs="2" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="16" r="19" cs="3" s="24">
+<O>
+<![CDATA[个、总支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="19" r="19" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="19" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="19" cs="3" s="35">
+<O>
+<![CDATA[ 个、支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="19" s="25">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="25" r="19" s="30">
+<O>
+<![CDATA[个。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="19" cs="2" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="28" r="19" s="26">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="19" s="30">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="19" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="19" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="32" r="19" s="33">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="20" cs="5" s="24">
+<O>
+<![CDATA[5．农村专业技术协会]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="20" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="20" cs="5" s="34">
+<O>
+<![CDATA[个，共有党组织]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="20" cs="2" s="31">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="16" r="20" cs="4" s="24">
+<O>
+<![CDATA[个，其中党委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="20" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="20" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="20" cs="2" s="24">
+<O>
+<![CDATA[个、总支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="25" r="20" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="20" cs="2" s="24">
+<O>
+<![CDATA[个、支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="28" r="20" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="20" cs="2" s="24">
+<O>
+<![CDATA[个；农民专业合作社]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="20" cs="2" s="36">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="21" cs="4" s="23">
+<O>
+<![CDATA[个，共有党组织]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="21" cs="2" s="31">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="21" cs="4" s="24">
+<O>
+<![CDATA[个，其中党委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="21" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="21" cs="3" s="24">
+<O>
+<![CDATA[个、总支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="21" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="21" cs="3" s="30">
+<O>
+<![CDATA[个、支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="21" s="24">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="21" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="21" cs="2" s="24">
+<O>
+<![CDATA[个；家庭农场]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="25" r="21" cs="2" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="21" cs="2" s="24">
+<O>
+<![CDATA[个，共有党组织]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="21" s="31">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="21" cs="2" s="24">
+<O>
+<![CDATA[个，其中党委]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="32" r="21" s="33">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="22" cs="2" s="37">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="22" cs="3" s="38">
+<O>
+<![CDATA[个、总支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="22" cs="2" s="39">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="22" cs="3" s="40">
+<O>
+<![CDATA[个、支部]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="22" cs="3" s="39">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="22" s="38">
+<O>
+<![CDATA[个。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="16" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="18" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="19" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="25" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="26" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="27" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="28" r="22" s="41">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="29" r="22" s="38">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="30" r="22" s="38">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="31" r="22" s="38">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="32" r="22" s="42">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+</CellElementList>
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting/>
+</ReportSettings>
+</ReportAttrSet>
+<PrivilegeControl/>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="true" windowPosition="1" align="0" useParamsTemplate="true"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="136"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+<Left style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="2"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3355393"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3355393"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1"/>
+<Bottom style="2"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Left style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Left style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3355393"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-13159"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-13159"/>
+<Border>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-13159"/>
+<Border>
+<Bottom style="1"/>
+<Left style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="Times New Roman" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-13159"/>
+<Border>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+</StyleList>
+<DesignerVersion DesignerVersion="JAA"/>
+<PreviewType PreviewType="0"/>
+<TemplateID TemplateID="274e84b8-f766-4636-a4a8-9a2c2a90f5e5"/>
+<TemplateIdAttMark class="com.fr.base.iofileattr.TemplateIdAttrMark">
+<TemplateIdAttMark TemplateId="35714dba-cf51-4b45-95f2-cf79cf4888ab"/>
+</TemplateIdAttMark>
+</WorkBook>

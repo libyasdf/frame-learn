@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列表</title>
+    <link rel="stylesheet" href="/static/core/layui/css/layui.css">
+    <link rel="stylesheet" href="/modules/dagl/bmgl/css/common.css">
+    <link rel="stylesheet" href="/modules/dagl/bmgl/css/index.css">
+    <link rel="stylesheet" href="/static/core/layer/theme/default/layer.css">
+    <link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <style>
+    	/* .c1{
+	    	display: inline-block;
+	    	line-height: 16px;
+	    	border-width: 1px;
+	    	border-style: solid;
+	    	border-color: rgb(231, 231, 231);
+	    	border-image: initial;
+	    	border-radius: 3px;
+	    	padding: 6px 10px;
+	   		background: url(/static/images/btn_bj.png) repeat-x rgb(236, 236, 236);
+		} */
+		.c1:hover{
+			color:#fff;
+			background-color: #3071a9;
+    		border-color: #285e8e;
+		}
+		.c1{
+    		color: #fff;
+    		background-color: #428bca;
+    		border-color: #375cbd;
+	    	display: inline-block;
+	    	line-height: 16px;
+	    	border-width: 1px;
+	    	border-style: solid;
+	    	border-color: rgb(231, 231, 231);
+	    	border-image: initial;
+	    	border-radius: 3px;
+	    	padding: 6px 10px;
+	    	border: 1px solid transparent;
+    		border-radius: 4px;
+		} 
+		.c2 {
+		    display: inline;
+		    height: 32px;
+		    padding: 6px 12px;
+		    font-size: 14px;
+		    color: #555;
+		    line-height: 1.42857143;
+		    background-color: #fff;
+		    background-image: none;
+		    border: 1px solid #ccc;
+		    border-radius: 4px;
+		    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+		}
+        .table{
+            table-layout: fixed;
+        }
+        .table_list_box{
+            table-layout:fixed !important;
+        }
+    </style>
+</head>
+
+<body>
+	<input type="hidden" id="sqlStr" value=""> 
+    <div class="app">
+
+        <!-- 树 -->
+        <div class="demoTree">
+	
+            <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+                <div class="inner">
+                 <ul id="treeDemo1" class="ztree" style="margin-top: 10px; height: 300px; overflow: auto;border:1px solid #ccc">
+                    </ul>
+                    <ul id="treeDemo" class="ztree" style="margin-top: 10px; height: 300px; overflow: auto;border:1px solid #ccc">
+                    </ul>
+                   
+                    
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-component-container">
+
+            <!-- 标签容器 -->
+            <div class="tab-container col-md-12">
+
+                <!-- 标签 -->
+
+                <div class="select-container dropdown">
+                <span style="display: none;" id="rolesNo">
+	                <input type="hidden" id="danweihao" value="">   
+	                <!-- 占时不用  -->
+	                <!-- <input class="c2" type="text" id=danwei style="height: 32px" placeholder="   请选择立卷单位" onclick="openSelectZtree({'id':'danweihao','name':'danwei','isMulti':0,'type':2,'asyn':false,'level':2,'url':'/system/component/tree/deptTree'})">
+	                <button class="c1" style="height: 32px" onclick="danweiE()">查询</button>
+	                <button class="c1" style="height: 32px" onclick="$('#danweihao').val('');$('#danwei').val('');">重置</button>     -->
+                </span><span style="margin-right: 50px"></span>
+                    <!-- 下拉菜单 -->
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <!-- <li class="dropdown-item">新增</li> -->
+                        <li class="dropdown-item">组合查询</li>
+                        <li class="dropdown-item">简单查询</li>
+                        <!--预立库（按门类，按立卷单位补不能替换）2019/08/05 -王富康-->
+                        <!--<li class="dropdown-item">替换</li>-->
+                        <!-- 档案管理员在预立库不能进行调整操作 王磊 20190423 -->
+                        <!-- <li class="dropdown-item" id="dangantiaozheng" style="display: none;">档案调整</li> -->
+                        <li class="dropdown-item" title="将勾选数据及下层数据提交给档案管理员审核">移交</li>
+                        <li class="dropdown-item">删除</li>
+                        <!-- 预立库（按立卷单位）不需要q2变更功能 王磊 20190423 -->
+						<!-- <li class="dropdown-item" id="q2" style="display: none;">q2变更</li> -->
+                        <li class="dropdown-item">生成条码号</li>
+                        <li class="dropdown-item">打印条形码</li>
+                        <li class="dropdown-item" id="huizong" style="display: none;" title="将勾选数据及下层数据汇总到归档库，并在归档库重新生成档号">汇总</li>
+                        <!--<li class="dropdown-item">排序</li>-->
+                        <li class="dropdown-item" title="将勾选数据置为封号状态，录入人不能修改、删除">封号</li>
+                        <li class="dropdown-item" title="将勾选数据置为解封状态，录入人可以修改、删除">解封</li>
+                        <li class="dropdown-item" title="将勾选数据置为退回创建人，并设置状态为【已退回待处置】">退回修改</li>
+                        <li class="dropdown-item" title="将勾选数据置为退回创建人，并设置状态为【已退回待处置】">退回不归档</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--新增等按钮-->
+            <div id="toolbar" class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="newlyAdded()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                    <button class="list_table_btn2" onclick="easyFind()">
+                        <span class="glyphicon glyphicon-search"></span> 查询
+                    </button>
+                    <button class="list_table_btn2" onclick="refresh()">
+                        <span class="glyphicon glyphicon-refresh"></span> 刷新
+                    </button>
+                </div>
+            </div>
+            <!-- 面板容器 -->
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.js"></script>
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/modules/dagl/bmgl/js/common.js"></script>
+<script src="/modules/dagl/bmgl/js/indexForLjMl.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script src="/modules/dagl/tree/js/danweiTypeTree.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<script src="/modules/dagl/tree/js/danweiToMenleiTree.js"></script>
+</html>

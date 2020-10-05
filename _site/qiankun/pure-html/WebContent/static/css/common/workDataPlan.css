@@ -1,0 +1,270 @@
+/*日志内容模块*/
+
+#formpage2 {
+	padding: 15px;
+}
+
+.gr_rili_block_datelogo {
+	font-size: 14px;
+	padding: 0;
+}
+
+.form-inline {
+	padding: 4px;
+	border: 1px solid #d1dadf;
+	border-radius: 5px;
+	color: #666;
+	margin-bottom: 15px;
+}
+
+
+/*工作日志按钮组清除input默认样式并新增样式*/
+
+.form-inline input {
+	border: none;
+	outline: none;
+	width: 65%;
+	height: 26px;
+	color: #666;
+}
+
+
+/*设置input默认提示文字颜色*/
+
+.form-inline input::-webkit-input-placeholder {
+	color: #999;
+}
+
+.form-inline input::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+	color: #999;
+}
+
+.form-inline input:-moz-placeholder {
+	/* Mozilla Firefox 4 to 18 */
+	color: #999;
+}
+
+.form-inline input:-ms-input-placeholder {
+	/* Internet Explorer 10-11 */
+	color: #999;
+}
+
+
+/*获取焦点时 不显示外边框*/
+
+#content {
+	text-indent: 1em;
+	outline: none;
+}
+
+#content:focus {
+	border: none;
+}
+
+
+/*按钮组样式*/
+
+.form-inline .gr_Btn_categories {
+	padding-left: 5px;
+}
+
+.form-inline .gr_Btn_categories .line {
+	padding-left: 5px;
+	border-left: 1px solid #d1dadf;
+}
+
+.gr_worklog_content {
+	border: 1px solid #d1dadf;
+	border-radius: 5px;
+}
+
+.gr_worklog_content ul {
+	height: 170px;
+	overflow: hidden;
+}
+
+.gr_worklog_list li:last-child {
+	border-bottom: none;
+}
+
+.gr_worklog_listitem {
+	height: 34px;
+	line-height: 34px;
+	font-size: 12px;
+	border-bottom: 1px solid #d1dadf;
+}
+
+.gr_worklog_listitem .worklog_listitem_date {
+	margin: 0 10px 0 10px;
+}
+
+.gr_worklog_listitem .worklog_listitem_name {
+	max-width: 120px;
+	margin-right: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.gr_worklog_listitem .operationBtns {
+	color: #666;
+	margin-right: 6px;
+}
+
+.operationBtns i {
+	margin: 0 4px 0 4px;
+}
+
+.gr_rili_block_select {
+	background-color: #3dbaf0;
+	color: #fff;
+	padding: 0;
+}
+
+.select_year,
+.select_month {
+	margin-left: 15px;
+}
+
+
+/*修改默认的select框*/
+
+.selectbox {
+	/*用div的样式代替select的样式*/
+	display: inline-block;
+	width: 80px;
+	height: 34px;
+	border-radius: 5px;
+	position: relative;
+}
+
+
+/*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+
+.selectbox select::-ms-expand {
+	display: none;
+}
+
+/*火狐谷歌清除*/
+.selectbox select {
+	appearance:none;  
+    -moz-appearance:none;  
+    -webkit-appearance:none;
+    /*清除select的边框样式*/
+	border: none;
+	/*/清除select聚焦时候的边框颜色*/
+	outline: none;
+}
+
+.selectbox select {
+	width: 100%;
+	height: 34px;
+	line-height: 34px;
+	color: #fff;
+	background: url(../../images/xiala.png) no-repeat right center;
+	padding-left: 10px;
+}
+
+.selectbox_leibie{
+	width: 50px;
+	height: 26px;
+	color: #999;
+}
+
+.selectbox_leibie select{
+	width: 50px;
+	height: 26px;
+	color: #666;
+	padding-left: 5px;
+	line-height: 26px;
+	background: url(../../images/xiala_1.png) no-repeat right center;
+}
+
+/*option样式清除*/
+.selectbox select option::-ms-expand{ display: none; }
+.selectbox select option{
+    -moz-appearance:none; /* Firefox */
+    -webkit-appearance:none; /* Safari 和 Chrome */
+    appearance:none;
+}
+
+.selectbox select option {
+	background-color:#fff ;
+	color: #333;
+	font-size: 12px;
+	max-height: 100px;
+	overflow: auto;
+	position: relative;
+}
+.selectbox select option:hover{
+	color:#fff;
+    background-color: #3dbaf0;
+}
+
+.select_month .selectbox {
+	width: 50px;
+}
+
+.today {
+	padding-top: 4px;
+	margin-right: 10px;
+}
+
+
+/*今天按钮样式*/
+
+#today {
+	width: 60px;
+	height: 26px;
+	line-height: 26px;
+	font-size: 12px;
+	border: 1px solid #0dae78;
+	border-radius: 4px;
+	color: #fff;
+	background-color: #0dae78;
+}
+
+.gr_rili_table {
+	font-size: 12px;
+}
+
+.gr_rili_table .table_title_date {
+	background-color: #3dbaf0;
+	color: #fff;
+}
+
+.gr_rili_table td {
+	height: 32px;
+}
+
+.gr_rili_table span.taday {
+	color: #3dbaf0;
+	border: none;
+	padding: 0;
+}
+
+
+/*计划*/
+
+.unfinishedplan,
+.completedPlan {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	line-height: 32px;
+}
+
+
+/*未完成计划*/
+
+.unfinishedplan {
+	background-image: url(../../images/unfinishedplan.png);
+}
+
+
+/*已完成计划*/
+
+.completedPlan {
+	background-image: url(../../images/completedPlan.png);
+}

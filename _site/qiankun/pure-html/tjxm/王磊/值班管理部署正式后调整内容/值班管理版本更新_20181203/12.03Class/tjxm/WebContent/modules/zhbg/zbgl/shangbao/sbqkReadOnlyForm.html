@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>表单页面</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+
+</head>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <!-- resId -->
+    <input name="resId" id="resId" type="hidden" value="">
+    <!-- 流程字段-->
+    <input name="id" id="id" type="hidden" value="" />
+    <!-- 其他人员信息 -->
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="block_title">
+                <span class="name">已上报</span>
+            </div>
+        </div>
+    </div>
+    <div class="row m-t-15" style="margin-top: 15px;">
+        <div class="col-md-12 p-f-60">
+            <!--这里表格用的普通表格，要用bootstrap-table（参考列表页面）可以自行修改-->
+            <table class="table table-bordered" name="table1" id="table1">
+                <thead>
+                <th width="10%" class="text-center">上报状态</th>
+                <th width="70%" class="text-center">已上报单位</th>
+                <th width="10%" class="text-center">上报数量</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="block_title">
+                <span class="name">未上报</span>
+            </div>
+        </div>
+    </div>
+    <div class="row m-t-15" style="margin-top: 15px;">
+        <div class="col-md-12 p-f-60">
+            <!--这里表格用的普通表格，要用bootstrap-table（参考列表页面）可以自行修改-->
+            <table class="table table-bordered" name="table2" id="table2">
+                <thead>
+                <tr>
+                    <th width="70%" class="text-center">单位名称</th>
+                    <th width="20%" class="text-center">未上报数量</th>
+                    <th width="10%" class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 按钮区 -->
+<div class="form_btn_area" style="text-align: center;">
+    <button id="preserveBtn" class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭 </button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--行内编辑所需js-->
+<script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script type="text/javascript" src="/static/core/lhgdialog/lhgcore.lhgdialog.min.js?self=true&skin=iblack"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<!--固定表头所需js-->
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<!--获取系统id的js-->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<!-- 发送消息js -->
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+<script type="text/javascript">
+
+    // 获取值班表的id
+    var theRequest = GetRequest();
+    $("#resId").val(theRequest.resId ? theRequest.resId : "");
+    var year_month = theRequest.year_month ? theRequest.year_month : "";
+
+    $(document).ready(function () {
+        $.ajax({
+            type: "post",
+            url: "/zhbg/zbgl/shangbao/getChushiReportStatus",
+            data: {"year_month":year_month},
+            dataType: 'JSON',
+            success: function (data, status) {
+                //查询数据成功，回显页面
+                var isOnTimeNum = 0;
+                var isNotisOnTimeNum = 0;
+                var notReport = 0;
+                var html1 = [];
+                var html3 = [];
+                var lits = "<tr><td class=\"text-center\" width=\"20%\"> <input type=\"checkbox\" name=\"allCheck\" id=\"allCheck\" style=\"vertical-align: center;\" onclick = \"selectAlldbdw()\"> 全选";
+                html1.push('<tr><td class="text-center" width="20%">按时报</td><td class="text-left" >');
+                html3.push('<tr><td class="text-center" >逾期报</td><td class="text-left" >');
+                for (var i = 0; i < data.data.rows.length; i++) {
+                    if (data.data.rows[i].isReport == '1') {
+                        //已上报
+                        if(data.data.rows[i].isOnTime == '1'){
+                            //按时报
+                            var reportId = data.data.rows[i].id
+                            html1.push("<a onclick=\"layerOpenzbbR1('"+reportId+"')\" style=\"cursor:pointer;color:blue;text-decoration:underline;\">"+data.data.rows[i].unitName+"</a> ; ");
+                            isOnTimeNum++;
+                        }else if(data.data.rows[i].isOnTime =='0'){
+                            //逾期报
+                            var reportId = data.data.rows[i].id
+                            html3.push( "<a onclick=\"layerOpenzbbR1('"+reportId+"')\" style=\"cursor:pointer;color:blue;text-decoration:underline;\">"+data.data.rows[i].unitName+"</a> ; ");
+                            isNotisOnTimeNum++;
+                        }
+
+                    } else if (data.data.rows[i].isReport == '0') {
+                        //未上报
+                        notReport++;
+                        lits += " &nbsp;<input type='checkbox' name='notReport' id='+data.data.rows[i].unitId+' value = "+ data.data.rows[i].unitId +" style='vertical-align: center;'> "+data.data.rows[i].unitName +"";
+                    } else {
+
+                    }
+                }
+                html1.push('</td><td style=\'text-align: center;\'>'+isOnTimeNum+'</td></tr>');
+                html3.push('</td><td style=\'text-align: center;\'>'+isNotisOnTimeNum+'</td></tr>');
+                lits += "</td><td style='text-align: center;'>"+notReport+"</td><td class=\"text-center\"><i class='glyphicon glyphicon-earphone' onclick='layerOpenzbbR2()' title='催办' style=\"cursor:pointer\"  ></i></td></tr>";
+                // $("#uintMenu").append(lits);
+                $('#table1 tbody').empty().append(html1.join(''));
+                // $('#table2 tbody').empty().append(html2.join(''));
+                $('#table2 tbody').empty().append(lits);
+                $('#table1 tbody').append(html3.join(''));
+
+
+            },
+            error: function () {
+                layer.msg('查询失败！',{icon:0}); //没有数据时弹出提示信息
+            },
+            complete: function () {
+
+            }
+
+        });
+    })
+
+
+
+    //单位对比全选
+    function selectAlldbdw(){
+
+        var checklista = document.getElementsByName('notReport');
+        if(document.getElementById("allCheck").checked){
+            for(var i=0;i<checklista.length;i++){
+                checklista[i].checked = 1;
+            }
+        }else{
+            for(var j=0;j<checklista.length;j++){
+                checklista[j].checked = 0;
+            }
+        }
+    }
+    
+    function layerOpenzbbR1(id) {
+        var resId = $("#resId").val();
+
+        MyLayer.layerOpenUrl({
+            url: "/modules/zhbg/zbgl/shangbao/zbbReadOnlyForm.html?resId="+resId+"&reportId="+id+"&year_month="+year_month,
+            title: "值班表详情"
+        })
+    }
+
+    function layerOpenzbbR2() {
+
+        var obj1 = document.getElementsByName('notReport');//获取复选框对象
+        //取到数组后，循环监测它有没有被选中
+        var unitIds = "";//选中的单位id
+        var unitNames = "";//选中的单位名称
+        for(var i = 0;i<obj1.length;i++){
+            if(obj1[i].checked){
+                unitIds += obj1[i].value+",";//如果选中，将value添加到变量S中--单位id
+                unitNames += obj1[i].nextSibling.nodeValue.trim()+",";//单位名称
+            }
+        }
+        if(unitIds == ""){
+            layer.msg('请选择要催办的处室！',{icon:0});
+        }else{
+            unitIds = unitIds.substring(0,unitIds.length-1).trim();
+            unitNames = unitNames.substring(0,unitNames.length-1).trim();
+            /*setCookie("unitIds",unitIds);//将value添加到Cookies中去
+            setCookie("unitNames",unitNames);*/
+
+            var resId = $("#resId").val();
+
+
+            $.ajax({
+                type: 'get',
+                dataType: "json",//返回json格式的数据
+                url: "/zhbg/zbgl/config/queryOne",
+                data:{"dutyMonth":year_month,"sysId":Config.sysId},
+                success: function (result) {
+                    layer.prompt({
+                            title:"编辑催办内容",
+                            formType:2,
+                            value:result.data.rows[0].promptMessageContent,
+                            maxlength:100},
+                        function(val,index){
+                            layer.close(index);
+                            press(unitIds,unitNames,val);
+                        })
+                },
+                error: function (error) {
+                    layer.msg("查询失败！", {icon: 0,time:1000});
+                }
+            });
+        }
+    }
+
+    function press(unitIds,unitNames,val) {
+        //首先判断是否有值班上报员
+        var deptNames = unitNames.split(",");
+        var deptIds = unitIds.split(",");
+        var para = {"deptIds":JSON.stringify(deptIds),"deptNames":JSON.stringify(deptNames), "pressContent":val, "yearMonth":year_month};
+
+        $.ajax({
+            type: 'get',
+            dataType: "json",//返回json格式的数据
+            url: "/zhbg/zbgl/shangbao/press",
+            data: para,
+            success: function (result) {
+                if(result.flag = "1"){
+                    layer.msg("催办成功！", {icon: 1,time:1000});
+                }else{
+                    var names = result.deptNames.split(",");
+                    layer.alert(names+'没有配置值班表上报员，请及时与相关处室联系，配置后再发布！',{icon:0,title:'警告'})
+                }
+            },
+            error: function (error) {
+                layer.msg("插入催办记录失败！", {icon: 0,time:1000});
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
+ 

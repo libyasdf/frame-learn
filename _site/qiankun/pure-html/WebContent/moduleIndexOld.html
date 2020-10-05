@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>综合管理信息化系统</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link href="/static/core/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/form-public.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+
+    <script src="/static/js/common/url.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!-- 顶部容器 -->
+    <div id="header">
+        <div class="head">
+            <div class="logo">
+                <img src="/static/images/head_logo.png" />
+
+            </div>
+            <div class="user" id="user" style="top: 14px; font-size: 14px;">
+                <img id="userImg" src="" width="50" height="50" alt="" style="border-radius:50%;" />
+            </div>
+        </div>
+        <!-- 一级导航开始 -->
+        <div class="nav">
+            <span style="display:none" class="glyphicon glyphicon-chevron-left pull-left" onclick="navMoveleft()"></span>
+            <div>
+                <ul id="top_nav">
+
+                </ul>
+            </div>
+            <span style="display:none" class="glyphicon glyphicon-chevron-right pull-right" onclick="navMoveRight()"></span>
+        </div>
+        <!-- 一级导航结束 -->
+        <script type="text/javascript">
+            //获取滚动条偏移
+            function getScrleft() {
+                return $(".nav div").scrollLeft();
+            }
+
+            //获取滚动条可以滚动的宽度
+            function getTargetScroll() {
+                var liCount = $("#top_nav").children("li").size(); //li个数
+                var liWidths = 0, lrBorder = 31;
+                //递归导航栏li元素，获取总宽度
+                $("#top_nav").children("li").each(function () {
+                    liWidths += $(this).width();
+                })
+                liWidths += (liCount * lrBorder);
+                //获取窗口宽度
+                var winWidth = window.innerWidth;
+                //li总宽度减去窗口的宽度。即得到滚动条需要滚动的长度
+                var targetScroll = liWidths - winWidth;
+                return targetScroll + 100;
+            }
+
+            //判断是否需要显示左移按钮
+            function isShowMoveLeft() {
+                var scrleft = getScrleft();
+                if (scrleft > 0)
+                    return true;
+                else
+                    return false;
+            }
+
+            //判断是否需要显示右移按钮
+            function isShowMoveRight() {
+                var targetScroll = getTargetScroll();
+                //目前滚动条已经滚动的长度
+                var scrleft = getScrleft();
+                if (!isNaN(targetScroll) && (scrleft < targetScroll)) {
+                    return true;
+                } else
+                    return false;
+            }
+            //导航栏左移、右移按钮切换
+            function navSwitch() {
+                //$(".glyphicon-chevron-right").hide();
+                //$(".glyphicon-chevron-left").hide();
+                if (isShowMoveRight()) {
+                    $(".glyphicon-chevron-right.pull-right").show();
+                } else
+                    $(".glyphicon-chevron-right.pull-right").hide();
+                if (isShowMoveLeft())
+                    $(".glyphicon-chevron-left.pull-left").show();
+                else
+                    $(".glyphicon-chevron-left.pull-left").hide();
+            }
+
+            //点击左移按钮功能
+            function navMoveleft() {
+                var divWidth = window.innerWidth * 0.8;
+                var scrleft = getScrleft();
+                var targetScroll = getTargetScroll();
+                if (isShowMoveLeft) {
+                    $(".nav div").animate({ scrollLeft: (scrleft - divWidth) }, 500);
+                    if ((scrleft - divWidth) <= 0)
+                        $(".pull-left").hide();
+                    if ((scrleft - divWidth) < targetScroll)
+                        $(".pull-right").show();
+                    else
+                        $(".pull-right").hide();
+                } else
+                    $(".pull-left").hide();
+            }
+            //点击右移按钮功能
+            function navMoveRight() {
+                //根据窗口宽度，*0.8作为每次滚动的宽度
+                var divWidth = window.innerWidth * 0.8;
+                //目前滚动条已经滚动的长度
+                var scrleft = getScrleft();
+                var targetScroll = getTargetScroll();
+                if (isShowMoveRight) {
+                    $(".nav div").animate({ "scrollLeft": scrleft + divWidth }, 500); //若目前的滚动条的长度小于 最终需要滚动的长度，则向左拉动滚动条，拉动的距离为一个li的宽度和它的左外空的距离。
+                    scrleft += divWidth;
+                    if (scrleft > 0)
+                        $(".pull-left").show();
+                    else
+                        $(".pull-left").hide();
+                    if (scrleft >= targetScroll) {
+                        $(".pull-right").hide();
+                    } else
+                        $(".pull-right").show();
+                } else {
+                    $(".pull-right").hide();
+                }
+                //console.log("右移 liCount:" + liCount);
+                //console.log("右移 liWidths:" + liWidths);
+            }
+            /**
+            function navMoveRight(){ 
+                var licount = $("#top_nav").children("li").size(); //li个数
+                var perwidth = 100;//每个li的宽度和左控的和
+                var liwidths = licount * perwidth; //所有li的总宽度
+                var divWidth = window.innerWidth * 0.8;
+                var targetScrol = liwidths - window.innerWidth;//li总宽度减去外层div的宽度。即得到滚动条需要滚动的长度
+                var scrleft = $(".nav div").scrollLeft();//目前滚动条的滚动长度
+                if(!isNaN(targetScrol) && (scrleft < targetScrol)){
+                    $(".nav div").animate({"scrollLeft":scrleft+divWidth},500); //若目前的滚动条的长度小于 最终需要滚动的长度，则向左拉动滚动条，拉动的距离为一个li的宽度和它的左外空的距离。
+                    $(".glyphicon-chevron-left").show();
+                    if((scrleft+divWidth) >= targetScrol){
+                        $(".glyphicon-chevron-right").hide();
+                    }		
+                }else{
+                    $(".glyphicon-chevron-right").hide();
+                }
+                console.log("navMoveRight licount:" + licount);
+                console.log("navMoveRight liwidths:" + liwidths);
+                console.log("navMoveRight divWidth:" + divWidth);
+                console.log("navMoveRight targetScrol:" + targetScrol);
+                console.log("navMoveRight scrleft:" + scrleft);
+            }*/
+            /**
+            * 顶部导航初始函数
+            * @return {[type]} [description]
+            */
+            var headerInit = function () {
+                var init = function () {
+                    loadData();
+                    $("#top_nav").on("mouseover", "li.dropdown", function () {
+                        $(this).css("position", "static")
+                        $(this).find(".dropdown-menu").css("left", $(this).position().left)
+                    })
+                };
+
+                /**
+                * 加载头部导航树
+                * @return {[type]} [description]
+                */
+                var loadData = function () {
+                    $.getJSON('/recourse/top', function (json) {
+                        var html = [];
+                        var data = null;
+                        // json.flag为 1 时数据正常返回
+                        if (json.flag === '1') {
+                            data = json.data;
+                            for (var i = 0; i < data.length; i++) {
+                                // 从url中获取id并根据id确定选中
+                                var id;
+                                try {
+                                    id = Url.prototype.parse(window.location.href).query.id;
+                                } catch (e) {
+                                }
+                                if (data[i].childrenList && data[i].childrenList.length > 0) {
+                                    if (data[i].id === id.substring(0, 3)) {
+                                        html.push('<li class="dropdown active" >');
+                                    } else {
+                                        html.push('<li class="dropdown" >');
+                                    }
+                                    html.push('<a href="javascript:;" id=' + data[i].id + ' data-toggle="dropdown" class="dropdown-toggle">' + data[i].name + '<span class="caret"></span></a>');
+                                    html.push('<ul class="dropdown-menu">');
+                                    //      循环填充二级菜单
+                                    var childrenList = data[i].childrenList;
+                                    for (var j = 0; j < childrenList.length; j++) {
+                                        if (childrenList[j].id === id) {
+                                            html.push('<li class="active" >');
+                                        } else {
+                                            html.push('<li>');
+                                        }
+                                        html.push('<a href=' + childrenList[j].url + '?id=' + childrenList[j].id + ' id=' + childrenList[j].id + '>' + childrenList[j].name + '</a>');
+                                        html.push('</li>');
+                                    }
+                                    html.push('</ul>');
+                                    //html.push('</a>');
+                                    html.push('</li>');
+                                } else {
+                                    if (data[i].id === id) {
+                                        html.push('<li class="active" >');
+                                    } else {
+                                        html.push('<li>');
+                                    }
+                                    html.push('<a href=' + data[i].url + '?id=' + data[i].id + ' id=' + data[i].id + '>' + data[i].name + '</a>');
+                                    html.push('</li>');
+                                }
+                            }
+                            $('#top_nav').empty().append(html.join(''));
+                            //控制导航栏左右切换按钮的显示与否
+                            navSwitch();
+                            // 调用事件绑定方法
+                            //                            funBind();
+                            //给top菜单添加悬浮展开事件 start
+                            $('#header .dropdown').mouseover(function () {
+                                $(this).addClass('open');
+                            });
+                            $('#header .dropdown').mouseout(function () {
+                                $(this).removeClass('open');
+                            });
+                            //给top菜单添加悬浮展开事件 end
+
+                            // 加载第二级
+                            loadTwoNav();
+                        }
+                    });
+                };
+
+                /**
+                * 事件绑定函数
+                * @return {[type]} [description]
+                */
+                var funBind = function () {
+                    $("#top_nav li").on("click", "a", function () {
+                        $("#top_nav li").removeClass("active");
+                        $(this).parent().addClass("active");
+                        loadTwoNav();
+                    });
+                };
+
+                /**
+                * 加载第二级，左边导航栏
+                * @return {[type]} [description]
+                */
+                var loadTwoNav = function () {
+                    // 用来获取导航数据的id
+                    var id = Url.prototype.parse(window.location.href).query.id;
+                    //$("#top_nav li.active").find('a').attr('id');
+                    //                    $('#left').empty().load('/modules/frame/left.html',function(html) {
+                    leftInit.init(id);
+                    //                    });
+                };
+
+                return {
+                    init: function () {
+                        init();
+                    }
+                }
+            }();
+
+        </script>
+    </div>
+    <!-- 左边导航栏 -->
+    <div id="left">
+        <!-- 导航的容器-->
+        <ul class="left_ul" id="left_ul"></ul>
+        <div id="unfold">
+            <span>
+                <img src="../static/images/show_24.jpg" />
+            </span>
+        </div>
+        <script id="myfavor" type="text/template">
+        <? if(@data){?>
+        <?for(var i=0; i<@data.length; i++){?>
+        <li>
+            <a class="left-yiji" href="javascript:;" isChild="<?=@data[i].isChild?>" url="<?=@data[i].url?>"
+               id="<?=@data[i].id?>">
+                <? if(@data[i].isChild == "true"){?>
+                	<span class="fr">
+                        <img src="/static/images/zyqy_ico_29.png"/>
+                    </span>
+                <?}?>
+                <img src="<?=@data[i].style?>"/>  <?=@data[i].name?>
+            </a>
+            <? if(@data[i].childrenList){?>
+            <? if(i<1){?>
+            	<ul>
+            <?}else{?>
+                <ul style="display: none">
+                    <?}?>
+                    <?for(var j=0; j<@data[i].childrenList.length; j++){?>
+                    <li>
+                        <a class="left-erji" href="javascript:;" isChild="<?=@data[i].childrenList[j].isChild?>"
+                           url="<?=@data[i].childrenList[j].url?>" id="<?=@data[i].childrenList[j].id?>">
+                            <?=@data[i].childrenList[j].name?>
+                            <? if(@data[i].childrenList[j].isChild == "true"){?>
+                            <? if(i<1 && j<1){?>
+                            <img src="/static/images/icon16/ico_gd.gif" style="float: right;"/>
+                            <? }else{?>
+                            <img src="/static/images/icon16/ico_gr.gif" style="float: right;"/>
+                            <?}?>
+                            <?}?>
+                        </a>
+                    <? if(@data[i].childrenList[j].childrenList){?>
+                    <? if(j<1){?>
+                    <ul>
+                        <?}else{?>
+                        <ul style="display: none">
+                            <?}?>
+                            <?for(var k=0; k<@data[i].childrenList[j].childrenList.length; k++){?>
+                            <li>
+                                <a class="left-sanji" href="javascript:;"
+                                   url="<?=@data[i].childrenList[j].childrenList[k].url?>"
+										id="<?=@data[i].childrenList[j].childrenList[k].id?>"
+                                   isChild="<?=@data[i].childrenList[j].childrenList[k].isChild?>">
+                                    <? if(@data[i].childrenList[j].childrenList[k].isChild == "true"){?>
+                                    <img src="/static/images/icon16/ico_gd.gif"  style="float: right;"/>
+                                    <?}?>
+                                    <?=@data[i].childrenList[j].childrenList[k].name?>
+                                </a>
+
+                            <? if(@data[i].childrenList[j].childrenList[k].childrenList){?>
+                            <ul>
+                                <?for(var m=0; m<@data[i].childrenList[j].childrenList[k].childrenList.length; m++){?>
+                                <li>
+                                    <a class="left-siji" href="javascript:;"
+                                       url="<?=@data[i].childrenList[j].childrenList[k].childrenList[m].url?>"
+                                       id="<?=@data[i].childrenList[j].childrenList[k].childrenList[m].id?>"
+                                       isChild="<?=@data[i].childrenList[j].childrenList[k].childrenList[m].isChild?>">
+                                        <?=@data[i].childrenList[j].childrenList[k].childrenList[m].name?>
+                                    </a>
+                                </li>
+                                <?}?>
+                            </ul>
+                            <?}?>
+                            </li>
+                            <?}?>
+                        </ul>
+                        <?}?>
+                        </li>
+                        <?}?>
+                    </ul>
+                    <?}?>
+                    </li>
+                    <?}?>
+                    <?}?>
+    </script>
+        <script type="text/javascript">
+
+            function yiji(obj) {
+                // 绑定第一级
+                obj.siblings('ul').show('slow');
+                obj.find('span.fr > img').attr('src', '/static/images/zyqy_ico_29.png');
+            }
+
+            function erji(obj) {
+                // 绑定第一级
+                obj.parent('li').find('ul').show('show');
+                obj.find('img').attr('src', '/static/images/icon16/ico_gd.gif');
+            }
+
+            function sanji(obj) {
+                // 绑定第一级
+                obj.parent('li').find('ul').show('show');
+                obj.find('img').attr('src', '/static/images/icon16/ico_gd.gif');
+            }
+
+            var leftInit = function () {
+                /**
+                 * 初始化函数
+                 * @return {[type]} [description]
+                 */
+                var init = function (id) {
+                    loadData(id);
+                };
+
+                /**
+                 * 加载第二级导航树
+                 * id: 加载左边导航树必须参数，目前模拟不使用
+                 * @return {[type]} [description]
+                 */
+                var loadData = function (id) {
+                    $.getJSON('/recourse/left?pid=' + id, function (json) {
+                        if (json.flag === '1') {
+                            // 获取模板
+                            var content = $('#myfavor').html();
+                            // 格式化数据，主要是添加isChild标志位
+                            json = FormatData(json);
+                            // 拼接模板
+                            nodetpl.render(content, json, function (html) {
+                                var sidResult = false;
+                                $("#left_ul").empty().append(html);
+                                // 调用绑定事件方法
+                                var sid = Url.prototype.parse(window.location.href).query.sid;
+                                funBind();
+                                if (sid && !sidResult) {
+                                    $(".left_ul").each(function () {
+                                        $(this).find('a').each(function () {
+                                            var everySid = $(this).attr('id');
+                                            if (sid == everySid) {
+                                                var thisUrl = $(this).attr('url');
+                                                sidResult = true;
+                                                if ($(this).parent().parent().siblings('a').attr('class') == 'left-sanji') {
+                                                    yiji($(this).parent().parent().parent().parent().parent().parent().siblings('a'));
+                                                    erji($(this).parent().parent().parent().parent().siblings('a'));
+                                                    sanji($(this).parent().parent().siblings('a'));
+
+                                                }
+                                                if ($(this).parent().parent().siblings('a').attr('class') == 'left-erji') {
+                                                    yiji($(this).parent().parent().parent().parent().siblings('a'));
+                                                    erji($(this).parent().parent().siblings('a'));
+
+                                                }
+                                                if ($(this).parent().parent().siblings('a').attr('class') == 'left-yiji') {
+                                                    yiji($(this).parent().parent().siblings('a'));
+
+                                                }
+                                                $(this).addClass('active');
+                                                loadContent(thisUrl);
+
+                                            }
+
+                                        });
+                                    });
+                                }
+                                if (sidResult == true) {
+                                    return;
+                                }
+                                // 默认初始化内容区域
+
+                                // 如果没有第二级，选择第一级
+                                var $yiji = $('#left_ul .left-yiji:first').parent();
+                                if ($yiji.find('.left-erji').length === 0) {
+                                    var _url = $yiji.find('.left-yiji').eq(0).attr('url');
+                                    $yiji.find('.left-yiji').eq(0).addClass('active');
+                                    loadContent(_url);
+                                    return;
+                                }
+                                // 如果没有第三级，选择第二级
+                                var $erji = $yiji.find('.left-erji:first').parent();
+                                if ($erji.find('.left-sanji').length === 0) {
+                                    var _url = $erji.find('.left-erji').eq(0).attr('url');
+                                    $erji.find('.left-erji').eq(0).addClass('active');
+                                    loadContent(_url);
+                                    return;
+                                }
+                                // 如果没有第四级，选择第三级
+                                var $sanji = $erji.find('.left-sanji:first').parent();
+
+                                if ($sanji.find('.left-siji').length === 0) {
+                                    var _url = $sanji.find('.left-sanji').eq(0).attr('url');
+                                    $sanji.find('.left-sanji').eq(0).addClass('active');
+                                    loadContent(_url);
+                                    return;
+                                }
+                                // 有第四级选择第四级
+                                var $siji = $sanji.find('.left-siji:first').parent();
+                                var _url = $siji.find('.left-siji').eq(0).attr('url');
+                                $siji.find('.left-siji').eq(0).addClass('active');
+                                loadContent(_url);
+                            })
+                        }
+                    });
+                };
+
+                /**
+                 * 格式化数据
+                 * [FormatData description]
+                 */
+                var FormatData = function (json) {
+                    var data = json.data;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].childrenList && data[i].childrenList.length > 0) {
+                            data[i].isChild = "true";
+                            data[i].childrenList = recursion(data[i].childrenList);
+                        } else {
+                            data[i].isChild = "false";
+                        }
+                    }
+
+                    return {
+                        flag: json.flag,
+                        data: data
+                    }
+                };
+
+                var recursion = function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].childrenList && data[i].childrenList.length > 0) {
+                            data[i].isChild = "true";
+                            data[i].childrenList = recursion(data[i].childrenList);
+                        } else {
+                            data[i].isChild = "false";
+                        }
+                    }
+                    return data;
+                };
+
+                /**
+                 * 绑定事件方法
+                 * @return {[type]} [description]
+                 */
+                var funBind = function () {
+                    // 绑定第一级
+                    $('#left_ul .left-yiji').unbind('click').bind('click', function () {
+                        if ($(this).attr('isChild') == 'true') {
+                            if ($(this).siblings('ul:hidden').length > 0) {
+                                $(this).siblings('ul').show('slow');
+                                $(this).find('span.fr > img').attr('src', '/static/images/zyqy_ico_28.png');
+                            } else {
+                                $(this).siblings('ul').hide('slow');
+                                $(this).find('span.fr > img').attr('src', '/static/images/zyqy_ico_29.png');
+                            }
+                        } else {
+                            // 添加样式
+                            $('#left_ul').find('a.active').removeClass('active');
+                            $(this).addClass('active');
+                            // 加载页面
+                            var url = $(this).attr('url');
+                            // alert("1级" + url);
+                            loadContent(url);
+                        }
+                    });
+
+                    // 绑定第二级
+                    $('#left_ul .left-erji').unbind('click').bind('click', function () {
+                        if ($(this).attr('isChild') == 'true') {
+                            if ($(this).parent('li').find('ul:hidden').length > 0) {
+                                $(this).parent('li').find('ul').show('show');
+                                $(this).find('img').attr('src', '/static/images/icon16/ico_gd.gif');
+                            } else {
+                                $(this).parent('li').find('ul').hide('show');
+                                $(this).find('img').attr('src', '/static/images/icon16/ico_gr.gif');
+                            }
+                        } else {
+                            // 添加样式
+                            $('#left_ul').find('a.active').removeClass('active');
+                            $(this).addClass('active');
+                            // 加载页面
+                            var url = $(this).attr('url');
+                            loadContent(url);
+                        }
+                    });
+
+                    // 绑定第三级
+                    $('#left_ul .left-sanji').unbind('click').bind('click', function () {
+                        if ($(this).attr('isChild') == 'true') {
+                            if ($(this).parent('li').find('ul:hidden').length > 0) {
+                                $(this).parent('li').find('ul').show('show');
+                                $(this).find('img').attr('src', '/static/images/icon16/ico_gd.gif');
+                            } else {
+                                $(this).parent('li').find('ul').hide('show');
+                                $(this).find('img').attr('src', '/static/images/icon16/ico_gr.gif');
+                            }
+                        } else {
+                            // 添加样式
+                            $('#left_ul').find('a.active').removeClass('active');
+                            $(this).addClass('active');
+                            // 加载页面
+                            var url = $(this).attr('url');
+                            loadContent(url);
+                        }
+                    })
+
+                    // 绑定第四级
+                    $('#left_ul .left-siji').unbind('click').bind('click', function () {
+                        // 添加样式
+                        $('#left_ul').find('a.active').removeClass('active');
+                        $(this).addClass('active');
+                        // 加载页面
+                        var url = $(this).attr('url');
+                        loadContent(url);
+                    })
+
+                    $("#unfold").unbind('click').bind('click', function () {
+                        if (!$("body").hasClass('unfoldBody')) {
+                            $("body").addClass("unfoldBody")
+                        } else {
+                            $("body").removeClass("unfoldBody")
+                        }
+
+                    })
+                };
+
+                /**
+                 * 加载内容区域
+                 * @return {[type]} [description]
+                 */
+                var loadContent = function (url) {
+                    var url = url == "#" ? "/404.html" : url;
+                    if (url && url.indexOf("?") >= 0) {
+                        url += "&" + new Date().getTime()
+                    } else {
+                        url += "?" + new Date().getTime()
+                    }
+                    $('#right').empty().load(url, function () {
+
+                    });
+                };
+
+                return {
+                    init: function (id) {
+                        init(id);
+                    }
+                };
+            }();
+        </script>
+    </div>
+    <!-- 右边内容区域-->
+    <div id="right"></div>
+
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/laydate/laydate.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script src="/static/core/nodetpl.min.js"></script>
+    <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!--行内编辑所需js-->
+    <script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+    <script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+    <script type="text/javascript" src="/static/core/lhgdialog/lhgcore.lhgdialog.min.js?self=true&skin=iblack"></script>
+    <script src="/static/js/common/mylayer.js"></script>
+    <script src="/static/js/common/tablelist.js"></script>
+    <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+    <!-- 获取cookie值 -->
+    <script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+
+    <script src="/common/js/config.js"></script>
+    <script src="/common/js/index.js"></script>
+    <script type="text/javascript">
+        $(function (e) {
+            // 加载顶部
+            // $('#header').empty().load('modules/frame/top.html',function(){
+            headerInit.init();
+            $(window).resize(function () {
+                navSwitch();
+            });
+
+            // })
+        });
+
+        //fullScreen.init('full-screen');
+
+
+
+        /* 扩展窗口外部方法 */
+        $.dialog.notice = function (options) {
+            var opts = options || {},
+                api, aConfig, hide, wrap, top,
+                duration = opts.duration || 800;
+
+            var config = {
+                id: 'Notice',
+                left: '100%',
+                top: '100%',
+                fixed: true,
+                drag: false,
+                resize: false,
+                init: function (here) {
+                    api = this;
+                    aConfig = api.config;
+                    wrap = api.DOM.wrap;
+                    top = parseInt(wrap[0].style.top);
+                    hide = top + wrap[0].offsetHeight;
+
+                    wrap.css('top', hide + 'px')
+                        .animate({ top: top + 'px' }, duration, function () {
+                            opts.init && opts.init.call(api, here);
+                        });
+                },
+                close: function (here) {
+                    wrap.animate({ top: hide + 'px' }, duration, function () {
+                        opts.close && opts.close.call(this, here);
+                        aConfig.close = $.noop;
+                        api.close();
+                    });
+
+                    return false;
+                }
+            };
+
+            for (var i in opts) {
+                if (config[i] === undefined) config[i] = opts[i];
+            }
+
+            return $.dialog(config);
+        };
+
+    /* 调用示例 */
+    /* $.dialog.notice({
+        title: '消息通知',
+        width: 220,  //必须指定一个像素宽度值或者百分比，否则浏览器窗口改变可能导致lhgDialog收缩
+        content: '<br/>您有一条待办信息，请及时办理<br/><br/>',
+        time: 5,
+        focus: false
+    }); */
+
+
+    </script>
+</body>
+
+</html>

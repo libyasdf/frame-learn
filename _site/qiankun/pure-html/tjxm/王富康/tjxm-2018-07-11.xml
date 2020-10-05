@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+<property name="export.dir.root" value="F:\导出文件\tjxm\20180711"></property>
+
+
+<target name="all">
+	<mkdir dir="${export.dir.root}"/>
+	<copy todir="${export.dir.root}" overwrite="true">
+		<fileset refid="zs"/>
+	</copy>
+</target>
+
+<fileset id="zs" dir="../">
+
+	<!--1： 模板下载后台代码  -->
+	<include name="/com/sinosoft/sinoep/modules/system/component/template/**"/>
+	<!--1： 前台代码 modules/zhbg/zbgl/rczbSearch.html 48行 -->
+	<include name="/modules/zhbg/zbgl/rczbSearch.html"/>
+
+</fileset>
+
+
+<!--删除上次导出文件-->
+<target name="deleteOldFile" >
+	<delete verbose="true" includeemptydirs="true" failonerror="false" >
+		<fileset dir="${export.dir.root}">
+			<include name="**/*"/>
+		</fileset>
+	</delete>
+</target>
+
+<target name="default" depends="deleteOldFile,all">
+	<exec executable="cmd" failonerror="false">
+		<arg line='/f explorer "${export.dir.root}\"' />
+	</exec>
+</target>
+</project>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>试卷管理</title>
+<link rel="stylesheet"
+	href="/static/core/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+<link href="/static/css/common/style.css" rel="stylesheet" />
+<link href="/static/css/common/form-public.css" rel="stylesheet" />
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet"
+	href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+<link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+
+<body class="formpage_bj">
+<form class="form-horizontal" id="form">
+	<div class="container-fluid formpage_area">
+		
+			<input type="hidden" id="id" name="id" value="" /> 
+			<input type="hidden" id="type" name="type" value="" /> 
+			<input type="hidden" id="nodeId" name="nodeId" value="" />
+			<input type="hidden" id="groupId" name="groupId" value="" />
+			<input type="hidden" id="createType" name="createType" value="" />
+			<!-- 基本信息 -->
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">试卷基本信息</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label"><span style="color:red">* </span>试卷名称：</label>
+						<div class="col-md-10">
+							<input type="text" class="form-control" id="name" name="name" maxlength="45"
+								placeholder="试卷名称">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">难易程度：</label>
+						<div class="col-md-4">
+							<select name="difficultyLevel" class="form-control"
+								id="difficultyLevel">
+								<option value="1" selected>简单</option>
+								<option value="2">一般</option>
+								<option value="3">困难</option>
+							</select>
+						</div>
+						
+					</div>
+						
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">备注：</label>
+						<div class="col-md-10">
+							<textarea name="remark" id="remark" class="form-control" rows="3"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+					<label for=""  class="col-md-2 control-label isofo">是否共享：</label>
+						<div class="col-md-4 isofo">
+							<label class="radio-inline"> 
+								<input type="radio" id="isShare1" name="isShare" value="1" checked> 是
+							</label> 
+							<label class="radio-inline"> 
+								<input type="radio" id="isShare0" name="isShare" value="0" > 否
+							</label>
+						</div>
+					<label for="" class="col-md-2 control-label">是否可用：</label>
+						<div class="col-md-4">
+							<label class="radio-inline"> 
+								<input type="radio" id="isState1" name="state" value="1" checked> 是
+							</label> 
+							<label class="radio-inline">
+								<input type="radio" id="isState0" name="state" value="0" > 否
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+	<!-- 	</form> -->
+		<!-- 基本信息结束 -->
+
+		<!-- 试题选择 -->
+		<div class="row">
+			<div class="col-md-12 ">
+				<div class="block_title">
+					<span class="name">试题选择</span>
+				</div>
+			</div>
+		</div>
+		<!--最外层tab-->
+		<div class="modal-body selectjs">
+			<div class="selectjs_block" style="height: auto;">
+				<div class="title_tab">
+					<ul class="nav nav-tabs">
+						<li class="active" for="formpage1"  id="renZuJuan"><a href="javascript:;"
+							data-toggle="tab"> 人工组卷 </a></li>
+						<li for="formpage2" id="autoZuJuan"><a href="javascript:;" data-toggle="tab">
+								自动组卷 </a></li>
+					</ul>
+				</div>
+				<div class="main" style="height: auto;">
+					<!--tab的主体部分-->
+					<!-- 人工组卷展示内容 -->
+					<div id="formpage1" class="active">
+						<!--<div class="container-fluid formpage_area">-->
+						<div class="row m-t-15">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="" class="col-md-2 control-label"><b
+										style="color: red;">* </b>题型：</label>
+									<button type="button" class="list_table_btn2"
+										onclick="questionType(this,1)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 单选
+									</button>
+									<button type="button" class="list_table_btn2"
+										onclick="questionType(this,2)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 多选
+									</button>
+									<button type="button" class="list_table_btn2"
+										onclick="questionType(this,3)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 判断
+									</button>
+									<button type="button" class="list_table_btn2"
+										onclick="questionType(this,4)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 填空
+									</button>
+									<button type="button" class="list_table_btn2"
+										onclick="questionType(this,5)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 简答
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="row m-t-15">
+							<div class="col-md-12">
+								<table class="table table-bordered" name="table">
+									<thead>
+										<tr>
+											<th width="10%" class="text-center">序号</th>
+											<th width="10%" class="text-center">类型</th>
+											<th width="20%" class="text-center">数量</th>
+											<th width="20%" class="text-center">每题分数</th>
+											<th width="20%" class="text-center">总分</th>
+											<th width="20%" class="text-center">操作</th>
+										</tr>
+									</thead>
+									<tbody id="tbody">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- 自动组卷展示内容 -->
+					<div id="formpage2" class="hidden">
+						<div class="row m-t-15">
+							<div class="col-md-10">
+								<div class="form-group">
+									<label for="" class="col-md-3 control-label"><b
+										style="color: red;">* </b>题型：</label>
+									<button class="list_table_btn2" onclick="autoQuestionType(this,1)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 单选
+									</button>
+									<button class="list_table_btn2" onclick="autoQuestionType(this,2)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 多选
+									</button>
+									<button class="list_table_btn2" onclick="autoQuestionType(this,3)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 判断
+									</button>
+									<button class="list_table_btn2" onclick="autoQuestionType(this,4)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 填空
+									</button>
+									<button class="list_table_btn2" onclick="autoQuestionType(this,5)">
+										<span class="glyphicon glyphicon-plus-sign"></span> 简答
+									</button>
+									
+									
+									
+								</div>
+								<div class="form-group" id="dept">
+								
+								</div>
+								<div class="form-group">
+								<label for="" class="col-md-3 control-label"><b
+										style="color: red;">* </b>开始组卷：</label>
+									<button class="list_table_btn2" onclick="startZujuan()">
+										<span class="glyphicon glyphicon-random"></span> 组卷
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="row m-t-15">
+							<div class="col-md-12">
+								<table class="table table-bordered" name="table">
+									<thead>
+										<tr>
+											<th width="5%" class="text-center"><input
+												type="checkbox" id="isCheckbox" onclick="checkboxAll(this)"/></th>
+											<th width="10%" class="text-center">序号</th>
+											<th width="10%" class="text-center">类型</th>
+											<th width="10%" class="text-center">简单</th>
+											<th width="10%" class="text-center">一般</th>
+											<th width="10%" class="text-center">困难</th>
+											<th width="15%" class="text-center">每题分数</th>
+											<th width="10%" class="text-center">总分</th>
+											<th width="10%" class="text-center">状态</th>
+											<th width="10%" class="text-center">操作</th>
+										</tr>
+									</thead>
+									<tbody id="autoTbody">
+										
+									
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- tip -->
+				<div id="tip" style="padding-left:10px;width: 100%;height: 60px;line-height: 60px;background-color: rgb(217,237,247);">
+				  操作步骤：1.添加题型；2.选择试题；3.设置每题分数；
+				</div>
+				</div>
+				
+			</div>
+		</div>
+
+		<div class="row m-b-5">
+			<div class="col-md-12">
+				<label class="control-label">试卷总分：<input type="hidden" 
+					id="fullScore"></label><span id="zongfen">0</span>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- 按钮区 -->
+	<div class="form_btn_area" style="text-align: center;">
+		<button id="save" class="btn btn-primary form_btn_area_btn2"
+			onclick="saveForms()">
+			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+			保存
+		</button>
+		<button id="yulan"  class="btn btn-primary form_btn_area_btn2"
+			onclick="commitForm();">
+			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+			预览
+		</button>
+		<button id="preserveBtn" class="btn btn-primary form_btn_area_btn2"
+			onclick="MyLayer.closeOpen();">
+			<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+			关闭
+		</button>
+	</div>
+</form>
+
+	<!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+	<script
+		src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script
+		src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script src="/static/js/common/url.js"></script>
+	<script src="/static/js/common/mylayer.js"></script>
+	<!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<script src="/modules/zhbg/xxkh/paperManage/js/sjglEditForm.js"></script>
+	<!-- 数据回显 -->
+	<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+	<script type="text/javascript">
+
+
+var type="";
+	
+/* function deptTypes(){
+	var a =layer.confirm("切换试题类型会导致数量重新填写，是否要确实切换？", {
+		btn : [ '确定', '取消' ]
+	//按钮
+	}, function() {
+	var deptType = "?deptType="+$("#deptType").val();
+       	$.get("/zhbg/xxkh/xxkhPaperInfo/save"+deptType,{id:$("#id").val(),remark:$("#remark").val(),createType:"1",zz:Math.random()},function(data){
+    		parent.TableInit.refTable('right_table');
+    	})
+       	layer.close(a);
+	 getSjAutoData();
+	},function(){
+		//切换取消按钮事件
+		layer.close(a);
+	})
+}  */
+	
+	
+	
+
+$(function () {
+	var theRequest = GetRequest();
+	type = theRequest.type;
+	if(type.indexOf("juj")!=-1){
+		$(".isofo").hide();
+		$("#dept").html('<label for="" class="col-md-3 control-label">\
+						<b style="color: red;">* </b>试卷类型：</label>\
+						<span class="glyphicon" id = "dept">\
+							<select name="deptType" class="form-control" id="deptType"  >\
+								<option id="fzst" value="fzst" selected>法制</option>\
+								<option id="zzllst" value="zzllst">政治理论</option>\
+								<option id="bmst" value="bmst">保密</option>\
+							</select>\
+						</span>')
+	}
+	var createType =theRequest.createType;
+	$("#nodeId").val(theRequest.nodeId);
+	if(createType=="0"){$("#autoZuJuan").hide();}
+	if(createType=="1"){$("#autoZuJuan").addClass("active");$("#renZuJuan").hide();$("#formpage1").addClass('hidden');$("#formpage2").removeClass('hidden');}
+    // tab页切换
+    $('.nav-tabs > li').unbind('click').bind('click', function () {
+        var id = $(this).attr('for');
+        $(this).addClass('active').siblings('li').removeClass('active');
+        $('.main').children().addClass('hidden');
+        $('#' + id).removeClass('hidden');
+        $("#tip").removeClass('hidden');
+        if($(this).attr("id")=="renZuJuan"){
+        	$("#tip").text("操作步骤：1.添加题型；2.在操作列选择试题；3.设置每题分数；")
+        }else{
+        	$("#tip").text("操作步骤：1.添加题型；2.设置简单、一般、困难数量；3.点击组卷按钮进行组卷；4.设置每题分数；")
+        }
+    })
+    
+    console.log($("#deptType"));
+
+    $("#deptType").change(function (e) {
+        var that = e.target;
+        var val = $(that).val();
+        
+        // e.preventDefault();
+        
+		var a =layer.confirm("切换试卷类型后，会清空所有输入的数量，是否切换？", {
+			btn : [ '确定', '取消' ]
+		//按钮
+		}, function() {
+            $(that).attr("hook", val);
+            var deptType = "?deptType="+$("#deptType").val();
+           	$.get("/zhbg/xxkh/xxkhPaperInfo/save"+deptType,{id:$("#id").val(),remark:$("#remark").val(),createType:"1",zz:Math.random()},function(data){
+        		parent.TableInit.refTable('right_table');
+        	})
+           	layer.close(a);
+    		 getSjAutoData();	
+        }, function () {
+
+            if (typeof $(that).attr("hook") == "undefined") {
+                //尚未做过选择，重置为默认选择
+                $(that).val($(that).children("option:first-child").val());
+                
+            } else {
+                //重置为修改之前的选择
+                $(that).val($(that).attr("hook"));
+            }
+        });
+    });
+   
+})
+	//人工组卷
+	var tdNumber = 0;
+	var repetition = true;
+    function questionType(e,val){
+    	$("#createType").val("0");
+    	if($("#id").val()==""){
+    		layer.msg("请先保存试卷再添加试题！", {
+				icon : 0
+			});
+    		return;
+    	}
+    	
+    	$("#autoZuJuan").hide();
+    	$("#tbody").find("tr").each(function(){
+    		if($(this).attr("id")==val){
+    			repetition =  false;
+    		}
+    	})
+    	if(!repetition){
+    		layer.msg("已存在"+$(e).text().trim()+"题型", {
+				icon : 0
+			});
+    		repetition =  true;
+    		return;
+    	}
+    	tdNumber = $("#tbody").children("tr").length;
+    	$.get("/zhbg/xxkh/qusetiongroup/save",{questionType:val,paperId:$("#id").val(),createType:"0",sequence:tdNumber+1,zz:Math.random()},function(data){
+    		
+    		if(data.flag==1){
+    		
+    		$("#tbody").append('<tr id="'+val+'">\
+			  <td class="text-center" >'+(tdNumber+1)+'</td>\
+			  <td class="text-center" >'+$(e).text()+'</td>\
+			  <td class="text-center" >0</td>\
+			  <td class="text-center" ><input class="form-control"  onblur=\"suanzongfen(\''+data.data.id+'\')\" id=\"'+data.data.id+'\" type="text" name="everyScore" id="everyScore" value=""/></td>\
+			  <td class="text-center" >0</td>\
+			  <td class="text-center" >\
+			  <i class="glyphicon glyphicon-edit" title=\'选择试题\' style="cursor:pointer;" onclick="selectQuestion(\''+data.data.questionType+'\',\''+data.data.id+'\')"></i>\
+			  <i class="glyphicon glyphicon-trash p-l-10" title=\'删除\' style="cursor:pointer;" onclick="deleteTiZu(\''+data.data.id+'\')"></i>\
+			  </td>\
+			  </tr>');
+	    		$.get("/zhbg/xxkh/xxkhPaperInfo/save",{id:$("#id").val(),createType:"0",remark:$("#remark").val(),zz:Math.random()},function(data){
+	        		parent.TableInit.refTable('right_table');
+	        	});
+    		}else{
+    			layer.msg("添加异常！请重试", {
+    				icon : 0
+    			});
+    		}
+    	 },"json")
+    }
+   
+    //自动组卷-添加题组
+    function autoQuestionType(e,val){
+    	$("#createType").val("1");
+    	if($("#id").val()==""){
+    		layer.msg("请先保存试卷再添加试题！", {
+				icon : 0
+			});
+    		return;
+    	}
+ 
+    	$("#renZuJuan").hide();
+    	 $("#autoTbody").find("tr").each(function(){
+    		if($(this).attr("id")==val){
+    			repetition =  false;
+    		}
+    	})
+    	if(!repetition){
+    		layer.msg("已存在"+$(e).text().trim()+"题型", {
+				icon : 0
+			});
+    		repetition =  true;
+    		return;
+    	} 
+    	
+    	 $("#isCheckbox").prop("checked",true);
+    	tdNumber = $("#autoTbody").children("tr").length;
+    	$.get("/zhbg/xxkh/qusetiongroup/autosave",{questionType:val,paperId:$("#id").val(),createType:"1",sequence:tdNumber+1,zz:Math.random()},function(data){
+    	$("#autoTbody").append('<tr id="'+val+'">\
+				<td class="text-center"><input id='+data.data.id+' type="checkbox" checked /></td>\
+				<td class="text-center">'+(tdNumber+1)+'</td>\
+				<td class="text-center">'+$(e).text()+'</td>\
+				<td class="text-center"><input class="form-control"\
+					type="text" name="jiandan" id="jiandan" value="0" onblur="jiancetishu(this,1)" onfocus="clean(this)" /></td>\
+				<td class="text-center"><input class="form-control"\
+					type="text" name="yiban" id="yiban" value="0" onblur="jiancetishu(this,2)" onfocus="clean(this)" /></td>\
+				<td class="text-center"><input class="form-control"\
+					type="text" name="kunnan" id="kunnan" value="0" onblur="jiancetishu(this,3)" onfocus="clean(this)"  /></td>\
+				<td class="text-center"><input class="form-control"\
+					type="text" name="everyScore" onblur="autoZuJuan(\''+data.data.id+'\',this)" id="everyScore" value="0" /></td>\
+				<td class="text-center">0</td>\
+				<td class="text-center">'+(data.data.zujuanStatus==0?"未组卷":"已组卷")+'</td>\
+				<td class="text-center"><i\
+					class="glyphicon glyphicon-trash p-l-10" title=\'删除\'\
+					style="cursor: pointer;" onclick="deleteTiZuAuto(\''+data.data.id+'\',this)"></i></td>\
+			</tr>');
+    	/* 微调按钮不需要的话就放这 等开发人员用 */
+    	/* <i\
+		class="glyphicon glyphicon-edit" onclick="selectQuestionAuto(\''+data.data.questionType+'\',\''+data.data.id+'\')" title=\'微调\' \
+		style="cursor: pointer;"></i> */ 
+		var deptType = "";
+		if(typeof($("#deptType").val())!="undefined"){
+			deptType = "?deptType="+$("#deptType").val();
+		} 
+	       	$.get("/zhbg/xxkh/xxkhPaperInfo/save"+deptType,{id:$("#id").val(),remark:$("#remark").val(),createType:"1",zz:Math.random()},function(data){
+	    		parent.TableInit.refTable('right_table');
+	    	})
+    	})
+    }
+    	//开始组卷-自动
+		function startZujuan() {
+			var startZujuan = new Array();
+			if($("#autoTbody").find("tr").length<=0){
+				layer.msg("请先添加题型", {
+					icon : 0
+				});
+				return;
+			}
+			//当前要组哪些类型的数量
+			var selectCount= 0;
+			//当前选择已组卷类型的数量
+			var selectYiZuJuanCount = 0;
+			//当前题型是否没有填写数量
+			var selectQuestionType = 0;
+			$("#autoTbody").find("tr").each(function(index, element) {
+			   if($(this).find("td").eq(0).find("input").prop("checked")==true){
+				   if($(this).find("td").eq(3).find("input").val()=='0'&&$(this).find("td").eq(4).find("input").val()=='0'&&$(this).find("td").eq(5).find("input").val()=='0'){
+					   selectQuestionType++;
+				   }
+				   if($(this).find("td").eq(8).text()=="已组卷"){
+					   selectYiZuJuanCount++;
+					   return false;
+				   }
+				   selectCount++;
+				var jibie = {};
+				jibie.groupId = $(this).find("td").eq(0).find("input").attr("id");
+				jibie.jiandan = $(this).find("td").eq(3).find("input").val();
+				jibie.yiban = $(this).find("td").eq(4).find("input").val();
+				jibie.kunnan = $(this).find("td").eq(5).find("input").val();
+				jibie.everyScore = $(this).find("td").eq(6).find("input").val();
+				if ($(this).attr("id") == "1") {
+					var danxuan = {};
+					danxuan.danxuan = jibie;
+					startZujuan[index] = danxuan;
+				}
+				if ($(this).attr("id") == "2") {
+					var duoxuan = {};
+					duoxuan.duoxuan = jibie;
+					startZujuan[index] = duoxuan;
+				}
+				if ($(this).attr("id") == "3") {
+					var panduan = {};
+					panduan.panduan = jibie;
+					startZujuan[index] = panduan;
+				}
+				if ($(this).attr("id") == "4") {
+					var tiankong = {};
+					tiankong.tiankong = jibie;
+					startZujuan[index] = tiankong;
+				}
+				if ($(this).attr("id") == "5") {
+					var wenda = {};
+					wenda.wenda = jibie;
+					startZujuan[index] = wenda;
+				}
+				}
+			})
+			if(selectQuestionType>0){
+				layer.msg("组卷的题型中存在未填写数量的题型，如果不需要该题型，可以删除或将该题型勾选去掉", {
+					icon : 0
+				});
+				return;	
+			}
+			if(selectYiZuJuanCount>0){
+				layer.msg("已组卷的题组类型无法再次组卷,请勾选未组卷状态的题组再次组卷", {
+					icon : 0
+				});
+				return;
+			}
+			if(selectCount<=0){
+				layer.msg("请选择需要组卷的题组类型", {
+					icon : 0
+				});
+				return;
+			}
+			var dengji = JSON.stringify(startZujuan);
+			if(dengji==""||dengji.length==0){
+				return;
+			}
+			var index = 1;
+			var dept="";
+			if(typeof($("#deptType").val())!="undefined"){
+				dept=$("#deptType").val();
+			}
+			var deptType = "";
+			if(typeof($("#deptType").val())!="undefined"){
+				deptType = "?deptType="+$("#deptType").val();
+			} 
+		       	$.get("/zhbg/xxkh/xxkhPaperInfo/save"+deptType,{id:$("#id").val(),remark:$("#remark").val(),createType:"1",zz:Math.random()},function(data){
+		    		parent.TableInit.refTable('right_table');
+		    	})
+			$.ajax({
+				url:"/zhbg/xxkh/qusetiongroup/autoZujuan",
+				data:{startZujuan:dengji,type:type,deptType:dept,zz:Math.random()},
+				dataType:"json",
+				success:function(data){
+					layer.close(index);
+					layer.msg("组卷完成", {
+						icon : 1
+					});
+					getSjAutoData();
+					
+				 	if(typeof($("#deptType").val())!="undefined"){
+						$("#deptType").prop("disabled",true)
+					} 
+				},
+				beforeSend:function(xhr){
+					//加载动画
+				index = layer.load(1,{shade: [0.5, '#393D49'],content: '请稍候',success: function(layero){
+					layero.find('.layui-layer-content').css({'padding-top':'50px','font-size':'16px','width':'200px','color':'#000000'});
+				} }); 
+				}
+			})
+		}
+		
+		function jiancetishu(e,difficultyLevel){
+			if($(e).val()==""){
+				$(e).val(0);
+				return;
+			}
+			 var patrn  =/^([1-9]\d*|0)$/;
+				  if(!patrn.test($(e).val())){
+					  layer.msg("请填写数字,不能以0开头", {
+							icon : 0
+						});
+					  $(e).val("0");
+					  $(e)[0].focus();
+					  return;
+				  }
+				  if(type.indexOf("fz")>-1){
+					  type="fzst";
+				  }
+				  if(type.indexOf("zzll")>-1){
+					  type="zzllst";
+				  }
+				  if(type.indexOf("bm")>-1){
+					  type="bmst";
+				  }
+					if(typeof($("#deptType").val())!="undefined"){
+						type=$("#deptType").val();
+					}
+		$.get("/zhbg/xxkh/qusetiongroup/getQuestionCount", {
+				difficultyLevel : difficultyLevel,
+				questionType : $(e).parent().parent().attr("id"),
+				type : type,
+				shuliang:$(e).val()	
+				,zz:Math.random()
+			}, function(data) {
+				if (data.flag != 1) {
+					layer.msg("超出试题库试题数量<br>当前题库试题数量为:" + data.number, {
+						icon : 0
+					});
+					$(e).val("0");
+					$(e)[0].focus();
+				}
+			}, "json");
+		}
+		
+		
+		//全选/反全选
+		function checkboxAll(e){
+			if($(e).is(":checked")){
+				$("#autoTbody tr").each(function(){
+					$(this).find("td").eq(0).find("input").prop("checked",true);
+					if($(this).find("td").eq(0).find("input").prop("disabled")==true){
+						$(this).find("td").eq(0).find("input").prop("checked",false);
+					}
+				})
+			}else{
+				$("#autoTbody tr").each(function(){
+					$(this).find("td").eq(0).find("input").prop("checked",false);
+				})
+			}
+		}
+		
+		function clean(e){
+			if($(e).val()=="0"){
+				$(e).val("");
+			}
+		}
+	</script>
+</body>
+</html>

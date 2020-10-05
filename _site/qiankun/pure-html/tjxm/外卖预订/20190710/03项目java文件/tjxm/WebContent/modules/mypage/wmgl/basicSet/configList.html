@@ -1,0 +1,148 @@
+<style type="text/css">
+	.panel-controls{
+		position: absolute;
+		right: 40px;
+		top: 10px;
+	}
+	.panel-controls > i.showSelect{
+		font-size: 16px;
+		color: #acb1b8;
+		cursor: pointer;
+	}
+	label{
+		font-weight: normal;
+	}
+	
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" >
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls " >
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+							<label class="col-md-2 control-label"> 年度：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="period" name="period" />
+							</div>
+						</div>
+						<!--查询重置等按钮-->
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center">
+								<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+								</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="reset" class="btn btn-primary"> 重&nbsp;&nbsp;置
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+		<div class="col-md-12">
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	//日期范围
+	laydate.render({
+	    elem: '#period',
+	    type:'year'
+	});
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'period'
+        , title: '年限'
+        , width: '18%'
+        , align:"center"
+    },{
+        field: 'lostCreditLimt'
+        , title: '失信限制/次'
+        , width: '16%'
+        , align:"center"
+     },{
+        field: 'lockTime'
+        , title: '锁定时长/月'
+        , width: '16%'
+        , align:"center"
+     },{
+        field: 'attentionItme'
+       , title: '外卖的注意事项'
+       , width: '28%'
+       , align:"center"
+   	   ,formatter: function (value, row, index) {
+          	if(value!=null){
+          		var length = value.length
+  	  	   	      var val = '';
+  	  	   	      if(length>25){
+  	  	   	    	  val = value.substring(0,24)+"...";
+  	  	   	      }else{
+  	  	   	    	  val = value;
+  	  	   	      }
+    	   	   		return  "<span>"+val+"</span>";
+          	}else{
+          		return "-";
+          	}
+          }
+     },{
+       field: 'cz'
+       , title: '操作'
+       , width: '16%'
+       , align: "center"
+       , formatter: function (value, row, index) {  
+           var html = "";
+           html += "<i style='cursor:pointer'class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\""+ row.id + "\")\'></i>&nbsp;&nbsp;";
+           return html;
+       }
+    }];
+    
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mypage/wmgl/config/list",
+            columns:right_table_col,
+            queryParams:function(params){
+            	params.period = $("#period").val();
+                return params;
+            },
+            rowStyle: function (row, index) {	
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            }
+        });
+    });
+
+	var list = {
+			editFun : function(id) {
+				var resId = $('#left_ul').find('a.active').attr("id");
+				MyLayer.layerOpenUrl({url:'/modules/mypage/wmgl/basicSet/configEditForm.html?resId=' + resId+'&id='+id,title:'修改基础配置信息',width:'80%',height:'85%'})
+
+			}
+		}
+</script>

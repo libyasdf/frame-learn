@@ -1,0 +1,26 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "serviceDept": "后勤部",
+        "serviceContent": "茶水，饮食",
+        "cz": "update,delete"
+      },
+      {
+        "id": 3,
+        "serviceDept": "秘书部",
+        "serviceContent": "桌牌",
+        "cz": "update,delete"
+      },
+      {
+        "id": 4,
+        "serviceDept": "信息部",
+        "serviceContent": "照相",
+        "cz": "update,delete"
+      }
+    ]
+  }
+}

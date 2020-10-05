@@ -1,0 +1,47 @@
+{
+  "flag": "1",
+  "data": [
+    {
+      "name": "党员信息维护",
+      "style": "/static/images/ico_listsearch.png",
+      "id": "001",
+      "url":"#",
+     "childrenList":[{
+         "id":"001001",
+         "name":"党员队伍基本情况",
+         "url":"/modules/dwgl/dygl/dyxxwh/dydwjbqk/dydwjbqkEditForm.html"
+     },{
+         "id":"001002",
+         "name":"党员信息",
+         "url":"/modules/dwgl/dygl/dyxxwh/dyxx/dyxxList.html"
+     },{
+           "id":"001003",
+           "name":"预备党员",
+            "url":"/modules/dwgl/dygl/dyxxwh/ybdy/ybdyList.html"
+     },{
+           "id":"001004",
+           "name":"党员奖励",
+            "url":"/modules/dwgl/dygl/dyxxwh/dyxx/dyjlList.html"
+     },{
+             "id":"001005",
+             "name":"历史党员",
+              "url":"/modules/dwgl/dygl/dyxxwh/dyxx/dyzcList.html"
+         }]
+    },
+     {
+          "url": "/modules/dwgl/dzz/hjxj/hjxjList.html",
+          "name": "介绍信、证明信管理",
+          "style": "/static/images/ico_listsearch.png",
+          "id": "002",
+          "childrenList":[{
+                         "id":"002001",
+                         "name":"党员证明信管理",
+                         "url":"/modules/dwgl/dygl/dyzmx/dyzmxList.html"
+                     },{
+                          "id":"002002",
+                          "name":"组织关系介绍信管理",
+                          "url":"/modules/dwgl/dygl/zzgxjsx/zzgxjsxList.html"
+                       }]
+        }
+  ]
+}

@@ -1,0 +1,131 @@
+<link rel="stylesheet" href="/modules/zhbg/hygl/statistics/leader/query.css">
+<link rel="stylesheet" href="/modules/zhbg/hygl/statistics/leader/numbergd/css/globle.css">
+<div class="page">
+    <div class="wrapper-left">
+        <!-- 情况总览 -->
+        <div class="wrapper-box box-1">
+            <div class="wrapper-header">
+                <span class="wrapper-title">情况总览</span>
+            </div>
+            <div class="wrapper-content view">
+                <ul class="view-list">
+                    <li class="view-item">
+                        <span class="view-title-wrapper">督办事项</span>
+                        <div class="view-itme-number" id="item-1-num">456</div>
+                    </li>
+                    <li class="view-item">
+                        <span class="view-title-wrapper">按时办结</span>
+                        <div class="view-itme-number" id="item-2-num">456</div>
+                    </li>
+                    <li class="view-item">
+                        <span class="view-title-wrapper">逾期办结</span>
+                        <div class="view-itme-number" id="item-3-num">456</div>
+                    </li>
+                    <li class="view-item">
+                        <span class="view-title-wrapper">任务取消</span>
+                        <div class="view-itme-number" id="item-4-num">456</div>
+                    </li>
+                    <li class="view-item">
+                        <span class="view-title-wrapper">正在办理</span>
+                        <div class="view-itme-number" id="item-5-num">456</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 办结情况 -->
+        <div class="wrapper-box box-2">
+            <div class="progress-container">
+                <span class="progress-title">已办结</span>
+                <span class="progress-number">45%</span>
+                <div class="progress-box">
+                    <span class="progress"></span>
+                </div>
+            </div>
+            <div class="progress-container">
+                <span class="progress-title">未办结</span>
+                <span class="progress-number">55%</span>
+                <div class="progress-box">
+                    <span class="progress" style="width: 55%"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper-right">
+        <!-- 逾期预警 -->
+        <div class="wrapper-box box-3">
+            <div class="wrapper-header">
+                <span class="wrapper-title">逾期预警</span>
+            </div>
+            <div class="wrapper-content">
+                <div class="chart" id="chart-1"></div>
+            </div>
+        </div>
+        <!-- 年度任务统计 -->
+        <div class="wrapper-box box-4">
+            <div class="wrapper-header">
+                <span class="wrapper-title">年度任务统计</span>
+            </div>
+            <div class="wrapper-content">
+                <div class="chart" id="chart-2"></div>
+            </div>
+        </div>
+    </div>
+    <!-- 任务状态分布 -->
+    <div class="wrapper-box box-5">
+        <div class="wrapper-header">
+            <span class="wrapper-title">任务状态分布</span>
+        </div>
+        <div class="wrapper-content">
+            <div class="chart" id="chart-3"></div>
+        </div>
+    </div>
+    <!-- 承办单位任务总览 -->
+    <div class="wrapper-box box-6">
+        <div class="wrapper-header">
+            <span class="wrapper-title">承办单位任务总览</span>
+        </div>
+        <div class="wrapper-content">
+            <div class="chart" id="chart-4"></div>
+        </div>
+    </div>
+    <!-- 承办单位跟踪概况 -->
+    <div class="wrapper-box box-7">
+        <div class="wrapper-header">
+            <span class="wrapper-title">承办单位跟踪概况</span>
+        </div>
+        <div class="wrapper-content">
+            <div class="chart" id="chart-5"></div>
+        </div>
+    </div>
+    <!-- 办结时长分布 -->
+    <div class="wrapper-box box-8">
+        <div class="wrapper-header">
+            <span class="wrapper-title">办结时长分布</span>
+        </div>
+        <div class="wrapper-content">
+            <div class="chart" id="chart-6"></div>
+        </div>
+    </div>
+
+    <!-- 小球 -->
+    <div id="neko">
+        <div class="search-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="请选择日期范围" id="search-date">
+        </div>
+    </div>
+</div>
+<!--<script src="/js/plugs/echarts/echarts.js"></script>-->
+<script src="/static/core/echarts.js"></script>
+<script src="/modules/zhbg/hygl/statistics/leader/numbergd/js/index.js"></script>
+<script src="/modules/zhbg/hygl/statistics/leader/js/neko.js"></script>
+<script src="/modules/zhbg/hygl/statistics/leader/js/chartsConfig.js"></script>
+<script src="/modules/zhbg/hygl/statistics/leader/js/query.js"></script>
+<script>
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#search-date' //指定元素
+    });
+</script>

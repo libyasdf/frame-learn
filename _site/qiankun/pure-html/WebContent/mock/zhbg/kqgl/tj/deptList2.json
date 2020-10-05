@@ -1,0 +1,47 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 600,
+    "rows": [
+      {
+        "id": 1,
+        "applicantUnitName": "办公室",
+        "creUserName": "张三",
+        "overTimeDate": "6",
+        "beLate": "6",
+        "leaveEarly": "6",
+        "absentWork": "6",
+        "businessTripe": "6",
+        "goOut": "6",
+        "overTime1": "6",
+        "overTime2": "6"
+      },
+      {
+        "id": 2,
+        "applicantUnitName": "政办室",
+       "creUserName": "李四",
+        "overTimeDate": "3",
+        "beLate": "0",
+        "leaveEarly": "1",
+        "absentWork": "0",
+        "businessTripe": "4",
+        "goOut": "1.5",
+        "overTime1": "7",
+        "overTime2": "6"
+      },
+      {
+        "id": 3,
+        "applicantUnitName": "保密办",
+        "creUserName": "王五",
+        "overTimeDate": "4",
+        "beLate": "3",
+        "leaveEarly": "5",
+        "absentWork": "7",
+        "businessTripe": "8",
+        "goOut": "0",
+        "overTime1": "5",
+        "overTime2": "3"
+      }
+    ]
+  }
+}

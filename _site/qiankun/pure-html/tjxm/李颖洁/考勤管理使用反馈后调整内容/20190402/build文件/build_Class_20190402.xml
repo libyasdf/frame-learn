@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\考勤管理_19.4.2"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		
+		<!-- 导出审计日志审查 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceQueryServiceImp.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceQueryServiceImp$1.class"/>
+		
+		
+		
+		
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

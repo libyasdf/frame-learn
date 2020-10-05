@@ -1,0 +1,872 @@
+--1、字段表添加样式、是否列表项、列表顺序
+alter table table_struct_description add (COLUMN_STYLE varchar2(50 char));
+comment on column table_struct_description.COLUMN_STYLE
+  is '字段样式：位置和大小';
+  
+alter table table_struct_description add (COLUMN_LIST_ORDER varchar2(50 char));
+comment on column table_struct_description.COLUMN_LIST_ORDER
+  is '列表项顺序：1、2、3。。。';
+
+alter table table_struct_description add (COLUMN_LIST_ISSHOW varchar2(50 char));
+comment on column table_struct_description.COLUMN_LIST_ISSHOW
+  is '是否列表项：T是，F否';
+
+--2、更新数据字典表
+update SYS_DATA_DICTIONARY set name = '借出实体' where id = '4028d088670aa44001670ab749f20000';
+  
+--3、虚拟分类表添加【是否管理员】字段
+alter table dagl_virtual_class add (isAdmin varchar2(10 char));
+comment on column   dagl_virtual_class.isAdmin  is '是否管理员 1是 2 不是';
+
+--4、收集列表数据库表
+create table dagl_shopping_trolley  (
+   id                 VARCHAR2(36 CHAR)               not null,
+   cre_user_id        VARCHAR2(50 CHAR),
+   cre_user_name      VARCHAR2(50 CHAR),
+   cre_dept_id        VARCHAR2(50 CHAR),
+   cre_dept_name      VARCHAR2(50 CHAR),
+   cre_chushi_id      VARCHAR2(50 CHAR),
+   cre_chushi_name    VARCHAR2(50 CHAR),
+   cre_ju_id          VARCHAR2(50 CHAR),
+   cre_ju_name        VARCHAR2(50 CHAR),
+   cre_time           VARCHAR2(30 CHAR),
+   recid              VARCHAR2(50 CHAR),
+   main_title         VARCHAR2(200 CHAR),
+   basefolder_unit    VARCHAR2(50 CHAR),
+   ljdw_mark          VARCHAR2(50 CHAR),
+   archive_no         VARCHAR2(100 CHAR),
+   category_no        VARCHAR2(30 CHAR),
+   category_name      VARCHAR2(30 CHAR),
+   table_name         VARCHAR2(50 CHAR),
+   borrow_user_id      VARCHAR2(50 CHAR),
+   borrow_user_name      VARCHAR2(30 CHAR)
+);
+
+comment on table dagl_shopping_trolley is
+'dagl：档案管理数据库表前缀';
+
+comment on column dagl_shopping_trolley.id is
+'唯一标识';
+
+comment on column dagl_shopping_trolley.cre_user_id is
+'创建人id';
+
+comment on column dagl_shopping_trolley.cre_user_name is
+'创建人姓名';
+
+comment on column dagl_shopping_trolley.cre_dept_id is
+'创建人部门ID';
+
+comment on column dagl_shopping_trolley.cre_dept_name is
+'创建人部门名';
+
+comment on column dagl_shopping_trolley.cre_chushi_id is
+'创建人处室ID';
+
+comment on column dagl_shopping_trolley.cre_chushi_name is
+'创建人处室名';
+
+comment on column dagl_shopping_trolley.cre_ju_id is
+'创建人二级局ID';
+
+comment on column dagl_shopping_trolley.cre_ju_name is
+'创建人二级局名';
+
+comment on column dagl_shopping_trolley.cre_time is
+'创建时间';
+
+comment on column dagl_shopping_trolley.recid is
+'档案唯一标识';
+
+comment on column dagl_shopping_trolley.main_title is
+'题名';
+
+comment on column dagl_shopping_trolley.basefolder_unit is
+'立卷单位';
+
+comment on column dagl_shopping_trolley.ljdw_mark is
+'立卷单位mark';
+
+comment on column dagl_shopping_trolley.archive_no is
+'档号';
+
+comment on column dagl_shopping_trolley.category_no is
+'门类代号，例如文书档案编号w，Q2档案Q2等';
+
+comment on column dagl_shopping_trolley.category_name is
+'门类名称';
+
+comment on column dagl_shopping_trolley.table_name is
+'档案所在业务表';
+
+comment on column dagl_shopping_trolley.borrow_user_id is
+'借阅人id';
+
+comment on column dagl_shopping_trolley.borrow_user_name is
+'借阅人name';
+
+--5、档案借阅催还记录表
+create table DAGL_URGE_RETURN
+(
+  id               VARCHAR2(36 CHAR) not null,
+  cre_user_id      VARCHAR2(50 CHAR),
+  cre_user_name    VARCHAR2(50 CHAR),
+  cre_dept_id      VARCHAR2(50 CHAR),
+  cre_dept_name    VARCHAR2(50 CHAR),
+  cre_chushi_id    VARCHAR2(50 CHAR),
+  cre_chushi_name  VARCHAR2(50 CHAR),
+  cre_ju_id        VARCHAR2(50 CHAR),
+  cre_ju_name      VARCHAR2(50 CHAR),
+  cre_time         VARCHAR2(30 CHAR),
+  borrow_id        VARCHAR2(50 CHAR),
+  borrow_user_id   VARCHAR2(50 CHAR),
+  urge_content     VARCHAR2(500 CHAR),
+  borrow_user_name VARCHAR2(50 CHAR),
+  urge_type        VARCHAR2(1 CHAR)
+)
+tablespace ZHGL
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table DAGL_URGE_RETURN
+  is 'dagl：档案管理数据库表前缀
+';
+-- Add comments to the columns 
+comment on column DAGL_URGE_RETURN.id
+  is '唯一标识';
+comment on column DAGL_URGE_RETURN.cre_user_id
+  is '创建人id';
+comment on column DAGL_URGE_RETURN.cre_user_name
+  is '创建人姓名';
+comment on column DAGL_URGE_RETURN.cre_dept_id
+  is '创建人部门ID';
+comment on column DAGL_URGE_RETURN.cre_dept_name
+  is '创建人部门名';
+comment on column DAGL_URGE_RETURN.cre_chushi_id
+  is '创建人处室ID';
+comment on column DAGL_URGE_RETURN.cre_chushi_name
+  is '创建人处室名';
+comment on column DAGL_URGE_RETURN.cre_ju_id
+  is '创建人二级局ID';
+comment on column DAGL_URGE_RETURN.cre_ju_name
+  is '创建人二级局名';
+comment on column DAGL_URGE_RETURN.cre_time
+  is '创建时间';
+comment on column DAGL_URGE_RETURN.borrow_id
+  is '借阅id或者档案id';
+comment on column DAGL_URGE_RETURN.borrow_user_id
+  is '被催还人id';
+comment on column DAGL_URGE_RETURN.urge_content
+  is '催还内容';
+comment on column DAGL_URGE_RETURN.borrow_user_name
+  is '被催还人name';
+comment on column DAGL_URGE_RETURN.urge_type
+  is '催还方式：0自动，1手动。这里考虑是否要将系统自动催还记录加到这里';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DAGL_URGE_RETURN
+  add constraint PK_DAGL_URGE_RETURN primary key (ID)
+  using index 
+  tablespace ZHGL
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+--6、给所有档案业务表添加封号人id、封号人name、封号时间、借阅状态四个字段
+DECLARE
+  V_SQL        VARCHAR2(2000);
+  V_TABLE_NAME VARCHAR2(50);
+  CURSOR C1 IS select distinct table_name from table_struct_description t;--查询所有档案业务表
+BEGIN
+  OPEN C1;
+  LOOP
+    --提取一行数据到c1
+    FETCH C1
+      INTO V_TABLE_NAME;
+    --判读是否提取到值，没取到值就退出
+    --取到值c_job%notfound 是false 
+    --取不到值c_job%notfound 是true
+    EXIT WHEN C1%NOTFOUND;
+    begin
+    --添加封号人id
+    V_SQL := 'alter table ' || V_TABLE_NAME || ' add fhr_id VARCHAR2(50 CHAR)';
+    EXECUTE IMMEDIATE V_SQL;
+    
+    --添加封号人id
+    V_SQL := 'comment on column ' || V_TABLE_NAME ||'.fhr_id is'||'''封号人id''';
+    EXECUTE IMMEDIATE V_SQL;
+    
+     --添加封号人name
+    V_SQL := 'alter table ' || V_TABLE_NAME || ' add fhr_name VARCHAR2(50 CHAR)';
+    EXECUTE IMMEDIATE V_SQL;
+    
+    --添加封号人name备注
+    V_SQL := 'comment on column ' || V_TABLE_NAME ||'.fhr_name is '||'''封号人name''';
+    EXECUTE IMMEDIATE V_SQL;
+    
+    --添加封号时间
+    V_SQL := 'alter table ' || V_TABLE_NAME || ' add fh_time VARCHAR2(30 CHAR)';
+    EXECUTE IMMEDIATE V_SQL;
+    
+     --添加封号时间备注
+    V_SQL := 'comment on column ' || V_TABLE_NAME|| '.fh_time is '||'''封号时间''';
+    EXECUTE IMMEDIATE V_SQL;
+    
+    --添加借阅状态
+    V_SQL := 'alter table ' || V_TABLE_NAME || ' add borrow_status VARCHAR2(1 CHAR)';
+    EXECUTE IMMEDIATE V_SQL;
+    
+    --添加借阅备注
+    V_SQL := 'comment on column ' || V_TABLE_NAME ||'.borrow_status is'||'''借阅状态：0或者空表示未借出，1表示部分借出，2表示借出''';
+    EXECUTE IMMEDIATE V_SQL;
+    dbms_output.put_line(V_TABLE_NAME||'处理完成！');
+    
+    exception when others then
+      dbms_output.put_line(V_TABLE_NAME||'出现异常，该表需要手动添加这四个字段！');
+    end;
+  END LOOP; --关闭游标
+  CLOSE C1;
+END;
+
+--7、删除档案借阅子表、主表；重新建表；档案借阅主表添加锁定人name,锁定人id字段，锁定时间
+drop table dagl_file;
+drop table dagl_borrow;
+
+create table DAGL_BORROW
+(
+  id                   VARCHAR2(50 CHAR) not null,
+  cre_user_id          VARCHAR2(50 CHAR),
+  cre_user_name        VARCHAR2(50 CHAR),
+  cre_dept_id          VARCHAR2(50 CHAR),
+  cre_dept_name        VARCHAR2(50 CHAR),
+  cre_chushi_id        VARCHAR2(50 CHAR),
+  cre_chushi_name      VARCHAR2(50 CHAR),
+  cre_ju_id            VARCHAR2(50 CHAR),
+  cre_ju_name          VARCHAR2(50 CHAR),
+  visible              VARCHAR2(1 CHAR),
+  cre_time             VARCHAR2(30 CHAR),
+  update_user_id       VARCHAR2(50 CHAR),
+  update_user_name     VARCHAR2(30 CHAR),
+  update_time          VARCHAR2(30 CHAR),
+  title                VARCHAR2(100 CHAR),
+  borrow_user_name     VARCHAR2(50 CHAR),
+  borrow_user_id       VARCHAR2(50 CHAR),
+  borrow_dept_id       VARCHAR2(50 CHAR),
+  borrow_dept_name     VARCHAR2(50 CHAR),
+  borrow_unit_id       VARCHAR2(50 CHAR),
+  borrow_unit_name     VARCHAR2(50 CHAR),
+  use_purpose          VARCHAR2(50 CHAR),
+  phone                VARCHAR2(50 CHAR),
+  remark               VARCHAR2(2000 CHAR),
+  subflag              VARCHAR2(1 CHAR),
+  flow_type            VARCHAR2(1 CHAR),
+  year                 VARCHAR2(50 CHAR),
+  borrow_status        VARCHAR2(1 CHAR),
+  approve_unit_id      VARCHAR2(50 CHAR),
+  approve_unit_name    VARCHAR2(50 CHAR),
+  borrow_date          VARCHAR2(50 CHAR),
+  should_return_date   VARCHAR2(50 CHAR),
+  approve_user_id      VARCHAR2(50 CHAR),
+  approve_user_name    VARCHAR2(50 CHAR),
+  handle_user_id       VARCHAR2(50 CHAR),
+  handle_user_name     VARCHAR2(50 CHAR),
+  serial_number        VARCHAR2(20 CHAR),
+  is_innew_or_reborrow VARCHAR2(1 CHAR)
+)
+tablespace ZHGL
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table DAGL_BORROW
+  is '档案管理模块：借阅审批表
+dagl:档案管理模块表名前缀';
+-- Add comments to the columns 
+comment on column DAGL_BORROW.id
+  is '主键';
+comment on column DAGL_BORROW.cre_user_id
+  is '创建人id';
+comment on column DAGL_BORROW.cre_user_name
+  is '创建人名称（也是申请人名称字段）';
+comment on column DAGL_BORROW.cre_dept_id
+  is '创建部门id';
+comment on column DAGL_BORROW.cre_dept_name
+  is '创建部门name';
+comment on column DAGL_BORROW.cre_chushi_id
+  is '创建人处室id';
+comment on column DAGL_BORROW.cre_chushi_name
+  is '创建人处室name';
+comment on column DAGL_BORROW.cre_ju_id
+  is '创建人二级局id';
+comment on column DAGL_BORROW.cre_ju_name
+  is '创建人二级局name';
+comment on column DAGL_BORROW.visible
+  is '逻辑删除';
+comment on column DAGL_BORROW.cre_time
+  is '创建时间';
+comment on column DAGL_BORROW.update_user_id
+  is '最后更新人id';
+comment on column DAGL_BORROW.update_user_name
+  is '最后更新人name';
+comment on column DAGL_BORROW.update_time
+  is '最后更新时间';
+comment on column DAGL_BORROW.title
+  is '待办标题';
+comment on column DAGL_BORROW.borrow_user_name
+  is '借阅姓名';
+comment on column DAGL_BORROW.borrow_user_id
+  is '借阅人id';
+comment on column DAGL_BORROW.borrow_dept_id
+  is '借阅人所在部门id';
+comment on column DAGL_BORROW.borrow_dept_name
+  is '借阅人所在部门名称';
+comment on column DAGL_BORROW.borrow_unit_id
+  is '借阅单位id';
+comment on column DAGL_BORROW.borrow_unit_name
+  is '借阅单位名称';
+comment on column DAGL_BORROW.use_purpose
+  is '利用目的';
+comment on column DAGL_BORROW.phone
+  is '电话';
+comment on column DAGL_BORROW.remark
+  is '借阅内容说明';
+comment on column DAGL_BORROW.subflag
+  is '流程状态（有值的是走流程的，没有值的是手工登记的）';
+comment on column DAGL_BORROW.flow_type
+  is '1：借阅本单位，2：借阅非本单位';
+comment on column DAGL_BORROW.year
+  is '年份';
+comment on column DAGL_BORROW.borrow_status
+  is '借阅状态（1：未归还2：部分归还3：已归还）';
+comment on column DAGL_BORROW.approve_unit_id
+  is '审批单位id';
+comment on column DAGL_BORROW.approve_unit_name
+  is '审批单位name';
+comment on column DAGL_BORROW.borrow_date
+  is '借阅日期';
+comment on column DAGL_BORROW.should_return_date
+  is '应还日期';
+comment on column DAGL_BORROW.approve_user_id
+  is '审批人id';
+comment on column DAGL_BORROW.approve_user_name
+  is '审批人名称';
+comment on column DAGL_BORROW.handle_user_id
+  is '经办人id';
+comment on column DAGL_BORROW.handle_user_name
+  is '经办人name';
+comment on column DAGL_BORROW.serial_number
+  is '流水号（年份+流水2018-0001）';
+comment on column DAGL_BORROW.is_innew_or_reborrow
+  is '是否是续借重借（0：不是，1：是）用于续借发送之后，在流程上打开代办，页面的显示问题（子表，按钮，数据项）';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DAGL_BORROW
+  add primary key (ID)
+  using index 
+  tablespace ZHGL
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+create table DAGL_FILE
+(
+  id                      VARCHAR2(50 CHAR) not null,
+  borrow_id               VARCHAR2(4000 CHAR),
+  old_id                  VARCHAR2(50 CHAR),
+  cre_user_id             VARCHAR2(50 CHAR),
+  cre_user_name           VARCHAR2(50 CHAR),
+  cre_dept_id             VARCHAR2(50 CHAR),
+  cre_dept_name           VARCHAR2(50 CHAR),
+  cre_chushi_id           VARCHAR2(50 CHAR),
+  cre_chushi_name         VARCHAR2(50 CHAR),
+  cre_ju_id               VARCHAR2(50 CHAR),
+  cre_ju_name             VARCHAR2(50 CHAR),
+  visible                 VARCHAR2(1 CHAR),
+  cre_time                VARCHAR2(30 CHAR),
+  update_user_id          VARCHAR2(50 CHAR),
+  update_user_name        VARCHAR2(30 CHAR),
+  update_time             VARCHAR2(30 CHAR),
+  use_way                 VARCHAR2(50 CHAR),
+  borrow_status           VARCHAR2(50 CHAR),
+  borrow_date             VARCHAR2(50 CHAR),
+  return_date             VARCHAR2(50 CHAR),
+  should_return_date      VARCHAR2(50 CHAR),
+  borrow_user_id          VARCHAR2(50 CHAR),
+  borrow_user_name        VARCHAR2(50 CHAR),
+  approve_user_id         VARCHAR2(50 CHAR),
+  approve_user_name       VARCHAR2(50 CHAR),
+  handle_user_id          VARCHAR2(50 CHAR),
+  handle_user_name        VARCHAR2(50 CHAR),
+  return_handle_user_id   VARCHAR2(50 CHAR),
+  return_handle_user_name VARCHAR2(50 CHAR),
+  reason                  VARCHAR2(2000 CHAR),
+  use_result              VARCHAR2(2000 CHAR),
+  return_time             VARCHAR2(50 CHAR),
+  in_renew                VARCHAR2(50 CHAR),
+  borrow_dept_id          VARCHAR2(50 CHAR),
+  borrow_dept_name        VARCHAR2(50 CHAR),
+  borrow_unit_id          VARCHAR2(50 CHAR),
+  borrow_unit_name        VARCHAR2(50 CHAR),
+  recid                   VARCHAR2(50 CHAR),
+  main_title              VARCHAR2(200 CHAR),
+  archive_no              VARCHAR2(100 CHAR),
+  basefolder_unit         VARCHAR2(50 CHAR),
+  ljdw_mark               VARCHAR2(50 CHAR),
+  category_no             VARCHAR2(30 CHAR),
+  category_name           VARCHAR2(50 CHAR),
+  table_name              VARCHAR2(50 CHAR),
+  use_purpose             VARCHAR2(50 CHAR),
+  phone                   VARCHAR2(50 CHAR),
+  approve_unit_id         VARCHAR2(50 CHAR),
+  approve_unit_name       VARCHAR2(50 CHAR),
+  order_num               VARCHAR2(50 CHAR),
+  is_reminder             VARCHAR2(1 CHAR),
+  anjuan                  NUMBER,
+  fenjuan                 NUMBER,
+  juannei                 NUMBER
+)
+tablespace ZHGL
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table DAGL_FILE
+  is '档案管理模块：被借阅档案信息表
+dagl:档案管理模块表名前缀';
+-- Add comments to the columns 
+comment on column DAGL_FILE.id
+  is '主键';
+comment on column DAGL_FILE.borrow_id
+  is '借阅id';
+comment on column DAGL_FILE.old_id
+  is '续借或者重借时，原来的那条数据的id（审批通过后状态置为已归还）';
+comment on column DAGL_FILE.cre_user_id
+  is '创建人id';
+comment on column DAGL_FILE.cre_user_name
+  is '创建人名称';
+comment on column DAGL_FILE.cre_dept_id
+  is '创建部门id';
+comment on column DAGL_FILE.cre_dept_name
+  is '创建部门name';
+comment on column DAGL_FILE.cre_chushi_id
+  is '创建人处室id';
+comment on column DAGL_FILE.cre_chushi_name
+  is '创建人处室name';
+comment on column DAGL_FILE.cre_ju_id
+  is '创建人二级局id';
+comment on column DAGL_FILE.cre_ju_name
+  is '创建人二级局name';
+comment on column DAGL_FILE.visible
+  is '逻辑删除';
+comment on column DAGL_FILE.cre_time
+  is '创建时间';
+comment on column DAGL_FILE.update_user_id
+  is '最后更新人id';
+comment on column DAGL_FILE.update_user_name
+  is '最后更新人name';
+comment on column DAGL_FILE.update_time
+  is '最后更新时间';
+comment on column DAGL_FILE.use_way
+  is '利用方式（暂时不用）';
+comment on column DAGL_FILE.borrow_status
+  is '状态（暂时不用）';
+comment on column DAGL_FILE.borrow_date
+  is '借阅日期';
+comment on column DAGL_FILE.return_date
+  is '归还日期';
+comment on column DAGL_FILE.should_return_date
+  is '应还日期';
+comment on column DAGL_FILE.borrow_user_id
+  is '借阅人id';
+comment on column DAGL_FILE.borrow_user_name
+  is '借阅人名称';
+comment on column DAGL_FILE.approve_user_id
+  is '审批人id';
+comment on column DAGL_FILE.approve_user_name
+  is '审批人名称';
+comment on column DAGL_FILE.handle_user_id
+  is '经办人id';
+comment on column DAGL_FILE.handle_user_name
+  is '经办人name';
+comment on column DAGL_FILE.return_handle_user_id
+  is '归还经办人id';
+comment on column DAGL_FILE.return_handle_user_name
+  is '归还经办人name';
+comment on column DAGL_FILE.reason
+  is '阅档事由';
+comment on column DAGL_FILE.use_result
+  is '利用效果';
+comment on column DAGL_FILE.return_time
+  is '归还的具体时间';
+comment on column DAGL_FILE.in_renew
+  is '是否续借';
+comment on column DAGL_FILE.borrow_dept_id
+  is '借阅人所在部门id';
+comment on column DAGL_FILE.borrow_dept_name
+  is '借阅人所在部门name';
+comment on column DAGL_FILE.borrow_unit_id
+  is '借阅人所在单位id';
+comment on column DAGL_FILE.borrow_unit_name
+  is '借阅人所在单位name';
+comment on column DAGL_FILE.recid
+  is '档案唯一标识';
+comment on column DAGL_FILE.main_title
+  is '题名';
+comment on column DAGL_FILE.archive_no
+  is '档号';
+comment on column DAGL_FILE.basefolder_unit
+  is '立卷单位';
+comment on column DAGL_FILE.ljdw_mark
+  is '立卷单位mark';
+comment on column DAGL_FILE.category_no
+  is '门类代号，例如文书档案编号w，Q2档案Q2等';
+comment on column DAGL_FILE.category_name
+  is '门类名称';
+comment on column DAGL_FILE.table_name
+  is '档案所在业务表';
+comment on column DAGL_FILE.use_purpose
+  is '利用目的';
+comment on column DAGL_FILE.phone
+  is '电话';
+comment on column DAGL_FILE.approve_unit_id
+  is '审批单位id';
+comment on column DAGL_FILE.approve_unit_name
+  is '审批单位name';
+comment on column DAGL_FILE.order_num
+  is '子表排序';
+comment on column DAGL_FILE.is_reminder
+  is '是否催还（0：为催还；1;已催还）用于子表上催还记录按钮的显示';
+comment on column DAGL_FILE.anjuan
+  is '当前档案对应的【案卷】数';
+comment on column DAGL_FILE.fenjuan
+  is '当前档案对应的【分卷】数';
+comment on column DAGL_FILE.juannei
+  is '当前档案对应的【卷内】数';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DAGL_FILE
+  add primary key (ID)
+  using index 
+  tablespace ZHGL
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+alter table dagl_borrow add lock_user_id VARCHAR2(50 CHAR);
+comment on column dagl_borrow.lock_user_id is '锁定人id';
+
+alter table dagl_borrow add lock_user_name VARCHAR2(50 CHAR);
+comment on column dagl_borrow.lock_user_name is '锁定人name';
+
+alter table dagl_borrow add lock_time VARCHAR2(30 CHAR);
+comment on column dagl_borrow.lock_time is '锁定时间 yyyy-mm-dd hh:mm:ss';
+
+--8、新增门类-立卷单位-录入人、立卷单位管理员对应关系表
+create table DAGL_CATE_DEPT_PERSON_RELATION
+(
+  id               VARCHAR2(36 CHAR) not null,
+  cre_user_id      VARCHAR2(50 CHAR),
+  cre_user_name    VARCHAR2(50 CHAR),
+  cre_dept_id      VARCHAR2(50 CHAR),
+  cre_dept_name    VARCHAR2(50 CHAR),
+  cre_chushi_id    VARCHAR2(50 CHAR),
+  cre_chushi_name  VARCHAR2(50 CHAR),
+  cre_ju_id        VARCHAR2(50 CHAR),
+  cre_ju_name      VARCHAR2(50 CHAR),
+  cre_time         VARCHAR2(30 CHAR),
+  update_user_name VARCHAR2(50 CHAR),
+  update_user_id   VARCHAR2(50 CHAR),
+  update_time      VARCHAR2(50 CHAR),
+  cate_id          VARCHAR2(36 CHAR),
+  ljdw_name        VARCHAR2(50 CHAR),
+  ljdw_mark        VARCHAR2(50 CHAR),
+  lrr_name         VARCHAR2(200 CHAR),
+  lrr_id           VARCHAR2(200 CHAR),
+  ljdw_admin_name  VARCHAR2(200 CHAR),
+  ljdw_admin_id    VARCHAR2(200 CHAR)
+)
+tablespace ZHGL
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table DAGL_CATE_DEPT_PERSON_RELATION
+  is 'dagl:档案管理数据库表前缀
+';
+-- Add comments to the columns 
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.id
+  is '唯一标识';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_user_id
+  is '创建人id';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_user_name
+  is '创建人姓名';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_dept_id
+  is '创建人部门ID';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_dept_name
+  is '创建人部门名';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_chushi_id
+  is '创建人处室ID';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_chushi_name
+  is '创建人处室名';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_ju_id
+  is '创建人二级局ID';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_ju_name
+  is '创建人二级局名';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cre_time
+  is '创建时间';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.update_user_name
+  is '最后更新人姓名';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.update_user_id
+  is '最后更新人id';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.update_time
+  is '最后更新时间';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.cate_id
+  is '门类id';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.ljdw_name
+  is '数据字典里立卷单位名称';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.ljdw_mark
+  is '数据字典对应的mark值';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.lrr_name
+  is '录入人name';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.lrr_id
+  is '录入人id';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.ljdw_admin_name
+  is '立卷单位管理员name';
+comment on column DAGL_CATE_DEPT_PERSON_RELATION.ljdw_admin_id
+  is '立卷单位管理员id';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DAGL_CATE_DEPT_PERSON_RELATION
+  add constraint PK_DAGL_CATE_DEPT_PERSON_RELAT primary key (ID)
+  using index 
+  tablespace ZHGL
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+--9、编研管理业务表
+create table DAGL_BYGL_MAIN
+(
+  id              VARCHAR2(50 CHAR) not null,
+  cre_user_id     VARCHAR2(50 CHAR),
+  cre_user_name   VARCHAR2(50 CHAR),
+  cre_dept_id     VARCHAR2(50 CHAR),
+  cre_dept_name   VARCHAR2(50 CHAR),
+  cre_chushi_id   VARCHAR2(50 CHAR),
+  cre_chushi_name VARCHAR2(50 CHAR),
+  cre_ju_id       VARCHAR2(50 CHAR),
+  cre_ju_name     VARCHAR2(50 CHAR),
+  visible         VARCHAR2(1 CHAR),
+  cre_time        VARCHAR2(30 CHAR),
+  year            VARCHAR2(4 CHAR),
+  title           VARCHAR2(500 CHAR),
+  status          VARCHAR2(1 CHAR)
+)
+tablespace ZHGL
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table DAGL_BYGL_MAIN
+  is '编研管理主表
+dagl：档案管理数据库表前缀';
+-- Add comments to the columns 
+comment on column DAGL_BYGL_MAIN.id
+  is '主键';
+comment on column DAGL_BYGL_MAIN.cre_user_id
+  is '创建人id';
+comment on column DAGL_BYGL_MAIN.cre_user_name
+  is '创建人名称（登记人）';
+comment on column DAGL_BYGL_MAIN.cre_dept_id
+  is '创建部门id';
+comment on column DAGL_BYGL_MAIN.cre_dept_name
+  is '创建部门name';
+comment on column DAGL_BYGL_MAIN.cre_chushi_id
+  is '创建人处室id';
+comment on column DAGL_BYGL_MAIN.cre_chushi_name
+  is '创建人处室name';
+comment on column DAGL_BYGL_MAIN.cre_ju_id
+  is '创建人二级局id';
+comment on column DAGL_BYGL_MAIN.cre_ju_name
+  is '创建人二级局name';
+comment on column DAGL_BYGL_MAIN.visible
+  is '逻辑删除';
+comment on column DAGL_BYGL_MAIN.cre_time
+  is '创建时间';
+comment on column DAGL_BYGL_MAIN.year
+  is '年份';
+comment on column DAGL_BYGL_MAIN.title
+  is '标题';
+comment on column DAGL_BYGL_MAIN.status
+  is '编研状态：0待分发，1已分发，2已汇总';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DAGL_BYGL_MAIN
+  add constraint PK_DAGL_BYGL_MAIN primary key (ID)
+  using index 
+  tablespace ZHGL
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create table DAGL_BYGL_SUB
+(
+  id              VARCHAR2(50 CHAR) not null,
+  pid             VARCHAR2(50 CHAR),
+  cre_user_id     VARCHAR2(50 CHAR),
+  cre_user_name   VARCHAR2(50 CHAR),
+  cre_dept_id     VARCHAR2(50 CHAR),
+  cre_dept_name   VARCHAR2(50 CHAR),
+  cre_chushi_id   VARCHAR2(50 CHAR),
+  cre_chushi_name VARCHAR2(50 CHAR),
+  cre_ju_id       VARCHAR2(50 CHAR),
+  cre_ju_name     VARCHAR2(50 CHAR),
+  visible         VARCHAR2(1 CHAR),
+  cre_time        VARCHAR2(30 CHAR),
+  year            VARCHAR2(4 CHAR),
+  title           VARCHAR2(500 CHAR),
+  sequence        NUMBER,
+  rec_chushi_name VARCHAR2(50 CHAR),
+  rec_chushi_id   VARCHAR2(50 CHAR),
+  status          VARCHAR2(1 CHAR),
+  is_back         VARCHAR2(1 CHAR)
+)
+tablespace ZHGL
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table DAGL_BYGL_SUB
+  is '编研管理子表
+dagl：档案管理数据库表前缀';
+-- Add comments to the columns 
+comment on column DAGL_BYGL_SUB.id
+  is '主键id';
+comment on column DAGL_BYGL_SUB.pid
+  is '父表主键';
+comment on column DAGL_BYGL_SUB.cre_user_id
+  is '创建人id';
+comment on column DAGL_BYGL_SUB.cre_user_name
+  is '创建人名称（登记人）';
+comment on column DAGL_BYGL_SUB.cre_dept_id
+  is '创建部门id';
+comment on column DAGL_BYGL_SUB.cre_dept_name
+  is '创建部门name';
+comment on column DAGL_BYGL_SUB.cre_chushi_id
+  is '创建人处室id';
+comment on column DAGL_BYGL_SUB.cre_chushi_name
+  is '创建人处室name';
+comment on column DAGL_BYGL_SUB.cre_ju_id
+  is '创建人二级局id';
+comment on column DAGL_BYGL_SUB.cre_ju_name
+  is '创建人二级局name';
+comment on column DAGL_BYGL_SUB.visible
+  is '逻辑删除';
+comment on column DAGL_BYGL_SUB.cre_time
+  is '创建时间';
+comment on column DAGL_BYGL_SUB.year
+  is '年份';
+comment on column DAGL_BYGL_SUB.title
+  is '标题';
+comment on column DAGL_BYGL_SUB.sequence
+  is '在编研管理中序号';
+comment on column DAGL_BYGL_SUB.rec_chushi_name
+  is '接收处室name';
+comment on column DAGL_BYGL_SUB.rec_chushi_id
+  is '接收处室id';
+comment on column DAGL_BYGL_SUB.status
+  is '确认状态，0未确认，1已确认';
+comment on column DAGL_BYGL_SUB.is_back
+  is '反馈状态：0未反馈，1已反馈';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DAGL_BYGL_SUB
+  add constraint PK_DAGL_BYGL_SUB primary key (ID)
+  using index 
+  tablespace ZHGL
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table DAGL_BYGL_SUB
+  add constraint FK_DAGL_BYG_REFERENCE_DAGL_BYG foreign key (PID)
+  references DAGL_BYGL_MAIN (ID); 
+
+--10、删除档号规则表跟门类表的外键
+ALTER TABLE dagl_party_num_rule DROP CONSTRAINT FK_DAGL_PAR_REFERENCE_DAGL_CAT;

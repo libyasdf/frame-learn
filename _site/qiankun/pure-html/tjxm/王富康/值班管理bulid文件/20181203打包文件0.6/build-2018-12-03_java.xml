@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\12.03.java"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	
+	<fileset id="maqiuxia" dir="../../../../">
+		
+		<!--1.	值班管理上报情况数量显示(值班上报详情-点击某月的上报情况页面添加了上报的数量，和未上报的数量) -->
+		<include name="WebContent\modules\zhbg\zbgl\shangbao\sbqkReadOnlyForm.html"/>
+
+		<!--（值班室上报情况详情，点击某个已上报的单位查看详情时，添加了导出功能） -->
+		<include name="WebContent\modules\zhbg\zbgl\shangbao\zbbReadOnlyForm.html"/>
+
+		<include name="src\com\sinosoft\sinoep\modules\zhbg\zbgl\dutytable\controller\DutyTableController.java"/>
+
+		<!--(值班查询，总值班查询：添加了导出功能；查询项，值班单位改为下拉，下拉内容为当月的基础配置中的单位；会根据查询项值班日期改变。 -->
+		<include name="WebContent\modules\zhbg\zbgl\dutysearch\rczbSearch.html"/>
+		<include name="WebContent\modules\zhbg\zbgl\dutysearch\zzbsSearch.html"/>
+
+		<include name="src\com\sinosoft\sinoep\modules\zhbg\zbgl\dutytable\"/>
+
+		<!--4.	之后修改BUG修改的文件
+			修复的bug：
+				1.基础配置：如果有重名的处室，当有一个处室没有值班室上报员时，基础配置也会保存成功。
+				2.值班室上报情况-点击某个上报的值班室上报情况时，查询项，时间改为时间范围的日期框。
+			-->
+		<include name="src\com\sinosoft\sinoep\modules\zhbg\zbgl\dutywork\controller\DutyWorkController.java"/>
+		<include name="src\com\sinosoft\sinoep\modules\zhbg\zbgl\dutywork\services\DutyWorkServiceImpl.java"/>
+		<include name="WebContent\modules\zhbg\zbgl\dutytable\zbbRl.html"/>
+
+		<!--获取下月的日期导致定时器生成跨年的数据的问题-->
+		<include name="src\com\sinosoft\sinoep\modules\zhbg\zbgl\config\source\Task.java"/>
+		<include name="WebContent\modules\zhbg\zbgl\config\jcpzForm.html"/>
+
+	</fileset>
+	
+	<target name="all">
+		<mkdir dir="${export.dir.root}/cqqx"/>
+		<copy todir="${export.dir.root}/cqqx" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	<!--删除上次导出文件-->
+	<target name="deleteOldFile" >  
+	    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+	       <fileset dir="${export.dir.root}">
+	           <include name="**/*"/>
+	       </fileset>
+	    </delete>
+	</target> 
+
+	<target name="default" depends="deleteOldFile,mqx">
+        <exec executable="cmd" failonerror="false">  
+            <arg line='/c explorer "${export.dir.root}\"' />  
+        </exec>
+	</target>	
+</project>

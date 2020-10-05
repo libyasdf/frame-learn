@@ -1,0 +1,289 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 考试名称：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="name" id = "name" value=""/>
+                            </div>
+                            <!--法制、保密、政治这三个部门应该是只会评自己负责类别的试卷，这里的查询条件先去掉 -->
+                            <!-- <label class="col-md-1 control-label"> 考试类型：</label>
+                            <div class="col-md-3">
+                                <select class="form-control">
+                                    <option>---请选择---</option>
+                                    <option>法制法规</option>
+                                    <option>保密</option>
+                                    <option>政治理论</option>
+                                    <option>考试类型4</option>
+                                </select>
+                            </div> -->
+                            <label class="col-md-2 control-label"> 状态：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" id = "markStatus">
+                                    <option value="">---请选择---</option>
+                                    <option value="0">未评卷</option>
+                                    <option value="1">评卷中</option>
+                                    <option value="2">已评卷</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary"
+                                        onclick=""> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+	<script src="/static/js/common/mylayer.js"></script>
+<!-- <script type="text/javascript" src="/common/js/getrequest.js"></script> -->
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        ,formatter : function(value, row, index) {
+        	var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span recordId='"+row.id+"'>" + orderNum + "</span>";//计算序号
+        }
+    }, {
+        field: 'name'
+        , title: '考试名称'
+        , width: '50%'
+        , align: "center"
+        ,formatter : function(value, row, index){
+        	var data = value;
+        	if(value.length>15){
+        		value = value.substring(0,14)
+        	}
+        	return "<span title = '"+data+"'>"+value+"<span>";
+        }
+    },{
+        field: 'startTime'
+            , title: '考试时间'
+            , width: '20%'
+            , align: "center"
+    },{
+        field: 'answerTime'
+        , title: '答题时长/分钟'
+        , sortable: true
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'markStatus'
+        , title: '状态'
+        , sortable: true
+        , width: '5%'
+        , align: "center"
+        ,formatter:function(value, row, index){
+        	var data = "";
+        	if(value == "0"){
+        		data = '未评卷';
+        	}else if(value == "1"){
+        		data = '评卷中';
+        	}else{
+        		data = '已评卷';
+        	}
+        	return "<span>"+data+"</span>"
+        }
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align: "center"
+         , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+                if (row.markStatus=="0") {
+                	html += "<i title='开始评卷' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                } else if (row.markStatus=="1") {
+                    html += "<i title='开始评卷' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;<i title='结束评卷' class='glyphicon glyphicon-ok-sign' onclick=\'list.deleteFun(\"" + row.id + "\",\""+row.endTime+"\")\'></i>"
+                } else if (row.markStatus=="2") {
+                    html += "";
+                }
+            return html;
+        } 
+    }];
+	
+    $(document).ready(function (e) {
+    	var url = $("#left_ul").find("a.active").attr("url");
+    	var resId = $("#left_ul").find("a.active").attr("id");
+    	var parameter = new GetParameter(url);
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/zhbg/xxkh/grade/gradeList?type="+parameter.treeType+"&resId="+resId+"&"+Math.random(),
+            columns: right_table_col,
+            queryParams: function (params) {
+            	params.name = $("#name").val(),
+            	params.markStatus = $("#markStatus").val()
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+             //   params.xname = $('#queryDiv input[name=\'textfield2\']').val();
+            //    params.xage = $('#queryDiv input[name=\'textfield2\']').val();
+                return params;
+            },
+        readOnlyFn:function(){
+        	$('tr.readOnly').find('td:not(:last)').css("cursor","default")
+            $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                var evt = e ? e : window.event;
+                if (evt.stopPropagation) {
+                    evt.stopPropagation();
+                }else {
+                    evt.cancelBubble = true;
+                }
+            });
+        }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+        	MyLayer.layerOpenUrl({
+                url: '/modules/zhbg/xxkh/gradePaper/ifram.html?id='+id,
+                title: "评卷",
+				height : "98%",
+				cancel:function(){
+					$.get("/zhbg/xxkh/grade/getTestToUser",{id:id},function(data){
+						if(data.flag==1){
+							console.log("已更新");
+							parent.TableInit.refTable('right_table');
+						}
+					},"json")
+				}
+            })
+        },
+        deleteFun: function (id,time) {
+        	
+        		if(!compareDate(getNowFormatDate(),time)){
+        			layer.msg("考试期间不可使用，考试结束后方可使用", {
+						icon : 0
+					});
+        		}else{
+        	layer.confirm("结束评卷会将所有未评卷的主观题分数全部记为0分", {
+				btn : [ '确定', '取消' ]
+			//按钮
+			}, function() {
+				$.get("/zhbg/xxkh/grade/getTestToUser",{id:id,all:"OK"},function(data){
+					if(data.flag==1){
+						console.log("已更新");
+						TableInit.refTable('right_table');
+						layer.msg("已结束评卷", {
+							icon : 1
+						});
+					}else{
+						layer.msg("结束评卷失败", {
+							icon : 1
+						});
+					}
+				},"json")
+			});
+        		}
+        }
+    }
+  //获取当前时间，格式YYYY-MM-DD
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+    //判断 年-月-日，大小  
+function compareDate(DateOne,DateTwo)  
+{   
+    var str="-";  
+  
+    var OneMonth = DateOne.substring(5,DateOne.lastIndexOf (str));  
+    var OneDay = DateOne.substring(DateOne.length,DateOne.lastIndexOf (str)+1);  
+    var OneYear = DateOne.substring(0,DateOne.indexOf (str));  
+  
+    var TwoMonth = DateTwo.substring(5,DateTwo.lastIndexOf (str));  
+    var TwoDay = DateTwo.substring(DateTwo.length,DateTwo.lastIndexOf (str)+1);  
+    var TwoYear = DateTwo.substring(0,DateTwo.indexOf (str));  
+  
+    if (Date.parse(OneMonth+"/"+OneDay+"/"+OneYear) >  
+        Date.parse(TwoMonth+"/"+TwoDay+"/"+TwoYear))  
+    {  
+        return true;  
+    }  
+    else  
+    {  
+        return false;  
+    }  
+  
+}  
+</script>

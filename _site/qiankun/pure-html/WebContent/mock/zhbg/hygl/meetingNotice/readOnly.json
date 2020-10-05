@@ -1,0 +1,39 @@
+{
+	"meetingName":"关于保密第一次会议",
+	"meetingRoom":"第一会议室",
+	"isPrivacy":"是",
+	"isResponse":"人名",
+	"responseTime":"2018-03-03 09:00:00",
+	"joinDept":"A单位，B单位，C单位，D单位，E单位，F单位，G单位，H单位",
+	"meetingContent":"这是一条很重要的备注",
+	"hysj":"2018-02-14 09:00:00 - 2018-02-14 11:00:00",
+	"remark":"这是一条很重要的备注,看到了",
+	"table":{
+		"type":"table",
+		"data":[{
+			"name":"A单位",
+			"sbqk":"已上报"
+		},{
+			"name":"B单位",
+			"sbqk":"已上报"
+		},{
+			"name":"C单位",
+			"sbqk":"已上报"
+		},{
+			"name":"D单位",
+			"sbqk":"未上报"
+		},{
+			"name":"E单位",
+			"sbqk":"未上报"
+		},{
+			"name":"F单位",
+			"sbqk":"未上报"
+		},{
+			"name":"G单位",
+			"sbqk":"逾期"
+		},{
+			"name":"H单位",
+			"sbqk":"逾期"
+		}]
+	}
+}

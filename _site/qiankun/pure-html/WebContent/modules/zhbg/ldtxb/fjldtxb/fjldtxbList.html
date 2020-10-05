@@ -1,0 +1,218 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 姓名：</label>
+                            <div class="col-md-3">
+                               <input class="form-control" type="text"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 部门：</label>
+                            <div class="col-md-3">
+                               <input class="form-control" type="text"/>
+                            </div>
+                            <label class="col-md-1 control-label"> 处室：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 职务：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text"/>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="MyLayer.layerOpenUrl({url:'/modules/zhbg/ldtxb/fjldtxb/fjldtxbEditForm.html',title:'新增',width:'75%',height:'50%'})">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+                <button class="list_table_btn2"
+                        onclick="">
+                    <span class="glyphicon glyphicon-chevron-right"></span> 导出
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'selectAll',
+        title: "全选",
+        width: '3%',
+        align: "center",
+        checkbox:"true"
+    },{
+        field: 'id'
+        , title: '编号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center"
+    }, {
+        field: 'jkrmc'
+        , title: '姓名'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'bz'
+        , title: '职务'
+        , width: '9%'
+        , sortable: true
+        , align:"center"
+    }, {
+        field: 'bt'
+        , title: '部门'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'ywlx'
+        , title: '处室'
+        , width: '10%'
+        , sortable: true
+        , align:"center"
+    }, {
+        field: 'zczlfl'
+        , title: '专网'
+        , sortable: true
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'pw'
+        , title: '普网'
+        , sortable: true
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'phone'
+        , title: '手机号码'
+        , sortable: true
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '18%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "add") {
+
+                } else if (opt[i] == "update") {
+                    html +="<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun("+row.id+")\'></i>&nbsp;&nbsp;"
+                } else if (opt[i] == "delete") {
+                    html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun("+row.id+")\'></i>"
+                }
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mock/zhbg/ldtxb/fjldtxb/list.json",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.xname = $('#queryDiv input[name=\'textfield2\']').val();
+                params.xage = $('#queryDiv input[name=\'textfield2\']').val();
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/ldtxb/fjldtxb/fjldtxbReadOnlyForm.html',title:'只读',width:'75%',height:'50%'});
+                });
+            }
+        });
+    });
+
+//    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/ldtxb/fjldtxb/fjldtxbEditForm.html?id='+id,
+                title:"修改",
+                width:"75%",
+                height:"50%"
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'/index.html?id=' + id,
+                tableId:'right_table'
+            })
+        }
+    }
+
+</script>

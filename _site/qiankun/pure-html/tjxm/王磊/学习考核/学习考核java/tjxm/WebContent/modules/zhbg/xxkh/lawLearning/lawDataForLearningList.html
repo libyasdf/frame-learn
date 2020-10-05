@@ -1,0 +1,216 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid">
+    <div class="row" style="height:100%;">
+        <!--查询--><div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" title="查询资料类型">查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:606px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details" >
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;" id="queryDiv">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 资料名称：</label>
+                            <div class="col-md-3">
+                               <input class="form-control" id="dataName" name="dataName" type="text"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2" style="width:100%;text-align: center">
+                                <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary" onclick="chongzhi();"> 重&nbsp;&nbsp;置 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+       
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+         </div>
+    </div>
+</div>
+    <script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+    <script src="/static/js/common/jquery.tablednd.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+    <script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script src="/modules/zhbg/xxkh/tree/js/dictionaryTypeTree.js"></script>
+    <!-- 页面获取参数 -->
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript">
+
+	//查询字典类型
+	function searchType(){
+	    typeTree.searchNodes($("#typeName").val());
+	}
+	
+	// 查询窗口
+	function showSearchFrame() {
+	    var search = $("#searchDiv");
+	    if (search.is(":hidden")) {
+	        search.show();
+	        $("#typeName").focus();
+	    } else {
+	        search.hide();
+	    }
+	}
+
+	//定义bootatrap-table数据列
+	//    sortable：开启列排序，其他参考API
+	var right_table_col = [
+			{
+				field : 'id',
+				title : '序号',
+				width : '5%',
+				order : "desc",
+				align : "center",
+				formatter : function(value, row, index) {
+					//计算序号，并存放业务ID，及已办事项ID
+					var pageSize = $('#right_table').bootstrapTable(
+							'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+					var pageNumber = $('#right_table').bootstrapTable(
+							'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+					var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+					return "<span recordId='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+				}
+			},{
+				field : 'dataName',
+				title : '资料名称',
+				width : '35%',
+				align : "center",
+				formatter : function(value, row, index) {
+					var dataName=value;
+					if(value.length>25){
+						dataName=dataName.substring(0,26)+"...";
+						
+					}
+					return "<span title='"+value+"'>" + dataName
+							+ "</span>";//计算序号
+				}
+			},{
+			    field: 'isWillLearn'
+			    , title: '是否必学'
+			    , width: '10%'
+			    , align:"center"
+			    ,formatter : function(value, row, index) {
+			    	if(value=="1"){
+			    		return "是";
+			    	}else{
+			    		return "否";
+			    	}
+			    }
+			},{
+				field : 'creUserName',
+				title : '创建人',
+				
+				width : '10%',
+				align : "center"
+			},
+			{
+				field : 'creTime',
+				title : '创建时间',
+				sortable : true,
+				width : '20%',
+				align : "center"
+			},{
+				field : 'shareTime',
+				title : '共享时间',
+				width : '20%',
+				align : "center"
+			}];
+	var nodeId = "";
+    $(document).ready(function (e) {
+    	 //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        
+      	//获取url中的参数
+    	var url = $("#left_ul").find("a.active").attr("url");
+    	var resId = $("#left_ul").find("a.active").attr("id");
+    	var parameter = new GetParameter(url);
+        typeTree.init({mark:parameter.mark,treeType:parameter.treeType});
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        if(nodes.length>0){
+        	nodeId = nodes[0].id
+        }
+        //初始化表格
+        //默认查询第一个类别的内容
+		var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        TableInit.init({
+            domId:"right_table",
+			url : "/zhbg/xxkh/tree/datatable/list?type="+parameter.treeType+"&resId="+resId+"&nodeId="+nodeId,
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+               	params.dataName = $("#queryDiv input[name='dataName']").val();
+                //学习列表只展示可用的资料
+                params.subflag = "1";
+                return params;
+            },
+            readOnlyFn:function(){
+				$('tr.readOnly').attr("title","点击查看详情");//悬停显示
+                $('tr.readOnly').find('td').unbind('click').bind('click',function(e){
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+					var id = $(this).parent().find("span[recordid]").attr("recordid");
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/xxkh/lawLearning/lawDataReadonlyForm.html?id='+id+"&resId="+resId+"&opertation=VIEW",title:'资料信息只读页面',width:'90%',height:'85%'});
+                });
+            }
+        });
+    });
+    
+	//重置
+	function chongzhi(){
+		$("#dataName").val("");
+	}
+
+</script>

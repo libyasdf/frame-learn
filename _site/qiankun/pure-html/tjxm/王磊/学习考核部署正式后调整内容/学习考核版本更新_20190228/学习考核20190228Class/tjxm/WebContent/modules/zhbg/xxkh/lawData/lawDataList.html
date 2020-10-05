@@ -1,0 +1,570 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+</style>
+<link rel="stylesheet" type="text/css"
+	href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+	href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+	href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid">
+	<div class="row" style="height: 100%;">
+		<!--查询-->
+		<div class="vertify-panel vertify-tree x-unselectable"
+			role="presentation">
+			<div class="inner">
+				<div class="folderBar">
+					<i class="glyphicon glyphicon-plus-sign" onclick="addType('0');"
+						style="font-size: 18px; cursor: pointer;" title="新增资料类型"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<i class="glyphicon glyphicon-edit" onclick="editType();"
+						style="font-size: 18px; cursor: pointer;" title="修改资料类型"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<i class="glyphicon glyphicon-trash" onclick="deletType();"
+						style="font-size: 18px; cursor: pointer;" title="删除资料类型"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<i class="glyphicon glyphicon-search" onclick="showSearchFrame()"
+						style="font-size: 18px; cursor: pointer;" title="查询资料类型"></i>
+				</div>
+				<div id="searchDiv" class="input-group input-group-sm"
+					style="display: none; padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+					<input type="text" id="typeName" class="form-control"> <span
+						class="input-group-btn">
+						<button class="btn btn-primary" type="button"
+							onclick="searchType();">查询</button>
+					</span>
+				</div>
+				<ul id="treeDemo" class="ztree" style="margin-top: 10px; height: 606px; overflow: auto;">
+				</ul>
+			</div>
+		</div>
+		<div class="vertify-panel vertify-details">
+			<form class="form-horizontal">
+				<div class="col-md-12">
+					<div class="panel panel-default toggle">
+						<div class="panel-heading" style="cursor: pointer;">
+							<h3 class="panel-title">查询项</h3>
+							<div class="panel-controls ">
+								<i class="glyphicon glyphicon-plus showSelect"></i>
+							</div>
+						</div>
+						<div class="panel-body" style="display: none;">
+							<div class="form-group">
+								<label class="col-md-2 control-label"> 资料名称：</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" id="dataName" name="dataName" />
+								</div>
+								<!-- <label class="col-md-1 control-label"> 资料类别：</label>
+                            <div class="col-md-3">
+                                <select class="form-control" >
+                                    <option>---请选择---</option>
+                                    <option>资料类别1</option>
+                                    <option>资料类别2</option>
+                                    <option>资料类别3</option>
+                                    <option>资料类别4</option>
+                                </select>
+                            </div> -->
+								<!-- <label class="col-md-1 control-label"> 立法机关：</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" id="legislature" name="legislature" />
+								</div>
+								<label class="col-md-1 control-label"> 颁布机关：</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" id="authority" name="authority" />
+								</div> -->
+							</div>
+
+							<div class="form-group">
+
+								<!-- <label class="col-md-1 control-label"> 音频：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text"/>
+                            </div>
+							<label class="col-md-1 control-label"> 视频：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text"/>
+                            </div> -->
+							</div>
+							<!-- <div class="form-group">
+                            <label class="col-md-1 control-label"> 附件：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text"/>
+                            </div>
+                        </div> -->
+							<div class="form-group">
+								<div class="col-md-2" style="width: 100%; text-align: center">
+									<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"><!-- TableInit.refTable('right_table') -->
+										查&nbsp;&nbsp;询</button>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<button type="button" class="btn btn-primary"
+										onclick="chongzhi()">
+										重&nbsp;&nbsp;置</button>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<!--查询结束-->
+
+			<div class="col-md-12">
+				<div class="list_button_area" id="addButton">
+				     <button class="list_table_btn2"
+                        onclick="add()">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+				</div>
+				<!--bootstrap-table表格-->
+				<table id="right_table"></table>
+			</div>
+		</div>
+	</div>
+</div>
+<script
+	src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<!-- 不让用户自己拖动分类 -->
+<!-- <script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script> -->
+<script src="/modules/zhbg/xxkh/tree/js/dictionaryTypeTree.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/modules/zhbg/xxkh/displayVideoAndPdf/js/displayVideoAndPdf.js"></script>
+<script type="text/javascript">
+	var parameter;
+	var nodeId = "";
+	function add() {
+		var resId = $('#left_ul').find('a.active').attr("id");
+		//MyLayer.layerOpenUrl({url:'/modules/llg/taskPlanEditForm2.html?oper=NEW&resId=' + resId,title:'起草'})
+		//获得当前被选中类别的全路径
+		var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+		
+		if(nodes.length==0){
+			layer.msg('请先选择资料类型！', {icon : 0});
+			return false;
+		}
+		nodeId=nodes[0].id;
+		MyLayer.layerOpenUrl({
+					url : '/modules/zhbg/xxkh/lawData/lawDataEditForm.html?oper=NEW&resId='
+							+ resId
+							+ '&type='
+							+ parameter.treeType
+							+'&nodeId='
+							+nodeId+"&classId="+nodes[0].code,
+					title : '新增资料信息',
+					width : '90%',
+					height : '90%'
+				})
+				
+	}
+
+	//增加资料类型
+	function addType(type) {
+		//清空类型查询框内容
+		$("#typeName").val("");
+		// 判断是否已经选择了某个节点
+		var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+		var ztree = $.fn.zTree.getZTreeObj("treeDemo");
+		if (nodes.length == 0) {
+			if($.fn.zTree.getZTreeObj("treeDemo").getNodes().length > 0){
+	    		layer.msg('请选择资料类型', {icon: 0});
+	    		return false;
+	    	}
+			var url = "/modules/zhbg/xxkh/tree/dictionaryEditForm.html?fid=1234567890123&treeType="+parameter.treeType+"&type=0"+"&code=&flag=";
+			var title = "";
+			title = "新增资料类型";
+			layer.open({
+				type : 2,
+				shadeClose : true,
+				content : url+"&resId="+$('#left_ul').find('a.active').attr("id"),
+				area : [ '770px', '250px' ],
+				title : [ title, 'font-size:16px;font-weight:bold;' ]
+			})
+			if (nodes.length > 0) {
+				ztree.selectNode(nodes[0]);
+	        }
+		} else if (type) {
+			var pid = nodes[0].id;
+			//alert("nodes[0].code="+nodes[0].code+"---"+"nodes[0].flag"+nodes[0].flag);
+			var url = "/modules/zhbg/xxkh/tree/dictionaryEditForm.html?treeType="+parameter.treeType+"&type=";
+			var title = "";
+			if ("0" == type) {
+				url = url + "0&pId=" + pid+"&code="+nodes[0].code+"&flag="+nodes[0].flag;
+				title = "新增资料类型";
+			}
+			//alert("新增类别url："+url);
+			layer.open({
+				type : 2,
+				shadeClose : true,
+				content : url+"&resId="+$('#left_ul').find('a.active').attr("id"),
+				area : [ '770px', '250px' ],
+				title : [ title, 'font-size:16px;font-weight:bold;' ]
+			})
+						if (nodes.length > 0) {
+				ztree.selectNode(nodes[0]);
+	        }
+		}
+	}
+
+	//修改资料类型
+	function editType() {
+		//清空类型查询框内容
+		$("#typeName").val("");
+		// 判断是否已经选择了某个节点
+		var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+		if (nodes.length == 0) {
+			layer.msg('请选择资料类型', {
+				icon : 0
+			});
+		} else {
+			var id = nodes[0].id;
+			var mark = nodes[0].mark;
+			var url = "/modules/zhbg/xxkh/tree/dictionaryEditForm.html?id="
+					+ id+"&code="+nodes[0].code+"&flag="+nodes[0].flag;
+			//alert(url);
+			layer.open({
+				type : 2,
+				shadeClose : true,
+				content : url+"&resId="+$('#left_ul').find('a.active').attr("id"),
+				area : [ '770px', '250px' ],
+				title : [ '修改资料类型', 'font-size:16px;font-weight:bold;' ]
+			})
+		}
+	}
+
+	//删除资料类型
+	function deletType() {
+		//清空类型查询框内容
+		$("#typeName").val("");
+		// 判断是否已经选择了某个节点
+		var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+		if (nodes.length == 0) {
+		/* 	var url = "/modules/zhbg/xxkh/tree/dictionaryEditForm.html?treeType=fz&type=0";
+			var title = "";
+
+			layer.open({
+				type : 2,
+				shadeClose : true,
+				content : url,
+				area : [ '770px', '450px' ],
+				title : [ title, 'font-size:16px;font-weight:bold;' ]
+			}) */
+			 layer.msg('请选择资料类型', {icon: 0});
+		} else {
+			layer.confirm("确定要删除该类型吗？",{icon: 3}, function() {
+				$.ajax({
+					type : "POST",
+					url : "/zhbg/xxkh/tree/deleteType",
+					data : {
+						id : nodes[0].id,
+					},
+					dataType : "json",
+					success : function(data) {
+						if ('1' == data.flag) {
+							layer.msg("删除成功！", {
+								icon : 1,
+								time : 1000
+							}, function(index) {
+								typeTree.delNode(nodes[0].id);
+								//调用接口，在音视频系统中同步删除该分类
+								deleteFenLeiInHB(nodes[0].code);
+							});
+						} else {
+							layer.msg("该类型下有资料项，不可删除！", {
+								icon : 5
+							});
+						}
+					},
+					error : function(data) {
+					}
+				});
+			});
+		}
+	}
+
+	//查询资料类型
+	function searchType() {
+		typeTree.searchNodes($("#typeName").val());
+	}
+
+	// 查询窗口
+	function showSearchFrame() {
+		//清空类型查询框内容
+		$("#typeName").val("");
+		var search = $("#searchDiv");
+		if (search.is(":hidden")) {
+			search.show();
+			$("#typeName").focus();
+		} else {
+			search.hide();
+		}
+	}
+
+	//参考：http://www.layui.com/laydate/
+	//绑定日期输入input
+	laydate.render({
+		elem : '#time' //指定元素
+	});
+	//日期范围
+	laydate.render({
+		elem : '#timeRange',
+		range : true
+	});
+
+	//定义bootatrap-table数据列
+	//    sortable：开启列排序，其他参考API
+	var right_table_col = [
+			{
+				field : 'id',
+				title : '序号',
+				width : '5%',
+				order : "desc",
+				align : "center",
+				formatter : function(value, row, index) {
+					//计算序号，并存放业务ID，及已办事项ID
+					var pageSize = $('#right_table').bootstrapTable(
+							'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+					var pageNumber = $('#right_table').bootstrapTable(
+							'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+					var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+					return "<span recordId='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+				}
+			},{
+				field : 'dataName',
+				title : '资料名称',
+				width : '30%',
+				align : "center",
+				formatter : function(value, row, index) {
+					var dataName=value;
+					if(value.length>20){
+						dataName=dataName.substring(0,21)+"...";
+					}
+					return "<span title='"+value+"'>" + dataName
+							+ "</span>";//计算序号
+				}
+			},{
+			    field: 'isWillLearn'
+			    , title: '是否必学'
+			    , width: '10%'
+			    , align:"center"
+			    ,formatter : function(value, row, index) {
+			    	if(value=="1"){
+			    		return "是";
+			    	}else{
+			    		return "否";
+			    	}
+			    }
+			},{
+				field : 'creUserName',
+				title : '创建人',
+				width : '10%',
+				align : "center"
+			},{
+				field : 'creTime',
+				title : '创建时间',
+				sortable : true,
+				width : '15%',
+				align : "center"
+			},{
+				field : 'shareTime',
+				title : '共享时间',
+				width : '10%',
+				align : "center"
+			},{
+				field : 'subflag',
+				title : '是否可用',
+				width : '10%',
+				align : "center",
+				sortable : true,
+				formatter : function(value, row, index) { //直接定义function,return就是html代码
+					if(value=="1"){
+						value="是";
+					}else{
+						value="否";
+					}
+					return value;
+			}
+			},{
+				field : 'cz',
+				title : '操作',
+				width : '10%',
+				align : "center",
+				formatter : function(value, row, index) { //直接定义function,return就是html代码
+					var opt = value.split(",");
+					var html = "";
+					for (var i = 0; i < opt.length; i++) {
+						if (opt[i] == "add") {
+
+						} else if (opt[i] == "update") {
+							html += "<i title='修改' class='glyphicon glyphicon-edit' onclick='list.editFun(\""
+									+ row.id + "\")'></i>&nbsp;&nbsp;"
+						} else if (opt[i] == "delete") {
+							html += "<i title='删除' class='glyphicon glyphicon-trash' onclick='list.deleteFun(\""
+									+ row.id + "\")'></i>"
+						}
+					}
+					return html;
+				}
+			} ];
+
+	$(document).ready(function(e) {
+		//搜索按钮
+		$(document).keyup(function(e) {
+			var key = e.which;
+			if (key == 13) {
+				searchType();
+			}
+		});
+
+		//获取url中的参数
+		var url = $("#left_ul").find("a.active").attr("url");
+		var resId = $("#left_ul").find("a.active").attr("id");
+		parameter = new GetParameter(url);
+		typeTree.init({
+			treeType : parameter.treeType
+		});
+
+		var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+		if(nodes.length>0){
+			nodeId=nodes[0].id
+		}
+		var listUrl = "/zhbg/xxkh/tree/datatable/list?type="+parameter.treeType+"&resId="+resId;
+		//alert(JSON.stringify($.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()));
+		if(nodes.length!=0){
+			listUrl = "/zhbg/xxkh/tree/datatable/list?type="+parameter.treeType+"&resId="+resId+"&nodeId="+nodeId;
+		}
+		//初始化表格
+		TableInit.init({
+					domId : "right_table",
+					url : listUrl,
+					pagination:true,//分页
+					columns : right_table_col,
+					queryParams : function(params) {
+						//这里将各个查询项添加到要传递的参数中
+						//                可以做一些校验
+						params.dataName = $("input[name='dataName']").val();
+						return params;
+					},
+					readOnlyFn : function() {
+						$('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+						$('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e) {
+								//取消事件冒泡
+								var evt = e ? e: window.event;
+								if (evt.stopPropagation) {
+									evt
+											.stopPropagation();
+								} else {
+									evt.cancelBubble = true;
+								}
+								//取消事件冒泡 end
+								var id = $(this).parent().find("span[recordid]").attr("recordid");
+								
+								MyLayer.layerOpenUrl({
+											url : '/modules/zhbg/xxkh/lawData/lawDataReadonlyForm.html?id='+id+"&resId="+resId+"&opertation=VIEW",
+											title : '资料信息只读页面',
+											width : '90%',
+											height : '85%'
+								});
+						});
+						//设置页面加载后调整最后侧滚动条高度
+						if(document.documentElement){
+							document.documentElement.scrollTop=0;
+						}else{
+							document.body.scrollTop=0;
+						}
+					}
+				});
+	});
+
+	//    表格数据项的操作
+	var list = {
+		editFun : function(id) {
+			//获得当前选中类别的全路径
+			var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+			//当前所选类别在音视频中的ClassId,删除、新增文件用
+			var classId=nodes[0].code;
+			console.log("打开修改页面前classId："+classId);
+			MyLayer.layerOpenUrl({
+				url : '/modules/zhbg/xxkh/lawData/lawDataEditForm.html?id='
+						+ id+'&opertation=VIEW&resId='+$("#left_ul").find("a.active").attr("id")+"&classId="+classId,
+				title : "修改资料信息",
+				width : "90%",
+				height : "90%"
+			})
+		},
+		deleteFun : function(id) {
+			layer.confirm('确定删除吗？', 
+				{
+					icon:3
+					//,title:'删除'
+					,btn: ['确定','取消'] //按钮
+					,btn1:function(index){
+						$.ajax({
+							type: "get",
+							url:'/zhbg/xxkh/tree/datatable/delete?id=' + id+"&resId="+$("#left_ul").find("a.active").attr("id"),
+							async: false,
+							success:function(data){
+								if(data.flag=="1"){
+									layer.msg("删除成功！", {icon: 1});
+									TableInit.refTable('right_table');
+									//删除该资料在音视频中所有文件开始
+									var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+									//当前类别在海比系统中的类别id
+									var hBId = nodes[0].code;
+									//根据资料获得该资料对应的所有文件
+									var jsonData = getFilesByInfoId(id);
+									console.log("infoId="+id);
+									//遍历删除
+									for(var i=0;i<jsonData.length;i++){
+										var fileId = jsonData[i].fileIdNum;
+										//根据hBId和fileId在海比系统中删除文件
+										deleteFileInHB(fileId,hBId);
+									}
+									//删除该资料在音视频中所有文件结束
+								}else{
+									layer.msg("删除文件异常，请稍后再试！", {icon: 0});
+								}
+							},
+							error:function(data){
+								layer.msg("音视频系统删除文件异常，请稍后再试！", {icon: 0});
+							}
+						});
+					},btn2:function(){
+						//取消什么都不做
+					}	
+				});
+		}
+	}
+	
+	//重置
+	function chongzhi(){
+		$("#dataName").val("");
+	}
+	
+	//递归获得类型的全路径
+	function getFilePath(treeObj){
+		if(treeObj==null){
+			return "";
+		}
+		var filename = treeObj.name;
+		var pNode = treeObj.getParentNode();
+		if(pNode!=null){
+			filename = getFilePath(pNode) +"/"+ filename;
+		}
+		return filename;
+	}
+</script>

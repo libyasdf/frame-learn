@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="Expires" content="0">
+	    <meta http-equiv="Pragma" content="no-cache">
+	    <meta http-equiv="Cache-control" content="no-cache">
+	    <meta http-equiv="Cache" content="no-cache">
+        <title>浏览文件</title>
+        <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css" />
+		<link href="/static/css/common/style.css" rel="stylesheet" />
+    </head>
+    <body>
+    	<div class="ctrlDiv" style="width: 100%;height: 100%;">
+		    <div class="eleContainer elePaddingBtm">
+		        <iframe id="displayPdfIframe" width="100%" height="736px"></iframe>
+		    </div>
+		</div>
+		<div id="confirmDiv" style="display:none;">
+    		<div id="aa" style="margin:10px;">
+    			页面将在<span id="count" style="color:#F00;font-weight: bold;">10</span>秒后关闭，并将上次点击【继续预览】时间作为本次学习结束时间来计算学习时长。
+    		</div>
+    	</div>
+    	<!-- 按钮区 -->
+		<div class="form_btn_area" style="text-align: center;">
+			<button style="display:none;" id="saveAndClose" class="btn btn-primary form_btn_area_btn2" onclick="quitPlayVideo();">
+				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 退出学习
+			</button>
+			<button style="display:none;" id="justClose" class="btn btn-primary form_btn_area_btn2" onclick="quitPlayVideoNoSave();">
+				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭
+			</button>
+		</div>
+		<!-- 按钮区结束 -->
+    </body>
+	<!-- 页面获取参数 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<script src="/static/core/layer/layer.js"></script>
+	<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+	<script type="text/javascript" src="/modules/zhbg/xxkh/displayVideoAndPdf/js/displayVideoAndPdf.js"></script>
+	<!-- cookie -->
+	<script src="/product/workflow/js/common/getCook.js"></script>
+    <script type="text/javascript">
+	    /** 定时访问后台保持session*/
+	    setInterval(keepAlive, 5 * 60 * 1000);
+	    var theRequest = GetRequest();
+	    var pdfUrl = theRequest.pdfUrl;
+	    document.title=decodeURIComponent(theRequest.fileFullName);
+	    $("#displayPdfIframe").attr("src","/modules/zhbg/xxkh/generic/web/viewer.html?file="+pdfUrl);
+	    //倒计时计算学习时间
+	    var startVideoTime="";
+	    var endVideoTime="";
+	    var daoJiShiCountDefault = 600;//默认每播放10分钟提醒一次，引入默认方便配置和调试
+	    var daoJiShiConfirmDefault = 10;//默认确认播放时间为10秒钟，引入默认方便配置和调试
+	    var daoJiShiCount = daoJiShiCountDefault;//每播放10分钟提醒一次
+	    var daoJiShiConfirm = daoJiShiConfirmDefault;//十秒不确认继续播放，结算学习时长并退出播放页面
+	    var timerTenMinute;
+	    var timerTenSecond;
+	    
+	  	//资料id
+	    var infoId = theRequest.infoId;
+	    //资料name
+	    var infoName = decodeURIComponent(theRequest.infoName);
+	    //是否需要将学习记录存入数据库，区分资料维护和资料学习，0:不需要记录，1：需要记录
+	    var isRecord = theRequest.isRecord;
+	    if(isRecord == "1"){
+	    	$("#saveAndClose").show();
+	    }else{
+	    	$("#justClose").show();
+	    }
+	  	//倒计时方法，倒计时10分钟
+	    function daoJiShiTenMinute(){
+		  	//倒计时10分钟完毕，暂停视频，显示倒计时10秒
+	    	if(daoJiShiCount == 0){
+	    		//弹出倒计时10秒的确认框
+	    		console.log("倒计时10分钟结束，暂停视频:"+getNowFormatDate());
+        		clearTimeout(timerTenMinute);
+        		timerTenSecond = setInterval("daoJiShiTenSencond()",1000);
+        		showConfirmWindow();
+	    		return false;
+	    	}
+	    	daoJiShiCount = daoJiShiCount -1;
+	    	console.log("此时倒计时十分钟还剩下："+daoJiShiCount);
+	    }
+		
+	    //倒计时方法，倒计时10秒
+	    function daoJiShiTenSencond(){
+	    	if(daoJiShiConfirm == 1){
+	    		//手动清空cookie，防止非ie浏览器不能再页面关闭时执行清空cookie的动作
+				delCookie("isLearning");
+				//停止倒计时10秒钟
+	    		clearTimeout(timerTenSecond);
+	    		//确认框隐藏
+	        	layer.closeAll();
+	        	//判断时长是否大于20秒
+				var startTime = new Date(startVideoTime.replace(/-/g,"/"));
+		  		var endTime = new Date(endVideoTime.replace(/-/g,"/"));
+		  		var total = (endTime.getTime()-startTime.getTime())/1000;
+		  		//alert(total);
+	    		if(endVideoTime.length == 0 || total < 20){
+	    			//layer.msg("不存在有效学习时间，本次学习不记入学习时长！",{icon: 1});
+	    			layer.confirm('不存在有效学习时间，本次学习不记入学习时长！', 
+	    					{
+	    						icon:0
+	    						,title:'信息'
+	    						,btn: ['确定'] //按钮
+	    						,btn1:function(index){
+	    							layer.close(index);
+	    							window.close();
+	    						},end:function(index){
+	    							layer.close(index);
+	    							window.close();
+	    						}
+	    				});
+	    			//window.close();
+	    		}else{
+	    			//延迟一毫秒执行，否则获取不到最新学习结束时间
+			  		setTimeout(saveLearningTime,1);
+	    		}
+	    		return false;
+	    	}
+	    	//alert($("#count").text());
+	    	daoJiShiConfirm = daoJiShiConfirm -1;
+	    	$("#count").text(daoJiShiConfirm);
+	    	console.log("此时daoJiShiConfirm："+daoJiShiConfirm);
+	    }
+	    
+	    //显示10秒倒计时
+	    function showConfirmWindow(){
+	    	var index = layer.open({
+	    		title:"文件预览确认",
+	    		type: 1,
+	    		closeBtn:0,
+	    		btn: ['继续预览'],
+	   		    yes: function(){
+	   		    	//关闭当前弹出层
+	   		    	layer.close(index);
+	   		    	//继续播放视频等
+	   		    	stopTimerTenSecond();
+	   		    },
+	    		//skin: 'layui-layer-rim', //加上边框
+	    		area: ['360px', '160px'], //宽高
+	    		content: $("#confirmDiv")
+	    	});
+	    }
+	    
+	    //暂停10秒倒计时
+	    function stopTimerTenSecond(){
+	    	//暂停倒计时
+	    	clearTimeout(timerTenSecond);
+	    	//用户在倒计时10秒中，点击了继续播放,这里其实应该按照视频被暂停的时间作为学习结束时间，这样做会差几秒，也无妨
+	    	endVideoTime = getNowFormatDate();
+	    	console.log("用户点击继续播放了，更新学习结束时间:"+endVideoTime);
+	    	//重置两个倒计时
+	    	daoJiShiCount = daoJiShiCountDefault;
+	    	daoJiShiConfirm = daoJiShiConfirmDefault;
+	    	//确认框隐藏
+	    	$("#confirmDiv").hide();
+	    	$("#count").text(daoJiShiConfirmDefault);
+	    	//继续浏览
+	    	timerTenMinute = setInterval("daoJiShiTenMinute()",1000);
+	    }
+	    
+	    //当页面加载状态发生改变时触发
+	    document.onreadystatechange = function(){
+		    　　 if(document.readyState == "complete"){ 
+		    	//当页面加载状态为完全结束时进入
+		    	console.log("页面加载完成了。。。"+document.readyState);
+		    	//初始化开始时间
+		    	startVideoTime = getNowFormatDate();
+		    	//如果需要记录学习时长才记录，用于区分资料维护时候浏览和用户学习
+		    	if(isRecord == "1"){
+		    		//倒计时10分钟，然后给提示：10s内不点击播放将关闭视频
+			     	timerTenMinute = setInterval("daoJiShiTenMinute()",1000);
+		    	}
+		    　　 }　
+	    }
+		
+	  	//记录本次学习时长
+	  	function saveLearningTime(){
+	  		if(endVideoTime.length == 0){
+				console.log("结束时间为空，用户没有有效学习，本次学习作废");
+				layer.confirm('不存在有效学习时间，本次学习不记入学习时长！', 
+    					{
+    						icon:0
+    						,title:'信息'
+    						,btn: ['确定'] //按钮
+    						,btn1:function(index){
+    							layer.close(index);
+    							window.close();
+    						},end:function(index){
+    							layer.close(index);
+    							window.close();
+    						}
+    				});
+			}else{
+	  			console.log("视频播放自动结束，学习时间为："+startVideoTime+"至"+endVideoTime);
+				var record = {
+					startTime:startVideoTime,
+					overTime:endVideoTime,
+					infoId:infoId,
+					infoName:infoName
+				};
+				$.ajax({
+					type: "post",
+					url:"/zhbg/xxkh/learntime/saveLearningRecord",
+					data:JSON.stringify(record),
+					async: true,
+					dataType:"json",
+					contentType:"application/json",
+					success:function(data){
+						if(data.flag=='1'){
+							layer.confirm('系统已为您记录本次学习时长！', 
+								{
+									icon:1
+									,title:'信息'
+									,btn: ['确定'] //按钮
+									,btn1:function(index){
+										layer.close(index);
+										window.close();
+									},end:function(index){
+										layer.close(index);
+										window.close();
+									}
+							});
+						}else{
+							layer.alert("保存学习记录失败！",{icon: 0});
+						}
+					},
+					error:function(data){
+						layer.msg("请稍后再试！", {icon: 0});
+					}
+				});
+			}
+	  	}
+	  
+	  	//退出学习
+	  	function quitPlayVideo(){
+	  		//暂停倒计时十分钟
+    		clearTimeout(timerTenMinute);
+    		//重置倒计时10分钟
+    		daoJiShiCount = daoJiShiCountDefault;
+    		//用户主动点击暂停，需要更新学习结束时间
+    		endVideoTime = getNowFormatDate();
+    		console.log("用户主动点击暂停，需要更新学习结束时间:"+endVideoTime);
+    		//判断时长是否大于20秒
+			var startTime = new Date(startVideoTime.replace(/-/g,"/"));
+	  		var endTime = new Date(endVideoTime.replace(/-/g,"/"));
+	  		var total = (endTime.getTime()-startTime.getTime())/1000;
+	  		//alert("startTime:"+startTime+",endTime="+endTime+",getNowFormatDate()="+getNowFormatDate());
+	  		if(total < 20){
+	  			layer.confirm('确定退出吗？学习时间小于20秒，本次学习将不记入学习时长！', 
+    					{
+    						icon:0
+    						,title:'信息'
+    						,btn: ['确定','取消'] //按钮
+    						,btn1:function(index){
+    							//手动清空cookie，防止非ie浏览器不能再页面关闭时执行清空cookie的动作
+    							delCookie("isLearning");
+    							layer.close(index);
+    							window.close();
+    						},btn2:function(){
+    							//倒计时10分钟，然后给提示：10s内不点击播放将关闭视频
+    					    	timerTenMinute = setInterval("daoJiShiTenMinute()",1000);
+    							//取消后继续倒计时10分钟
+    					    	endVideoTime = getNowFormatDate();
+    					    	console.log("用户点击继续播放了，更新学习结束时间:"+endVideoTime);
+    						}
+    				});
+	  		}else{
+	  			//确认是否退出
+		  		layer.confirm('确定退出学习吗？', 
+						{
+						icon:3
+						,title:'退出'
+						,btn: ['确定','取消'] //按钮
+						,btn1:function(){
+							//手动清空cookie，防止非ie浏览器不能再页面关闭时执行清空cookie的动作
+							delCookie("isLearning");
+							//延迟一毫秒执行，否则获取不到最新学习结束时间
+					  		setTimeout(saveLearningTime,1);
+							
+						},btn2:function(){
+							//倒计时10分钟，然后给提示：10s内不点击播放将关闭视频
+					    	timerTenMinute = setInterval("daoJiShiTenMinute()",1000);
+							//取消后继续倒计时10分钟
+					    	endVideoTime = getNowFormatDate();
+					    	console.log("用户点击继续播放了，更新学习结束时间:"+endVideoTime);
+						}
+		  		});
+	  		}
+	  	}
+	  	
+	  	//关闭
+	  	function quitPlayVideoNoSave(){
+	  		window.close();
+	  	}
+
+	  	//关闭页面时清空cookie
+		$(window).unload(function(){
+	        //响应事件
+	        //alert("获取到了页面要关闭的事件了！清理cookie前："+getCookie("isLearning"));
+	        delCookie("isLearning");
+	        //alert("清理cookie后："+getCookie("isLearning"));
+	        
+	    });
+	  	
+	  	//监测用户主动退出页面，目前这种方式只兼容ie
+		var is_confirm=false;
+		$(window).bind('beforeunload', function(){
+	        // 只有在标识变量is_confirm不为false且需要计算学习时长时，才弹出确认提示
+	        if(window.is_confirm !== false && isRecord == "1")
+	            return '请点击【退出学习】按钮，否则系统无法给您计算学习时长！';
+	    })
+	    // mouseleave mouseover事件也可以注册在body、外层容器等元素上
+	    .bind('mouseover mouseleave', function(event){
+	        is_confirm = event.type == 'mouseleave';
+	    });
+    </script>
+</html>

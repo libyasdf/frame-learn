@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理java_20190827"></property>
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+		<!--两层表中转库归档档案生成的案卷中，归档日期不受数据对照影响-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/services/"/>
+		<!--组合查询中，不等于，不包含，填写值的时候，查询结果应包含空值-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+		<!--回填值继承，只有一个立卷单位的时候，导致序号不自动加1.-->
+		<include name="WebContent/modules/dagl/bmgl/js/form.js"/>
+		<!--预立库（按门类）/（按立卷单位）没有数据时，全选按钮不应该勾选-->
+		<include name="WebContent/modules/dagl/bmgl/js/indexForLjMl.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForMlLj.js"/>
+		<!--点击不同门类，立卷单位的变化-->
+		<include name="WebContent/modules/dagl/bmgl/js/index.js"/>
+		<include name="WebContent/modules/dagl/tree/js/indexTree.js"/>
+		<!--归档门类点了别处，多出一个undefind选项-->
+		<include name="WebContent/modules/dagl/wdgl/transferrepository/transferRepositoryIndex.html"/>
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

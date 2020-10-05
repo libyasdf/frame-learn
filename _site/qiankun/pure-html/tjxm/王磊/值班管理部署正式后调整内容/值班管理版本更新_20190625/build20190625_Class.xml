@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\值班管理20190625Class"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="fengchao"/>
+		</copy>
+	</target>
+	
+	
+	<fileset id="fengchao" dir="../../../../">
+			
+		<!-- 后台class-->
+		<include name="build/classes/com/sinosoft/sinoep/modules/zhbg/zbgl/constant/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/zhbg/zbgl/dutytable/controller/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/zhbg/zbgl/dutytable/services/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/zhbg/zbgl/dutywork/controller/"/>
+		<include name="build/classes/com/sinosoft/sinoep/modules/zhbg/zbgl/dutywork/services/"/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/cqqx"/>
+			<copy todir="${export.dir.root}/cqqx" overwrite="true">
+				<fileset refid="fengchao"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,mqx">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

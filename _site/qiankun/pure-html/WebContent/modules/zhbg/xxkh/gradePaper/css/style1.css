@@ -1,0 +1,102 @@
+@charset "utf-8";
+/* CSS Document */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+ul li {
+    list-style: none;
+}
+
+body {
+    font-size: 12px;
+    line-height: 25px;
+    text-align:left;
+    font-family: "微软雅黑", yahei;
+    color:#404040;
+    background:#eee;
+}
+
+/* 主题页面 */
+.examinee-box {
+    width: 90%;
+    height: 60%;
+    border-radius: 10px;
+    position: absolute;
+    top: 1%;
+    left: 5%;
+    background-color: #fff;
+}
+
+/* 标签容器 */
+.tab-box {
+    position: relative;
+    top: 30px;
+    left: 5%;
+    clear: left;
+} .tab-box ul {
+    height: 47px;
+}
+
+/* 标签 */
+.tab {
+    width: 100px;
+    height: 47px;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #337ab7;
+    background-color: #fff;
+    border: 1px solid #337ab7;
+    float: left;
+    text-align: center;
+    cursor: pointer;
+} .tab:hover {
+    background-color: #eee;
+}
+
+/* 激活的标签 */
+.tab-active {
+    background-color: #337ab7;
+    border-bottom: 1px solid #337ab7;
+    color: #fff;
+} .tab-active:hover {
+    background-color: #286090;
+}
+
+/* 显示表格的面板 */
+.examinee-panel {
+    width: 90%;
+    height: 550px;
+    border: 1px solid #337ab7;
+    margin: 29px 0 0 5%;
+}
+
+/* 关闭按钮容器 */
+.close-box {
+    width: 100%;
+    height: 60px;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: #c7c7c7;
+} .close-btn {
+    width: 110px;
+    height: 32px;
+    margin-top: 10px;
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: #fff;
+} .close-btn:hover {
+    color: #fff !important;
+    background-color: #286090;
+} .close-btn:focus {
+    color: #fff !important;
+}

@@ -1,0 +1,272 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css"
+      href="/static/css/common/Loading.css">
+<link rel="stylesheet" type="text/css"
+      href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="vertify-panel vertify-tree x-unselectable"
+             role="presentation">
+            <div class="inner">
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style=" padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+                    <input id="keyword" name="deptName" onkeydown="CommonUtil.keyDown(event);" type="text" class="form-control"
+                           placeholder="快速搜索">
+                    <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt" onclick="search()">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span>
+                </div>
+                <ul id="tree-obj" class="ztree" style="margin-top: 10px; height:510px; overflow:auto;"></ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details">
+            <!--查询-->
+            <form class="" id="form">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls " >
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <div class="form-group">
+								<input id="resId" name="resId" type="hidden"/>
+                                <input id="cruDeptId" name="cruDeptId" type="hidden"/>
+                                <input id="chuShiId" name="chuShiId" type="hidden"/>
+                                <input id="type" name="type" type="hidden" value="1"/>
+                                <input id="userId" name="userId" type="hidden"/>
+                                <input id="busiRole" name="busiRole" type="hidden"/>
+								<input type="hidden" id="flag">
+                                <label class="col-md-2 control-label"> 日期：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="timeRange" name="timeRange" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="col-md-12" style="text-align: center">
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12">
+            	<div class="list_button_area">
+					<button class="list_table_btn2"
+							onclick="exportDate()">
+						<span class="glyphicon glyphicon-chevron-right"></span> 导出
+					</button>
+				</div>
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script>
+<script type="text/javascript" src="/common/js/dateutil.js"></script>
+<script src="/common/js/commonFunction.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+	var flag = "0";
+	var deptid = getcookie("deptid")
+	var chuShiId = getcookie("chuShiId")
+	
+	$("#chuShiId").val(chuShiId)
+	$("#cruDeptId").val(deptid)
+	$("#busiRole").val(getcookie("rolesNo"))
+    //用于存放选择的id刷新列表
+    var userIds = "";
+
+	Dictionary.init({mark:'attendanceState',type:'1',position:"attendanceState",domType:"select",name:"attendanceState"});
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+  /*   var currentTime=getCurrentDate("yyyy-MM-dd");
+    var firstDay=currentTime.substring(0,8)+"01";
+	$("#timeRange").val(firstDay + " - " + currentTime) */
+	//起草
+	function draft(){
+		  var resId = $('#left_ul').find('a.active').attr("id");
+		  MyLayer.layerOpenUrl({url:'/modules/zhbg/kqgl/wc/wcEditForm.html?oper=NEW&resId=' + resId,title:'起草外出信息'})
+	}
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+   var right_table_col = [{
+         title: '序号'
+        , width: '10%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	  var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;
+              var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;
+              var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+              return "<span data-id='"+row.importDate+"'>"+orderNum+"</span>";
+           }
+    },
+     {
+        field: 'deptName'
+        , title: '部门名称'
+        , width: '15%'
+        , align:"center"
+    }, 
+    {
+        field: 'name'
+        , title: '姓名'
+        , width: '15%'
+        , align:"center"
+    },
+    {
+        field: 'cardNumber'
+        , title: '卡号'
+        , width: '15%'
+        , align:"center"
+    },  
+    {
+        field: 'importDate'
+        , title: '日期'
+        , width: '15%'
+        , align:"center"
+     },
+     {
+     	field: 'qrTime'
+        , title: '签到时间'
+        , width: '15%'
+         , align:"center"
+  	},
+     {
+     	field: 'qcTime'
+        , title: '签退时间'
+        , width: '15%'
+        , align:"center"
+ 	 },
+ 	{
+      	field: 'importDate'
+         , title: '进出详情'
+         , width: '15%'
+         , align:"center"
+         , formatter: function (value, row, index) {
+ 	          return "<a class='blue_link' href='javascript:void(0);' onclick='getAttendence(\""+row.cardNumber+"\",\""+row.importDate+"\",\""+row.name+"\")'>查看详情</a>";
+        }
+     }
+  	];
+	
+    var isAll = "0"//是否选中所有的节点，
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/kqgl/kqcx/attendence/getPageList",
+            method : 'post',
+            contentType:'application/x-www-form-urlencoded; charset=UTF-8',
+            columns:right_table_col,
+            queryParams:function(params){
+            	params.resId = $('#left_ul').find('a.active').attr("id");  // 查找当前菜单id，前者兼容旧版本，后者兼容新版本。（杨奇修改）
+            	params.timeRange = $("#timeRange").val();
+            	params.isAll = isAll;
+            	params.userId = userIds;
+                return params;
+            },
+            readOnlyFn:function(){
+            	
+            }
+        });
+    });
+
+  //清空查询条件
+	function clearAll(){
+		$("#timeRange").val("");	//时间
+		$("#userId").val("");
+		$("#userName").val("");
+	}
+  
+	function getAttendence(cardNumber,importDate,name){
+    		MyLayer.layerOpenUrl({
+    	      	 url: '/modules/zhbg/kqgl/kqcx/attendanceDetailed.html?importDate='+ importDate +'&cardNumber=' + cardNumber + '&name=' + encodeURI(name),
+    	          title:"进出详情",
+    	      })
+	}
+	/**
+	 * 导出按钮的事件
+	 */
+	 function exportDate () {
+		$("#resId").val($('#left_ul').find('a.active').attr("id"));
+        $("#userId").val(userIds);
+	    	$.ajax({
+				url : "/zhbg/kqgl/kqcx/attendence/getCnt",
+				data : {
+					
+	                resId:$("#resId").val(),
+	                userId: userIds,
+					isAll:isAll,
+					timeRange : $("#timeRange").val() //时间
+				},
+				type : "post",
+				success : function(data){
+					 //alert(data.cnt)
+					if( data.cnt > 0){ //0 查询有数据， 可导出
+						layer.confirm("是否导出查询的所有信息？", function(e) {
+							//$.post("/zhbg/kqgl/kqcx/attendence/export1", $("form").serialize() ,function(){} );
+							  $('#form').attr('action','/zhbg/kqgl/kqcx/attendence/export1');
+							$('#form').attr('method','post');
+							$("#form").submit();  
+							layer.closeAll();
+						})
+						
+					}else{
+							layer.msg('暂无可导出信息！', {
+								icon : 0
+							}); //没有数据时弹出提示信息
+					}
+				}
+			})
+
+	    	   
+	  };
+</script>
+<!--部门人员树，放在最后的原因是放在前边获取不到$("#cruDeptId").val()的值-->
+<script src="/modules/zhbg/kqgl/kqcx/js/attendenceQueryTree.js"></script>

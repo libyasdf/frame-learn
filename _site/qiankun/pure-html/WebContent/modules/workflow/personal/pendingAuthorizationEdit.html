@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="../../../plugins/bootstrap/css/bootstrap-3.3.4.css" rel="stylesheet">
+	<script type="text/javascript" src="../../../plugins/jquery/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="../../../common/js/commonFunction.js"></script>
+	<script type="text/javascript" src="../../../plugins/laydate/laydate.js"></script>
+	<script type="text/javascript" src="../../../common/js/getrequest.js"></script>
+	<script type="text/javascript" src="../../../common/js/checkForm/checkform.js"></script>
+	<script type="text/javascript" src="../../../common/js/checkForm/autocheckform.js"></script>
+	<script type="text/javascript" src="../../../plugins/lhgdialog/lhgdialog.min.js"></script>
+	<script type="text/javascript" src="../../../product/workflow/js/storage.js"></script>
+	<!-- <script type="text/javascript" src="../../../common/js/dialog.js"></script> -->
+	<script type="text/javascript" src="../../..//product/user/js/deptTreeDialog.js"></script>
+	<script type="text/javascript" src="../../../common/js/overlay.js"></script>
+<style>
+	.container > form {
+		padding: 30px 0;
+	}
+	.required-flag {
+		position: absolute;
+	    right: 6px;
+	    top: 9px;
+	    
+	    font-size: 16px;
+	    color: red;
+	}
+
+	.icon-right {
+		position: absolute;
+		right: -8px;
+    	top: 9px;
+	}
+	
+   div.exlist table{width:100%;height:0%;}
+   .topsearch td{padding-top: 5px;padding-bottom: 5px;vertical-align: middle;}
+   .topsearch tr{padding:3px;height:30px}
+   .topsearch td.tl{text-align:right;}
+   select{height:auto} 
+   .btnClass{border:1px solid #016EC5;background-color:#016EC5;color:#fff}
+   td{text-align: center !important;}
+</style>
+</head>
+<body>
+<div class="container">
+	
+	<form name="addedit" id="addedit" target="_self">
+					<input type="hidden" name="sccreditid" value="" id="sccreditid">
+					<input type="hidden" name="cre_user" value="" id="cre_user">
+					<input type="hidden" name="sysId" id ="sysId" value=""/>
+					<input type="hidden" name="orgId" id ="orgId" value=""/>
+					<table  class="table topsearch" >
+						<tr >
+							<td  class="tl" ><label  style="padding-top: 7px;">授权范围: </label></td>
+							<td  class="tr" >
+							     <input type="radio" id="scopeone" name="scope" value="1" checked
+								onClick="changeShow();"><label for='scopeone'>全部授权</label> &nbsp; &nbsp;  <input type="radio" id="scope"
+								name="scope" value="0" onClick="changeShow();"><label for='scope'>部分授权</label>
+							</td>
+							<td class="tl" ><label  style="padding-top: 7px;">办理类型: </label></td>
+							<td class="tr">
+							 <select name="sccredittype" class="form-control" style="width: 300px;">
+								<option selected="selected" value="">请选择</option>
+								<option value="2">共同办理</option>
+								<option value="1">单独代办</option>
+							  </select>
+						    </td>
+						</tr>
+						
+						<tr  id="typeShow" style="display:none">
+							<td class="tl" ><label  style="padding-top: 7px;">事项类型: </label></TD>
+							<td class="tr" ><select name="fileType" id="filetype"
+								class="form-control" size="9" style="width: 85%">
+							</select></td>
+							<td class="tl" >
+							&nbsp; <input type="button"
+								class="btn btn-mini btn-primary" name="add" onClick="addSelectRecord()"
+								value="&nbsp添 &nbsp&nbsp&nbsp&nbsp加&nbsp"> <br>
+							&nbsp; <br>
+							&nbsp; <input type="button" class="btn btn-mini btn-primary" name="addall"
+								onClick="addAllSelectRecord()" value="&nbsp添加全部 "> <br>
+							&nbsp; <br>
+							&nbsp; <input type="button" class="btn btn-mini btn-primary" name="delete"
+								onClick="del()" value="&nbsp移&nbsp&nbsp&nbsp&nbsp除 &nbsp"> <br>
+							&nbsp; <br>
+							&nbsp; <input type="button" class="btn btn-mini btn-primary" name="deleteall"
+								onClick="delAll()" value="&nbsp移除全部">
+					 
+							</td>
+							<td class="tr" ><select id='fileTypeItem'
+								name="fileTypeItem" multiple="multiple" class="form-control" size="9"
+								style="width: 85%">
+							</select></td>
+						</tr>
+						<tr style="display: none;">
+							<td class="tl"  ><label  style="padding-top: 7px;">授 权 人: </label></td>
+							<td colspan="3" >
+									<INPUT TYPE="hidden" NAME="authPeople" id="authPeople" value=""> 
+									<INPUT TYPE="hidden" NAME="userid" id="userid" value=""> 
+									<INPUT TYPE="hidden" NAME="authDeptID" value="" id="authDeptID"> 
+									<INPUT TYPE="hidden" NAME="authDept" value=""/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tl" ><label  style="padding-top: 7px;">被授权人: </label></td>
+							<td colspan="3">
+								 <input TYPE="text"
+									NAME="authedPeople" id="authedPeople" class="form-control"
+									onclick="chooseDept('sccredituserid','authedPeople','3','1');" maxlength="500" value="" readonly="readonly" style="width:100%; margin-left:10px;"/>
+									<input TYPE="hidden" NAME="sccredituserid"
+									value="" id="sccredituserid"> <input type="hidden"
+									name="ObjectUserDept" value=""> <input TYPE="hidden"
+									NAME="authedDeptID" id="authedDeptID" value=""/>
+								  <input TYPE="hidden" NAME="authedDept" value=""/>
+							</td>
+							<td>
+								<img class="" src="../../../static/images/addressbook.gif" onclick="chooseDept('sccredituserid','authedPeople','3','1')" title="选择被授权人" style="width:20px; margin-left:0px;"/>
+							</td>
+						</tr>
+						<tr >
+							<td colspan="4" style="color: red">*******生效时间,失效时间请填写时间,精确到小时*******</td>
+						</tr>
+						<tr >
+							<td class="tl"><label  style="padding-top: 7px;">生效时间: </label></td>
+							<td class="tr">
+							  <input class="form-control" align="top"
+								size="12" readonly="readonly" value="" name="sccbegindate" type='text'
+								onclick="laydate(startM)" id="sccbegindate" style="width:200px;margin-left:10px;" />
+							</td>
+							<td class="tl"><label  style="padding-top: 7px;">失效时间: </label></td>
+							<td class="tr">
+							  <input class="form-control"
+								align="top" size="12" name="sccenddate" type='text'
+								onclick="laydate(endM)"
+								value="" id="sccenddate" readonly="readonly" style="width:200px;margin-left:10px;" />
+							
+							</td>
+						</tr>
+						<tr>
+							<td class="tl"><label  style="padding-top: 7px;">是否允许再授权: </label></td>
+							<td colspan="3">
+							  <input
+								TYPE="radio" id="issccreditone" NAME="issccredit" value="1" style="margin-left:10px;"><label for='issccreditone'>是 </label>
+							    &nbsp; &nbsp;  <INPUT TYPE="radio" id="issccredittwo" NAME="issccredit" value="0"><label for='issccredittwo'>否 </label>
+						   </td>
+						</tr>
+					</table>
+				</form>
+</div>
+
+<script>
+
+$(function(){
+	getLicenseFlowType();
+	showData();
+	/*
+	格式化时间日期
+	 */
+	Date.prototype.Format = function(fmt) { //author: meizz 
+		var o = {
+			"M+" : this.getMonth() + 1, //月份 
+			"d+" : this.getDate(), //日 
+			"h+" : this.getHours(), //小时 
+			"m+" : this.getMinutes(), //分 
+			"s+" : this.getSeconds(), //秒 
+			"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+			"S" : this.getMilliseconds()
+		//毫秒 
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1,(RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+	
+});
+var api = frameElement.api;W = api.opener;
+function showData(){
+	var id = api.data.id;
+	if(id!=""){
+		//设置scope的值为0
+		$("#scope").prop("checked", true);
+		changeShow();
+		var data={"id":id};
+		getDataByAjax(basePath+'/flowSccredit/view',data,function(data) {
+			if (data["result"] == "0") {
+				result = data["msg"];
+				Overlay.unableAlert(result);
+			} else {
+				//将获取到的值写入到form中
+				 $("select[name=sccredittype]").val(data.sccredittype);
+				 var newOption = new Option(data.filetypename,data.filetype);
+	        	 $("#fileTypeItem").append(newOption);
+	        	 $("#sccreditid").val(data.sccreditid);
+	        	 $("#authPeople").val(data.username);
+	        	 $("#userid").val(data.userid);
+	        	 $("#authedPeople").val(data.sccreditusername);
+	        	 $("#sccredituserid").val(data.sccredituserid);
+	        	 $("#sccbegindate").val(data.sccbegindate);
+	        	 $("#sccenddate").val(data.sccenddate);
+	        	 $("input[type=radio][name=issccredit][value="+data.issccredit+"]").attr("checked",true); 
+	        	 $("#updateAuth").hide();
+	        	 $("#updateSubmit").show();
+			}
+		});
+	}
+}
+
+/* function initUser(){
+	$("#cre_user").val(getcookie(USERID));
+	$("#sysId").val(getcookie(SYSID));
+	$("#orgId").val(getcookie(ORGID));
+	
+	//当前授权人信息
+	$("#userid").val(getcookie(USERID));
+	$("#authPeople").val(getcookie(USERNM));
+} */
+function getLicenseFlowType(){
+	$("#filetype").html("");
+	var view = "";
+	$.ajax({
+        type: "post",
+        url: basePath+"/workflow/getworkflow",
+        data:{},
+        dataType: "json",
+        success: function(data) {
+        	//console.log(data);
+        	for ( var i in data.flows) {
+        		for(var j in data.flows[i].flowList){
+        			//console.log(data.flows[i].flowList[j].fileTypeName);
+        			var newOption = new Option(data.flows[i].flowList[j].fileTypeName,data.flows[i].flowList[j].fileTypeId);
+    				$("#filetype").append(newOption); 
+        		}
+			}
+        },
+        error: function() {
+            alert("请重新登入系统！");
+        }
+    });
+}
+
+function tab(date1,date2){
+    var oDate1 = new Date(date1);
+    var oDate2 = new Date(date2);
+    if(oDate1.getTime() > oDate2.getTime()){
+        return false;
+    } else {
+    	return true;
+    }
+}
+function changeShow(){
+	var scope = document.forms["addedit"].elements["scope"];
+	if(scope[1].checked){
+		document.getElementById("typeShow").style.display="";
+		delAll();
+	}else if(scope[0].checked){
+	
+		document.getElementById("typeShow").style.display="none";
+		addAllSelectRecord();
+	}
+	if(scope.value == 0){
+	   delAll();
+	}
+}
+
+function MoveRecord(){
+	var objFile = document.addedit.fileType;
+	var objFileItem = document.addedit.fileTypeItem;
+	var selectIndex = objFile.selectedIndex;
+	var addFlag = "0";
+	
+	var selText = objFile.options[selectIndex].text;
+	var selValue = objFile.options[selectIndex].value;
+	var newOption = new Option(objFile.options[selectIndex].text,objFile.options[selectIndex].value);
+	for(var i=0;i<objFileItem.length;i++){
+		var tempText = objFileItem.options[i].text;
+		var tempValue = objFileItem.options[i].value;
+		if(tempText==selText && tempValue==selValue){
+			addFlag = "1";
+			break;
+		}
+	}
+	if(addFlag=="0"){
+		objFileItem.add(newOption);
+	}
+}
+function MoveAllRecord(){
+	var objFile = document.addedit.fileType;
+	var objFileItem = document.addedit.fileTypeItem;
+	var length = objFile.options.length;
+	var addFlag = "0";
+	
+	for(var i=0;i<length;i++){
+		var selText = objFile.options[i].text;
+		var selValue = objFile.options[i].value;
+		var newOption = new Option(objFile.options[i].text,objFile.options[i].value);
+		for(var j=0;j<objFileItem.length;j++){
+			var tempText = objFileItem.options[j].text;
+			var tempValue = objFileItem.options[j].value;
+			if(tempText==selText && tempValue==selValue){
+				addFlag = "1";
+			}
+		}
+		if(addFlag=="0"){
+			objFileItem.add(newOption);
+		}
+		addFlag = 0;
+	}
+}
+function delRecord(){
+	var obj = document.addedit.fileTypeItem;
+	var selectIndex = document.addedit.fileTypeItem.selectedIndex;
+	if (selectIndex != -1){
+		document.addedit.fileTypeItem.remove(selectIndex);
+	}
+}
+function delAllRecord(){
+	var obj = document.addedit.fileTypeItem;
+	var length = obj.options.length;
+	for(var i=0;i<length;i++){
+		obj.remove(0);
+	}
+}
+function  addSelectRecord(){
+	var obj =document.addedit.fileType.value;
+	if(obj==""){
+		Overlay.unableAlert("请选择要增加的事项类型");
+	return false;
+	}
+	MoveRecord();
+}
+function addAllSelectRecord(){
+	MoveAllRecord();
+}
+function del(){
+	var obj = document.addedit.fileTypeItem.value;
+	if(obj==""){
+		Overlay.unableAlert("请选择要删除的事项类型");
+	return false;
+	}
+	delRecord();
+}
+function delAll(){
+	delAllRecord();
+}
+
+function formsubmit(){
+	var id = api.data.id;
+	if(id!=""){
+		if(addedit.fileTypeItem.length<1){
+	      	showDialogWarn('请选择事项类型！');
+		  	return false;
+		}
+	    if(addedit.fileTypeItem.length>1){
+	     	showDialogWarn('请选择要修改的一项事项类型！');
+	     	return false;
+		}
+		if(addedit.authedPeople.value==""){
+	     	showDialogWarn('请选择被授权人！');
+		  	return false;
+		}
+		if(addedit.sccredituserid.value==addedit.cre_user.value){
+	     	showDialogWarn('不能授权给自己！');
+		  	return false;
+		}
+		if(addedit.issccredit.value==""){
+	    	showDialogWarn('请选择是否可再授权！');
+		  	return false;
+		}
+		if(addedit.sccredittype.value==""){
+			showDialogWarn('请选择办理类型！');
+		  	return false;
+		}
+	    if(addedit.sccenddate.value==""){
+			showDialogWarn('生效日期不能为空！');
+		  	return false;
+		}
+		if(addedit.sccenddate.value==""){
+			showDialogWarn('失效日期不能为空 ！');
+		  	return false;
+		}
+		 if (document.addedit.sccenddate.value.length>0&&document.addedit.sccenddate.value.length>0){
+	            if (opinionDate(document.addedit.sccenddate.value,document.addedit.sccenddate.value)==false){
+		    			showDialogWarn('生效日期必须小于或者等于失效日期！');
+		                return false;
+		        }
+	        }
+		 if(addedit.fileTypeItem.length>0){
+				var i=0;
+				for(i=0;i<addedit.fileTypeItem.length;i++){
+					addedit.fileTypeItem.options[i].selected=true;
+				}
+				//var request=$("[name='addedit']").serialize();
+				//var pageContentBody = $('.page-content-body  .page-content');//.page-content-body  page-content
+				//var purl="/CIEBANK/jsp/auth/auth_manager.jsp?type=add&"+request;//如果不存在页面，则加载无内容模版
+				//location.href="/CIEBANK/html/two_level_select.html?src="+purl;
+				getDataByAjax(basePath+'/flowSccredit/update',$('#addedit').serialize(),function(data) {
+					if (data["result"] == "0") {
+						result = data["msg"];
+						showDialogAlert(result,false);
+						setTimeout("api.close();",2000);
+					} else {
+						result = data["msg"];
+						showDialogAlert(result,true);
+						setTimeout("api.close();",2000);
+					}
+					return data["result"];
+				});
+			}else{
+				return false;
+			}
+	}else{
+		if(addedit.scope.value=="1"){
+			MoveAllRecord();
+		}
+		if(addedit.fileTypeItem.length<1){
+	      	showDialogWarn('请选择事项类型！');
+		  	return false;
+		}
+		if(addedit.authedPeople.value==""){
+	      	showDialogWarn('请选择被授权人！');
+		  	return false;
+		}
+		
+		if(addedit.sccredituserid.value==addedit.cre_user.value){
+	      	showDialogWarn('不能授权给自己！');
+		  	return false;
+		}
+		if(addedit.issccredit.value==""){
+	     	showDialogWarn('请选择是否可再授权！');
+		  	return false;
+		}
+		if(addedit.sccredittype.value==""){
+	     	showDialogWarn('请选择办理类型！');
+		  	return false;
+		}
+	    if(addedit.sccbegindate.value==""){
+	     	showDialogWarn('生效日期不能为空！');
+		  	return false;
+		}
+		if(addedit.sccenddate.value==""){
+	     	showDialogWarn('失效日期不能为空 ！');
+		  	return false;
+		}
+		
+		 if (document.addedit.sccbegindate.value.length>0&&document.addedit.sccbegindate.value.length>0){
+	            if (opinionDate(document.addedit.sccbegindate.value,document.addedit.sccenddate.value)==false){
+		                showDialogWarn('生效日期必须小于或者等于失效日期！');
+		                return false;
+		        }
+	      }
+		if(addedit.fileTypeItem.length>0){
+			var i=0;
+			for(i=0;i<addedit.fileTypeItem.length;i++){
+				addedit.fileTypeItem.options[i].selected=true;
+			}
+			getDataByAjax(basePath+'/flowSccredit/save?',$('#addedit').serialize(),function(data) {
+				if (data["result"] == "0") {
+					result = data["msg"];
+					showDialogAlert(result,false);
+					setTimeout("api.close();",2000);
+				} else {
+					result = data["msg"];
+					showDialogAlert(result,true);
+					setTimeout("api.close();",2000);
+				}
+				return data["result"];
+			});
+		}else{
+			return false ;
+		}
+		
+	}
+	
+}
+
+/*
+ * 一个判断日期大小，sDate代表起始时间，eDate代表结束时间，如果eDate大于sDate，返回true
+ */
+function opinionDate(sDate, eDate) {
+	startDate = sDate;
+	endDate = eDate;
+	startMark1 = startDate.indexOf("-");
+	startYear = startDate.substring(0, startMark1);
+	startDate = startDate.substring(startMark1 + 1, startDate.length);
+	startMark2 = startDate.indexOf("-");
+	startMonth = startDate.substring(0, startMark2);
+	startDate = startDate.substring(startMark2 + 1, startDate.length);
+	startDay = startDate;
+
+	endMark1 = endDate.indexOf("-");
+	endYear = endDate.substring(0, endMark1);
+	endDate = endDate.substring(endMark1 + 1, endDate.length);
+	endMark2 = endDate.indexOf("-");
+	endMonth = endDate.substring(0, endMark2);
+	endDate = endDate.substring(endMark2 + 1, endDate.length);
+	endDay = endDate;
+
+	if (startMonth.substring(0, 1) == 0) {
+		startMonth = startMonth.substring(1, 2);
+	}
+	if (endMonth.substring(0, 1) == 0) {
+		endMonth = endMonth.substring(1, 2);
+	}
+	if (startDay.substring(0, 1) == 0) {
+		startDay = startDay.substring(1, 2);
+	}
+	if (endDay.substring(0, 1) == 0) {
+		endDay = endDay.substring(1, 2);
+	}
+	if (parseInt(endYear) < parseInt(startYear)) {
+		return false;
+	} else if ((parseInt(endYear) == parseInt(startYear))) {
+
+		if (parseInt(startMonth) < parseInt(endMonth)) {
+			return true;
+		} else if (parseInt(startMonth) > parseInt(endMonth)) {
+			return false;
+		} else if (parseInt(startMonth) == parseInt(endMonth)) {
+			if (parseInt(startDay) > parseInt(endDay)) {
+				return false;
+
+			}
+		}
+	}
+
+	return true;
+
+}
+
+
+
+</script>
+</body>
+</html>

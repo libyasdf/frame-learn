@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列表</title>
+    <link rel="stylesheet" href="/static/core/layui/css/layui.css">
+    <link rel="stylesheet" href="/modules/dagl/bmgl/css/common.css">
+    <link rel="stylesheet" href="/modules/dagl/bmgl/css/index.css">
+    <link rel="stylesheet" href="/static/core/layer/theme/default/layer.css">
+    <link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <style>
+    	/* .c1{
+	    	display: inline-block;
+	    	line-height: 16px;
+	    	border-width: 1px;
+	    	border-style: solid;
+	    	border-color: rgb(231, 231, 231);
+	    	border-image: initial;
+	    	border-radius: 3px;
+	    	padding: 6px 10px;
+	   		background: url(/static/images/btn_bj.png) repeat-x rgb(236, 236, 236);
+		} */
+		.c1:hover{
+			color:#fff;
+			background-color: #3071a9;
+    		border-color: #285e8e;
+		}
+		.c1{
+    		color: #fff;
+    		background-color: #428bca;
+    		border-color: #375cbd;
+	    	display: inline-block;
+	    	line-height: 16px;
+	    	border-width: 1px;
+	    	border-style: solid;
+	    	border-color: rgb(231, 231, 231);
+	    	border-image: initial;
+	    	border-radius: 3px;
+	    	padding: 6px 10px;
+	    	border: 1px solid transparent;
+    		border-radius: 4px;
+		}
+		.c2 {
+		    display: inline;
+		    height: 32px;
+		    padding: 6px 12px;
+		    font-size: 14px;
+		    color: #555;
+		    line-height: 1.42857143;
+		    background-color: #fff;
+		    background-image: none;
+		    border: 1px solid #ccc;
+		    border-radius: 4px;
+		    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+		}
+        .table{
+            table-layout: fixed;
+        }
+        .table_list_box{
+            table-layout:fixed !important;
+        }
+
+    </style>
+</head>
+
+<body>
+	<input type="hidden" id="sqlStr" value="">
+    <div class="app">
+
+        <!-- 树 -->
+        <div class="demoTree">
+	
+            <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+                <div class="inner">
+                	<div class="folderBar">
+                        <i class="glyphicon glyphicon-plus-sign" onclick="addType();" style="font-size: 18px; cursor: pointer;"
+                            title="新增虚拟分类"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <!-- 						<i class="glyphicon glyphicon-edit" onclick="editType();"
+							style="font-size: 18px; cursor: pointer;" title="修改资料类型"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+                        <i class="glyphicon glyphicon-trash" onclick="deletType();" style="font-size: 18px; cursor: pointer;"
+                            title="删除虚拟分类"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="glyphicon glyphicon-search" onclick="showSearchFrame()" style="font-size: 18px; cursor: pointer;"
+                            title="查询虚拟分类"></i>
+                    </div>
+                    <div id="searchDiv" class="input-group input-group-sm" style="display: none; padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+                        <input type="text" id="typeName" class="form-control" > <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="searchType();">查询</button>
+                        </span>
+                    </div>
+                    <div id="ljdwDiv" class="col-md-12" style="padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+                        <select id="basefolderUnit" class="form-control" name='basefolderUnit' onchange="basefolderUnitChange(this)">
+                            <!--下拉框数据动态加载-->
+                        </select>
+                    </div>
+                    <ul id="treeDemo" class="ztree" style="margin-top: 10px; height: 606px; overflow: auto;">
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-component-container">
+
+            <!-- 标签容器 -->
+            <div class="tab-container col-md-12">
+
+                <!-- 标签 -->
+
+                <div class="select-container dropdown">
+                <span style="display: none;" id="rolesNo">
+	                <input type="hidden" id="danweihao" value="">   
+	                <!-- 占时不用  -->
+	                <!-- <input class="c2" type="text" id=danwei style="height: 32px" placeholder="   请选择立卷单位" onclick="openSelectZtree({'id':'danweihao','name':'danwei','isMulti':0,'type':2,'asyn':false,'level':2,'url':'/system/component/tree/deptTree'})">
+	                <button class="c1" style="height: 32px" onclick="danweiE()">查询</button>
+	                <button class="c1" style="height: 32px" onclick="$('#danweihao').val('');$('#danwei').val('');">重置</button>     -->
+                </span><span style="margin-right: 50px"></span>
+                    <!-- 下拉菜单 -->
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item">新增</li>
+                        <li class="dropdown-item">组合查询</li>
+                        <li class="dropdown-item">简单查询</li>
+                        <li class="dropdown-item">替换</li>
+                        <li class="dropdown-item" id="dangantiaozheng" title="调整下层数据顺序" style="display: none;">档案调整</li>
+                        <li class="dropdown-item" title="将勾选数据及下层数据提交给档案管理员审核">移交</li>
+                        <li class="dropdown-item">删除</li>
+                        <!-- 单位预立库不需要q2变更功能 -->
+						<!-- <li class="dropdown-item" id="q2" style="display: none;">q2变更</li> -->
+                        <li class="dropdown-item">生成条码号</li>
+                        <li class="dropdown-item">打印条形码</li>
+                        <li class="dropdown-item" id="huizong" style="display: none;">汇总</li>
+                        <!--<li class="dropdown-item" id="adjustOrderForFirstLevel" style="display: none;" title="对门类的第一层进行顺序调整">顺序调整</li>-->
+                    </ul>
+                </div>
+            </div>
+            <!--新增等按钮-->
+            <div id="toolbar" class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="newlyAdded()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                    <button class="list_table_btn2" onclick="easyFind()">
+                        <span class="glyphicon glyphicon-search"></span> 查询
+                    </button>
+                    <button class="list_table_btn2" onclick="refresh()">
+                        <span class="glyphicon glyphicon-refresh"></span> 刷新
+                    </button>
+                </div>
+            </div>
+            <!-- 面板容器 -->
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<!--<script src="/static/core/jquery/jquery-migrate-1.2.1.js"></script>-->
+<script src="/static/core/bootstrap/js/bootstrap.js"></script>
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/modules/dagl/bmgl/js/common.js"></script>
+<!--<script src="/static/core/colResizable-1.3/colResizable-1.3.min.js"></script>-->
+<script src="/modules/dagl/bmgl/js/index.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script src="/modules/dagl/tree/js/indexTree.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<!-- <script src="/modules/dagl/tree/js/renyuanTypeTree.js"></script> -->
+
+<script type="text/javascript">
+    function addType() {
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+        if (nodes[0].pId == "" || nodes[0].pId == null) {
+            layer.msg("该节点无法新增虚拟分类，请在子节点下新增！", {
+                icon: 0
+            });
+            return;
+        }
+        var url = "/modules/dagl/tree/treeAdd.html?columnName="+nodes[0].columnName+"&pId=" + nodes[0].id + "&categoryCode=" + nodes[0].categoryCode+"&isAdmin=2";
+        var title = "新增分类";
+        layer.open({
+            type: 2,
+            shadeClose: true,
+            content: url + "&resId=" + $('#left_ul').find('a.active').attr("id") + "&tName=" + tabCurrent,
+            area: ['770px', '300px'],
+            title: [title, 'font-size:16px;font-weight:bold;']
+        })
+
+    }
+    function deletType() {
+        var ztree = $.fn.zTree.getZTreeObj("treeDemo");
+        if (nodes[0].columnName == "" || nodes[0].columnName == null) {
+            layer.msg("该分类无法删除", {
+                icon: 0
+            });
+            return;
+        }
+        layer.confirm("确定要删除该类型吗？", { icon: 3 }, function () {
+            $.ajax({
+                type: "POST",
+                url: "/dagl/bmgl/deleteTree",
+                data: {
+                    id: nodes[0].id,
+                },
+                dataType: "json",
+                success: function (data) {
+                    if ('1' == data.flag) {
+                        layer.msg("删除成功！", {
+                            icon: 1,
+                            time: 1000
+                        }, function (index) {
+                            typeTree.delNode(nodes[0].id);
+                            if (nodes.length > 0) {
+                                var a = nodes[0].getParentNode();
+                                ztree.selectNode(a);
+                                typeTree.onClick(null, "treeDemo", a);
+                            }
+                        });
+                    } else {
+                        layer.msg("删除失败，请刷新页面再次操作", {
+                            icon: 5
+                        });
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        });
+    }
+
+    /* $(function(){
+        typeTree.init({
+        });
+    }) */
+    // 查询窗口
+    function showSearchFrame() {
+        //清空类型查询框内容
+        $("#typeName").val("");
+        var search = $("#searchDiv");
+        if (search.is(":hidden")) {
+            search.show();
+            $("#typeName").focus();
+        } else {
+            search.hide();
+        }
+    }
+
+    //查询资料类型
+    function searchType() {
+        typeTree.searchNodes($("#typeName").val());
+    }
+
+</script>
+</html>

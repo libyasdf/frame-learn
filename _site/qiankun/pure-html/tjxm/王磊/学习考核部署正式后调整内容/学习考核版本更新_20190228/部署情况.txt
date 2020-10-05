@@ -1,0 +1,3 @@
+部署状态：北京测试环境已部署；
+WebContent/modules/zhbg/xxkh/displayVideoAndPdf/  已经提前部署
+3-11发送浩磊

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\学习考核更新class_20181030"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+			
+		<!--王磊 模块内页面和js -->
+		<!-- 没保存直接上传文件到音视频，提示先保存资料后再上传该文件，无反应-->
+		<include name="WebContent/modules/zhbg/xxkh/displayVideoAndPdf/js/displayVideoAndPdf.js"/>
+		<!-- pdf预览页面防止复制文字-->
+		<include name="WebContent/modules/zhbg/xxkh/generic/web/viewer.html"/>
+		<!-- 1、cookie相关文件变动 2、添加关闭页面监控-->
+		<include name="WebContent/modules/zhbg/xxkh/displayVideoAndPdf/"/>
+		<include name="WebContent/modules/zhbg/xxkh/lawLearning/lawDataReadonlyForm.html"/>
+		<!-- 添加树节点维护权限-->
+		<include name="WebContent/modules/zhbg/xxkh/questionsManage/stglList.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/lawData/lawDataList.html"/>
+		
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		<!-- 目前最新，可以直接打包、部署getCook.js，为了保险部署前还是对比一下-->
+		<include name="WebContent/product/workflow/js/common/getCook.js"/>
+		
+		
+		<!--模块内页面和js -->
+		<!-- 李颖洁：学习考核多套试卷考试修改页面和js -->
+		<include name="WebContent/modules/zhbg/xxkh/testManage/js/ksglEditForm.js"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/js/testpaperupload.js"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/js/ksglEditFormEcho.js"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ifram.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ksglEditForm.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ksglReadOnlyForm.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ksglList.html"/>
+		<!-- 李颖洁：选择人员后可以删除人员操作放开（天津环境中不能删除人员），先不放开此功能 -->
+		<!--<include name="WebContent/modules/zhbg/xxkh/testManage/ksglDelPerson.html"/>-->
+		<!-- 李颖洁：个人管理成绩查询-多套试卷修改页面 -->
+		<include name="WebContent/modules/zhbg/xxkh/testResult/personTestResultList.html"/>
+		<include name="WebContent/modules/zhbg/xxkh/testResult/paperList.html"/>
+		
+		<!-- 模块内class文件-->
+		<!-- 李颖洁：学习考核多套试卷考试修改后端代码-->
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\controller\TestManageController.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\entity\XxkhTestInfo.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\entity\XxkhTestPaper.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\entity\XxkhUserPaper.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\services\TestManageService.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\testmanage\services\TestManageServiceImpl.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\gradesearch\controller\GradesearchController.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\gradesearch\services\GradesearchService.class"/>
+		<include name="WebContent\WEB-INF\classes\com\sinosoft\sinoep\modules\zhbg\xxkh\gradesearch\services\GradesearchServiceImpl.class"/>
+		
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		<!-- 李颖洁:学习考核多套试卷考试修改公共的js，目前是最新的 -->
+		<include name="WebContent/static/js/common/tablelist.js"/>
+		
+		
+		
+		<!--王富康 学习考核  	1.IE浏览器考试完成后显示答案页面单选，多选，判断的单选和复选框勾选不会填的问题
+								2.五分钟提示考试快要结束的弹框弹两次的问题
+								3.考试时间到，自动交卷的提示问题
+								4.学习考核-发送待办不成功
+								5.6.发送两次待办的问题-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/test/"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/testmanage/controller/"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/testmanage/source/"/>
+
+		<include name="WebContent/modules/zhbg/xxkh/test/"/>
+		<include name="WebContent/modules/zhbg/xxkh/testManage/ksglEnterTest.html"/>
+
+		<!--公共的配置文件 -->
+		<include name="config/spring/spring-context.xml"/>
+		
+		
+		<!--颜振兴 人工评卷后端代码-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/grade/**"/>
+		<!--成绩查询后端代码-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/gradesearch/**"/>
+		<!--考试管理后端代码-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/testmanage/**"/>
+		<!--人工评卷前台代码-->
+		<include name="WebContent/modules/zhbg/xxkh/gradePaper/**"/>
+		<!--人工评卷前台代码-->
+		<include name="WebContent/modules/zhbg/xxkh/testResult/**"/>
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

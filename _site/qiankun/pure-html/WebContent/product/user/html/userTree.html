@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>选择人员</title>
+<meta charset="UTF-8">
+<link href="../../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="../../../plugins/tree/css/zTreeStyle.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../plugins/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="../../../plugins/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="../../../plugins/tree/jquery-ztree-2.6.js"></script>
+<script type="text/javascript" src="../../../plugins/lhgdialog/lhgdialog.min.js"></script>
+<script type="text/javascript" src="../../../common/js/getrequest.js" ></script>
+<script type="text/javascript" src="../../../product/workflow/js/common/getCook.js"></script>
+<style>
+  .dept-container {
+	  width: 440px;
+	  margin:20px 20px 0px;
+  }
+
+	.dept-container .panel-heading {
+		background-color: #eaf4ff;
+	}
+
+	.margin-b-10 {
+		margin-bottom: 10px;
+	}
+
+	.margin-tb-10 {
+		margin-top: 10px!important;
+		margin-bottom: 10px!important;
+	}
+
+	.dept-container > .row > .col-xs-6 {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+	.clear {
+		clear: both;
+	}
+
+	.selected-dept-panel .panel-body{
+		padding: 0;
+	}
+	  .dept-container .selected-dept-user {
+		  margin-top: 15px;
+		  margin-bottom: 0;
+		  clear: both;
+		  height:313px;
+		  overflow-y:auto;
+	  }
+
+	.selected-dept-user .list-group {
+		margin-bottom:0!important;
+	}
+	
+	.selected-dept-user .list-group > .list-group-item:last-child {
+		border-bottom:none!important;
+	}
+	.dept-container .selected-dept-user .list-group-item{
+		padding: 5px 15px;
+		text-align: center;
+		border: none;
+		border-bottom: 1px solid #ddd!important;
+		border-top: 1px solid #ddd!important;
+	}
+
+  .dept-container .selected-dept-user .list-group-item:first-child {
+	  border-top-left-radius: 0;
+	  border-top-right-radius: 0;
+  }
+
+  .dept-container .selected-dept-user .list-group-item:last-child {
+	  border-bottom-right-radius: 0;
+	  border-bottom-left-radius: 0;
+  }
+	.list-group-item.active {
+		background-color: #7CC5E5;
+	}
+	
+	.loading-img {
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    margin-left: -30px;
+	    margin-top: -30px;
+	}
+</style>
+</head>
+<body>
+<div class="dept-container">
+	<div class="row">
+		<div class="col-xs-6" >
+			<div class="margin-b-10">
+					<div class="input-group">
+						<input type="text" class="form-control" name="deptName" placeholder="快速搜索" onkeydown="if(event.keyCode==13){searchNodes()};">
+						<span class="input-group-btn">
+        					<button class="btn btn-default" type="button" onclick="searchNodes()">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+      					</span>
+					</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					按部门选择
+					<span class="glyphicon glyphicon-minus pull-right" onclick="removeSelectedNodes()"></span>
+				</div>
+				<div class="panel-body" style="padding:0px;height:320px;overflow:auto">
+					<div id="deptTree" class="tree">
+
+					</div>
+					<img class="loading-img" src="/demo/product/user/image/loading4.gif" width="60" height="60">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="panel panel-default selected-dept-panel">
+				<div class="panel-heading">按部门选择</div>
+				<div class="panel-body ">
+					<div class="selected-dept-user" id="selectedDeptUser">
+				
+					</div>
+					
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+var api = frameElement.api, W = api.opener;
+var userIdHidden = api.data.id1;
+var userNameHidden = api.data.id2;
+var deptUrl = api.data.url;
+var isMulti = api.data.isMulti;
+var type = api.data.type;
+var treeNodes = [];
+var nodeId = 'id',nodePid = 'pid',nodeName = 'name',nodeType = 'nodeType';
+var zTree,setting = {
+		nameCol : nodeName,
+		isSimpleData : true,
+		treeNodeKey : nodeId,
+		treeNodeParentKey : nodePid,
+		async:true,//是否异步加载 设为true后必须设置其他异步选项
+		asyncDataFilter: ajaxFataFilter,
+		asyncUrl:deptUrl,  //获取节点数据的URL地址
+		asyncParam:["id"],  //获取节点数据时，必须的数据名称，例如：id、name */
+		asyncParamOther:{"type":'3',"orgId":getcookie("orgid")},
+		checkable:true,
+		checkStyle:'checkbox',
+		checkType :{ "Y": "", "N": "" },//勾选 checkbox 对于父子节点的关联关系
+		callback : {
+			change: function (event, treeId, treeNode) {
+				appendCheckedUsersToRight(treeNode);
+			}
+		}
+	};
+
+//异步返回数据后的回调方法
+function ajaxFataFilter(event, parentNode, childNodes) {
+	if(childNodes.length>0){
+		for (var i = 0; i < childNodes.length; i++) {
+			//如果节点是部门的话 则节点该节点可以展开
+			if(childNodes[i].nodeType=="dept"){
+				 childNodes[i].isParent = true;
+			}else{//人员节点  显示人员图标
+				childNodes[i].icon = "/product/user/image/user.png";
+			}
+			var id = childNodes[i].id;
+			var checkli = $(".list-group-item[data-id='"+id+"']");
+			if (checkli.attr("data-id") != undefined && checkli.attr("data-id") != "") {
+				childNodes[i].checked = true;
+			}
+		}
+	}
+	return childNodes;
+};
+
+
+//选择人员后追加到右侧
+var ulHtml = '<ul class="list-group" data-dept-id="selectedDept"></ul>';
+$('#selectedDeptUser').append(ulHtml);
+function appendCheckedUsersToRight(node){
+	var thisLiHtml="";
+	var len=$(".list-group-item").length;//获取右侧列表的长度
+	//选择节点是部门的话 获取该部门下的直接人员追加到右侧
+	if(node[nodeType] == 'dept'){
+		var childNodes = node.nodes?node.nodes:[];
+		for(var i=0;i<childNodes.length;i++){
+			var childNode = childNodes[i];
+			if(childNode[nodeType] == 'user'){
+				//是否选中
+				if(node.checked){
+					//选中
+					var status=true;
+					if(len>=0){
+						for(var j=0;j<len;j++){
+							var thisLi=$(".list-group-item:eq("+j+")");
+							var id=$(thisLi).attr("data-id");
+							if(id==childNode[nodeId]){
+								status=false;
+							}
+						}
+						//右侧列表不存在
+						if(status){
+							thisLiHtml += '<li ondblclick="removeCheck(\''+childNode[nodeId]+'\')" class="list-group-item" data-id="'+childNode[nodeId]+'" data-name="'+childNode[nodeName]+'" data-dept-id="'+childNode[nodePid]+'" data-dept-name="'+childNode.parentNode[nodeName]+'">'+childNode[nodeName]+'</li>';
+						}
+					}
+				}else{
+					//未选中
+					if(len>=0){
+						for(var j=0;j<len;j++){
+							var thisLi=$(".list-group-item:eq("+j+")");
+							var id=$(thisLi).attr("data-id");
+							if(id==childNode[nodeId]){
+								$(thisLi).remove();
+							}
+						}
+					}
+				}
+				childNode['checked'] = node.checked;//子节点的选中状态和父节点保持一致
+				zTree.updateNode(childNode);
+			}
+		}
+	}else{//直接选人员
+		//是否选中
+		if(node.checked){
+			//选中
+			var status=true;
+			if(len>=0){
+				for(var i=0;i<len;i++){
+					var thisLi=$(".list-group-item:eq("+i+")");
+					var id=$(thisLi).attr("data-id");
+					if(id==node[nodeId]){
+						status=false;
+					}
+				}
+				//右侧列表不存在
+				 if(status){
+					thisLiHtml += '<li ondblclick="removeCheck(\''+node[nodeId]+'\')" class="list-group-item" data-id="'+node[nodeId]+'"data-name="'+node[nodeName]+'" data-dept-id="'+node[nodePid]+'" data-dept-name="'+node.parentNode[nodeName]+'">'+node[nodeName]+'</li>';
+				} 
+			}
+		}else{
+			//未选中
+			if(len>=0){
+				for(var i=0;i<len;i++){
+					var thisLi=$(".list-group-item:eq("+i+")");
+					var id=$(thisLi).attr("data-id");
+					if(id==node[nodeId]){
+						$(thisLi).remove();
+					}
+				}
+			}
+			
+		}
+		var parentNode = node.parentNode;
+		var pChildNodes = parentNode.nodes;
+		var isAllChecked = true;
+		for(var i=0;i<pChildNodes.length;i++){
+			var node = pChildNodes[i];
+			//如果部门下的直接人员有个一是未选中 父节点就不选中
+			if(node[nodeType] == 'user' && !node.checked){
+				isAllChecked = false;
+				break;
+			}
+		}
+		
+		//更新父节点的选中状态
+		parentNode.checked = isAllChecked;
+		zTree.updateNode(parentNode);
+	}
+	$("#selectedDeptUser .list-group").append(thisLiHtml);
+}
+
+
+
+//加载dialog的时候初始化部门树 
+function initTree(){
+	showLoading();
+	//获取部门  
+	$.ajax({
+	  	async : false,  
+	    cache:false,
+	    type: "POST",//请求方式为get
+		url:deptUrl,  
+	    dataType: "json", //返回数据格式为json
+		data:{"type":'2',"orgId":getcookie("orgid")},
+		success: function(datas) {
+			var zNodes=datas;
+			treeNodes = datas;
+			for (var i=0;i<zNodes.length; i++) {
+				if(zNodes[i].isBranch==true||zNodes[i].isBranch=="true"){
+					zNodes[i].isParent=true;
+				}
+			} 
+			zTree = $("#deptTree").zTree(setting, zNodes);
+			hideLoading();
+			//zTree1.expandAll(true);
+			//隐藏域id
+			if(userIdHidden&&userNameHidden){
+				var userIds = W.$('#'+userIdHidden).val();
+				var userNames = W.$('#'+userNameHidden).val();
+				if(userIds&&userNames){
+					var userIdsArr = userIds.split(',');
+					var userNamesArr = userNames.split(',');
+					var ulHtml = '<ul class="list-group" data-dept-id="undefind">';
+					for(var i=0;i<userIdsArr.length;i++){
+						ulHtml += '<li ondblclick="removeCheck(\''+userIdsArr[i]+'\')" class="list-group-item" data-id="'+userIdsArr[i]+'" data-name="'+userNamesArr[i]+'">'+userNamesArr[i]+'</li>';
+						for(var n=0;n<treeNodes.length;n++){
+							var treeNode = treeNodes[n];
+							if(userIdsArr[i] == treeNode.id){
+								treeNode.checked = true;
+								zTree.updateNode(treeNode, true);
+								break;
+							}
+						}
+					}
+					ulHtml += '</ul>';
+					$('#selectedDeptUser').empty().append(ulHtml);
+				}
+			}
+		},  
+		error: function(request) {  
+			hideLoading();
+		}    
+	});
+
+}
+
+//删除所有选中节点
+function removeSelectedNodes() {
+	zTree.checkAllNodes(false);
+	$("ul[data-dept-id='selectedDept']").empty();
+}
+
+
+//根据关键字过滤节点
+function searchNodes() {
+	var nodeName = $('input[name="deptName"]').val().replace(/^\s+|\s+$/g,'');
+	//如果输入为空 则显示全部部门 
+	if(nodeName == ""){
+		delete setting.fontCss;//移除节点样式
+		setting.asyncDataFilter = ajaxFataFilter;
+		setting.async = true;
+		setting.asyncUrl = deptUrl;
+		setting.asyncParam = ["id"];
+		setting.asyncParamOther = {"type":'3',"orgId":getcookie("orgid")};
+		initTree();
+		return;
+	}
+	$.ajax({
+		async : false,  
+	    cache:false,  
+		type: 'Post',  
+		url:basePath + '/dept/getDepartmentStaffByName',  
+		data:{"type":"user","qName":nodeName},    
+		dataType:"json",
+		success: function(datas) {
+			var zNodes=datas;
+			for (var i=0;i<zNodes.length; i++) {
+				zNodes[i].id = zNodes[i].uuid;
+				zNodes[i].pid = zNodes[i].uupid;
+				zNodes[i].nodeType = zNodes[i].type;
+				if(zNodes[i].type == "user"){
+					zNodes[i].icon = "/product/user/image/user.png";
+				} 
+			} 
+			delete setting.asyncDataFilter;
+			delete setting.async;
+			delete setting.asyncUrl;
+			delete setting.asyncParam;
+			delete setting.asyncParamOther;
+			
+			zTree = $("#deptTree").zTree(setting, zNodes);
+			var tempNodes = zTree.getNodes();
+		},  
+		error: function(request) {  
+			alert("error!");
+		}    	
+	})
+	
+}
+
+
+//递归获取父节点
+function getParentNode(node,initNodes){
+	if(!node.parentNode) {
+		return;
+	}
+	if(node.parentNode){
+		var parentNode = node.parentNode;
+		var isExit = false;
+		//需要先遍历 初始化节点数组 如果已经存在该节点 则不追加到数组中
+		for(var j=0;j<initNodes.length;j++){
+			if(parentNode.id == initNodes[j].id){
+				isExit = true;
+				break;
+			}else{
+				isExit = false;
+				
+			}
+		}
+		if(!isExit){
+			initNodes.push(initNode(node));
+		}
+		
+		getParentNode(parentNode,initNodes);
+	}
+}
+
+//初始化节点
+function initNode(node){
+	var pushNode = {};
+	pushNode[nodeId] = node[nodeId];
+	pushNode[nodePid] = node[nodePid];
+	pushNode[nodeType] = node[nodeType];
+	pushNode[nodeName] = node[nodeName];
+	return pushNode;
+}
+
+
+//回写选择的人员
+function saveSelectedUsers(){
+	var idArr = [],nameArr = [],pIds=[],pNames=[];
+	var res = {};
+	var $selectedLi = $('#selectedDeptUser .list-group-item[data-id][data-name]');
+	if($selectedLi.length < 1){
+		alert('至少选择一个');
+		return;
+	}
+	if(isMulti == '1' && $selectedLi.length > 1){
+		alert('只能选择一个');
+		return;
+	}
+	
+	$selectedLi.each(function(index,item){
+		var $this = $(item);
+		idArr.push($this.attr('data-id'));
+		nameArr.push($this.attr('data-name'));
+		pIds.push($this.attr('data-dept-id'));
+		pNames.push($this.attr('data-dept-name'));
+		
+	});
+	res.ids = idArr.join(',');
+	res.names = nameArr.join(',');
+	res.pid = pIds.join(',');
+	res.pname = pNames.join(',');
+	return res;
+}
+
+
+function showLoading(){
+	$('.loading-img').eq(0).show();
+}
+
+function hideLoading(){
+	$('.loading-img').eq(0).hide();
+}
+
+
+//初始化树
+initTree();
+$(function () {
+});
+
+function removeCheck(id){
+	var thisLi=$(".list-group-item[data-id='"+id+"']");
+	$(thisLi).remove();
+	var node = zTree.getNodesByParam("id",id);
+	if (node[0] != undefined) {
+		var checkInputId = node[0].tId+"_check";
+		$("#"+checkInputId).attr("class","chk checkbox_false_full");
+	}
+}
+
+</script>
+</body>
+</html>

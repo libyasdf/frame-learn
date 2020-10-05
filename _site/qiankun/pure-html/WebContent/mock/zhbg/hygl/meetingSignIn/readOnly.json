@@ -1,0 +1,12 @@
+{
+	"meetingName":"测试",
+	"meetingRoom":"李四",
+	"startTime":"2018-02-21 09:00:00",
+	"endTime":"2018-02-21 09:00:00",
+	"meetingService":"茶水",
+	"holdDept":"情报科",
+	"joinDept":"档案科",
+	"meetingContent":"这是一条很重要的备注,看到了",
+	"remark":"这是一条很重要的备注,看到了"
+
+}

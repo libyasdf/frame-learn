@@ -1,0 +1,413 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle!important;
+    }
+
+    .modal-body {
+        padding: 0px;
+    }
+
+    .fixed-table-header-columns {
+        border-right: 1px solid #dddcdd;
+    }
+</style>
+<link rel="stylesheet" type="text/css"
+      href="/static/css/common/Loading.css">
+<link rel="stylesheet" type="text/css"
+      href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="vertify-panel vertify-tree x-unselectable"
+             role="presentation">
+            <div class="inner">
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style=" padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+                    <input id="keyword" name="deptName" onkeydown="CommonUtil.keyDown(event);" type="text" class="form-control"
+                           placeholder="快速搜索">
+                    <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt" onclick="search()">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span>
+                </div>
+                <ul id="tree-obj" class="ztree" style="margin-top: 10px; height:510px; overflow:auto;"></ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details">
+            <!--查询-->
+            <form id="domForm">
+                <input id="cruJuId" name="cruJuId" type="hidden"/>
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls " >
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 查询日期：</label>
+                                <div class="col-md-5 control-label" style="text-align:left;">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="dateType" value="year" checked /><span style="margin-right:30px;">按年查询</span></input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="dateType" value="month" /><span style="margin-right:30px;">按月查询</span></input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="dateType" value="date" /><span style="margin-right:30px;">自定义</span></input>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 " >
+                                    <div class="input-group">
+                                        <span class="input-group-addon input-group-addon1" onclick="">
+                                            <span id="leftImage" class="btn-both leftbtn"></span>
+                                         </span>
+                                            <div id="dateType"><input class="form-control" type="text" id="timeRange"/></div>
+                                            <div id="dateLogWeek" style="margin-top:25px"></div>
+                                            <span class="input-group-addon" onclick="">
+                                            <span id="rightImage" class="btn-both rightbtn"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 查询类型：</label>
+                                <div class="col-md-5 control-label" style="text-align:left;">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="dataType" value="dept" checked /><span style="margin-right:30px;">按部门查询</span></input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="dataType" value="user" /><span style="margin-right:30px;">按人员查询</span></input>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="col-md-12" style="text-align: center">
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="queryTable()"> 查&nbsp;&nbsp;询
+                                        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="clearAll()"> 重&nbsp;&nbsp;置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+            <div class="col-md-12">
+                <div class="modal-body selectjs">
+                    <div class="selectjs_block" style="height: 100%;">
+                        <div class="title_tab" id="kq_title_tab">
+                            <ul class="nav nav-tabs" style="cursor:pointer">
+                                <li class="active" for="formpage1">
+                                    <a href="#" data-toggle="tab">
+                                        因私迟到
+                                    </a>
+                                </li>
+                                <li for="formpage2" >
+                                    <a href="#" data-toggle="tab">
+                                        因私早退
+                                    </a>
+                                </li>
+                                <li  for="formpage3">
+                                    <a href="#" data-toggle="tab">
+                                        因私未到岗
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="list_button_area">
+                            <button class="list_table_btn2"
+                                    onclick="exportDate();">
+                                <span class="glyphicon glyphicon-chevron-right"></span> 导出
+                            </button>
+                        </div>
+                        <div class="main" style="height: auto;">
+
+                            <div id="formpage1" class="active">
+                                <table id="right_table1"></table>
+                            </div>
+                            <div id="formpage2" class="active">
+                                <table id="right_table2"></table>
+                            </div>
+                            <div id="formpage3" class="active">
+                            <table id="right_table3"></table>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript">
+
+    $('.panel-heading').unbind('click').bind('click',function(){
+        if($(this).find('.showSelect').hasClass('glyphicon-minus')){
+            // $('.panel-body').hide("slow");
+            $('.panel-body').hide();
+            $(this).find('.showSelect').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+        }else{
+            // $('.panel-body').show("slow");
+            $('.panel-body').show();
+            $(this).find('.showSelect').removeClass('glyphicon-plus').addClass(' glyphicon-minus');
+        }
+    })
+
+    $("#cruJuId").val(getcookie("orgid"))
+    //用于存放选择的id刷新列表
+    var userIds = "";
+
+    var dateType = $('input:radio[name="dateType"]').val();
+
+
+    $('input:radio[name="dateType"]').change( function(){
+        var dateType = $(this).val();
+        $("#dateType").empty();
+        $("#dateType").append("<input class=\"form-control\" type=\"text\" id=\"timeRange\"/>");
+        var data = ""
+        if(dateType == 'date'){
+            var currentDate=getCurrentDate("yyyy-MM-dd");
+            var firstDate=currentDate.substring(0,8)+"01";
+            data = firstDate + " - " + currentDate;
+        }else if(dateType == 'month'){
+            var currentMonth=getCurrentDate("yyyy-MM");
+            data = currentMonth + " - " + currentMonth;
+        }else{
+            var currentYear=getCurrentDate("yyyy");
+            data = currentYear + " - " + currentYear;
+        }
+        //日期范围
+        laydate.render({
+            elem: '#timeRange'
+            , range: true
+            , type: dateType
+            , value: data
+        });
+
+    })
+
+    var currentYear=getCurrentDate("yyyy");
+
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+        , type: "year"
+        , value: currentYear + " - " + currentYear
+    });
+
+    $('.nav-tabs > li').unbind('click').bind('click', function () {
+        var id = $(this).attr('for');
+        $(this).addClass('active').siblings('li').removeClass('active');
+        $('.main').children().addClass('hidden');
+        $('#' + id).removeClass('hidden');
+        var index = id.substr(id.length-1,1);
+        $('#right_table'+index).bootstrapTable("destroy");
+        var right_table_col = pageType(index);
+        tableInit('right_table'+index,right_table_col);
+    })
+
+
+    var right_table_col = pageType(1);
+    tableInit('right_table1',right_table_col);
+
+    function pageType(type){
+        var right_table_col = [{
+            title: '序号'
+            , width: '5%'
+            , order: "desc"
+            , align:"center"
+            , formatter: function (value, row, index) {
+                return "<span >"+(index+1)+"</span>";
+            }
+        },{
+            field: 'BUMEN'
+            , title: '<br/><br/>' +
+            '&nbsp;&nbsp;&nbsp;&nbsp;部门名称&nbsp;&nbsp;&nbsp;&nbsp;<br/>' +
+            '<br/><br/>'
+            , width: '10%'
+            , align:"center"
+        },{
+            field: 'CHUSHI'
+            , title: '&nbsp;&nbsp;&nbsp;&nbsp;处室名称&nbsp;&nbsp;&nbsp;&nbsp;'
+            , width: '10%'
+            , align:"center"
+        },{
+            field: 'NAME'
+            , title: '&nbsp;&nbsp;&nbsp;&nbsp;姓名&nbsp;&nbsp;&nbsp;&nbsp;'
+            , width: '10%'
+            , align:"center"
+        }
+        ];
+
+        var kqMap = "";
+        if(type == '1'){
+            kqMap = Dictionary.getNameAndCode({mark:"lateCause",type:"1"});;
+        }else if(type == '2'){
+            kqMap = Dictionary.getNameAndCode({mark:"leaveEarlyCause",type:"1"});
+        }else if(type == '3'){
+            kqMap = Dictionary.getNameAndCode({mark:"leaveReason",type:"1"});
+        }
+        $.each(kqMap,function(i,obj){
+            var str = "";
+            for (var j = 1; j <= obj.length; j++) {
+                if (j % 8 == 0) {
+                    str += obj[j-1]+'<br/>';
+                }else {
+                    str += obj[j-1];
+                }
+            }
+            right_table_col.push({
+                field: i,
+                title: str,
+                formatter:function(value,row,index){
+                    if(value == 0){
+                        return "-";
+                    }else{
+                        return value;
+                    }
+
+                }
+            })
+        })
+        if(type == '1'){
+            right_table_col.push({
+                field: 'SC',
+                title: '无故迟到'
+            })
+        }else if(type == '2'){
+            right_table_col.push({
+                field: 'SC',
+                title: '无故早退'
+            })
+        }else if(type == '3'){
+            right_table_col.push({
+                field: 'SC',
+                title: '旷工'
+            })
+        }
+        return right_table_col;
+    }
+
+    function tableInit(tableId,right_table_col){
+        var dataType = $("input[name='dataType']:checked").val();
+        var fixedNumber = 3;
+        if(dataType == "user"){
+            fixedNumber = 4;
+        }
+
+        //初始化表格
+        $('#'+tableId).bootstrapTable({
+            url:"/zhbg/kqgl/kqcx/attendence/getlist",
+            sidePagination:"client",
+            pagination:true,
+            striped:true,
+            classes: 'table table-hover',
+            pageList: "[10, 25, 50, 100]",
+            fixedColumns:true,
+            fixedNumber:fixedNumber,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            },
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.timeRange = $('#timeRange').val();
+                params.dataType = $("input[name='dataType']:checked").val();
+                params.treeIds = userIds;
+                var activeId = $('#kq_title_tab .active').attr("for");
+                var index = activeId.substr(activeId.length-1,1);
+                params.activeId = index;
+                return params;
+            },
+            onLoadSuccess:function(data){
+                if($("input[name='dataType']:checked").val() == "dept"){
+                    $("#"+tableId).bootstrapTable('hideColumn', 'NAME');
+                }else{
+                    $("#"+tableId).bootstrapTable('showColumn', 'NAME');
+                }
+            }
+        });
+    }
+
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate() {
+        layer.confirm("是否导出查询的所有信息？", function(e) {
+            layer.close(e);
+            var resId = $('#left_ul').find('a.active').attr("id");
+            var activeId = $('#kq_title_tab .active').attr("for");
+            var index = activeId.substr(activeId.length-1,1);
+            var timeRange = $("#timeRange").val();
+            $('#domForm').attr("action","/zhbg/kqgl/kqcx/attendence/export?treeIds="+userIds+"&resId="+resId+"&activeId="+index+"&timeRange="+timeRange);
+            $('#domForm').attr("method","post");
+            $("#domForm").submit();
+
+        })
+    };
+
+
+	function queryTable(){
+        var activeId = $('#kq_title_tab .active').attr("for");
+        var index = activeId.substr(activeId.length-1,1);
+        TableInit.refTable('right_table'+index);
+        $('#right_table'+index).bootstrapTable("destroy");
+        var right_table_col = pageType(index);
+        tableInit('right_table'+index,right_table_col);
+    }
+
+    function clearAll() {
+        $('#domForm')[0].reset();
+        $("#dateType").empty();
+        $("#dateType").append("<input class=\"form-control\" type=\"text\" id=\"timeRange\"/>");
+        var currentYear=getCurrentDate("yyyy");
+        //日期范围
+        laydate.render({
+            elem: '#timeRange'
+            , range: true
+            , type: "year"
+            , value: currentYear + " - " + currentYear
+        });
+    }
+</script>
+<!--部门人员树，放在最后的原因是放在前边获取不到$("#cruDeptId").val()的值-->
+<script src="/modules/zhbg/kqgl/statistics/js/tree.js"></script>

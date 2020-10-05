@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>试卷管理</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+
+<body>
+
+    <!--最外层tab-->
+    <div class="modal-body selectjs">
+        <div class="selectjs_block" style="height: 100%;">
+            <div class="title_tab">
+                <ul class="nav nav-tabs">
+                    <li class="active" for="formpage1">
+                        <a href="#" data-toggle="tab">
+                            当月基础配置信息
+                        </a>
+                    </li>
+                    <li for="formpage2">
+                        <a href="#" data-toggle="tab">
+                            历史基础配置信息
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="main">
+                <!--tab的主体部分-->
+                <!-- 当月基础配置信息 -->
+                <div id="formpage1" class="active">
+                    <form class="form-horizontal" id="form">
+
+                        <!-- resId -->
+                        <input type="text" id="resId" name="resId" value="" hidden="true">
+                        <!-- 开关字段 -->
+                        <input type="text" id="id" name="id" value="" hidden="true">
+                        <input type="text" id="creUserId" name="creUserId" value="" hidden="true">
+                        <input type="text" id="creUserName" name="creUserName" value="" hidden="true">
+                        <input type="text" id="creDeptId" name="creDeptId" value="" hidden="true">
+                        <input type="text" id="creDeptName" name="creDeptName" value="" hidden="true">
+                        <input type="text" id="creChushiId" name="creChushiId" value="" hidden="true">
+                        <input type="text" id="creChushiName" name="creChushiName" value="" hidden="true">
+                        <input type="text" id="creJuId" name="creJuId" value="" hidden="true">
+                        <input type="text" id="creJuName" name="creJuname" value="" hidden="true">
+                        <input type="text" id="visible" name="visible" value="" hidden="true">
+                        <input type="text" id="creTime" name="creTime" value="" hidden="true">
+                        <!-- 流程字段结束 -->
+                        <input type="hidden" id="textId"/>
+                        <div class="row m-t-15">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="" class="col-md-3 control-label"> 值班年月：</label>
+                                    <div class="col-md-4">
+                                        <input class="form-control" type="text" name="dutyMonth" id="dutyMonth" readonly/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-md-3 control-label"><b style="color: red;">*</b> 上报截止日期：</label>
+                                    <div class="col-md-4">
+                                        <input class="form-control" type="text" name="reportOverDate" id="reportOverDate"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-md-3 control-label"><b style="color: red;">*</b> 催办提示内容：</label>
+                                    <div class="col-md-9">
+                                        <textarea name="promptMessageContent" id="promptMessageContent" class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-md-3 control-label"><b style="color: red;">*</b> 值班单位配置：</label>
+                                    <div class="col-md-9">
+                                        <textarea type="text" id="unitName" name="unitName" unselectable="on" onclick="openSelectZtree({'id':'unitId','name':'unitName','type':'2','asyn':false,'level':2,'url':'/system/component/tree/deptTree'})" class="form-control" ></textarea>
+                                        <input type="hidden" id="unitId" name="unitId" /><!-- 单位ID隐藏域 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                <!-- 基本信息结束 -->
+                </form>
+
+                <div style="text-align: center;">
+                    <button id="sendFLow" class="btn btn-primary form_btn_area_btn2" onclick="saveConfig();" >
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> 发布
+                    </button>
+                </div>
+            </div>
+            <!--  以往基础配置信息 -->
+                <div id="formpage2" class="hidden" style="width: 100%;">
+                        <div class="row">
+                            <!--查询-->
+                            <form class="form-horizontal" onkeydown="keyLogin()">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default toggle">
+                                        <div class="panel-heading" style="cursor: pointer;">
+                                            <h3 class="panel-title">查询项</h3>
+                                            <div class="panel-controls " >
+                                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body" style="display: none;">
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label"> 值班年月：</label>
+                                                <div class="col-md-3">
+                                                    <input class="form-control"  type="text" name="dutyMonthOfSearch" id="dutyMonthOfSearch"/>
+                                                </div>
+                                                <label class="col-md-2 control-label"> 值班单位名称：</label>
+                                                <div class="col-md-3">
+                                                    <input class="form-control"  type="text" name="unitNameOfSearch" id="unitNameOfSearch"/>
+                                                </div>
+                                            </div>
+                                            <!--查询重置等按钮-->
+                                            <div class="form-group">
+                                                <div class="col-md-12" style="text-align: center">
+                                                    <button type="button" class="btn btn-primary"
+                                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <button type="reset" class="btn btn-primary">
+                                                        重&nbsp;&nbsp;置
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!--查询重置等按钮 end-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!--查询结束-->
+
+                            <div class="col-md-12">
+                                <!--bootstrap-table表格-->
+                                <table id="right_table"></table>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/url.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+
+<script type="text/javascript" src="/modules/zhbg/zbgl/config/js/configValidator.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<!-- 发送消息js -->
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+<!--  <script src="/static/js/zhbg/xxkh/sjgl/sjglEditForm.js"></script>-->
+<script type="text/javascript">
+
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#dutyMonthOfSearch'
+        ,type: 'month'//指定元素
+    });
+
+    var date = new Date();
+    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    function DateToStringFomatter(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+    };
+    firstDay = DateToStringFomatter(firstDay);
+    lastDay = DateToStringFomatter(lastDay);
+    laydate.render({
+        elem: '#reportOverDate'
+        ,type: 'date'//指定元素
+        ,min: firstDay // 最小日期
+        ,max: lastDay // 最大日期
+        ,done : function(value, date, endDate) {
+            $('#reportOverDate').val(value).change()
+        }
+    });
+
+    //存放初始化的上报截止日期，和上报内容，用于后期判断内容是否发生改变
+    var oldReportOverDate = "";
+    var oldPromptMessageContent = "";
+
+    var year_month = getNextMonth(firstDay);
+
+    //页面初始化，查询到配置信息就回填，没有则空白
+    $(function () {
+
+        //默认为下个月的值班基础配置信息
+        $("#dutyMonth").val(year_month);
+            // tab页切换
+        $('.nav-tabs > li').unbind('click').bind('click', function () {
+            var id = $(this).attr('for');
+            $(this).addClass('active').siblings('li').removeClass('active');
+            $('.main').children().addClass('hidden');
+            $('#' + id).removeClass('hidden');
+        })
+        //将查询出的信息展示到页面
+        $.ajax({
+            type: 'get',
+            dataType: "json",//返回json格式的数据
+            url: "/zhbg/zbgl/config/queryOne",
+            data:{"dutyMonth":$("#dutyMonth").val(),"sysId":Config.sysId},
+            success: function (result) {
+                if(result.data.rows.length>0){
+                    $("#id").val(result.data.rows[0].id);
+                    $("#creUserId").val(result.data.rows[0].creUserId);
+                    $("#creUserName").val(result.data.rows[0].creUserName);
+                    $("#creDeptId").val(result.data.rows[0].creDeptId);
+                    $("#creDeptName").val(result.data.rows[0].creDeptName);
+                    $("#creChushiId").val(result.data.rows[0].creChushiId);
+                    $("#creChushiName").val(result.data.rows[0].creChushiName);
+                    $("#creJuId").val(result.data.rows[0].creJuId);
+                    $("#creJuName").val(result.data.rows[0].creJuName);
+                    $("#visible").val(result.data.rows[0].visible);
+                    $("#creTime").val(result.data.rows[0].creTime);
+                    $("#reportOverDate").val(result.data.rows[0].reportOverDate);
+                    $("#promptMessageContent").val(result.data.rows[0].promptMessageContent);
+                    $("#unitId").val(result.data.rows[0].unitId);
+                    $("#unitName").val(result.data.rows[0].unitName);
+
+                    oldReportOverDate += result.data.rows[0].reportOverDate;
+                    oldPromptMessageContent += result.data.rows[0].promptMessageContent;
+                }
+            },
+            error: function (error) {
+                layer.msg("查询失败！", {icon: 0,time:1000});
+            }
+        });
+        //加载以往基础配置信息列表
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/zbgl/config/list",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.dutyMonthOfSearch = $("#dutyMonthOfSearch").val();
+                params.unitNameOfSearch = $("#unitNameOfSearch").val();
+                return params;
+            },
+            readOnlyFn:function(row,value){
+                //值班年月
+                $('tr.readOnly').find('td:eq(1)').bind('mouseover', function (e) {
+                    var txt = $(this).find("span[data-content]").attr("data-content");
+                    $(this).attr("title",txt)
+
+                });
+                //截止上报日期
+                $('tr.readOnly').find('td:eq(2)').bind('mouseover', function (e) {
+                    var txt = $(this).find("span[data-content]").attr("data-content");
+                    $(this).attr("title",txt)
+
+                });
+                //催办提示内容
+                $('tr.readOnly').find('td:eq(3)').bind('mouseover', function (e) {
+                    var txt = $(this).find("span[data-content]").attr("data-content");
+                    $(this).attr("title",txt)
+
+                });
+                //应上报处室
+                $('tr.readOnly').find('td:eq(4)').bind('mouseover', function (e) {
+                    var txt = $(this).find("span[data-content]").attr("data-content");
+                    $(this).attr("title",txt)
+
+                });
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            }
+        });
+    })
+    // 提交
+    function saveConfig() {
+        var bootstrapValidator = $("#form").data('bootstrapValidator');
+        //手动触发验证
+        bootstrapValidator.validate();
+        if(bootstrapValidator.isValid()){
+
+            if($("#id").val()==""){
+
+                //首先判断是否有值班上报员
+                var deptNames = $('#unitName').val().split(",");
+                var deptIds = $('#unitId').val().split(",");
+                var para = {"deptIds":JSON.stringify(deptIds),"deptNames":JSON.stringify(deptNames)};
+                $.ajax({
+                    url:"/zhbg/zbgl/dutytable/hasReportUser",
+                    data:para,
+                    dataType:"json",
+                    async:false,
+                    success:function(data){
+                        if(data.flag=="1"){
+                            var userIds = data.data;
+                            for(var i in userIds){
+                                MessageUtil.sendMsg({
+                                    senderId:Config.sysId,	//系统ID
+                                    subject:"请上报"+$('#dutyMonth').val()+"值班表",		//消息主题
+                                    content:"请前往值班表管理添加"+$('#dutyMonth').val()+"值班信息，并填写完毕后进行上报，此次值班表上报截止日期为："+$('#reportOverDate').val(),		//消息内容
+                                    accepterId:userIds[i].userid,	//接收人ID
+                                    status:"0",		//0未读；1已读
+                                    type:"3"		//3站内消息
+                                });
+                            }
+                            //保存数据
+                            $.ajax({
+                                type: "POST",
+                                url:"/zhbg/zbgl/config/save",
+                                data:$("#form").serialize(),
+                                async: false,
+                                dataType:"json",
+                                success:function(data){
+                                    if ('1' == data.flag) {
+                                        layer.msg("发布成功！并向"+$('#unitName').val()+"发送了消息！", {icon: 1,time:1000});
+                                        $("#id").val(data.data.id);
+                                    }
+                                },
+                                error:function(data){
+                                    layer.msg("发布失败！", {icon: 0,time:1000});
+                                }
+                            });
+                        }else{
+                            var names = data.deptNames.split(",");
+                            layer.alert(names+'没有配置值班表上报员，请及时与相关处室联系，配置后再发布！',{icon:0,title:'警告'})
+                        }
+                    }
+                });
+            }else{
+                //修改
+                //判断上报截止日期，或者催办提示内容是否修改，如果是，则重新向所有单位发送消息，否则，只对，增加，或者去除的单位发送消息
+                var newReportOverDate = $("#reportOverDate").val();
+                var newPromptMessageContent = $("#promptMessageContent").val();
+                if(newReportOverDate != oldReportOverDate || newPromptMessageContent != oldPromptMessageContent){
+                    //首先判断是否有值班上报员
+                    var deptNames = $('#unitName').val().split(",");
+                    var deptIds = $('#unitId').val().split(",");
+                    var para = {"deptIds":JSON.stringify(deptIds),"deptNames":JSON.stringify(deptNames)};
+                    $.ajax({
+                        url:"/zhbg/zbgl/dutywork/hasReportUser",
+                        data:para,
+                        dataType:"json",
+                        async:false,
+                        success:function(data){
+                            if(data.flag=="1"){
+                                var userIds = data.data;
+                                for(var i in userIds){
+                                    MessageUtil.sendMsg({
+                                        senderId:Config.sysId,	//系统ID
+                                        subject:"请上报"+$('#dutyMonth').val()+"值班表",		//消息主题
+                                        content:"请前往值班表管理添加"+$('#dutyMonth').val()+"值班信息，并填写完毕后进行上报，此次值班表上报截止日期为："+$('#reportOverDate').val(),		//消息内容
+                                        accepterId:userIds[i].userid,	//接收人ID
+                                        status:"0",		//0未读；1已读
+                                        type:"3"		//3站内消息
+                                    });
+                                }
+                                //修改数据
+                                $.ajax({
+                                    type: "POST",
+                                    url:"/zhbg/zbgl/config/updateConfig",
+                                    data:$("#form").serialize(),
+                                    async: false,
+                                    dataType:"json",
+                                    success:function(data){
+                                        if ('1' == data.flag) {
+                                            layer.msg("修改成功！并通知了相关单位！", {icon: 1,time:1000});
+                                            /*layer.alert("修改成功！并向&nbsp;&nbsp;"+$('#unitName').val()+"&nbsp;&nbsp;发送了需要填报值班表的消息！", {
+                                                area:['300px','200px'],
+                                                icon: 1,
+                                                skin: 'layui-layer-lan' //样式类名
+                                                ,closeBtn: 0
+                                            });*/
+                                        }
+                                    },
+                                    error:function(data){
+                                        layer.msg("修改失败！", {icon: 0,time:1000});
+                                    }
+                                });
+                            }else{
+                                var names = data.deptNames.split(",");
+                                layer.alert(names+'没有配置值班表上报员，请及时与相关处室联系，配置后再发布！',{icon:0,title:'警告'})
+                            }
+                        }
+                    });
+                }else{
+                    //首先判断是否有值班上报员*********************应该判断是添加，还是去除了单位，分两种消息发送，添加的发需要填上报表消息，去除的应提示不需要上报值班信息
+                    $.ajax({
+                        type: "POST",
+                        url:"/zhbg/zbgl/config/getDefferentUnitIds",
+                        data:$("#form").serialize(),
+                        async: false,
+                        dataType:"json",
+                        success:function(data){
+                            if ('1' == data.flag){
+                                var addUnitName = data.addUnitName;
+                                var deleteUnitName = data.deleteUnitName;
+                                //校验新增的单位有没有上报员，有，则发送消息
+                                if(data.addUnitIds !=""){
+                                    var deptNames = data.addUnitName.split(",");
+                                    var deptIds = data.addUnitIds.split(",");
+                                    var para = {"deptIds":JSON.stringify(deptIds),"deptNames":JSON.stringify(deptNames)};
+                                    var deletedeptIds = data.deletedeptIds;
+                                    $.ajax({
+                                        url:"/zhbg/zbgl/dutywork/hasReportUser",
+                                        data:para,
+                                        dataType:"json",
+                                        async:false,
+                                        success:function(data){
+                                            if(data.flag=="1"){
+                                                var userIds = data.data;
+                                                //给添加的单位发送消息
+                                                for(var i in userIds){
+                                                    MessageUtil.sendMsg({
+                                                        senderId:Config.sysId,	//系统ID
+                                                        subject:"请上报"+$('#dutyMonth').val()+"值班表",		//消息主题
+                                                        content:"请前往值班表管理添加"+$('#dutyMonth').val()+"值班信息，并填写完毕后进行上报，此次值班表上报截止日期为："+$('#reportOverDate').val(),		//消息内容
+                                                        accepterId:userIds[i].userid,	//接收人ID
+                                                        status:"0",		//0未读；1已读
+                                                        type:"3"		//3站内消息
+                                                    });
+                                                }
+                                                //修改数据
+                                                $.ajax({
+                                                    type: "POST",
+                                                    url:"/zhbg/zbgl/config/updateConfig",
+                                                    data:$("#form").serialize(),
+                                                    async: false,
+                                                    dataType:"json",
+                                                    success:function(data){
+                                                        if ('1' == data.flag) {
+                                                            layer.msg("修改成功！并通知了相关单位！", {icon: 1,time:1000});
+                                                            /*if(addUnitName != "" && deleteUnitName ==""){
+                                                                //layer.msg("修改成功！并向"+addUnitName+"发送了需要填报值班表的消息！", {icon: 1,time:2000});
+                                                                layer.alert("修改成功！并向&nbsp;&nbsp;"+addUnitName+"&nbsp;&nbsp;发送了需要填报值班表的消息！", {
+                                                                    area:['300px','200px'],
+                                                                    icon: 1,
+                                                                    skin: 'layui-layer-lan' //样式类名
+                                                                    ,closeBtn: 0
+                                                                });
+                                                            }else if(addUnitName == "" && deleteUnitName !=""){
+                                                                //layer.msg("修改成功！并向"+deleteUnitName+"发送了不需要填报值班表的消息！", {icon: 1,time:2000});
+                                                                layer.alert("修改成功！并向&nbsp;&nbsp;"+deleteUnitName+"&nbsp;&nbsp;发送了不需要填报值班表的消息！", {
+                                                                    area:['300px','200px'],
+                                                                    icon: 1,
+                                                                    skin: 'layui-layer-molv' //样式类名
+                                                                    ,closeBtn: 0
+                                                                });
+                                                            }else if(addUnitName != "" && deleteUnitName !=""){
+                                                                //layer.msg("修改成功！并向"+addUnitName+"发送了需要填报值班表的消息！&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+deleteUnitName+"发送了不需要填报值班表的消息！", {icon: 1,time:3000});
+                                                                layer.alert("修改成功！并向&nbsp;&nbsp;"+addUnitName+"&nbsp;&nbsp;发送了需要填报值班表的消息！", {
+                                                                    area:['300px','200px'],
+                                                                    icon: 1,
+                                                                    skin: 'layui-layer-lan' //样式类名
+                                                                    ,closeBtn: 0
+                                                                }, function(){
+                                                                    layer.alert("修改成功！并向&nbsp;&nbsp;"+deleteUnitName+"&nbsp;&nbsp;发送了不需要填报值班表的消息！", {
+                                                                        area:['300px','200px'],
+                                                                        icon: 1,
+                                                                        skin: 'layui-layer-molv'
+                                                                        ,closeBtn: 0
+                                                                        ,anim: 4 //动画类型
+                                                                    });
+                                                                });
+                                                            }*/
+                                                        }
+                                                    },
+                                                    error:function(data){
+                                                        layer.msg("修改失败！", {icon: 0,time:1000});
+                                                    }
+                                                });
+                                            }else{
+                                                var names = data.deptNames.split(",");
+                                                layer.alert(names+'没有配置值班表上报员，保存失败，请及时与相关处室联系，配置后再保存基础配置！',{icon:0,title:'警告'})
+                                            }
+                                        }
+                                    });
+                                }
+
+                                //去除的单位肯定有上报员，获取上报员id，发送消息
+                                if(data.deleteUnitIds !=""){
+                                    var deptNames = data.deleteUnitName.split(",");
+                                    var deptIds = data.deleteUnitIds.split(",");
+                                    var para = {"deptIds":JSON.stringify(deptIds),"deptNames":JSON.stringify(deptNames)};
+                                    $.ajax({
+                                        url:"/zhbg/zbgl/dutywork/hasReportUser",
+                                        data:para,
+                                        dataType:"json",
+                                        async:false,
+                                        success:function(data){
+                                            if(data.flag=="1"){
+                                                var userIds = data.data;
+                                                for(var i in userIds){
+                                                    MessageUtil.sendMsg({
+                                                        senderId:Config.sysId,	//系统ID
+                                                        subject:""+$('#dutyMonth').val()+"值班表需要上报单位修改通知",		//消息主题
+                                                        content:"您"+$('#dutyMonth').val()+"不需要填报值班信息.",		//消息内容
+                                                        accepterId:userIds[i].userid,	//接收人ID
+                                                        status:"0",		//0未读；1已读
+                                                        type:"3"		//3站内消息
+                                                    });
+                                                }
+                                            }else{
+                                                var names = data.deptNames.split(",");
+                                                layer.alert(names+'没有配置值班表上报员，修改失败，请及时与相关处室联系，配置后再次修改！',{icon:0,title:'警告'})
+                                            }
+                                        }
+                                    });
+
+                                    /*//查询出上报表的数据
+                                    $.ajax({
+                                        url : "/zhbg/zbgl/shangbao/queryOneByMonthAndUnitId",
+                                        data : {
+                                            month : year+"-"+month, //上报表id
+                                            unitId : data.deleteUnitIds
+                                        },
+                                        type : "post",
+                                        success : function(data){
+                                            for(var i =0;i<data.data.length;i++){
+                                                //删除数据
+                                                $.ajax({
+                                                    url : "/zhbg/zbgl/dutytable/delete",
+                                                    data : {
+                                                        reportId : data.data[i].id //上报表id
+                                                    },
+                                                    type : "get",
+                                                    success : function(data){
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });*/
+
+                                    if(data.addUnitIds ==""){//如果有新增的，则在新增那里执行修改
+                                        //修改数据
+                                        $.ajax({
+                                            type: "POST",
+                                            url:"/zhbg/zbgl/config/updateConfig",
+                                            data:$("#form").serialize(),
+                                            async: false,
+                                            dataType:"json",
+                                            success:function(data){
+                                                if ('1' == data.flag) {
+                                                    layer.msg("修改成功！并通知了相关单位！", {icon: 1,time:1000});
+                                                    /*if(addUnitName != "" && deleteUnitName ==""){
+                                                        //layer.msg("修改成功！并向"+addUnitName+"发送了需要填报值班表的消息！", {icon: 1,time:2000});
+                                                        layer.alert("修改成功！并向&nbsp;&nbsp;"+addUnitName+"&nbsp;&nbsp;发送了需要填报值班表的消息！", {
+                                                            area:['300px','200px'],
+                                                            icon: 1,
+                                                            skin: 'layui-layer-lan' //样式类名
+                                                            ,closeBtn: 0
+                                                        });
+                                                    }else if(addUnitName == "" && deleteUnitName !=""){
+                                                        //layer.msg("修改成功！并向"+deleteUnitName+"发送了不需要填报值班表的消息！", {icon: 1,time:2000});
+                                                        layer.alert("修改成功！并向&nbsp;&nbsp;"+deleteUnitName+"&nbsp;&nbsp;发送了不需要填报值班表的消息！", {
+                                                            area:['300px','200px'],
+                                                            icon: 1,
+                                                            skin: 'layui-layer-molv' //样式类名
+                                                            ,closeBtn: 0
+                                                        });
+                                                    }else if(addUnitName != "" && deleteUnitName !=""){
+                                                        //layer.msg("修改成功！并向"+addUnitName+"发送了需要填报值班表的消息！&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+deleteUnitName+"发送了不需要填报值班表的消息！", {icon: 1,time:3000});
+                                                        layer.alert("修改成功！并向&nbsp;&nbsp;"+addUnitName+"&nbsp;&nbsp;发送了需要填报值班表的消息！", {
+                                                            area:['300px','200px'],
+                                                            icon: 1,
+                                                            skin: 'layui-layer-lan' //样式类名
+                                                            ,closeBtn: 0
+                                                        }, function(){
+                                                            layer.alert("修改成功！并向&nbsp;&nbsp;"+deleteUnitName+"&nbsp;&nbsp;发送了不需要填报值班表的消息！", {
+                                                                area:['300px','200px'],
+                                                                icon: 1,
+                                                                skin: 'layui-layer-molv'
+                                                                ,closeBtn: 0
+                                                                ,anim: 4 //动画类型
+                                                            });
+                                                        });
+                                                    }*/
+                                                }
+                                            },
+                                            error:function(data){
+                                                layer.msg("修改失败！", {icon: 0,time:1000});
+                                            }
+                                        });
+                                    }
+                                }
+                                //没有新增，也没有去除
+                                if(data.deleteUnitIds =="" && data.addUnitIds ==""){
+                                    //修改数据
+                                    $.ajax({
+                                        type: "POST",
+                                        url:"/zhbg/zbgl/config/updateConfig",
+                                        data:$("#form").serialize(),
+                                        async: false,
+                                        dataType:"json",
+                                        success:function(data){
+                                            if ('1' == data.flag) {
+                                                layer.msg("修改成功！", {icon: 1,time:1000});
+                                            }
+                                        },
+                                        error:function(data){
+                                            layer.msg("修改失败！", {icon: 0,time:1000});
+                                        }
+                                    });
+                                }
+                            }
+                        },
+                        error:function(data){
+                            layer.msg("修改失败！", {icon: 0,time:1000});
+                        }
+                    });
+                }
+
+            }
+        }
+        TableInit.refTable('right_table');//刷新列表
+        //@ sourceURL=editForm.html
+    }
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'dutyMonth'
+        , title: '值班年月'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index){
+            return "<span data-content='"+row.dutyMonth+"'>"+value+"</span>";
+        }
+    }, {
+        field: 'reportOverDate'
+        , title: '上报截止日期'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index){
+            return "<span data-content='"+row.reportOverDate+"'>"+value+"</span>";
+        }
+    },{
+        field: 'promptMessageContent'
+        , title: '催办提示内容'
+        , width: '20%'
+        , align:"center"
+        , formatter: function (value, row, index){
+            var length = value.length
+            var val = "";
+            if(length>20){
+                val = value.substring(0,19)+"...";
+            }else{
+                val = value;
+            }
+            return "<span data-content='"+row.promptMessageContent+"'>"+val+"</span>";
+        }
+    },{
+        field: 'unitName'
+        , title: '值班单位配置'
+        , width: '20%'
+        , align:"center"
+        , formatter: function (value, row, index){
+            var length = value.length
+            var val = "";
+            if(length>20){
+                val = value.substring(0,19)+"...";
+            }else{
+                val = value;
+            }
+            return "<span data-content='"+row.unitName+"'>"+val+"</span>";
+        }
+    }];
+
+    /**
+     * 获取下一个月
+     *
+     * @date 格式为yyyy-mm-dd的日期，如：2014-01-25
+     */
+    function getNextMonth(date) {
+        var arr = date.split('-');
+        var year = arr[0]; //获取当前日期的年份
+        var month = arr[1]; //获取当前日期的月份
+        var day = arr[2]; //获取当前日期的日
+        var days = new Date(year, month, 0);
+        days = days.getDate(); //获取当前日期中的月的天数
+        var year2 = year;
+        var month2 = parseInt(month) + 1;
+        if (month2 == 13) {
+            year2 = parseInt(year2) + 1;
+            month2 = 1;
+        }
+        var day2 = day;
+        var days2 = new Date(year2, month2, 0);
+        days2 = days2.getDate();
+        if (day2 > days2) {
+            day2 = days2;
+        }
+        if (month2 < 10) {
+            month2 = '0' + month2;
+        }
+
+        var t2 = year2 + '-' + month2;
+        return t2;
+    }
+
+
+</script>
+</body>
+</html>

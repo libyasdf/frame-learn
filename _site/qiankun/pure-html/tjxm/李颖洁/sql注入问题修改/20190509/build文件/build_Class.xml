@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\20190508天津反馈问题"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+	 	<!-- 领导查询统计全选报错问题修改-天津反馈 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/xtpz/service/KqLogServiceImpl.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/statistics/service/DirectorStatsServiceImpl.class"/>
+		<!-- 打卡记录、行政出差、业务出差等列表报错修改-天津反馈-->
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/attendenceQuery.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/xzBusinessTripQuery.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/ywBusinessTripQuery.html"/>
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

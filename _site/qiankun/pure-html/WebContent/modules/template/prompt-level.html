@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>Title</title>
+</head>
+<body>
+
+<button type="button" onclick="promptLevel()">弹窗</button>
+
+<script type="text/javascript" src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+    function promptLevel() {
+        //formType:0  文本（默认）；formType:1  密码；formType:2  文本域
+        layer.prompt({
+            title: "这里是标题", formType: 2, value: "默认输入内容", maxlength: 100 //可输入最大长度，默认500
+            , area: ['500px', '500px'] //自定义文本域宽高
+        }, function (val, index) { //确定按钮回调
+            layer.msg("输入了：" + val);
+            layer.close(index);
+        });
+    }
+</script>
+</body>
+</html>

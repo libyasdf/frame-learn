@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <style type="text/css">
+        .selectUserBorder{
+            width:calc(100% - 25px);
+            min-height:34px;
+            border-bottom:1px solid #eee;
+            display: inline-block;
+        }
+
+        .selectUserBorder .item{
+            display: inline-block;
+            min-width: 80px;
+            border-radius: 5px;
+            border: 1px solid #3C763D;
+            text-align: center;
+            padding-left: 4px;
+            padding-right: 4px;
+            box-sizing: border-box;
+            margin-left:5px;
+            margin-top: 5px;
+        }
+        .selectUserBorder .item .glyphicon-remove{
+            float: right;
+            margin-top: 5px;
+            margin-right: 3px;
+            margin-left: 3px;
+            color: #9FB6CD;
+        }
+    </style>
+</head>
+<body class="formpage_bj">
+<form class="form-horizontal" id="form">
+    <!-- resId -->
+    <input name="resId" id="resId" type="hidden" value="" />
+    <input name="id" id="id" type="hidden" value="" />
+    <input name="orgType" id="orgType" type="hidden" value="" />
+    <input name="superId" id="superId" type="hidden" value="" />
+    <input name="partyBranchId" id="partyBranchId" type="hidden" value="" />
+    <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 党小组所在党支部：</label>
+                        <div class="col-md-4 form-view">
+                            <span id="parentName"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 党小组名称：</label>
+                        <div class="col-md-4">
+                            <input id="orgName" name="orgName" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"> 建立日期：</label>
+                        <div class="col-md-4">
+                            <input type="text" id="creDate" name="creDate" class="form-control" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">
+                        选择人员：
+                    </label>
+                    <div class="col-md-10">
+                        <div id="selectUser2" class="selectUserBorder" style="">
+                        </div>
+                        <input type="hidden" name="selectIds" id="selectIds">
+                        <input type="hidden" name="selectNames" id="selectNames">
+                        <span class="glyphicon glyphicon-user"  onclick="openSelectZtree({'partyBranchId':$('#partyBranchId').val(),'zid':$('#id').val(),'id':'selectIds','name':'selectNames','mark':'selectUser2'})" ></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"> 备注：</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" name="reason" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </div>
+</form>
+
+
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="save();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+
+<script type="text/javascript" src="/modules/dwgl/dzz/dzzgl/js/dxzEdit.js"></script>
+
+<!-- 数据校验 -->
+<script type="text/javascript" src="/modules/dwgl/dzz/dzzgl/js/dxzEditValidator.js"></script>
+
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/modules/dwgl/common/setDyTree.js"></script>
+<script type="text/javascript">
+    laydate.render({
+        elem: '#creDate' //指定元素
+        ,done: function(value) {
+            $('#creDate').val(value).change();
+        }
+    });
+
+
+</script>
+
+</body>
+</html>

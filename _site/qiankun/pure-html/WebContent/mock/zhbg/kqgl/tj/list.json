@@ -1,0 +1,50 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "applicantUnitName": "办公室",
+        "userName": "张三",
+        "sickLeave": "1",
+        "casualLeave": "1",
+        "beLate": "1",
+        "leaveEarly": "1",
+        "absentWork": "1",
+        "businessTripe": "1",
+        "goOut": "1",
+        "overTime1": "1",
+        "overTime2": "1"
+      },
+      {
+        "id": 2,
+        "applicantUnitName": "办公室",
+        "userName": "李四",
+        "sickLeave": "2",
+        "casualLeave": "2",
+        "beLate": "2",
+        "leaveEarly": "2",
+        "absentWork": "2",
+        "businessTripe": "2",
+        "goOut": "2",
+        "overTime1": "2",
+        "overTime2": "2"
+      },
+      {
+        "id": 3,
+        "applicantUnitName": "办公室",
+        "userName": "王五",
+        "sickLeave": "3",
+        "casualLeave": "3",
+        "beLate": "3",
+        "leaveEarly": "3",
+        "absentWork": "3",
+        "businessTripe": "3",
+        "goOut": "3",
+        "overTime1": "3",
+        "overTime2": "3"
+      }
+    ]
+  }
+}

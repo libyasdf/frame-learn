@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <form id="form" class="form-horizontal" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 全宗号：</label>
+                        <div class="col-sm-7">
+                            <select id="general_archive_code" class="form-control" name="general_archive_code">
+                                <option value="03">全宗1</option>
+                                <option value="04">全宗2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 门类名称：</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" id="category_name" name="category_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 门类代号：</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" name="category_code" id="category_code">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 选择模板：
+                        </label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="templateId" id="templateId" >
+	                        	 <option value="">---请选择---</option>
+	                        </select>
+                        </div>
+                    </div>
+                    <!--查询项输入框选择框等结束-->
+
+                    <!--查询重置等按钮-->
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align: center">
+                            <button type="button" class="btn btn-primary" onclick="saveDictionary()">
+                                保&nbsp;&nbsp;存
+                            </button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary" onclick="closeIfram();">
+                                关&nbsp;&nbsp;闭
+                            </button>
+                        </div>
+                    </div>
+                    <!--查询重置等按钮 end-->
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+    <script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script src="/static/core/layer/layer.js"></script>
+    <script type="text/javascript" src="/modules/dagl/xtpz/mlgl/js/categoryValidator.js"></script>
+    <script type="text/javascript" src="/common/js/getrequest.js"></script>
+    <script type="text/javascript" src="/common/js/commonFunction.js"></script>
+    <script type="text/javascript" src="/static/js/common/displayData.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //初始化模板下拉框
+        	$.ajax({
+                type: "GET",
+                url: "/dagl/xtpz/category/getCategoryOption",
+                async: true,
+                dataType: "json",
+                success: function (data) {
+                    for(var i=0;i<data.data.length;i++){
+                    	var aOption="<option value='"+data.data[i].CATEGORY_CODE+"'>"+data.data[i].CATEGORY_NAME+"</option>";
+                    	$("#templateId").append(aOption);
+                    }
+                },
+                error: function (data) {
+                	layer.msg("获取门类模板异常！", { icon: 0, time: 1000 });
+                }
+            });
+        })
+
+        //提交
+        function saveDictionary() {
+            var bootstrapValidator = $("#form").data('bootstrapValidator');
+            //手动触发验证
+            bootstrapValidator.validate();
+            if (bootstrapValidator.isValid()) {
+            	var index;
+            	index=layer.load(1,{shade: [0.5, '#393D49'],content: '处理中，请稍候~',success: function(layero){
+    				layero.find('.layui-layer-content').css({'padding-top':'50px','font-size':'16px','width':'200px','color':'#000000'});
+    			}});
+            	setTimeout(function(){
+            		$.ajax({
+                        type: "POST",
+                        url: "/dagl/xtpz/category/addCategory",
+                        data: {
+                        	newCategoryName:$("#category_name").val(),
+                        	newCategoryCode:$("#category_code").val(),
+                        	templateCategoryCode:$("#templateId").val(),
+                            generalArchiveCode:$('#general_archive_code option:selected').val()
+                        },
+                        async: false,
+                        dataType: "json",
+                        success: function (data) {
+                        	if(data.flag==true){
+                        		layer.confirm('已成功新建门类，请到【系统配置-档号规则管理】模块设置该门类档号规则！', 
+                    					{
+                    						icon:1
+                    						,title:'信息'
+                    						,btn: ['确定'] //按钮
+                    						,btn1:function(){
+                    							layer.close(index);
+                    							//关闭当前窗口
+                    	                        closeIfram();
+                    						},end:function(){
+                    							layer.close(index);
+                    							//关闭当前窗口
+                    	                        closeIfram();
+                    						}
+                    				});
+                        		parent.typeTree.init({});
+                        	}else{
+                        		layer.confirm('创建门类失败，请稍后再试或联系管理员！', 
+                    					{
+                    						icon:0
+                    						,title:'信息'
+                    						,btn: ['确定'] //按钮
+                    						,btn1:function(){
+                    							layer.close(index);
+                    							//关闭当前窗口
+                    	                        closeIfram();
+                    						},end:function(){
+                    							layer.close(index);
+                    							//关闭当前窗口
+                    	                        closeIfram();
+                    						}
+                    				});
+                        	}
+                        },
+                        error: function (data) {
+                        	layer.msg("创建门类失败，请稍后再试或联系管理员！", { icon: 0, time: 2000 });
+                        	layer.close(index);
+                        	//关闭当前窗口
+                            closeIfram();
+                        }
+                    });
+            	},1000);
+            }
+        }
+
+        //关闭当前窗口
+        function closeIfram() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+    </script>
+</body>
+
+</html>

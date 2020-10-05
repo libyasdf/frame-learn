@@ -1,0 +1,294 @@
+﻿<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">事项类型</label>
+                            <div class="col-sm-4">
+                                <input id="filetypename" class="form-control" name="filetypename" placeholder="事项类型" type="text">
+                            </div>
+                            <label class="col-sm-2 control-label">被授权人</label>
+                            <div class="col-sm-4">
+                                <input id="sccreditusername" class="form-control" name="sccreditusername" placeholder="被授权人" type="text"
+                                       style="float: left;width: 85%;vertical-align:center;" onclick="openTree1();">
+                                <!--<img src="/static/images/bhyh/selectUserOrDept.png" title="选择被授权人" style="cursor:pointer;float: left;margin:10px;"
+                                     onclick="openTree1();"/>-->
+                                <input type="hidden" name="sccredituserid" value="" id="sccredituserid">
+                                <input type="hidden" name="sccreditdeptid" value="" id="sccreditdeptid">
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary"
+                                        onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2" onclick="do_auth();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript" src="/common/js/dateutil.js"></script>
+<script type="text/javascript">
+
+    //获取url中的参数，封装成json对象
+    var url = sessionStorage.getItem('url');
+    var paramJson = new GetParameter(url);
+    var role = paramJson.role;//role=1:总收发（查看本单位）；role=2:部门综合（查看本部门）
+
+    /**
+     * 新增授权信息
+     */
+    function do_auth(){
+        layer.open({
+            id:"addAuth",
+            type:2,
+            maxmin:true,
+            title:'新增授权',
+            content:"/modules/workflow/flowSccredit/adminAuthorizedEdit.html?id=&role=" + role,
+            area: ['90%', '90%']
+        });
+    }
+
+    /**
+     * 清空按钮
+     */
+    function clearAll(){
+        $("#filetypename").val("");		//事项类型
+        $("#sccreditusername").val("");	//被授权人
+    }
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [
+        {
+            title: '编号'
+            , width: '5%'
+            , order: "desc"
+            , align: "center"
+            , formatter: function (value, row, index) {
+                //计算序号，并存放业务ID，及已办事项ID
+                var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+                return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+            }
+        }, {
+            field: 'sccenddate'
+            , title: '授权状态'
+            , width: '7%'
+            , align: "center"
+            , formatter: function(value, row, index){
+                if(tab(getNowFormatDate(),value)){
+                    return "授权中";
+                }else{
+                    return "已过期";
+                }
+            }
+        }, {
+            field: 'filetypename'
+            , title: '事项类型'
+            , width: '17%'
+            , align: "center"
+        }, {
+            field: 'username'
+            , title: '授权人'
+            , width: '8%'
+            , align: "center"
+        }, {
+            field: 'deptname'
+            , title: '授权人单位'
+            , width: '15%'
+            , align: "center"
+        }, {
+            field: 'sccreditusername'
+            , title: '被授权人'
+            , width: '7%'
+            , align: "center"
+        }, {
+            field: 'sccbegindate'
+            , title: '生效日期'
+            , width: '13%'
+            , align: "center"
+        }, {
+            field: 'sccenddate'
+            , title: '失效日期'
+            , width: '13%'
+            , align: "center"
+        }, {
+            field: 'sccredittype'
+            , title: '办理类型'
+            , width: '8%'
+            , align: "center"
+            , formatter: function(value, row, index){
+                if(value == '1'){
+                    return "独立办理";
+                }else{
+                    return "共同办理";
+                }
+            }
+        }, {
+            field: 'cz'
+            , title: '操作'
+            , width: '8%'
+            , align: "center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var opt = value.split(",");
+                var html = "";
+                for (var i = 0; i < opt.length; i++) {
+                    if (opt[i] == "update") {
+                        html += "<i class='glyphicon glyphicon-edit' title='修改' style='cursor:pointer;' onclick=\'list.editFun(\""+row.sccreditid+"\")\'></i>&nbsp;&nbsp;";
+                    } else if (opt[i] == "delete") {
+                        html += "<i class='glyphicon glyphicon-trash' title='删除' style='cursor:pointer;' onclick=\'list.deleteFun(\""+row.sccreditid+"\")\'></i>";
+                    }
+                }
+                return html;
+            }
+        }];
+
+    function tab(date1,date2){
+        var oDate1 = stringToDate(date1);
+        var oDate2 = stringToDate(date2);
+        if(oDate1.getTime() > oDate2.getTime()){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //参数  isDay 值为true表示只显示日期  不传显示日期和时间
+    function getNowFormatDate(isDay) {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        var strHour = date.getHours();
+        var strMin = date.getMinutes();
+        var strSeconds = date.getSeconds();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        if (strHour >= 0 && strHour <= 9) {
+            strHour = "0" + strHour;
+        }
+        if (strMin >= 0 && strMin <= 9) {
+            strMin = "0" + strMin;
+        }
+        if (strSeconds >= 0 && strSeconds <= 9) {
+            strSeconds = "0" + strSeconds;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+        if(!isDay){
+            currentdate += " " + strHour + seperator2 + strMin + seperator2 + strSeconds
+        }
+        return currentdate;
+    }
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/sccredit/flowSccreditList",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.filetypename = $("#filetypename").val();
+                params.sccreditusername = $("#sccreditusername").val();
+                params.role = role;
+                return params;
+            },
+            rowStyle: function (row, index) {	//默认样式：居中
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            },
+            readOnlyFn:function () {
+
+            }
+        });
+    });
+
+    //  表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url: '/modules/workflow/flowSccredit/adminAuthorizedEdit.html?id=' + id + "&resId=" + resId + "&role=" + role,
+                title: "修改"
+            })
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/sccredit/del?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+
+    function openTree1() {
+        var deptId = "";
+        if(role == "1"){
+            //总收发（查看本单位）
+            deptId = getcookie('juId');
+        }else if(role == "2"){
+            //部门综合（查看本部门）
+            deptId = getcookie('deptid');
+        }
+        openSelectZtree({'id':'sccredituserid','name':'sccreditusername','parentId':'sccreditdeptid',
+            'deptId':deptId,'isMulti':'1','type':'1','asyn':true,'check':'','cancle':'',
+            'url':'/system/component/tree/getDeptOrUserTree'})
+    }
+
+</script>

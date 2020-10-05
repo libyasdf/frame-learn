@@ -1,0 +1,40 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 4,
+    "rows": [
+      {
+        "id": 1,
+        "creTime": "2019-05-01",
+        "content": "推出新品！！！！！！！！！！",
+        "isValid": "1",
+        "status": "1",
+         "cz": "update,delete"
+      },
+      {
+       "id": 1,
+        "creTime": "2019-05-02",
+        "content": "推出新品！！！！！！！！！！",
+        "isValid": "1",
+        "status": "1",
+         "cz": "update,delete"
+      },
+      {
+       "id": 1,
+        "creTime": "2019-05-03",
+        "content": "推出新品！！！！！！！！！！",
+        "isValid": "1",
+        "status": "1",
+         "cz": "update,delete"
+      },
+      {
+       "id": 1,
+        "creTime": "2019-05-04",
+        "content": "推出新品！！！！！！！！！！",
+        "isValid": "1",
+        "status": "1",
+         "cz": "update,delete"
+      }
+    ]
+  }
+}

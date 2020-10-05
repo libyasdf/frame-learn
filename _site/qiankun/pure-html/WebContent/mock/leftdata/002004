@@ -1,0 +1,22 @@
+{
+	"flag":"1",
+	"data":[{
+            "id":"002004001001",
+           	"style":"/static/images/ico_listsearch.png",
+           	"name":"局领导通讯簿",
+           	"url":"#"
+           },{
+           	"id":"002004001002",
+           	"style":"/static/images/ico_listsearch.png",
+           	"name":"副局、处领导通讯簿",
+           	"url":"#"
+           },{
+             "id":"002004001003",
+             "style":"/static/images/ico_listsearch.png",
+             "name":"局领导出津报备",
+             "url":"/modules/zhbg/ldtxb/jldcjbb/jldcjbbList.html"
+         }]
+}
+
+
+

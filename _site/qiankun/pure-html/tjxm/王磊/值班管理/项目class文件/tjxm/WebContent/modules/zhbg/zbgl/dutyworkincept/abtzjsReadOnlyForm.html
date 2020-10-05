@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>表单页面</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    
+</head>
+
+<style type="text/css">
+    span{ white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;text-align:left}
+</style>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+    	<!-- 隐藏域 -->
+    	<input type="hidden" id="id">
+    	<input type="hidden" id="reportId">
+    	<input type="hidden" id="resId">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">通知信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">值班标题：</label>
+                <div class="col-md-4 form-view">
+                    <span name="title"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">安保时间：</label>
+                <div class="col-md-4 form-view">
+                    <span name="yxq"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">通知内容：</label>
+                <div class="col-md-10  form-view">
+                    <span name="noticeText"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-md-2 control-label">备注：</label>
+                <div class="col-md-10  form-view">
+                    <span name="remark"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">附件：</label>
+                
+                <div class="col-md-10 form-view">
+                	<div class="files row">
+				        <div id="files" class="col-md-12 p-f-30">
+				        </div>
+	    			</div>
+                </div>
+           </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </form>
+    <!-- 部门上报的值班附件 -->
+    <form class="form-horizontal" id="form2">
+	   	<div class="row">
+	      <div class="col-md-12 ">
+	          <div class="block_title">
+	              <span class="name">值班表附件</span>
+	          </div>
+	          <div class="row m-t-15">
+		    	<div class="form-group">
+		    		<label for="" class="col-md-2 control-label"> 附件：</label>
+		          <div class="col-md-10 form-view">
+		           	<div class="files row">
+		        		<div id="files2" class="col-md-12 p-f-30">
+		        		</div>
+		 			</div>
+		          </div>
+	          	</div>
+	          </div>
+	      </div>
+	    </div>
+   </form>
+    <!-- 部门上报的值班附件 结束 -->
+    
+    <!-- 部门上报的值班具体信息  -->
+    <!-- <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">值班详情</span>
+                </div>
+            </div>
+     </div>
+     <div class="col-md-12 ">
+			bootstrap 表格
+			<table id="right_table"></table>
+      </div> -->
+      <!-- 部门上报的值班具体信息结束  -->
+</div>
+   	
+<!-- 按钮区 -->
+<div class="form_btn_area" style="text-align: center;">
+	<button id="preserveBtn" class="btn btn-primary form_btn_area_btn2" onclick="closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭 </button>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script> 
+<script src="/static/js/common/pageEcho.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--文件上传js end-->
+<script type="text/javascript">
+
+	//定义bootatrap-table数据列
+	//sortable：开启列排序，其他参考API
+	var right_table_col = [{
+	  field: 'id'
+	  , title: '序号'
+	  , width: '5%'
+	  , sortable: false
+	  , order: "desc"
+	  , align:"center"
+	  , formatter: function (value, row, index) {
+	      return "<span data-id='"+row.id+"' >"+(index+1)+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+	  } 
+	},{
+	  field: 'watchDate'
+	  , title: '值班日期'
+	  , width: '20%'
+	  , sortable: false
+	  , align:"center"
+	},{
+	  field: 'watchName'
+	  , title: '值班人员'
+	  , sortable: false
+	  , width: '20%'
+	  , align:"center"
+	},{
+	  field: 'phone'
+	  , title: '联系方式'
+	  , sortable: false
+	  , width: '20%'
+	  , align:"center"
+	},{
+	  field: 'shiftLeaderName'
+	  , title: '带班领导'
+	  , sortable: false
+	  , width: '20%'
+	  , align:"center"
+	},{
+	  field: 'shiftLeaderPhone'
+	  , title: '带班领导电话'
+	  , sortable: false
+	  , width: '20%'
+	  , align:"center"
+	}];  
+
+	$(document).ready(function (e) {
+		var theRequest = GetRequest();
+		var id = theRequest.id;
+		var reportId = theRequest.inceptId;
+		var resId = theRequest.resId;
+		//将通知ID存储在隐藏域中
+	 	 $("#id").val(id);
+	 	 $("#reportId").val(reportId);
+	 	 $("#resId").val(resId);
+	 	//初始化表格
+	  	/* TableInit.init({
+	      domId:"right_table",
+	      url:"/zhbg/zbgl/dutytable/list",
+		  height:"500", //定义表格高度
+	      columns:right_table_col,
+	      pagination:false,	//不分页
+	      queryParams:function(params){
+	    	  params.resId = resId;
+	          params.zbNoticeId = reportId;
+	          return params;
+	      }
+		}); */
+	 	$.getJSON("/zhbg/zbgl/dutyworkincept/read?id="+id+"&isRead=1", function (data) {
+            PageEcho.parseData({
+                data: data.data
+         	});
+		});
+		MyFileUpload.init({
+  			viewParams: {"tableId":$("#id").val(),"tableName":"zbgl_duty_notice"},
+  			editOrView:"VIEW",
+  	        maxFileSize:5*1024*1024 //5M
+  	    });
+         MyFileUpload.init({
+ 	    	viewParams: {"tableId":$("#reportId").val(),"tableName":"zbgl_duty_notice_incept"},
+ 	    	editOrView:"VIEW",
+ 	    	fileListId: "files2",//文件列表显示的div
+ 	    	maxFileSize:5*1024*1024 //5M
+ 	    });
+	})
+
+	function closeOpen(){
+		parent.TableInit.refTable('right_table');
+		MyLayer.closeOpen();
+	}
+</script>
+</body>
+</html>
+ 

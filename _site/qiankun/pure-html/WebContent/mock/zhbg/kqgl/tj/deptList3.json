@@ -1,0 +1,47 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 600,
+    "rows": [
+      {
+        "id": 1,
+        "applicantUnitName": "01021",
+        "creUserName": "张三",
+        "date": "2018-07-18",
+        "startDate": "08:10:32",
+        "endDate": "17:32:32",
+        "state": "正常",
+        "businessTripe": "6",
+        "goOut": "6",
+        "overTime1": "6",
+        "overTime2": "6"
+      },
+      {
+        "id": 2,
+        "applicantUnitName": "01021",
+       "creUserName": "李四",
+        "date": "2018-07-19",
+        "startDate": "08:40:32",
+        "endDate": "17:40:10",
+        "state": "迟到",
+        "businessTripe": "4",
+        "goOut": "1.5",
+        "overTime1": "7",
+        "overTime2": "6"
+      },
+      {
+        "id": 3,
+        "applicantUnitName": "01021",
+        "creUserName": "王五",
+        "date": "2018-07-19",
+        "startDate": "08:15:32",
+        "endDate": "17:20:10",
+        "state": "早退",
+        "businessTripe": "8",
+        "goOut": "0",
+        "overTime1": "5",
+        "overTime2": "3"
+      }
+    ]
+  }
+}

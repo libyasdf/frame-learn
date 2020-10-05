@@ -1,0 +1,61 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": 1,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "张三",
+        "riqi": "2019-04-08",
+        "zhuangtai":"草稿",
+        "dingdan": "DD1234534534534342",
+        "shangpin":"肘子,鱼，馒头",
+        "shuliang":"1",
+        "danjia" : "30",
+        "jine": "30",
+        "cz": "update,delete,fabu"
+      },
+      {
+        "id": 1,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "张三",
+        "riqi": "2019-04-08",
+        "shangpin":"馒头，花卷",
+        "shuliang":"2",
+        "danjia" : "0.5",
+        "jine": "1",
+        "dingdan": "DD1234534534534343",
+        "cz": "queren"
+      },
+      {
+        "id": 1,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "李四",
+        "riqi": "2019-04-08",
+        "shangpin":"羊肉，米饭",
+        "shuliang":"1",
+        "danjia" : "50",
+        "jine": "50",
+        "dingdan": "DD1234534534534344",
+        "cz": "queren"
+      },
+      {
+        "id": 1,
+        "bumen": "办公室",
+        "chushi": "一处",
+        "xingming": "王五",
+        "riqi": "2019-04-08",
+        "shangpin":"炒菜",
+        "shuliang":"3",
+        "danjia" : "10",
+        "jine": "30",
+        "dingdan": "DD1234534534534345",
+        "cz": "queren"
+      }
+    ]
+  }
+}

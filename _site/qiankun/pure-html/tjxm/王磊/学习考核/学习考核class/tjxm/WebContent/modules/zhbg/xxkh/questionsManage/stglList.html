@@ -1,0 +1,527 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid">
+    <div class="row" style="height:100%;">
+        <!--查询--><div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div class="folderBar">
+                    <i class="glyphicon glyphicon-plus-sign" onclick="addType('0');" style="font-size:18px;cursor: pointer;" title="新增试题类型"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="glyphicon glyphicon-edit" onclick="editType();" style="font-size:18px;cursor: pointer;" title="修改试题类型"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="glyphicon glyphicon-trash" onclick="deletType();" style="font-size:18px;cursor: pointer;" title="删除试题类型"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="glyphicon glyphicon-search" onclick="showSearchFrame()" style="font-size:18px;cursor: pointer;" title="查询试题类型"></i>
+                </div>
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style="display:none;padding-left:5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="searchType();" >查询</button>
+                    </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:606px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details" >
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;" id="queryDiv">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 题干：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="describe"/>
+                            </div>
+                             <label class="col-md-1 control-label"> 题型：</label>
+                            <div class="col-md-3">
+                                <select id="sel" class="form-control" name="questionType">
+		                            <option value="0">---请选择---</option>
+		                            <option value="1">单选</option>
+		                            <option value="2">多选</option>
+		                            <option value="3">判断</option>
+		                            <option value="4">填空</option>
+		                            <option value="5">简答</option>
+                        		</select>
+                            </div>
+                            <label class="col-md-1 control-label"> 难易程度：</label>
+                            <div class="col-md-3">
+                                 <select class="form-control" name="difficultyLevel">
+		                            <option value="0">---请选择---</option>
+		                            <option value="1">简单</option>
+		                            <option value="2">一般</option>
+		                            <option value="3">困难</option>
+                       			 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2" style="width:100%;text-align: center">
+                                <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table')" > 查&nbsp;&nbsp;询 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary" onclick="clearAll();" > 重&nbsp;&nbsp;置 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+       
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="addQuestion();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+                <button class="list_table_btn2"
+                        onclick="commitSelected();">
+                    <span class="glyphicon glyphicon-send"></span> 批量提交
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+         </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/zhbg/xxkh/tree/js/dictionaryTypeTree.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 页面常量配置config.js -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript">
+
+//获得左侧模块参数
+var url = $("#left_ul").find("a.active").attr("url");
+var parameter = new GetParameter(url);
+/**
+ *新增试题
+ */
+function addQuestion(){
+	//获取树所选节点
+	var resId = $("#left_ul").find("a.active").attr("id");
+	var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+	//alert(nodes[0].id+":"+nodes[0].name);
+	MyLayer.layerOpenUrl({url:'/modules/zhbg/xxkh/questionsManage/stglEditForm.html?nodeId='+nodes[0].id+"&resId="+resId+"&treeType="+parameter.treeType,title:'新增试题信息',width:'90%',height:'90%'})
+}
+
+//增加试题类型
+function addType(type) {
+	//清空类型查询框内容
+	$("#typeName").val("");
+    // 判断是否已经选择了某个节点
+    var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+  	//获取url中的参数
+	var url = $("#left_ul").find("a.active").attr("url");
+	var parameter = new GetParameter(url);
+    if (nodes.length == 0) {
+    	if($.fn.zTree.getZTreeObj("treeDemo").getNodes().length > 0){
+    		layer.msg('请选择试题类型', {icon: 0});
+    		return false;
+    	}
+    	var url = "/modules/zhbg/xxkh/tree/dictionaryEditForm.html?treeType="+parameter.treeType+"&type=0";
+		var title = "新增试题类型";
+		MyLayer.layerOpenUrl({
+            url:url,
+            title:title,
+            width:"60%",
+            height:"50%"
+        });
+    } else if (type) {
+        var pid = nodes[0].id;
+        var mark = nodes[0].mark;
+        var url = "/modules/zhbg/xxkh/tree/dictionaryEditForm.html?treeType="+parameter.treeType+"&type=";
+        var title = "";
+        if ("0" == type) {
+            url = url + "0&pId=" + pid;
+            title = "新增试题类型";
+        }/*  else if ("1" == type) {
+            url = url + "1&mark=" + mark;
+            title = "新增试题项";
+        } */
+        MyLayer.layerOpenUrl({
+            url:url,
+            title:title,
+            width:"770px",
+            height:"250px"
+        });
+    }
+}
+
+//修改试题类型
+function editType(){
+	//清空类型查询框内容
+	$("#typeName").val("");
+	// 判断是否已经选择了某个节点
+    var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+    if (nodes.length == 0) {
+        layer.msg('请选择试题类型', {icon: 0});
+    } else {
+        var id = nodes[0].id;
+        var mark = nodes[0].mark;
+        var url = "/modules/zhbg/xxkh/tree/dictionaryEditForm.html?id=" + id;
+        MyLayer.layerOpenUrl({
+            url:url,
+            title:"修改试题类型",
+            width:"770px",
+            height:"250px"
+        });
+    }
+}
+
+//删除试题类型
+function deletType(){
+	//清空类型查询框内容
+	$("#typeName").val("");
+	// 判断是否已经选择了某个节点
+    var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+    if (nodes.length == 0) {
+		layer.msg('请选择试题类型', {icon: 0});
+    } else {
+    	layer.confirm("确定要删除该类型吗？",{icon:3},function(){
+    		$.ajax({
+                type: "POST",
+                url:"/zhbg/xxkh/tree/deleteType",
+                data:{id:nodes[0].id ,mark:nodes[0].mark},
+                dataType:"json",
+                success:function(data){
+                    if ('1' == data.flag) {
+                        layer.msg("删除成功！", {icon: 1,time:1000}, function (index) {
+                            typeTree.delNode(nodes[0].id);
+                        });
+                    }else{
+                        layer.msg("该类型下或子类型有试题，不可删除！", {icon: 5});
+					}
+                },
+                error:function(data){
+                }
+            });
+    	});
+    }
+}
+
+//查询试题类型
+function searchType(){
+    typeTree.searchNodes($("#typeName").val());
+}
+
+// 查询窗口
+function showSearchFrame() {
+	//清空类型查询框内容
+	$("#typeName").val("");
+    var search = $("#searchDiv");
+    if (search.is(":hidden")) {
+        search.show();
+        $("#typeName").focus();
+    } else {
+        search.hide();
+    }
+}
+
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+  //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+			title : "",
+			width : '3%',
+			align : "center",
+			checkbox : "true",
+			formatter : function(value, row, index) {
+				 if (row.state == "1")
+			         return {
+			             disabled : true,//设置是否可用
+			     };
+			}
+		},{
+    	 	title: '序号'
+ 	        , width: '5%'
+ 	        , order: "desc"
+ 	        , align: "center"
+ 	        , formatter: function (value, row, index) {
+ 	        	//计算序号，并存放业务ID，及已办事项ID
+ 	        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+ 	            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+ 	            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+ 	            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+ 	        }
+ 	    },{
+	        field: 'describe'
+	        , title: '题干'
+	        , width: '32%'
+	        , align:"center"
+	        , formatter: function (value, row, index) {
+	            	if(value!=null){
+	            		var length = value.length
+	    	  	   	      var val = '';
+	    	  	   	      if(length>20){
+	    	  	   	    	  val = value.substring(0,21)+"...";
+	    	  	   	      }else{
+	    	  	   	    	  val = value;
+	    	  	   	      }
+	      	   	   		return  "<span title='"+value+"'>"+val+"</span>";
+	            	}else{
+	            		return "";
+	            	}
+	            }
+	    }, {
+	        field: 'questionType'
+	        , title: '题型'
+	        , width: '5%'
+	        , sortable: true
+	        , align:"center"
+	        ,formatter: function (value, row, index) {
+	        	if(Config.danXuan==value){
+	        		value="单选";
+	        	}else if(Config.duoXuan==value){
+	        		value="多选";
+	        	}else if(Config.panDuan==value){
+	        		value="判断";
+	        	}else if(Config.tianKong==value){
+	        		value="填空";
+	        	}else if(Config.jianDa==value){
+	        		value="简答";
+	        	}
+	            return "<span data-id='"+row.id+"'>"+value+"</span>";
+	        }
+	    },{
+	        field: 'difficultyLevel'
+	            , title: '难易程度'
+	            , width: '10%'
+	            , sortable: true
+	            , align:"center"
+	            ,formatter: function (value, row, index) {
+	            	if(Config.jianDan==value){
+	            		value="简单";
+	            	}else if(Config.yiBan==value){
+	            		value="一般";
+	            	}else if(Config.kunNan==value){
+	            		value="困难";
+	            	}
+	                return "<span data-id='"+row.id+"'>"+value+"</span>";
+	            }
+	    },{
+	        field: 'creUserName'
+	        , title: '创建人'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+	    },{
+	        field: 'creTime'
+	        , title: '创建时间'
+	        , sortable: true
+	        , width: '15%'
+	        , align:"center"
+	    },{
+	        field: 'state'
+	        , title: '状态'
+	        , sortable: true
+	        , width: '10%'
+	        , align:"center"
+	       	,formatter: function (value, row, index) {
+	       			//alert("row:"+row+",index:"+index);
+	            	if(Config.draft==value){
+	            		value="草稿";
+	            	}else if(Config.commit==value){
+	            		value="已提交";
+	            	}
+	                return "<span data-id='"+row.id+"'>"+value+"</span>";
+	            }
+	    },{
+	        field: 'cz'
+	        , title: '操作'
+	        , width: '15%'
+	        , align:"center"
+	        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+	            var opt = value.split(",");
+	            var html = "";
+	            for (var i = 0; i < opt.length; i++) {
+	               if(opt[i] == "update") {
+	                    html +="<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+	               }else if(opt[i] == "delete") {
+	                    html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>"
+	               }
+	            }
+	            return html;
+	        }
+	    }];
+
+    $(document).ready(function (e) {
+    	 //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        
+      	//获取url中的参数
+    	var url = $("#left_ul").find("a.active").attr("url");
+    	var resId = $("#left_ul").find("a.active").attr("id");
+    	var parameter = new GetParameter(url);
+        typeTree.init({mark:parameter.mark,treeType:parameter.treeType});
+        
+        var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+		var listUrl = "/zhbg/xxkh/question/getList?type="+parameter.treeType+"&resId="+resId;
+		//alert(JSON.stringify($.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()));
+		if(nodes.length!=0){
+			listUrl = "/zhbg/xxkh/question/getList?type="+parameter.treeType+"&resId="+resId+"&nodeId="+nodes[0].id;
+		}
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:listUrl,
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+				params.resId = $('#left_ul').find('a.active').attr("id");
+                params.difficultyLevel = $('#queryDiv select[name=\'difficultyLevel\']').val();
+                params.questionType = $('#queryDiv select[name=\'questionType\']').val();
+                params.describe = $('#queryDiv input[name=\'describe\']').val();
+                return params;
+            },
+            readOnlyFn:function(){
+            	$('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/xxkh/questionsManage/stglReadOnlyForm.html?id='+id+"&opertation=VIEW&resId="+resId,title:'试题基本信息',width:'85%',height:'85%'});
+                });
+                $('tr.readOnly').find('td:eq(1)').bind('mouseover', function (e) {
+              		 var txt = $(this).find("span[data-content]").attr("data-content");
+                           $(this).attr("title",txt) 
+       	         		 
+                });
+            }
+        });
+    });
+
+//    表格数据项的操作
+    var list = {
+        editFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	var nodes = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes();
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/xxkh/questionsManage/stglEditForm.html?id='+id+"&resId="+resId+"&opertation=UPDATE&nodeId="+nodes[0].id,
+                title:"修改试题信息",
+                width:"90%",
+                height:"90%"
+            })
+        },
+        deleteFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url:'/zhbg/xxkh/question/deleteById?id='+id+"&resId="+resId,
+                tableId:'right_table',
+            })
+        }
+    }
+    
+    /**
+     * 清空查询项
+     */
+    function clearAll() {
+    	$("div#queryDiv").find("input[name='describe']").val("");
+    	$("div#queryDiv").find("select[name='questionType']").val("0");
+    	$("div#queryDiv").find("select[name='difficultyLevel']").val("0");
+    }
+
+    /**
+     * 此方法提交试题后调用，打开试题只读页面
+     */
+	function openReadonly(pId,resId){
+        MyLayer.layerOpenUrl({url:'/modules/zhbg/xxkh/questionsManage/stglReadOnlyForm.html?id='+pId+"&opertation=VIEW&resId="+resId,title:'试题基本信息',width:'85%',height:'85%'});
+	}
+    
+	/**
+     * 试题列表批量提交试题
+     */
+    function commitSelected(){
+    	//异步更新试题状态
+		var ids="";
+		var idArray = $('#right_table').bootstrapTable('getAllSelections');
+		for(var i=0;i<idArray.length;i++){
+			ids = ids+idArray[i].id+",";
+		}
+		if(ids.length > 0){
+			ids = ids.substring(0,ids.length-1);
+		}
+		if(ids.length == 0){
+			layer.msg("请选择需要提交的试题！", {icon: 0});
+			return false;
+		}
+    	var index = layer.confirm('确定提交吗？提交后将不能对试题做修改！', 
+				{
+					icon:3
+					,title:'信息'
+					,btn: ['确定','取消'] //按钮
+					,btn1:function(index){
+						//刷新列表页面
+						$.ajax({
+							type:"post",
+							url:"/zhbg/xxkh/question/commitSelected?questionIds="+ids+"&resId="+$('#left_ul').find('a.active').attr("id"),
+							async: true,
+							dataType:"json",
+							success:function(data){
+								if(data.flag=='1'){
+									layer.msg("批量提交成功！", {icon: 1});
+									//刷新列表
+									parent.TableInit.refTable('right_table');
+								}else{
+									layer.msg("批量提交失败！", {icon: 0});
+								}
+							},
+							error:function(data){
+								layer.msg("请稍后再试！", {icon: 0});
+							}
+						});
+					},btn2:function(){
+						layer.close(index);
+					}
+			});
+    }
+
+</script>

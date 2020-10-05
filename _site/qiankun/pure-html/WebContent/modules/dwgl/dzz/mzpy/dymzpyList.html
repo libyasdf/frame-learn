@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+</head>
+<body class="formpage_bj">
+<form class="form-horizontal" id="form">
+    <!-- resId -->
+    <input name="resId" id="resId" type="hidden" value="">
+    <input name="reviewid" id="reviewid" type="hidden" value="">
+    <input name="partyId" id="partyId" type="hidden" value="">
+    <input name="partyIds" id="partyIds" type="hidden" value="">
+    <input name="partyNames" id="partyNames" type="hidden" value="">
+    <input name="orgId" id="orgId" type="hidden" value="">
+
+    <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">民主评议</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button  type ="button" class="list_table_btn2" onclick="list.addFun()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </div>
+</form>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+
+<script src="/static/js/common/tablelist.js"></script>
+<!--d党员树的js-->
+<script type="text/javascript" src="/modules/dwgl/common/orgUserTree.js"></script>
+
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<script type="text/javascript">
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var theRequest = GetRequest();
+    $("#orgId").val(theRequest.orgId);
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span recordId='"+row.id+"'>"+orderNum+"</span>";
+        }
+    },  {
+        field: 'partyId'
+        , title: '党员ID'
+        , width: '12%'
+        , align: "center"
+        ,visible:false
+    }, {
+        field: 'partyName'
+        , title: '姓名'
+        , width: '12%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+
+    },  {
+        field: 'startTime'
+        , title: '开始时间'
+        , width: '12%'
+        , align: "center"
+    }, {
+        field: 'endTime'
+        , title: '结束时间'
+        , width: '15%'
+        , align: "center"
+
+    }, {
+        field: 'reviewResults'
+        , title: '评议结果'
+        , width: '15%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            if(value == "01"){
+                return "<span>受表彰的</span>"
+            }else if(value == "02"){
+                return "<span>授予优秀党员称号</span>"
+            }else if(value == "03"){
+                return "<span>合格</span>"
+            }else if(value == "04"){
+                return "<span>基本合格</span>"
+            }else if(value == "05"){
+                return "<span>基本不合格</span>"
+            }else if(value == "06"){
+                return "<span>不合格</span>"
+            }else if(value == "07"){
+                return "<span>未评定</span>"
+            }
+        }
+
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '12%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            html += "<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\",\"" + row.partyId + "\")\'></i>&nbsp;&nbsp;"
+            html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/djgl/ddjs/dzz/mzpy/getMzpyListDymzpy",
+            columns: right_table_col,
+            queryParams: function (params) {
+                var theRequest = GetRequest();
+                $("#reviewid").val(regVlaue(theRequest.id))
+                params.reviewid = $("#reviewid").val();
+                params.isAll =false;
+                return params;
+            },
+            readOnlyFn : function() {
+                $('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+                $('tr.readOnly').find('td:not(:last)').unbind('click')
+                        .bind('click',function(e) {
+
+                            //                    取消事件冒泡
+                            var evt = e ? e
+                                    : window.event;
+                            if (evt.stopPropagation) {
+                                evt
+                                        .stopPropagation();
+                            } else {
+                                evt.cancelBubble = true;
+                            }
+                            //                    取消事件冒泡 end
+                            var id = $(this).parent().find("span[recordid]").attr("recordid");
+                            var resId = $('#left_ul').find('a.active').attr("id");
+                            MyLayer.layerOpenUrl({
+                                url : '/modules/dwgl/dzz/mzpy/dymzpyReadOnlyEditForm.html?id='+id+"&resId="+resId+"&opertation=VIEW",
+                                title : '民主评议',
+                                width : '90%',
+                                height : '85%'
+                            });
+                        });
+            }
+        })
+    });
+
+    //表格数据项的操作
+    var list = {
+        addFun: function (id) {
+         /*   MyLayer.layerOpenUrl({
+                url: '/modules/dwgl/common/dyTree.html',
+                width: "770px",
+                height: "551px",
+                title: "新增"
+            })*/
+         var  nameAndId =  openSelectZtree({'deptId':$("#orgId").val(),'id':'partyIds','name':'partyNames','check':'ps','cancle':'ps','isMulti':'0','type':'1','asyn':true,'cascade':'1'})
+        },
+        editFun: function (id,partyId) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+
+                url: '/modules/dwgl/dzz/mzpy/dymzpyEditForm.html?id='+id+"&resId="+resId+"&partyId="+partyId+"&opertation=EDIT",
+                title: "修改党员民主评议"
+            })
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/djgl/ddjs/dzz/mzpy/deleteByIdDymzpy?id='+ id+"&resId="+resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+    function putBackData(){
+        // 通过iframe 操作
+        var iframeId = $("#selectZtree").find('iframe').attr('id')
+        var res = document.getElementById(iframeId).contentWindow.CommonUtil.saveSelectedData();
+
+        //关闭窗口
+        var partyNames =res.names;
+        var partyIds =res.ids;
+        layer.close(_index);
+        $("#partyIds").val(partyIds);
+        $("#partyNames").val(partyNames);
+        var theRequest = GetRequest();
+        var datas = {"partyNames":partyNames,"partyIds":partyIds,"reviewid":regVlaue(theRequest.id),"startTime":regVlaue(theRequest.startTime),"endTime":regVlaue(theRequest.endTime)};
+        $.ajax({
+            type: "POST",
+            url: "/djgl/ddjs/dzz/mzpy/saveDymzpyNew",
+            data:datas,
+            async: false,
+            success:function(json){
+                if (json.flag == '1') {
+                    res = json.flag;
+                    $("#id").val(json.data.id);
+                 //   MyFileUpload.saveDocIdToAffix({docId:json.data.id,fileListId: "files"});
+                }
+            },
+            error:function(){
+            }
+        });
+        console.log(res);
+        TableInit.refTable('right_table');
+        return res;
+    }
+
+
+    /**
+     * 空值设置
+     * @param val
+     * @returns
+     */
+    function regVlaue(val){
+        if(!val||val=="undefined"){
+            val = "";
+        }
+        return val;
+    }
+
+
+</script>
+</body>
+</html>

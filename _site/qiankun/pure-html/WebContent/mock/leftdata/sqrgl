@@ -1,0 +1,28 @@
+{
+  "flag": "1",
+  "data": [
+             {
+                "name": "申请人管理",
+                "style": "/static/images/ico_listsearch.png",
+                "id": "001",
+                "url":"#",
+                     "childrenList":[{
+                           "id":"005001",
+                           "name":"申请人简要信息",
+                           "url":"/modules/dwgl/sqrgl/sqrjyqk/sqrjyxxEditForm.html"
+                       },{
+                            "id":"005002",
+                            "name":"申请人信息",
+                            "url":"/modules/dwgl/sqrgl/sqrxx/sqrxxList.html"
+                        },{
+                           "id":"005003",
+                           "name":"积分分子信息",
+                           "url":"/modules/dwgl/sqrgl/jjfz/jjfzList.html"
+                       },{
+                             "id":"005004",
+                             "name":"发展对象",
+                             "url":"/modules/dwgl/sqrgl/fzdx/fzdxList.html"
+                       }]
+              }
+  ]
+}

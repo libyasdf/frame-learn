@@ -1,0 +1,135 @@
+body {
+/*    background:rgb(200,200,190)*/
+	width: 100%;
+	position: absolute;
+	min-width: 1357px;
+	height: 100%;
+	/* background-image: url(https://www.w3school.com.cn/i/eg_bg_06.gif); */
+}
+h1 {
+    width: 100%;
+    /*text-align: center*/
+}
+.linkimg {
+    width: 200px;
+    height: 50px;
+}
+#libytable {
+	width: 400px;
+	border: 2px dotted #666666;
+	/*border-color: black;*/
+	/*background-image: url(https://www.w3school.com.cn/i/eg_bg_07.gif);*/
+}
+#libytable tr td{
+	text-align: center;
+}
+#libytable tr th {
+	/*text-align: center;*/
+}
+
+.boxDrag{
+	height: 200px;
+	width: 200px;
+	border: 3px solid #ffffff;
+}
+#div1 {
+	border: 2px dotted #0000ff;
+}
+.imgBox {
+	width: 550px;
+	height: 550px;
+}
+header {
+	background-color:black;
+	width: 100%;
+    color: #ffffff;
+    font-family: times;
+    text-align:center;
+    padding:5px;
+}
+nav {
+	line-height:30px;
+    background-color:#eeeeee;
+    /*height:300px;*/
+    width:200px;
+    float:left;
+    padding:5px;
+}
+section {
+	width:1050px;
+	background-color: #fffeee;
+    float:left;
+    padding:10px;
+}
+myHero {
+	display: block;
+    background-color: #ddd;
+    padding: 50px;
+    font-size: 30px;
+}
+#mycanvas {
+	width: 200px;
+	height: 200px;
+	border: 1px solid #c2c2c2;
+}
+.relative{
+  width: 200px;
+  height:200px;
+  border: 2px solid #FFB5BF;
+  position:relative;
+}
+.absolute{
+  width: 100px;
+  height: 100px;
+  border:1px solid #94E8FF;
+  position:absolute;
+  bottom:20px;
+  right:10px;
+}
+.fixed {
+    width: 90px;
+    height: 100px;
+    background-color: #FFB5BF;
+    position: fixed;
+    right: 300px;
+    bottom: 40px;
+}
+footer {
+    background-color:black;
+    /*width: 100%;*/
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+.table_header {
+	margin:10px;
+	text-align:center;
+	font-family: 微软雅黑;
+	font-size: 16px;
+	font-weight: bold;
+	color: #255e95;
+}
+.table_liby{
+	text-align:center;
+	/* background-color: "#cccccc"; */
+}
+.table_th_liby {
+	text-align:center;
+	font-family: 微软雅黑;
+	font-size: 16px;
+	font-weight: bold;
+	color: #255e95;
+}
+.table_footer {
+	float: right;
+	margin-right: 40px;
+}
+.text_label{
+	width: 5em;
+	height: 3em;
+	background-color: #2c3e50;
+	border-radius: 2.5em;
+	transition: all 0.5s ease;
+	cursor: pointer;
+}

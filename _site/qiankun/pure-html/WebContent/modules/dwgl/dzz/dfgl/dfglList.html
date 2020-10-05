@@ -1,0 +1,528 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css" href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>-
+        </div>
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div class="vertify-panel vertify-details" >
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <input  id="associativeUnitId" name="associativeUnitId" type="hidden" value="" >
+                <input name="partyOrganizationId" id="partyOrganizationId" type="hidden" value="">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <!--查询项输入框选择框等开始-->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 年份：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="annual" name="annual"/>
+                                </div>
+                               <!-- <label class="col-md-2 control-label"> 党组织名称：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="partyOrganizationName" name="partyOrganizationName"/>
+                                </div>-->
+                            </div>
+                            <!--查询项输入框选择框等结束-->
+
+                            <!--查询重置等按钮-->
+                            <div class="form-group">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                        重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                            <!--查询重置等按钮 end-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button class="list_table_btn2" onclick="list.addFun()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 党费缴纳
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/dwgl/common/dzzTree.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!--<script src="/static/core/laydate/laydate.js"></script>-->
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<script type="text/javascript">
+    var resource = {
+        resId : $('#left_ul').find('a.active').attr("id")
+    }
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#annual'
+        ,type: 'year'
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col1 = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'annual'
+        , title: '年份'
+        , width: '10%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+    },  {
+        field: 'monthval'
+        , title: '月份'
+        , width: '9%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            if(value == "1"){
+                return "<span>1月</span>"
+            }else if(value == "2"){
+                return "<span>2月</span>"
+            }else if(value == "3"){
+                return "<span>3月</span>"
+            }else if(value == "4"){
+                return "<span>4月</span>"
+            }else if(value == "5"){
+                return "<span>5月</span>"
+            }else if(value == "6"){
+                return "<span>6月</span>"
+            }else if(value == "7"){
+                return "<span>7月</span>"
+            }else if(value == "8"){
+                return "<span>8月</span>"
+            }else if(value == "9"){
+                return "<span>9月</span>"
+            }else if(value == "10"){
+                return "<span>10月</span>"
+            }else if(value == "11"){
+                return "<span>11月</span>"
+            }else if(value == "12"){
+                return "<span>12月</span>"
+            }
+        }
+    }, {
+        field: 'superName'
+        , title: '上级党组织名称'
+        , width: '15%'
+        , align:"center"
+    },{
+        field: 'partyOrganizationName'
+        , title: '党组织名称'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'partyName'
+        , title: '党员姓名'
+        , width: '10%'
+        , align: "center"
+
+    }, {
+        field: 'approvedMonthPartyfee'
+        , title: '核定交纳金额'
+        , width: '10%'
+        , align: "center"
+        , hidde: ""
+    }, {
+        field: 'currentPaymentAmount'
+        , title: '实际交纳金额'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+/*
+            html += "<i title='修改' class='glyphicon glyphicon-edit' style='cursor: pointer' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+*/
+            html += "<i title='删除' class='glyphicon glyphicon-trash' style='cursor: pointer' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+            return html;
+        }
+    }];
+
+    if(getcookie("rolesNo").indexOf("D478") >= 0){
+        dzzTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"user"});
+    }else{
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+            dataType: "json",
+            success: function (data) {
+                dzzTree.init({id:data.data,type:"user"});
+            },
+            error: function (data) {
+            }
+        })
+    }
+    var right_table_col2 = [{
+        field: 'id'
+        , title: '序号'
+        , width: '10%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-yearCurrentPaymentAmount='"+row.yearCurrentPaymentAmount+"' data-partyOrganizationName='"+row.partyOrganizationName+"' data-annual='"+row.annual+"'  data-monthval='"+row.monthval+"' data-partyOrganizationId='"+row.partyOrganizationId+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'annual'
+        , title: '年份'
+        , width: '15%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+    },  {
+        field: 'monthval'
+        , title: '月份'
+        , width: '15%'
+        , sortable: true
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            if(value == "1"){
+                return "<span>1月</span>"
+            }else if(value == "2"){
+                return "<span>2月</span>"
+            }else if(value == "3"){
+                return "<span>3月</span>"
+            }else if(value == "4"){
+                return "<span>4月</span>"
+            }else if(value == "5"){
+                return "<span>5月</span>"
+            }else if(value == "6"){
+                return "<span>6月</span>"
+            }else if(value == "7"){
+                return "<span>7月</span>"
+            }else if(value == "8"){
+                return "<span>8月</span>"
+            }else if(value == "9"){
+                return "<span>9月</span>"
+            }else if(value == "10"){
+                return "<span>10月</span>"
+            }else if(value == "11"){
+                return "<span>11月</span>"
+            }else if(value == "12"){
+                return "<span>12月</span>"
+            }
+        }
+    }, {
+        field: 'superName'
+        , title: '上级党组织名称'
+        , width: '15%'
+        , align:"center"
+    },{
+        field: 'partyOrganizationName'
+        , title: '党组织名称'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'yearApprovedMonthPartyfee'
+        , title: '核定交纳总金额'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'yearCurrentPaymentAmount'
+        , title: '实际交纳总金额'
+        , width: '15%'
+        , align: "center"
+    }];
+    var nodeId ="";
+    var orgType ="";
+    var type ="";
+    if( $.fn.zTree.getZTreeObj("treeDemo")){
+        var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+        nodeId = node.id;
+        orgType = node.orgType;
+        type =node.type;
+    }
+    if(type=="org"){
+        $('#right_table').bootstrapTable('destroy');
+        TableInit2(nodeId);
+    }else if(type=="user"){
+        $('#right_table').bootstrapTable('destroy');
+        TableInit1(nodeId,type);
+    }
+    function TableInit1(nodeId,type){
+        TableInit.init({
+            domId: "right_table",
+            url: "/djgl/ddjs/dzz/dfgl/getDfglList?id="+nodeId+"&type="+type+"&partyId="+nodeId,
+            columns: right_table_col1,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为箭头
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":""}
+                };
+            },
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                //   params.partyOrganizationId =node.zid;
+                params.annual = $("#annual").val();
+                if(node.type=="user"){
+                    params.partyId = node.id;
+                }
+                return params;
+            }
+        })
+
+    }
+    function TableInit2(nodeId){
+        TableInit.init({
+            domId: "right_table",
+            url: "/djgl/ddjs/dzz/dfgl/dzbList?partyOrganizationId="+nodeId,
+            sidePagination:"client",
+            columns: right_table_col2,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                //   params.partyOrganizationId =node.zid;
+                params.annual = $("#annual").val();
+                if(node.type=="user"){
+                    params.partyId = node.id;
+                }
+                return params;
+            },
+            responseHandler:function (res) {//参数sidePagination为server时，该方法必须返回total和rows
+                if (res.flag === '1') {
+                    return res.data.rows;
+                } else {
+                    layer.msg("加载列表发生错误!", {icon: 0});
+                }
+            },
+            readOnlyFn: function () {
+               /* if( $.fn.zTree.getZTreeObj("treeDemo")){
+                    var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+                    nodeId = node.id
+                    var datas = {"id":nodeId};
+                    if(node.orgType=="666"){
+                        document.getElementById("labelId").style.display='none';
+                        document.getElementById("user").style.display = "none";
+                    }else{
+                        document.getElementById("labelId").style.display='block';
+                        document.getElementById("user").style.display = "block";
+                        httpRequest("get","/djgl/ddjs/shyk/zbdydh/getOrgName",datas,function (data){
+                            var  unitId =data.data[0].ASSOCIATIVE_UNIT_ID;
+                            $("#associativeUnitId").val(unitId);
+                        });
+                    }
+
+                }*/
+                $('tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");//悬停显示
+                $('tr.readOnly').find('td:not(:last)').unbind('click')
+                        .bind('click', function (e) {
+
+                            //                    取消事件冒泡
+                            var evt = e ? e
+                                    : window.event;
+                            if (evt.stopPropagation) {
+                                evt
+                                        .stopPropagation();
+                            } else {
+                                evt.cancelBubble = true;
+                            }
+                            //                    取消事件冒泡 end
+                            var id = $(this).parent().find("span[recordid]").attr("recordid");
+                            var annual = $(this).parent().find("span[data-annual]").attr("data-annual");
+                            var monthval = $(this).parent().find("span[data-monthval]").attr("data-monthval");
+                            var partyOrganizationId = $(this).parent().find("span[data-partyOrganizationId]").attr("data-partyOrganizationId");
+                            var partyOrganizationName = $(this).parent().find("span[data-partyOrganizationName]").attr("data-partyOrganizationName");
+                            var yearCurrentPaymentAmount = $(this).parent().find("span[data-yearCurrentPaymentAmount]").attr("data-yearCurrentPaymentAmount");
+                            var resId = $('#left_ul').find('a.active').attr("id");
+                            MyLayer.layerOpenUrl({
+                                url: '/modules/dwgl/dzz/dfgl/dzbDfglReaadOnlyEditForm.html?annual=' + annual + "&monthval=" + monthval+ "&partyOrganizationName=" +encodeURI(encodeURI(partyOrganizationName))  + "&yearCurrentPaymentAmount=" + yearCurrentPaymentAmount + "&partyOrganizationId=" + partyOrganizationId+ "&opertation=VIEW",
+                                title: '党内表彰',
+                                width: '90%',
+                                height: '85%'
+                            });
+                        });
+            }
+        })
+
+    }
+    function refreshTable(treeNode) {
+        if(treeNode.type=="org"){
+            $('#right_table').bootstrapTable('destroy');
+            TableInit2(treeNode.id);
+        }else if(treeNode.type=="user"){
+            $('#right_table').bootstrapTable('destroy');
+            TableInit1(treeNode.id,treeNode.type);
+        }
+
+    }
+   /* function refreshTable(treeNode) {
+        var opt = {
+            url: "/djgl/ddjs/dzz/dfgl/getDfglList?id="+treeNode.id+"&type="+treeNode.type+"&partyId="+treeNode.id,
+            pageNumber:1,
+            pageSize:10
+        };
+        $('#right_table').bootstrapTable('refresh',opt);
+    }*/
+
+    //表格数据项的操作
+    var list = {
+        addFun:function(id) {
+            if ($.fn.zTree.getZTreeObj("treeDemo")) {
+                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                var node = treeObj.getSelectedNodes()[0];
+                var parentNode = node.getParentNode();
+                var resId = $('#left_ul').find('a.active').attr("id");
+                var orgName = "";
+                var orgId = "";
+                if (node.type == "user") {
+                    var datas = {"id": node.pId};
+                    httpRequest("get", "/djgl/ddjs/shyk/zbdydh/getOrgName", datas, function (data) {
+                        if(node.orgType=="666"){
+                            orgName = data.data[0].SUPER_ORG_NAME;
+                            orgId = data.data[0].SUPER_ORG_ID;
+                        }else{
+                            orgName = data.data[0].ORG_NAME;
+                            orgId =node.pId;
+                        }
+                    });
+                    MyLayer.layerOpenUrl({
+                        url: '/modules/dwgl/dzz/dfgl/dfglEditForm.html?orgName=' + encodeURI(encodeURI(orgName)) + "&partyName=" + encodeURI(encodeURI(node.name)) + "&addOrUpdate=add&orgId=" + orgId + "&partyId=" + node.id,
+                        title: '添加党费管理',
+                        width: '80%',
+                        height: '80%'
+                    })
+                } else {
+                    // layer.msg("请选择一个党员！", {icon: 1});
+                    if (node.orgType == "631") {
+                        MyLayer.layerOpenUrl({
+                            url: '/modules/dwgl/dzz/dfgl/dzbDfglEditForm.html?orgName=' + encodeURI(encodeURI(node.name)) + "&addOrUpdate=add&orgId=" + node.id,
+                            title: '添加党费管理',
+                            width: '80%',
+                            height: '80%'
+                        })
+                    } else {
+                        layer.msg("党费只有党支部和党员可以添加，请选择一个党支部或一个党员！", {icon: 1});
+                    }
+
+                }
+            }
+        },
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+
+                url: '/modules/dwgl/dzz/dfgl/dfglEditForm.html?id='+id+"&resId="+resId,
+                title: "修改党费管理",
+                width: '80%',
+                height:'80%'
+            })
+        },
+
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/djgl/ddjs/dzz/dfgl/deleteById?id='+ id+"&resId="+resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+
+    /**
+     * 空值设置
+     * @param val
+     * @returns
+     */
+    function regVlaue(val){
+        if(!val||val=="undefined"){
+            val = "";
+        }
+        return val;
+    }
+    function clearAll() {
+        $("#annual").val("");
+        $("#partyOrganizationName").val("");
+        $("#userId").val("");
+        $("#partyName").val("");
+    }
+
+    //去空格
+    function Trim(str)
+    {
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
+
+
+</script>

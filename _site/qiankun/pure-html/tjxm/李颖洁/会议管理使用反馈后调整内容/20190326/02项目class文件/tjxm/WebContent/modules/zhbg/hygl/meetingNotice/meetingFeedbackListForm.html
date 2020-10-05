@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+<title>企业中心</title>
+<link rel="stylesheet"
+	href="/static/core/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+<link href="/static/css/common/style.css" rel="stylesheet" />
+<link href="/static/css/common/form-public.css" rel="stylesheet" />
+<link href="/static/core/bootstrap-table/bootstrap-table.css"
+	rel="stylesheet" />
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet"
+	href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+<style>
+   .formpage_area .selectjs .selectjs_block .main { height: auto;}
+   .circleRed{
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: #FF0000;
+            text-align: center;
+            border-radius: 14px;
+            margin-right:10px;
+   }
+	.circleGreen{
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: #008000;
+            text-align: center;
+            border-radius: 14px;
+            margin-right:10px;
+   }
+   .btns_right {
+        float: right;
+    }
+    span#contents{ white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;text-align:left}
+</style>
+</style>
+</head>
+<body class="formpage_bj">
+	<div class="container-fluid formpage_area">
+		<form class="form-horizontal" id="form">
+			<input type="hidden" id="textId" /> <input type="hidden" id="id"
+				name="id" /> <input type="hidden" id="resId" name="resId" />
+				 <input name="noticeId" id="noticeId" type="hidden" value="" />
+				 <!-- 保存反馈类型 -->
+				 <input name="personOrNum" id="personOrNum" type="hidden" value="" />
+				<!-- 待办工作项ID -->
+			<input name="opertation" id="opertation" type="hidden" value="" />
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">通知信息</span>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">会议名称： </label>
+						<div class="col-md-4 form-view">
+							<span name="meetingName" id="meetingName"></span>
+						</div>
+					</div>
+					<div class="form-group">
+					<label for="" class="col-md-2 control-label">会议起止时间： </label>
+						<div class="col-md-4 form-view">
+							<span name="meetingTime" id="meetingTime"></span>
+						</div>
+						<label for="" class="col-md-2 control-label">最晚反馈时间：</label>
+						<div class="col-md-4  form-view">
+							<span name="responseTime" id="responseTime"></span>
+						</div>
+					</div>
+					<div class="form-group" >
+						<label for="" class="col-md-2 control-label">是否反馈：</label>
+						<div class="col-md-4 form-view">
+							<span name="isFankui"></span>
+						</div>
+						<div id="hasFankui">
+						<label for="" class="col-md-2 control-label">反馈类别：</label>
+						<div class="col-md-4 form-view">
+							<span name="fankuiType"></span>
+						</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">参会单位（部门）：</label>
+						<div class="col-md-10  form-view">
+							<span name="attendDeptJu" id="attendDeptJu"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">参会单位（处）：</label>
+						<div class="col-md-10  form-view">
+							<span name="attendDept" id="attendDept"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">通知内容：</label>
+						<div class="col-md-10  form-view">
+							<span name="contents" id="contents"></span>
+						</div>
+					</div>
+					<div class="form-group">
+                    	<label for="" class="col-md-2 control-label"> 会议室安排：</label>
+                        <div class="col-md-10" id="plan">
+                        	<table id="right_table3"></table>
+                        </div>
+                    </div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">统计信息</span>
+					</div>
+				</div>
+			</div>
+			
+					<div class="form-group">
+						<p align="center" style="color:red;font-size:16px;margin-top: 20px;">
+						共 <span id="totalCount"></span> 个单位，<span id="unBackedCount"></span> 个单位未反馈， <span id="backedCount"></span> 个单位正常反馈<span id="remarkCount" style="display:none;"></span></p>
+					</div>
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">反馈情况</span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-body selectjs">
+				<div class="selectjs_block" style="height: 100%;">
+					<div class="title_tab">
+						<ul class="nav nav-tabs">
+							<li class="active" for="formpage1"><a href="#"
+								data-toggle="tab"> 已反馈 </a></li>
+							<li for="formpage2"><a href="#" data-toggle="tab"> 未反馈 </a>
+							</li>
+						</ul>
+					</div>
+					<div id="one" class="main">
+						<div id="formpage1" class="active">
+							<div id="logo" style="display:none">
+                    			<div class="btns_right">
+                        		<span><div class="circleGreen"></div>正常参会人员 </span>
+                        		<span><div class="circleRed"></div>不能参会人员</span>
+                    			</div>
+                			</div>
+							<div class="row m-t-15" style="margin-top: 15px;">
+								<div class="col-md-12 p-f-10">
+									<!--这里表格用的普通表格，要用bootstrap-table（参考列表页面）可以自行修改-->
+									<table id="right_table">
+									</table>
+								</div>
+							</div>
+						</div>
+						<div id="formpage2" class="hidden" style="width: 100%;">
+							<div class="row m-t-15" style="margin-top: 15px;">
+								<div class="col-md-12 p-f-10">
+									<!--这里表格用的普通表格，要用bootstrap-table（参考列表页面）可以自行修改-->
+									<table id="right_table2"></table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 按钮区结束 -->
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<!-- 自定义意见(最后进行加载) -->
+	<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+	<!-- 数据校验 -->
+	<script type="text/javascript" src="js/validator.js"></script><!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--点击折叠展开-->
+<script type="text/javascript" src="/static/js/common/toggle.js"></script>
+<!--文件上传js-->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+	<!-- 页面获取参数 -->
+	<script src="/static/js/common/tablelist.js"></script>
+	<script type="text/javascript">
+	var totalAttend = 0;
+	var totalShouldAttend = 0;
+	var totalRealAttend = 0;
+    //绑定日期输入input
+    laydate.render({
+        elem: '#birth' //指定元素
+    });
+    $('.nav-tabs > li').unbind('click').bind('click', function () {
+        var id = $(this).attr('for');
+        $(this).addClass('active').siblings('li').removeClass('active');
+        $('.main').children().addClass('hidden');
+        $('#' + id).removeClass('hidden');
+    })
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center",
+        formatter : function(value, row, index) {
+			//计算序号，并存放业务ID，及已办事项ID
+			var pageSize = $('#right_table').bootstrapTable(
+					'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table').bootstrapTable(
+					'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span data-id='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+		}
+    }, {
+        field: 'attendDept'
+        , title: '参会<br>单位'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'attendDept'
+        , title: '参会单位'
+        , width: '10%'
+        , align:"center"
+    },{
+        field: 'attendPersonNum'
+      	, title: '参会人数'
+        , width: '3%'
+        , align:"center"
+        ,formatter : function(value, row, index) {
+        	if(!value){
+        		value = "-";
+        	}
+        	return value;
+   		}
+    },{
+        field: 'shouldAttendNum'
+      	, title: '应参会<br>人数'
+        , width: '3%'
+        , align:"center"
+        ,formatter : function(value, row, index) {
+			if(value){
+				//totalShouldAttend += parseInt(value);
+				return value;
+			}else{
+				return "-";
+			}
+		}
+    },{
+        field: 'realAttendNum'
+      	, title: '实参会<br>人数'
+        , width: '5%'
+        , align:"center"
+       	,formatter : function(value, row, index) {
+   			if(value){
+   				//totalRealAttend += parseInt(value);
+   				return value;
+   			}else{
+   				return "-";
+   			}
+   		}
+    },{
+        field: 'main'
+      	, title: '主要领导'
+        , width: '15%'
+        , align:"center"
+       	,formatter : function(value, row, index) {
+       		var attend;
+       		var notAttend;
+       		var html = "<span>";
+       		var f = false;
+       		var f1 = false;
+       		if(row.attendPersonChuName){
+       			f = true;
+       			attend = row.attendPersonChuName.split(",");
+       			for(i in attend){
+	       			html += '<div style="width:100px;display:inline-block;text-align:left" title="'+attend[i]+'"><div class="circleGreen"></div>'+attend[i]+'</div>';
+       				html += '<br>';
+       			}
+       		}
+       		if(row.notAttendPersonChuName){
+       			f1 = true;
+				notAttend = row.notAttendPersonChuName.split(",");       			
+				for(i in notAttend){
+					html += '<div style="width:100px;display:inline-block;text-align:left" title="'+notAttend[i]+'"><div class="circleRed"></div>'+notAttend[i]+'</div>';
+       				html += '<br>';
+				}
+       		}
+       		if(!f &&!f1){
+       			html += "-";
+       		}
+       		html += "</span>";
+      		return html;
+   		}
+    },{
+        field: 'leave'
+      	, title: '分管领导'
+        , width: '20%'
+        , align:"center"
+       	,formatter : function(value, row, index) {
+       		var attend;
+       		var notAttend;
+       		var html = "<span>";
+       		var f = false;
+       		var f1 = false;
+       		if(row.attendPersonLeaveName){
+       			f = true;
+       			attend = row.attendPersonLeaveName.split(",");
+       			for(i in attend){
+	       			html += '<div style="width:100px;display:inline-block;text-align:left" title="'+attend[i]+'"><div class="circleGreen"></div>'+attend[i]+'</div>';
+	       			if(i%2==1){
+	       				html += '<br>';
+	       			}
+       			}
+       		}
+       		if(row.notAttendPersonLeaveName){
+       			f1 = true;
+				notAttend = row.notAttendPersonLeaveName.split(",");       			
+				for(i in notAttend){
+					html += '<div style="width:80px;display:inline-block;text-align:left" title="'+notAttend[i]+'"><div class="circleRed"></div>'+notAttend[i]+'</div>';
+					if(f && (attend.length+i)%2==1){
+	       				html += '<br>';
+	       			}else if(!f && i%2==1){
+	       				html += '<br>';
+	       			}
+				}
+       		}
+       		if(!f &&!f1){
+       			html += "-";
+       		}
+       		html += "</span>";
+      		return html;
+   		}
+    },{
+        field: 'other'
+      	, title: '其他人员'
+        , width: '30%'
+        , align:"center"
+       	,formatter : function(value, row, index) {
+       		var attend;
+       		var notAttend;
+       		var html = "<span>";
+       		var f = false;
+       		var f1 = false;
+       		if(row.attendPersonName){
+       			f = true;
+       			attend = row.attendPersonName.split(",");
+       			for(i in attend){
+	       			html += '<div style="width:72px;display:inline-block;text-align:left"><div class="circleGreen"></div>'+attend[i]+'</div>';
+	       			if(i%3==2){
+	       				html += '<br>';
+	       			}
+       			}
+       		}
+       		if(row.notAttendPersonName){
+       			f1 = true;
+				notAttend = row.notAttendPersonName.split(",");       			
+				for(i in notAttend){
+					html += '<div style="width:72px;display:inline-block;text-align:left"><div class="circleRed"></div>'+notAttend[i]+'</div>';
+					if(f&&(attend.length+i)%3==2){
+	       				html += '<br>';
+	       			}else if(!f && i%3==2){
+	       				html += '<br>';
+	       			}
+				}
+       		}
+       		if(!f &&!f1){
+       			html += "-";
+       		}
+       		html += "</span>";
+      		return html;
+   		}
+    },{
+        field: 'remark'
+        , title: '备注'
+        , width: '8%'
+        , align:"center"
+        ,visible:true
+        ,formatter:function(value,row,index){
+        	var val=value;
+        	if(val!=null && val!=""){
+        		if(val.length>10){
+	        		val = value.substr(0,10)+"...";
+        		}
+        	}else{
+        		val = "-";
+        		value = "";
+        	}
+      		return "<span title='"+value+"'>"+val+"</span>";
+        }
+    }];
+    var right_table_col1 = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center",
+        formatter : function(value, row, index) {
+			//计算序号，并存放业务ID，及已办事项ID
+			var pageSize = $('#right_table2').bootstrapTable(
+					'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table2').bootstrapTable(
+					'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span data-id='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+		}
+    }, {
+        field: 'attendDept'
+        , title: '参会单位'
+        , width: '20%'
+        , align:"center"
+    },/*  {
+        field: 'attendPersonName'
+        , title: '参会人'
+        , width: '30%'
+        , align:"center"
+        
+    },{
+        field: 'attendPersonNum'
+      	, title: '参会人数'
+        , width: '5%'
+        , align:"center"
+       
+    }, */{
+        field: 'remark'
+        , title: '备注'
+        , width: '30%'
+        , align:"center"
+    },{
+        field: 'cz'
+            , title: '操作'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                var opt = value.split(",");
+                var html = "";
+                for (var i = 0; i < opt.length; i++) {
+                        html += "<i class='glyphicon glyphicon-earphone' style='cursor:pointer' onclick=\'list.cuibanFun(\""+row.id+"\",\""+row.attendDeptId+"\")\' title=\'催办\'></i>"
+                }
+                return html;
+            }
+        }];
+
+	    var right_table_col2 = [{
+		    field: 'id'
+		    , title: '序号'
+		    , width: '5%'
+		    , sortable: false
+		    , align:"center"
+		    , formatter: function (value, row, index) {
+				return "<span data-id='"+row.id+"'>" + (index+1) + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号   
+		    }  
+		},{
+		    field: 'useDate'
+		    , title: '会议日期'
+		    , width: '8%'
+		    , sortable: false
+		    , align:"center"
+		},{
+		    field: 'weekDate'
+		    , title:'星期'
+		    , width: '8%'
+		    , sortable: false
+		    , align:"center"
+		},{
+		    field: 'meetingroomName'
+		    , title: '会议室名称'
+		    , sortable: false
+		    , width: '10%'
+		    , align:"center"
+		},{
+		    field: 'useTime'
+		    , title: '会议时间'
+		    , sortable: false
+		    , width: '10%'
+		    , align:"center"
+		}]; 
+    $(document).ready(function (e) {
+    	var theRequest = GetRequest();
+    	$("#id").val(decodeURI(theRequest.id));
+    	$("#opertation").val(theRequest.oper);
+    	$("#personOrNum").val(theRequest.fankuiType);
+    	var datas = {
+    			"id" : $("#id").val()
+    		};
+    	httpRequest("get", "/zhbg/hygl/meetingNoticeBack/getBackCount", datas, function(data) {
+    		$("#totalCount").text(data.data.totalCount);
+    		$("#backedCount").text(data.data.backedCount);
+    		$("#unBackedCount").text(data.data.unBackedCount);
+    		if(data.data.remarkCount!=0){
+    			//$("#remarkCount").css("display", "inline-block");
+    			$("#remarkCount").show();
+    			$("#remarkCount").text("，其中【备注栏有内容的单位有"+data.data.remarkCount+"个】");
+    		}
+    		
+		});
+    		if ($("#opertation").val() == "VIEW") { // 只读页渲染
+    			$("#right_table3").bootstrapTable({
+    	            pagination:true,
+    	            striped:true,
+    	            classes: 'table table-hover',
+    	            fixedColumns: true,//是否固定列
+    	            pageList: "[10, 25, 50, 100]",
+    	            detailView:false,
+    	            columns: right_table_col2,
+    			})
+    			$.ajax({
+    				type : "get",
+    				url : "/zhbg/hygl/notice/edit",
+    				data : datas,
+    				async : false,
+    				success : function(data) {
+    					if (data.flag=='1') {
+    						if(data.data.isFankui=='1'){
+    	    					data.data.isFankui="是";
+    	    					if(data.data.fankuiType=='1'){
+    	    						data.data.fankuiType='参会人数';
+    	    					}else{
+    	    						data.data.fankuiType='参会人名';
+    	    					}
+    	    				}
+    	    				if(data.data.isFankui=='0'){
+    	    					data.data.isFankui="否";
+    	    				}
+    						DisplayData.playData({
+    	    					data : data
+    	    				});
+    						$.ajax({
+    	        				type : "get",
+    	        				url : "/zhbg/hygl/meetingRoomUseInfo/getByApplyId",
+    	        				data : {applyId:data.data.applyId,resId:$('#left_ul').find('a.active').attr("id")},
+    	        				async : false,
+    	        				success : function(json) {
+    	        					if (json.flag=='1') {
+    	        						$("#right_table3").bootstrapTable('removeAll');
+    	        						$('#right_table3').bootstrapTable('load',json.data);
+    	        						$('#plan .pull-left').css('display','none')
+    	        					}
+    	        				}
+    	        			}); 
+    					}
+    				}
+    			}); 
+    		}else {
+    			httpRequest("get", "/zhbg/hygl/notice/edit", datas, function(data) {
+    				DisplayData.playData({
+    					data : data
+    				});
+    				
+    			});
+    		}
+    	
+    		
+       //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/hygl/meetingNoticeBack/getBackList",
+            columns:right_table_col,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            queryParams:function(params){
+            	//这里将各个查询项添加到要传递的参数中
+				//                可以做一些校验
+				params.resId = $('#left_ul').find(
+						'a.active').attr("id");
+				params.status = "1";
+				params.id = $("#id").val();
+				return params;
+            },
+            readOnlyFn:function(){
+                    $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                        取消事件冒泡
+                        var evt = e ? e : window.event;
+                        if (evt.stopPropagation) {
+                            evt.stopPropagation();
+                        }else {
+                            evt.cancelBubble = true;
+                        }
+//                        取消事件冒泡 endmeetingFeedbackListForm.html
+                    });
+            	var data = $('#right_table').bootstrapTable('getData');
+	            	if($("#personOrNum").val()==1){
+	            		$('#right_table thead tr th:eq(1)').css('display','none');
+	            		$('#right_table thead tr th:eq(4)').css('display','none');
+	                	$('#right_table thead tr th:eq(5)').css('display','none');
+	                	$('#right_table thead tr th:eq(6)').css('display','none');
+	                	$('#right_table thead tr th:eq(7)').css('display','none');
+	                	$('#right_table thead tr th:eq(8)').css('display','none');
+	            		var $tr = $('#right_table tr.readOnly');
+	            		$tr.each(function(i,val){
+	            			$(this).find('td:eq(1)').css('display','none');
+	            			$(this).find('td:eq(4)').css('display','none');
+	            			$(this).find('td:eq(5)').css('display','none');
+	            			$(this).find('td:eq(6)').css('display','none');
+	            			$(this).find('td:eq(7)').css('display','none');
+	            			$(this).find('td:eq(8)').css('display','none');
+	            		})
+	            		if(data.length>0){
+		            	 	$('#formpage1 .pull-left').append('<span>，<b style="color:red;">参会总人数：'+data[0].attendCount+'人</b></span>');
+	            		}
+	            	}else{
+	            		$('#logo').show();
+	            		$('#right_table thead tr th:eq(2)').css('display','none');
+	            		$('#right_table thead tr th:eq(3)').css('display','none');
+	            		var $tr = $('#right_table tr.readOnly');
+	            		$tr.each(function(i,val){
+	            			$(this).find('td:eq(2)').css('display','none');
+	            			$(this).find('td:eq(3)').css('display','none');
+	            		})
+	            		if(data.length>0){
+		               	 	$('#formpage1 .pull-left').append('<span>，<b style="color:red;">应参会总人数：'+data[0].shouldAttendCount+'人，实参会总人数：'+data[0].realAttendCount+'人</b></span>');
+	            		}
+	            	}
+            }
+        });
+        //初始化表格
+        TableInit.init({
+            domId:"right_table2",
+            url:"/zhbg/hygl/meetingNoticeBack/getBackList",
+            columns:right_table_col1,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            },
+            queryParams:function(params){
+            	//这里将各个查询项添加到要传递的参数中
+				//                可以做一些校验
+				params.resId = $('#left_ul').find(
+						'a.active').attr("id");
+				params.status = "0";
+				params.id = $("#id").val();
+				return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 endmeetingFeedbackListForm.html
+                });
+            }
+        });
+        
+        /* //初始化会议室安排表格
+        TableInit.init({
+            domId:"right_table3",
+            url:"/mock/room.json",
+            columns:right_table_col2,
+            pagination:false,
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.applyId=id;
+                return params;
+            }
+        }); */
+    });
+    //    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/hygl/meetingNotice/meetingNoticeEditForm.html?id='+id,
+                title:"修改",
+                width:"90%",
+                heigh:"90%"
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'/index.html?id=' + id,
+                tableId:'right_table'
+            })
+        },
+        cuibanFun:function(id,attendDeptId){
+        	//点击一次后 不让重复发送催办
+        	//$(this).attr("disabled","disabled");
+        	var meetingName = $("#meetingName").text();
+        	var defTex='请尽快上报会议【'+meetingName+'】的参会人员';
+        	layer.prompt({
+        		title:"催办",
+        		formType: 2,
+        		value:defTex,
+        		maxlength:100},
+        		function(val,index,elem){
+        		layer.close(index);
+        		press(id,attendDeptId,val,defTex)
+        		}); 
+        }
+    }
+    function press(id,attendDeptId,val,defTex) {
+        //首先判断是否有值班上报员s
+        //var deptNames = unitNames.split(",");
+       // var deptIds = unitIds.split(",");
+        //var para = {"deptIds":JSON.stringify(deptIds),"deptNames":JSON.stringify(deptNames), "pressContent":val, "yearMonth":year_month};
+		var para = {"id":id,"attendDeptId":attendDeptId, "pressContent":val,"pressTitle":defTex};
+        $.ajax({
+            type: 'get',
+            dataType: "json",//返回json格式的数据
+            url: "/zhbg/hygl/meetingNoticeBack/urge",
+            data: para,
+            success: function (result) {
+                //debugger;
+                if(result.flag = "1"){
+                    layer.msg("催办成功！", {icon: 1,time:1000});
+                }else{
+                    layer.alert('催办失败，请稍后再发布！',{icon:0,title:'警告'})
+                }
+            },
+            error: function (error) {
+                layer.msg("插入催办记录失败！", {icon: 0,time:1000});
+            }
+        });
+    }
+    
+    function hideColumn(){
+    	
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+1.模板下载为根据模板id下载模板
+2.模板下载的后台方法在：com/sinosoft/sinoep/modules/system/component/template/**
+3.模板下载url为 eg：<a  class="glyphicon glyphicon-download-alt" href="/system/component/template/download?templateId=1">工资模板(测试模板下载)</a>
+4.数据库表名为：sys_template
+=======重要的
+5.打印条码的模板数据库数据在sys_affix 中，    一、把数据从sys_affix表中复制到sys_template表中，（最好查询一下附件表，中id为‘p900’的数据，应该是在里边的数据库中，斌哥应该知道）
+                                                sql：insert into sys_template t (t.id,t.title,t.file_type,t.cre_time,t.content,t.file_size) select s.id,s.title,s.file_type,s.cre_time,s.content,s.file_size from sys_affix s where s.id ='p900'
+                                            二、修改后台sql；
+                                                我记不清，我的id是在前台还是在后台了，请查看，如果复制的数据id不变，则只需要修改后台的sql语句为：String sql = "select content,title from sys_template where id = ?";传id！
+                                            三、其他的模板统一都是把模板数据放到sys_template表中，然后前台调接口，传id就可以实现下载模板功能；

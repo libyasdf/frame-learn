@@ -1,0 +1,111 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css" href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height:600px; overflow:auto;">
+                </ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details" >
+            <!--查询-->
+        <form class="form-horizontal" id="form">
+    <!-- resId -->
+    <input name="resId" id="resId" type="hidden" value="">
+    <div class="container-fluid" style="margin-bottom: 100px">
+        <!-- 基本信息 -->
+       <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title" style="text-align: center;font-size: 25px;">
+                    <span>党员队伍基本情况</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+               <div id = "teamTotal" style="font-size: 20px;">
+
+                            </div>
+                        </div>
+                    <!-- 基本信息结束 -->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/dwgl/common/dzzTree.js"></script>
+<script>
+    if(getcookie("rolesNo").indexOf("D478") >= 0){
+        dzzTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"org"});
+    }else{
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+            dataType: "json",
+            success: function (data) {
+                dzzTree.init({id:data.data,type:"org"});
+            },
+            error: function (data) {
+            }
+        })
+    }
+    var nodeId ="";
+    if( $.fn.zTree.getZTreeObj("treeDemo")){
+        var node = $.fn.zTree.getZTreeObj("treeDemo").getSelectedNodes()[0];
+        nodeId = node.id;
+    }
+    query();
+    function query(url) {
+        if(!url){
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            var node = treeObj.getSelectedNodes()[0];
+            var url =  "/djgl/ddjs/dygl/dyxx/getApplicantStatistics?id=" +nodeId
+        }
+        $.ajax({
+            type: "POST",
+            url:url,
+            data:$("#form").serialize(),
+            async: false,
+            success:function(json){
+               $('#teamTotal').html(json.data);
+            },
+            error:function(){
+            }
+        });
+    }
+
+    function refreshTable(node){
+        var   url ="/djgl/ddjs/dygl/dyxx/getApplicantStatistics?id=" + node.id
+        query(url);
+    }
+
+
+</script>
+</body>
+</html>

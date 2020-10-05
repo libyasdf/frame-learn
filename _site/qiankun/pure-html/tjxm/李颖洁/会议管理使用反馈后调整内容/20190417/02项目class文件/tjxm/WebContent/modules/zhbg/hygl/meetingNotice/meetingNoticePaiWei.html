@@ -1,0 +1,459 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" >
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+
+                            <label class="col-md-1 control-label"> 会议名称：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="meetingName" name="meetingName"/>
+                            </div>
+
+                            <label class="col-md-1 control-label"> 日期：</label>
+                            <div class="col-md-3">
+                               <input class="form-control" type="text" id="timeRange" />
+                            </div>
+
+                            <label class="col-md-1 control-label"> 状态：</label>
+                            <div class="col-md-3">
+                                <label class="radio-inline">
+                                    <input type="radio" id="inlineRadio1" name="status" value="0"> 全部
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="inlineRadio1" name="status" value="1"> 已发布
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="inlineRadio2" name="status" value="2"> 草稿
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <button type="button" class="btn btn-primary"
+                                            onclick="clearAll()"> 重&nbsp;&nbsp;置
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+     <div class="col-md-12">
+            <table id="right_table3"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+        ,type: 'datetime'
+    });
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center",
+        formatter : function(value, row, index) {
+			//计算序号，并存放业务ID，及已办事项ID
+			var pageSize = $('#right_table3').bootstrapTable(
+					'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table3').bootstrapTable(
+					'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span data-id='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+		}
+    }, {
+        field: 'meetingRoom'
+        , title: '会议室'
+        , width: '8%'
+        , align:"center"
+    }, {
+        field: 'meetingName'
+        , title: '会议名称'
+        , width: '20%'
+        , sortable: true
+        , align:"center"
+    }, {
+        field: 'meetingTime'
+        , title: '会议时间'
+        , width: '25%'
+        , align:"center",
+        formatter : function(value, row, index) {
+			var meetingTime = "";
+			if (row.startTime) {
+				meetingTime=""+row.startTime;
+			}
+			if (row.endTime) {
+				meetingTime=meetingTime+" - "+row.endTime;
+			}
+			return meetingTime;
+		}
+    }, {
+        field: 'attendDept'
+            , title: '参会部门'
+            , width: '10%'
+            , sortable: true
+            , align:"center"
+            ,visible:false
+        },
+        {
+            field: 'contents'
+                , title: '内容'
+                , width: '10%'
+                , sortable: true
+                , align:"center"
+                ,visible:false
+        },{
+            	field: 'responseTime'
+                    , title: '反馈时间'
+                    , width: '10%'
+                    , sortable: true
+                    , align:"center"
+        },{
+        field: 'status'
+        , title: '状态'
+        , sortable: true
+        , width: '10%'
+        , align:"center"
+        	,formatter : function (value, row, index)  {
+            	if(value=='0'){
+            		return "未发布";
+            	}
+    			if(value=='1'){
+    			    return "已发布";    		
+    			        	}
+                }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "add") {
+
+                } else if (opt[i] == "update") {
+                    html +="<i class='glyphicon glyphicon-search' onclick=\'list.queryFun(\""+row.id+"\",\""+row.meetingRoom+"\",\""+row.meetingName+"\",\""+row.startTime+"\",\""+row.endTime+"\",\""+row.responseTime+"\",\""+row.attendDept+"\",\""+row.contents+"\")\'></i>&nbsp;&nbsp;"
+                } else if (opt[i] == "delete") {
+                    html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\""+row.id+"\")\'></i>&nbsp;&nbsp;"
+                } else {
+                    html += "<i class='icon iconfont icon-phone' onclick=\'\' title=\'催办\'></i>"
+                }
+            }
+            return html;
+        }
+    }];
+    
+    var right_table_col1 = [{
+        field: 'id'
+        , title: '编号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center",
+        formatter : function(value, row, index) {
+			//计算序号，并存放业务ID，及已办事项ID
+			var pageSize = $('#right_table3').bootstrapTable(
+					'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table3').bootstrapTable(
+					'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span data-id='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+		}
+    }, {
+        field: 'meetingRoom'
+        , title: '会议室'
+        , width: '8%'
+        , align:"center"
+    }, {
+        field: 'meetingName'
+        , title: '会议名称'
+        , width: '20%'
+        , sortable: true
+        , align:"center"
+    }, {
+        field: 'meetingTime'
+        , title: '会议时间'
+        , width: '25%'
+        , align:"center",
+        formatter : function(value, row, index) {
+			var meetingTime = "";
+			if (row.startTime) {
+				meetingTime=""+row.startTime;
+			}
+			if (row.endTime) {
+				meetingTime=meetingTime+" - "+row.endTime;
+			}
+			return meetingTime;
+		}
+    }, {
+        field: 'responseTime'
+            , title: '反馈时间'
+            , width: '10%'
+            , sortable: true
+            , align:"center"
+        },{
+        field: 'status'
+        , title: '状态'
+        , sortable: true
+        , width: '10%'
+        , align:"center"
+        	,formatter : function (value, row, index)  {
+            	if(value=='0'){
+            		return "未发布";
+            	}
+    			if(value=='1'){
+    			    return "已发布";    		
+    			        	}
+                }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+                    html +="<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\""+row.id+"\",\""+row.meetingRoom+"\",\""+row.meetingName+"\",\""+row.startTime+"\",\""+row.endTime+"\",\""+row.responseTime+"\")\' title=\'起草会议通知\'></i>&nbsp;&nbsp;"
+            return html;
+        }
+    }];
+    var right_table_col2 = [{
+        field: 'id'
+        , title: '编号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center",
+        formatter : function(value, row, index) {
+			//计算序号，并存放业务ID，及已办事项ID
+			var pageSize = $('#right_table3').bootstrapTable(
+					'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+			var pageNumber = $('#right_table3').bootstrapTable(
+					'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+			var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+			return "<span data-id='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+		}
+    }, {
+        field: 'meetingRoom'
+        , title: '会议室'
+        , width: '8%'
+        , align:"center"
+    }, {
+        field: 'meetingName'
+        , title: '会议名称'
+        , width: '20%'
+        , sortable: true
+        , align:"center"
+    }, {
+        field: 'meetingTime'
+        , title: '会议时间'
+        , width: '25%'
+        , align:"center",
+        formatter : function(value, row, index) {
+			var meetingTime = "";
+			if (row.startTime) {
+				meetingTime=""+row.startTime;
+			}
+			if (row.endTime) {
+				meetingTime=meetingTime+" - "+row.endTime;
+			}
+			return meetingTime;
+		}
+    }, {
+        field: 'responseTime'
+            , title: '最晚反馈时间'
+            , width: '10%'
+            , sortable: true
+            , align:"center"
+        },{
+        field: 'status'
+        , title: '状态'
+        , sortable: true
+        , width: '10%'
+        , align:"center"
+        	,formatter : function (value, row, index)  {
+            	if(value=='0'){
+            		return "未发布";
+            	}
+    			if(value=='1'){
+    			    return "已发布";    		
+    			        	}
+                }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+                    html +="<i class='glyphicon glyphicon-tasks' onclick=\'list.queryFun(\""+row.id+"\",\""+row.meetingRoom+"\",\""+row.meetingName+"\",\""+row.startTime+"\",\""+row.endTime+"\",\""+row.responseTime+"\")\' title=\'排位\'></i>&nbsp;&nbsp;"
+            return html;
+        }
+    }];
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/hygl/notice/getList",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.meetingName=$("#meetingName").val();
+                params.timeRange=$("#timeRange").val();
+                params.status=$("#status").val();
+
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 endmeetingFeedbackListForm.html
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var resIds = $('#left_ul').find('a.active').attr("id");
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingNotice/meetingFeedbackListForm.html?id='+id+ "&resId=" + resIds,title:'会议通知详情'});
+                });
+            }
+        });
+        TableInit.init({
+            domId:"right_table2",
+            url:"/zhbg/hygl/notice/getList",
+            columns:right_table_col1,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.meetingName=$("#meetingName").val();
+                params.timeRange=$("#timeRange").val();
+                params.status=$("#status").val();
+
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 endmeetingFeedbackListForm.html
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var resIds = $('#left_ul').find('a.active').attr("id");
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingNotice/meetingFeedbackListForm.html?id='+id+ "&resId=" + resIds,title:'会议通知详情'});
+                });
+            }
+        });
+        TableInit.init({
+            domId:"right_table3",
+            url:"/zhbg/hygl/notice/getList",
+            columns:right_table_col2,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.meetingName=$("#meetingName").val();
+                params.timeRange=$("#timeRange").val();
+                params.status=$("#status").val();
+
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 endmeetingFeedbackListForm.html
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var resIds = $('#left_ul').find('a.active').attr("id");
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingNotice/meetingFeedbackListForm.html?id='+id+ "&resId=" + resIds,title:'会议通知详情'});
+                });
+            }
+        });
+    });
+
+//    表格数据项的操作
+    var list = {
+        queryFun:function(id,meetingRoom,meetingName,startTime,endTime,responseTime,attendDept,contents){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/hygl/meetingNotice/meetingFeedbackListForm.html?id='+id+ "&resId=" + resId+"&meetingRoom=" + meetingRoom+"&meetingName=" + meetingName+"&startTime=" + startTime+"&endTime=" + endTime+"&responseTime=" + responseTime+"&attendDept=" + attendDept+"&contents=" + contents,
+                title:"会议通知反馈详情页面"
+            })
+        },
+        editFun:function(id){
+        	var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+            	url: '/modules/zhbg/hygl/meetingNotice/meetingNoticeEditForm.html?id='+id+ "&oper=EDIT&resId=" + resId,
+                tableId:'right_table'
+            })
+        }
+    }
+    function draft(){
+    	var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({
+        	url: '/modules/zhbg/hygl/meetingNotice/meetingNoticeEditForm.html?&oper=EDIT&resId=' + resId,
+            tableId:'right_table'
+        })
+    }
+    function clearAll() {
+		$("#timeRange").val(""); //时间
+		$("#meetingName").val(""); //会议名称
+		//清空状态
+		var $isPrivacy = $("input[name=status]");
+		$isPrivacy.attr("checked", false);
+	}
+
+</script>

@@ -1,0 +1,353 @@
+<style type="text/css">
+.panel-controls {
+	position: absolute;
+	right: 40px;
+	top: 10px;
+}
+
+.panel-controls>i.showSelect {
+	font-size: 16px;
+	color: #acb1b8;
+	cursor: pointer;
+}
+
+label {
+	font-weight: normal;
+}
+</style>
+<link rel="stylesheet" type="text/css"
+	href="/static/css/common/Loading.css">
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" id="dmForm">
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls ">
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+
+							<label class="col-md-1 control-label"> 请假时间：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange"
+									name="timeRange" />
+							</div>
+							<label class="col-md-1 control-label"> 请假类型：</label>
+							<div class="col-md-3">
+								<select class="form-control" id="leaveType" name="leaveType">
+									<option value="">---请选择---</option>
+									<option value="1">事假</option>
+									<option value="2">病假</option>
+									<option value="3">年休假</option>
+									<option value="4">探亲假</option>
+									<option value="5">婚假</option>
+									<option value="6">丧假</option>
+									<option value="7">哺育假</option>
+									<option value="8">产假</option>
+									<option value="9">陪产假</option>
+								</select>
+							</div>
+							<label class="col-md-1 control-label"> 是否倒休：</label>
+							<div class="col-md-3">
+								<label class="radio-inline"> <input type="radio"
+									name="isLeaveInLieu" value=""> 全部
+								</label> <label class="radio-inline"> <input type="radio"
+									name="isLeaveInLieu" value="1"> 是
+								</label> <label class="radio-inline"> <input type="radio"
+									name="isLeaveInLieu" value="0"> 否
+								</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="col-md-12" style="text-align: center">
+									<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')">
+										查&nbsp;&nbsp;询</button>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<button type="button" class="btn btn-primary"
+										onclick="clearAll();">重&nbsp;&nbsp;置</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			<div class="list_button_area">
+				<button class="list_table_btn2" onclick="draft();">
+					<span class="glyphicon glyphicon-plus-sign"></span> 起草
+				</button>
+				<button class="list_table_btn2" onclick="exportDate()">
+					<span class="glyphicon glyphicon-chevron-right"></span> 导出
+				</button>
+			</div>
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var workFlowName = "请假";
+	//起草
+	function draft() {
+		MyLayer.layerOpenUrl({
+			url : '/modules/zhbg/kqgl/qj/qjEditForm.html?oper=NEW',
+			title : '起草' + workFlowName
+		})
+	}
+	//清空查询条件
+	function clearAll() {
+		$("#leaveType").val(""); //类型
+		$("#timeRange").val(""); //时间
+		//清空倒休
+		var $isLeaveInLieu = $("input[name=isLeaveInLieu]");
+		$isLeaveInLieu.attr("checked", false);
+	}
+	//参考：http://www.layui.com/laydate/
+	//绑定日期输入input
+	laydate.render({
+		elem : '#time' //指定元素
+	});
+	//日期范围
+	laydate.render({
+		elem : '#timeRange',
+		range : true
+	});
+
+	//定义bootatrap-table数据列
+	//    sortable：开启列排序，其他参考API
+	var right_table_col = [
+			{
+				field : 'id',
+				title : '编号',
+				width : '5%',
+				order : "desc",
+				align : "center",
+				formatter : function(value, row, index) {
+					//计算序号，并存放业务ID，及已办事项ID
+					var pageSize = $('#right_table').bootstrapTable(
+							'getOptions').pageSize;//通过表的#id 可以得到每页多少条
+					var pageNumber = $('#right_table').bootstrapTable(
+							'getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+					var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+					return "<span data-id='"+row.id+"'>" + orderNum + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+				}
+			},
+			{
+				field : 'leaveTitle',
+				title : '标题',
+				width : '10%',
+				align : "center"
+			},
+			{
+				field : 'creUserName',
+				title : '申请人',
+				width : '9%',
+				align : "center"
+			},
+			{
+				field : 'leaveDate',
+				title : '请假日期',
+				width : '25%',
+				align : "center",
+				formatter : function(value, row, index) {
+					var leave_Date = "";
+					if (row.leaveStartDate) {
+						leave_Date = "" + row.leaveStartDate;
+						if (row.startAmOrPm) {
+							if (row.startAmOrPm == '1') {
+								leave_Date = leave_Date + " 上午";
+							} else {
+								leave_Date = leave_Date + " 下午";
+							}
+						}
+					}
+					leave_Date = leave_Date + "—";
+					if (row.leaveEndDate) {
+						leave_Date = leave_Date + row.leaveEndDate;
+						if (row.endAmOrPm) {
+							if (row.endAmOrPm == '1') {
+								leave_Date = leave_Date + " 上午";
+							} else {
+								leave_Date = leave_Date + " 下午";
+							}
+						}
+					}
+					return leave_Date;
+				}
+			},
+			{
+				field : 'leaveType',
+				title : '请假类型',
+				width : '10%',
+				align : "center",
+				formatter : function(value, row, index) {
+					if (value == '1') {
+						return "事假";
+					} else if (value == '2') {
+						return "病假";
+					} else if (value == '3') {
+						return "年休假";
+					} else if (value == '4') {
+						return "探亲假";
+					} else if (value == '5') {
+						return "婚假";
+					} else if (value == '6') {
+						return "丧假";
+					} else if (value == '7') {
+						return "哺育假";
+					} else if (value == '8') {
+						return "产假";
+					} else if (value == '9') {
+						return "陪产假";
+					}
+				}
+			},
+			{
+				field : 'isLeaveInLieu',
+				title : '是否倒休',
+				width : '6%',
+				align : "center",
+				formatter : function(value, row, index) {
+					if (value == '0') {
+						return "否";
+					} else if (value == '1') {
+						return "是";
+					}
+				}
+			},
+			{
+				field : 'leaveLongTime',
+				title : '请假时长',
+				width : '5%',
+				order : "desc",
+				align : "center"
+			},
+			{
+				field : 'subflag',
+				title : '流程状态',
+				width : '5%',
+				order : "desc",
+				align : "center",
+				formatter : function(value, row, index) {
+					if (value == Config.subflag) {
+						return "审批中";
+					} else if (value == Config.approvalflag) {
+						return "审批通过";
+					} else if (value == Config.noApprovalflag) {
+						return "审批未通过";
+					} else if (value == Config.removeflag) {
+						return "已撤办";
+					} else if (value == Config.startflag) {
+						return "草稿";
+					}
+				}
+			},
+			{
+				field : 'cz',
+				title : '操作',
+				width : '10%',
+				align : "center",
+				formatter : function(value, row, index) { //直接定义function,return就是html代码
+					var opt = value.split(",");
+					var html = "";
+					for (var i = 0; i < opt.length; i++) {
+						if (opt[i] == "add") {
+
+						} else if (opt[i] == "update") {
+							html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\""
+									+ row.id + "\")\'></i>&nbsp;&nbsp;";
+						} else if (opt[i] == "delete") {
+							html += "<i class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\""
+									+ row.id + "\")\'></i>";
+						}
+					}
+					return html;
+				}
+			} ];
+
+	$(document).ready(
+			function(e) {
+				//初始化表格
+				TableInit.init({
+					domId : "right_table",
+					url : "/zhbg/kqgl/qj/getList",
+					columns : right_table_col,
+					queryParams : function(params) {
+						//这里将各个查询项添加到要传递的参数中
+						params.timeRange = $("#timeRange").val();
+						params.leaveType = $("#leaveType").val();
+						params.isLeaveInLieu = $(
+								'input:radio[name="isLeaveInLieu"]:checked')
+								.val();
+						params.subflag = Config.startflag;
+						return params;
+					},
+					readOnlyFn : function() {
+						$('tr.readOnly').attr("title","点击查看详情");
+						$('tr.readOnly').find('td:lt(8)').unbind('click').bind('click', function (e) {
+							//取消事件冒泡
+								var resId = $('#left_ul').find('a.active').attr("id");
+				         		 var id = $(this).parent().find("span[data-id]").attr("data-id");
+				         		 MyLayer.layerOpenUrl({url: '/modules/zhbg/kqgl/qj/qjReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId});
+				         		 
+		                });
+					}
+				});
+			});
+
+	//    表格数据项的操作
+	var list = {
+		editFun : function(id) {
+			MyLayer.layerOpenUrl({
+				url : '/modules/zhbg/kqgl/qj/qjEditForm.html?id=' + id
+						+ "&oper=EDIT",
+				title : "修改"
+			})
+		},
+		deleteFun : function(id) {
+			MyLayer.deleteOpt({
+				url : '/zhbg/kqgl/qj/delete?id=' + id,
+				tableId : 'right_table'
+			})
+		}
+	}
+	/**
+	 * 导出按钮的事件
+	 */
+	function exportDate() {
+	   layer.confirm("是否导出查询的所有信息？",function(e){
+		 layer.close(e);
+		 $.ajax({
+				url : "/zhbg/kqgl/qj/getQjData",
+				data : {
+					 timeRange : $("#timeRange").val(), //时间
+					 leaveType:$("#leaveType").val(), //请假类型
+					 isLeaveInLieu: $('input:radio[name="isLeaveInLieu"]:checked').val() //是否倒休
+				},
+				type : "post",
+				success : function(date){						
+					if( date.flag == '0'){ //0 查询有数据， 可导出
+						$('#dmForm').attr('action','/zhbg/kqgl/qj/exportQjData');
+						$('#dmForm').attr('method','get');
+						$("#dmForm").submit();
+					}else{
+						layer.msg('暂无可导出信息！',{icon:0}); //没有数据时弹出提示信息
+					}
+				}
+			});
+		 
+	 });
+	
+	};
+</script>

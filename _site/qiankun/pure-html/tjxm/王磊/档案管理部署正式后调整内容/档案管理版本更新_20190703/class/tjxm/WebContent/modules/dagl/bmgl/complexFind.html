@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="form" class="form-horizontal" style="margin-top: 15px;">
+                <span id="ids"></span>
+                <div class="form-group">
+                    <div id="connect1" class="col-xs-2 connect">
+                        <select class="form-control" id="selectConnect1" style="display: none">
+                            <option selected value="01">且</option>
+                            <option value="02">或</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-1 control-label"></label>
+                    <div id="name1" class="col-xs-3 name">
+                        <select class="form-control selectName" onchange="changeCondition(this);" id="selectName1">
+
+                        </select>
+                    </div>
+                    <div id="condition1" class="col-xs-3 condition">
+                        <select class="form-control" id="selectCondition1">
+                            <option value="01">包含</option>
+                            <option value="02">不包含</option>
+                            <option value="03">大于</option>
+                            <option value="04">小于</option>
+                            <option value="05">等于</option>
+                            <option value="06">不等于</option>
+                        </select>
+                    </div>
+                    <div id="value1" class="col-xs-3 value">
+                        <input type="text" class="form-control" name="inputValue1" id="inputValue1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="connect2" class="col-xs-2 connect">
+                        <select class="form-control" id="selectConnect2">
+                            <option value="01">且</option>
+                            <option value="02">或</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-1 control-label"></label>
+                    <div id="name2" class="col-xs-3 name">
+                        <select class="form-control selectName" onchange="changeCondition(this);" id="selectName2">
+
+                        </select>
+                    </div>
+                    <div id="condition2" class="col-xs-3 condition">
+                        <select class="form-control" id="selectCondition2">
+                            <option value="01">包含</option>
+                            <option value="02">不包含</option>
+                            <option value="03">大于</option>
+                            <option value="04">小于</option>
+                            <option value="05">等于</option>
+                            <option value="06">不等于</option>
+                        </select>
+                    </div>
+                    <div id="value2" class="col-xs-3 value">
+                        <input type="text" class="form-control" name="inputValue2" id="inputValue2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="connect3" class="col-xs-2 connect">
+                        <select class="form-control" id="selectConnect3">
+                            <option value="01">且</option>
+                            <option value="02">或</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-1 control-label"></label>
+                    <div id="name3" class="col-xs-3 name">
+                        <select class="form-control selectName" onchange="changeCondition(this);" id="selectName3">
+
+                        </select>
+                    </div>
+                    <div id="condition3" class="col-xs-3 condition">
+                        <select class="form-control" id="selectCondition3">
+                            <option value="01">包含</option>
+                            <option value="02">不包含</option>
+                            <option value="03">大于</option>
+                            <option value="04">小于</option>
+                            <option value="05">等于</option>
+                            <option value="06">不等于</option>
+                        </select>
+                    </div>
+                    <div id="value3" class="col-xs-3 value">
+                        <input type="text" class="form-control" name="inputValue3" id="inputValue3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="connect4" class="col-xs-2 connect">
+                        <select class="form-control" id="selectConnect4">
+                            <option value="01">且</option>
+                            <option value="02">或</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-1 control-label"></label>
+                    <div id="name4" class="col-xs-3 name">
+                        <select class="form-control selectName" onchange="changeCondition(this);" id="selectName4">
+
+                        </select>
+                    </div>
+                    <div id="condition4" class="col-xs-3 condition">
+                        <select class="form-control" id="selectCondition4">
+                            <option value="01">包含</option>
+                            <option value="02">不包含</option>
+                            <option value="03">大于</option>
+                            <option value="04">小于</option>
+                            <option value="05">等于</option>
+                            <option value="06">不等于</option>
+                        </select>
+                    </div>
+                    <div id="value4" class="col-xs-3 value">
+                        <input type="text" class="form-control" name="inputValue4" id="inputValue4">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="connect5" class="col-xs-2 connect">
+                        <select class="form-control" id="selectConnect5">
+                            <option value="01">且</option>
+                            <option value="02">或</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-1 control-label"></label>
+                    <div id="name5" class="col-xs-3 name">
+                        <select class="form-control selectName" onchange="changeCondition(this);" id="selectName5">
+
+                        </select>
+                    </div>
+                    <div id="condition5" class="col-xs-3 condition">
+                        <select class="form-control" id="selectCondition5">
+                            <option value="01">包含</option>
+                            <option value="02">不包含</option>
+                            <option value="03">大于</option>
+                            <option value="04">小于</option>
+                            <option value="05">等于</option>
+                            <option value="06">不等于</option>
+                        </select>
+                    </div>
+                    <div id="value5" class="col-xs-3 value">
+                        <input type="text" class="form-control" name="inputValue5" id="inputValue5">
+                    </div>
+                </div>
+                <!--查询项输入框选择框等结束-->
+
+                <!--查询重置等按钮-->
+                <div class="form-group">
+                    <div class="col-xs-12" style="text-align: center">
+                        <button id="saveButton" type="button" class="btn btn-primary" onclick="saveDictionary()">
+                            查&nbsp;&nbsp;询
+                        </button>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary"  onclick="chongzhi()">
+                                重&nbsp;&nbsp;置
+                            </button>
+                    </div>
+                </div>
+                <!--查询重置等按钮 end-->
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript" src="/modules/zhbg/xxkh/tree/js/dictionaryValidator.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/static/js/common/assistUtil.js"></script>
+<!-- 音视频系统ip -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript">
+function chongzhi(){
+	location.reload();
+}
+
+    var theRequest;
+    $(function () {
+        theRequest = GetRequest();
+        // 初始化参数
+	init();
+    });
+	function init(){
+        $.ajax({
+            type: "get",
+            url: "/dagl/bmgl/findAdd",
+            data: {tName: theRequest.tName},
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                var ids = [];
+                console.log(data)
+                var html = "";
+                html += '<option value="">--请选择--</option>';
+                for (var i in data) {
+                    if (data[i].COLUMN_VISIBLE == "T" && data[i].COLUMN_NAME != "basefolder_unit") {//是组合查询的，并且不是立卷单位
+                        html += '<option dictionary="' + data[i].COLUMN_SELECT_NO + '" valueType="' + data[i].COLUMN_TYPE + '" type="' + data[i].COLUMN_INPUT_TYPE + '" value="' + data[i].COLUMN_NAME + '">' + data[i].COLUMN_CHN_NAME + '</option>';
+                    }
+                }
+                $(".selectName").html("");
+                $(".selectName").append(html);
+            }
+        });
+	}
+    function saveDictionary() {
+        var arr = {};
+        /* $("input").each(function () {
+             if ($(this).val() != null && $(this).val() != "") {
+                 if ($(this).attr("id") != "cre_chushi_id1") {
+                     arr[$(this).attr("id")] = $(this).val();
+                 }
+             }
+         });*/
+        var selectConnectArray = new Array();
+        var selectNameArray = new Array();
+        var selectConditionArray = new Array();
+        var inputValueArray = new Array();
+        for (var i = 1; i <= 5; i++) {
+            if ($("#selectConnect" + i + "  option:selected").val() != undefined && $("#selectConnect" + i + "  option:selected").val() != "") {
+                selectConnectArray[i - 1] = $("#selectConnect" + i + "  option:selected").val()
+            } else {
+                selectConnectArray[i - 1] = "";
+            }
+            if ($("#selectName" + i + "  option:selected").val() != undefined && $("#selectName" + i + "  option:selected").val() != "") {
+                selectNameArray[i - 1] = $("#selectName" + i + "  option:selected").val()
+            } else {
+                selectNameArray[i - 1] = "";
+            }
+            if ($("#selectCondition" + i + "  option:selected").val() != undefined && $("#selectCondition" + i + "  option:selected").val() != "") {
+                selectConditionArray[i - 1] = $("#selectCondition" + i + "  option:selected").val()
+            } else {
+                selectConditionArray[i - 1] = "";
+            }
+            if ($("#inputValue" + i).is("input")) {
+                if ($("#inputValue" + i).val() != undefined && $("#inputValue" + i).val() != "") {
+                    inputValueArray[i - 1] = $("#inputValue" + i).val()
+                } else {
+                    inputValueArray[i - 1] = "";
+                }
+            } else {
+                if ($("#inputValue" + i + "  option:selected").val() != undefined && $("#inputValue" + i + "  option:selected").val() != "") {
+                    inputValueArray[i - 1] = $("#inputValue" + i + "  option:selected").text()
+                } else {
+                    inputValueArray[i - 1] = "";
+                }
+            }
+        }
+        arr["selectConnectArray"] = selectConnectArray;
+        arr["selectNameArray"] = selectNameArray;
+        arr["selectConditionArray"] = selectConditionArray;
+        arr["inputValueArray"] = inputValueArray;
+
+        parent.complexQuery(JSON.stringify(arr));//简单查询
+    }
+
+    //关闭当前窗口
+    function closeIfram() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+
+    function changeCondition(obj) {
+        var value = $("#" + obj.id + " option:selected").val();
+        var num = obj.id.substring(obj.id.length - 1, obj.id.length);
+        /*if (value == "cre_chushi_id") {//立卷单位
+            $("#selectCondition" + num).html("");
+            var html = "";
+            html += '<option value="04">等于</option>';
+            $("#selectCondition" + num).html(html);
+            var html1 = "";
+            html1 += ' <input type="text" class="form-control" id="inputValueName' + num + '" name="inputValueName' + num + '" onclick=parent.max();openSelectZtree({"id":"inputValue' + num + '","name":"inputValueName' + num + '","isMulti":1,"type":2,"asyn":false,"level":2,"url":"/system/component/tree/deptTree"})>';
+            html1 += '<input type="hidden" id="inputValue' + num + '" name="inputValue' + num + '" />';
+            $("#value" + num).html(html1);
+        } else*/ if (value == "barcode") {//条形码
+            $("#selectCondition" + num).html("");
+            var html = "";
+            html += '<option value="01">包含</option>';
+            $("#selectCondition" + num).html(html);
+            var html1 = "";
+            html1 += ' <input type="hiddden" class="form-control" id="inputValue' + num + '" name="inputValue' + num + '">';
+            $("#value" + num).html(html1);
+
+        } else {
+            if ($("#" + obj.id + " option:selected").attr("valueType") == "1") {//字符串
+            	$(obj).parent().next().next().off("change","#"+$(obj).parent().next().next().find("input").attr("id"))
+                $("#selectCondition" + num).html("");
+                var html = "";
+                html += '<option value="01">包含</option>';
+                html += '<option value="02">不包含</option>';
+                $("#selectCondition" + num).html(html);
+            }
+            if ($("#" + obj.id + " option:selected").attr("valueType") == "2" || $("#" + obj.id + " option:selected").attr("valueType") == "5") {//数字
+                $("#selectCondition" + num).html("");
+                var html = "";
+                html += '<option value="03">大于</option>';
+                html += '<option value="04">小于</option>';
+                html += '<option value="05">等于</option>';
+                html += '<option value="06">不等于</option>';
+                $(obj).parent().next().next().on("change","#"+$(obj).parent().next().next().find("input").attr("id"),function(){
+               	 var reg=/^\d*$/;
+               	 if(!reg.test($(this).val())){
+               		 $(this).val("")
+               		 layer.alert("只能填写数字！",{icon:0})
+               	 }
+                })
+                $("#selectCondition" + num).html(html);
+                $("#value" + num).html("");
+            }
+            if ($("#" + obj.id + " option:selected").attr("type") == "S") {//下拉框
+            	$(obj).parent().next().next().off("change","#"+$(obj).parent().next().next().find("input").attr("id"))
+                var dictionary = $("#" + obj.id + " option:selected").attr("dictionary");
+                var html1 = "";
+                html1 += ' <select class="form-control" id="inputValue' + num + '" name="inputValue' + num + '">';
+                html1 += ' </select>';
+                $("#value" + num).html(html1);
+                Dictionary.init({
+                    mark: dictionary,
+                    type: "1",
+                    position: "inputValue" + num,
+                    domType: "select",
+                    name: "inputValue" + num
+                });
+            }
+            if ($("#" + obj.id + " option:selected").attr("type") == "T") {//下拉框
+                var html1 = "";
+                html1 += ' <input type="text" class="form-control" id="inputValue' + num + '" name="inputValue' + num + '">';
+                $("#value" + num).html(html1);
+            }
+        }
+
+    }
+
+</script>
+</body>
+
+</html>

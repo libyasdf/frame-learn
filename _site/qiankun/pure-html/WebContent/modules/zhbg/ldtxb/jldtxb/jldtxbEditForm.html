@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>企业中心</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+</head>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area" style="min-height: 300px">
+    <form class="form-horizontal" id="form">
+        <input name="id" id="id" type="hidden" value=""/><!-- 工作项ID -->
+        <input type="hidden" id="textId"/>
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label  class="col-md-2 control-label">姓名：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="姓名">
+                    </div>
+                    <label  class="col-md-2 control-label">党政：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="partyGovernment" name="partyGovernment" placeholder="党政">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-md-2 control-label">专网：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="privateNetwork" name="privateNetwork" placeholder="专网">
+                    </div>
+                    <label  class="col-md-2 control-label">普网：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="universalNetwork" name="universalNetwork" placeholder="普网">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-md-2 control-label">手机号码：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="手机号码">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+    </form>
+</div>
+<!-- 按钮区 -->
+<div class="formpage_right_btn_area">
+    <ul>
+        <li><a href="#" onclick="global.save()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</a>
+        </li>
+    </ul>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/url.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/modules/zhbg/ldtxb/jldtxb/js/jldtxbEdit.js"></script>
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--文件上传js end-->
+<script src="/modules/zhbg/ldtxb/jldtxb/js/form.js"></script>
+<script type="text/javascript">
+    //绑定日期输入input
+    laydate.render({
+        elem: '#birth' //指定元素
+    });
+</script>
+</body>
+</html>

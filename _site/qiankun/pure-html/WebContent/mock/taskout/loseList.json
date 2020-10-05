@@ -1,0 +1,28 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 2,
+    "rows": [
+      {
+        "id": 1,
+        "loseUserDeptName": "A科",
+        "loseUserName": "张三",
+        "loseTime": "2019-02-05",
+        "relieveTime": "2019-05-05",
+        "isManualRelieve": "0",
+        "relieveType": "1",
+         "cz": "update,delete"
+      },
+      {
+       "id": 1,
+        "loseUserDeptName": "A科",
+        "loseUserName": "李四",
+        "loseTime": "2019-05-05",
+        "relieveTime": "2019-07-05",
+        "isManualRelieve": "",
+        "relieveType": "0",
+         "cz": "update,delete"
+      }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<msgConfig>
+	<!-- 需要登录才能访问的请求（模糊匹配） -->
+	<filter>
+		<url>/</url>
+	</filter>
+	<!-- 无需登录即可访问的资源路径（全路径名） -->
+	<noFilter>
+		<url>/login.html</url>
+		<url>/user/clearAllCookie</url>
+		<url>/workflow/getFlowStatus</url>
+		<url>/workflow/getflowcourse</url>
+		<url>/workflow/getformalidea</url>
+		<url>/yycx/getRectiveDeptUser/execution</url>
+		<url>/yycx/getRectiveDeptUserBm/execution</url>
+		<url>/yycx/getSelectDept/execution</url>
+		<url>/yycx/getSelectUser/execution</url>
+		<url>/yycx/getPreUserToNextLevel/execution</url>
+		<url>/yycx/getDraftUserToNextLevel/execution</url>
+		<!--常用工具下载（为客户端使用）-->
+		<url>/system/component/affix/downloadInServer</url>
+		<url>/system/login/login_ca</url>
+		<!--消息客户端版本验证方法-->
+		<url>/system/config/msgVersion/getNewVersion</url>
+		<url>/system/config/msgVersion/getByVersion</url>
+		<!--  待办授权回调方法 -->
+		<url>/accredit</url>
+		<url>/accredit/getAccreditInfo</url>
+		<url>/accredit/getAccUser</url>
+		<!-- jsp转换html服务 -->
+		<url>/toHtml</url>
+		<!--会议签到系统访问地址-->
+		<url>/sign/hygl/meetingSign/edit</url>
+		<url>/sign/hygl/meetingSign/saveForm</url>
+
+	</noFilter>
+
+    <!-- 无需合法校验的URL（精确匹配） -->
+    <noXssFilter>
+        <!-- 信息发布，正文编辑 -->
+        <url>/info/**</url>
+    </noXssFilter>
+
+	<!-- 需要校验资源访问权限的路径（模糊匹配） -->
+	<auth>
+		<url>/taskplan</url>
+		<url>/llg</url>
+		<url>/zhbg</url>
+	</auth>
+</msgConfig>

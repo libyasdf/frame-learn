@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<title></title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12">
+				<form id="form" class="form-horizontal" style="margin-top: 15px;">
+					<input type="hidden" id="type" name="type" value="">
+					<input type="hidden" id="pId" name="pId" value="">
+					<input type="hidden" id="id" name="id" value="">
+					<input type="hidden" id="treeType" name="treeType" value="">
+					<input type="hidden" id="fid" name="fid" value="">
+					<!-- 资料类别在音视频系统中的Id -->
+					<input type="hidden" id="code" name="code" value="">
+					<!-- 资料类别在音视频系统中的分类层级：1、2、3... -->
+					<input type="hidden" id="flag" name="flag" value="">
+					<!--查询项输入框选择框等开始-->
+					<div class="form-group">
+						<label class="col-sm-offset-1 col-sm-2 control-label">
+							<b style="color: red;">*</b> 类型名称：</label>
+						<div class="col-sm-7">
+							<input class="form-control" type="text" id="name" name="name" >
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-offset-1 col-sm-2 control-label"> 备注：</label>
+						<div class="col-sm-7">
+							<textarea class="form-control" rows="3" name="remark"></textarea>
+						</div>
+					</div>
+					<!--查询项输入框选择框等结束-->
+
+					<!--查询重置等按钮-->
+					<div class="form-group">
+						<div class="col-sm-12" style="text-align: center">
+							<button id="saveButton" type="button" class="btn btn-primary" onclick="saveDictionary()">
+								保&nbsp;&nbsp;存
+							</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-primary" onclick="closeIfram();">
+								关&nbsp;&nbsp;闭
+							</button>
+						</div>
+					</div>
+					<!--查询重置等按钮 end-->
+				</form>
+			</div>
+		</div>
+	</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript" src="/modules/zhbg/xxkh/tree/js/dictionaryValidator.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!-- 音视频系统ip -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript">
+	$(function () {
+	    // 初始化参数
+        var theRequest = GetRequest();
+        $("#id").val(theRequest.id ? theRequest.id : "");
+        $("#type").val(theRequest.type ? theRequest.type : "");
+        $("#fid").val(theRequest.fid ? theRequest.fid : "");
+        $("#pId").val(theRequest.pId ? theRequest.pId : "");
+        $("#mark").val(theRequest.mark ? theRequest.mark : "");
+        $("#treeType").val(theRequest.treeType ? theRequest.treeType : "");
+        $("#code").val(theRequest.code ? theRequest.code : "");
+        $("#flag").val(theRequest.flag ? theRequest.flag : "");
+        if ($("#type").val() == "0" && $("#id").val() == "") {
+            $("#mark").removeProp("readonly");
+		}
+		if($("#id").val() != ""){
+            var datas = {"id":$("#id").val()};
+            httpRequest("get","/zhbg/xxkh/tree/view",datas,function (data){
+                DisplayData.playData({data: data});
+            });
+		}
+    })
+
+
+	//保存资料类型
+	function saveDictionary() {
+		$("#saveButton").attr("disabled","disabled");
+		var bootstrapValidator = $("#form").data('bootstrapValidator');
+		var isSuccessFromHB = false;
+	    //手动触发验证
+	    bootstrapValidator.validate();
+	    if(bootstrapValidator.isValid()){
+	    	
+	    	//在音视频增加分类开始
+	    	var ClassLayer = 1;
+	    	var FatherId = 0;
+	    	//当前被选中类别在音视频系统中的Id
+	    	if($("#code").val()!=""){
+	    		FatherId = parseInt($("#code").val());
+	    	}
+	    	//当前被选中类别在音视频系统中的层级，即ClassLayer
+	    	if($("#flag").val()!=""){
+	    		ClassLayer = parseInt($("#flag").val()) + 1;
+	    	}
+	    	//console.log("#code="+$("#code").val()+",#flag="+$("#flag").val());
+	    	//console.log("FatherId="+FatherId+",ClassLayer="+ClassLayer);
+	    	//return false;
+	    	var newLevel={
+					ClassUuid: "7c97c0fa-fdd1-4097-9bd7-34386548ac09",	
+					ClassName: $("#name").val(),
+					ClassLongName: "",
+					ClassRemark: "",
+					ClassLargeIcon: "",
+					ClassMediumIcon: "",
+					ClassSmallIcon: "",
+					FatherId: FatherId,
+					ClassType: 0,
+					ClassLayer: ClassLayer,
+					ClassReadOnly: "0",
+					ClassIsDisplay: "1",
+					ClassDisplayOrder: "0",
+					OperatorId: 1,
+					OperatorUuid: "1ea9667c-0171-11e8-a1e1-000c29ba38ba",
+					AdderId: 1,
+					AdderName: "admin",
+					AddTime: "2018-06-04T15:47:24+08:00",
+					UpdaterId: 0,
+					UpdaterName: "",
+					UpdateTime: "2018-06-04T15:47:24+08:00",
+					DelFlag: "0"
+			}
+	    	//默认的请求方式和url
+	    	var url = Config.hBServerIp+"/api/v1/file_class";
+	    	var requestType = "POST";
+	    	//如果是修改，需要修改url和请求方式
+	    	if($("#id").val() != ""){
+	    		url=Config.hBServerIp+"/api/v1/file_class/"+FatherId;
+	    		requestType = "PUT";
+	    		newLevel={
+	    				ClassUuid: "7c97c0fa-fdd1-4097-9bd7-34386548ac09",	
+						ClassName: $("#name").val(),
+						ClassLongName: "",
+						ClassRemark: "",
+						ClassLargeIcon: "",
+						ClassMediumIcon: "",
+						ClassSmallIcon: "",
+						ClassType: 0,
+						ClassLayer: ClassLayer-1,
+						ClassReadOnly: "0",
+						ClassIsDisplay: "1",
+						ClassDisplayOrder: "0",
+						OperatorId: 1,
+						OperatorUuid: "1ea9667c-0171-11e8-a1e1-000c29ba38ba",
+						AdderId: 1,
+						AdderName: "admin",
+						AddTime: "2018-06-04T15:47:24+08:00",
+						UpdaterId: 0,
+						UpdaterName: "",
+						UpdateTime: "2018-06-04T15:47:24+08:00",
+						DelFlag: "0"
+				}
+	    	}
+	    	//只有法制资料、保密资料、政治理论资料维护三个模块的树需要跟音视频系统同步
+	    	if($("#treeType").val() =="fz" || $("#treeType").val() =="bm" || $("#treeType").val() =="zzll"){
+	    		$.ajax({
+		    		type:requestType,
+		    		url:url,
+		    		data:JSON.stringify(newLevel),
+		    		async: false,
+		    		dataType:"json",
+		    		success:function(data){
+		    		    console.log("音视频创建分类成功："+JSON.stringify(data));
+		    		    //如果是修改那么音视频那边并不会返回保存后的对象，只会返回“ok”，所以下边需要判断是修改还是新增
+		    		    if($("#id").val() == ""){
+		    		    	//设置在音视频中分类Id
+			    		    $("#code").val(data.Id);
+			    		    //设置在音视频中分类层级
+			    		    $("#flag").val(data.ClassLayer);
+		    		    }
+		    		    isSuccessFromHB = true;
+		    		},
+		    		error:function(data){
+		    			layer.msg("音视频系统创建分类失败，请稍后再试！", {icon: 0});
+		    		}
+		    	});
+	    	}else{
+	    		//如果非以上三个模块
+	    		isSuccessFromHB = true;
+	    	}
+			
+	    	//在音视频增加分类结束
+	    	//音视频那边没有保存成功，则直接退出
+	    	if(!isSuccessFromHB){
+	    		return false;
+	    	}
+	    	//在综合管理系统中创建一个分类
+	    	//console.log("序列化分类表单："+$("#form").serialize());
+			$.ajax({
+	    		type: "POST",
+	    		url:"/zhbg/xxkh/tree/save",
+	    		data:$("#form").serialize(),
+	    		async: false,
+	    		dataType:"json",
+	    		success:function(data){
+	    		    if('1' == data.flag){
+	    		    	if(data.data.type == '0'){
+							if($("#id").val() != ""){
+							    parent.typeTree.updateNode(data);
+                            }else{
+                                parent.typeTree.addNode({id:data.data.id,pId:data.data.pId,name:data.data.name,code:data.data.code,flag:data.data.flag,treeType:data.data.treeType});// 在ztree中增加新保存的节点
+							}
+						}else if(data.data.type == '1') {
+                            window.parent.refresh();
+                            // $("#right_table", parent.document).bootstrapTable("refresh");
+						}
+                        layer.msg("保存成功！", {icon: 1,time:1000}, function (index){
+							//关闭当前窗口
+                            closeIfram();
+                        });
+                    }
+	    		},
+	    		error:function(data){
+	    			 layer.msg("保存资料类别功能异常，请稍后再试！", {icon: 0});
+	    		}
+	    	});
+			
+	    }
+	}
+
+	//关闭当前窗口
+	function closeIfram(){
+        var index=parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+	}
+</script>
+</body>
+</html>

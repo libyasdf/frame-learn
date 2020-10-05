@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>企业中心</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+</head>
+<body>
+<!--<form name="form1">-->
+    <!--接受到的数据：<input type="text" style="width:1000px;height:100px" name="txtReceive" value="">-->
+<!--</form>-->
+<input type="hidden" id="comName"/>
+<input type="hidden" id="resId"/>
+<div class="container-fluid formpage_area" style="min-height: 50px; max-height:50px; border: 0px;text-align: center">
+    <h3>扫码枪扫描结果</h3>
+</div>
+<div id="content" class="container-fluid formpage_area" style="min-height: 300px; max-height:300px;overflow-y:scroll;">
+
+</div>
+
+
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+
+    <OBJECT CLASSID="clsid:648A5600-2C6E-101B-82B6-000000000014" id=MSComm1 codebase="MSCOMM32.OCX" type="application/x-oleobject"
+            style="LEFT:   54px;   TOP:   14px">
+        <PARAM NAME="DTREnable" VALUE="1">
+        <PARAM NAME="Handshaking" VALUE="0">
+        <PARAM NAME="InBufferSize" VALUE="1024"> <!-- 接受缓冲区大小 -->
+        <PARAM NAME="InputLen" VALUE="0">  <!-- 设置一次性读取的长度，设置为0表示所有内容 -->
+        <PARAM NAME="NullDiscard" VALUE="0">
+        <PARAM NAME="OutBufferSize" VALUE="512"><!-- 发送缓冲区大小 -->
+        <PARAM NAME="ParityReplace" VALUE="?">
+        <!--通过该属性设置产生OnComm 事件(接收时产生)的阀值,若MSComm1.RThreshold:=0,不产生OnComm 事件,
+         若MSComm1.RThreshold:=5,接收缓冲区每收到5字节时,则产生OnComm 事件 -->    
+        <PARAM NAME="RThreshold" VALUE="1">
+        <PARAM NAME="RTSEnable" VALUE="1">
+        <!-- 通过该属性设置产生OnComm 事件(发送时产生)的阀值,若MSComm1.SThreshold:=0, 则一次发送所有数据 ,
+        发送数据时不产生OnComm 事件, 若MSComm1.SThreshold:=5,当发送缓冲区的字节数从5字节减少到4字节时, 产生OnComm 事件-->
+        <PARAM NAME="SThreshold" VALUE="2">
+        <!-- 确定在输入过程中 MSComm 控件是否寻找文件结尾 (EOF) 字符。
+        如果找到 EOF 字符，将停止输入并激活 OnComm 事件，此时 CommEvent 属性设置为 comEvEOF-->
+        <PARAM NAME="EOFEnable" VALUE="0">
+        <!-- 设置以何种方式接收数据
+        comInputModeText为以文本方式接收，值为0；comInputModeBinary以二进制数据接收，值为1-->
+        <PARAM NAME="InputMode" VALUE="0">
+
+        <PARAM NAME="DataBits" VALUE="8">
+        <PARAM NAME="StopBits" VALUE="1">
+        <PARAM NAME="BaudRate" VALUE="9600">
+        <PARAM NAME="Settings" VALUE="9600,N,8,1"> <!-- 设置波特率 ,校验位,数据位,停止位 -->
+    </OBJECT>
+
+<SCRIPT LANGUAGE=javascript FOR=MSComm1 EVENT=OnComm>
+    // MSComm1控件每遇到OnComm事件就调用MSComm1_OnComm()函数
+    MSComm1_OnComm();
+</SCRIPT>
+
+<script>
+
+    $(function() {
+        var theRequest = GetRequest();
+        $("#resId").val(theRequest.resId);
+        $("#comName").val(theRequest.comName);
+        //页面加载后打开串口
+        OpenPort();
+    })
+
+    //重写mscomm控件的唯一事件处理代码
+    function MSComm1_OnComm() {
+        var len = 0;
+        if (MSComm1.CommEvent == 1)//如果是发送事件
+        {
+            window.alert("ok");//这句正常，说明发送成功了
+        }
+        else if (MSComm1.CommEvent == 2)//如果是接收事件
+        {
+            var result = MSComm1.Input;
+            //输出扫描到的条码信息
+            var now = getCurrentDate("yyyy-MM-dd hh:mm:ss");
+            $("#content").append("<p style='text-align: center'>" + now + "</p>" + result + "<br>" + "<br>");
+            var div = document.getElementById('content');
+            div.scrollTop = div.scrollHeight;
+        }
+
+        return false;
+    }
+
+    function OpenPort() {
+        if($("#comName").val() == null || $("#comName").val() == ""){
+            layer.alert("请选择端口！", {icon: 5});
+            return false;
+        }else{
+            MSComm1.CommPort = $("#comName").val();
+        }
+        if (MSComm1.PortOpen == false) {
+            MSComm1.PortOpen = true;
+        }else if(typeof(MSComm1.PortOpen) == "undefined" || MSComm1.PortOpen == null){
+            layer.alert("请安装控件后再试！", {icon: 5})
+        } else {
+            layer.alert("已经开始接收数据!");
+        }
+    }
+
+    function ClosePort() {
+        if (MSComm1.PortOpen == true) {
+            MSComm1.PortOpen = false;
+        }
+        else {
+            window.alert("串口已经关闭!");
+        }
+    }
+</script>
+</body>
+</html>

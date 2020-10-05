@@ -1,0 +1,17 @@
+{
+  "flag": "1",
+  "data": [
+             {
+                "name": "收文",
+                "style": "/static/images/ico_listsearch.png",
+                "id": "001",
+                "url":"/modules/dagl/wdgl/receiveFile/wdglList.html",
+              },
+              {
+                  "name": "发文",
+                  "style": "/static/images/ico_listsearch.png",
+                  "id": "001",
+                  "url":"/modules/dagl/wdgl/sendFile/wdglSendList.html",
+                }
+  ]
+}

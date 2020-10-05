@@ -1,0 +1,96 @@
+{
+  "flag": "1",
+  "data": [
+    {
+               "url": "/modules/dwgl/shyk/ndjh/dzbNdjhList.html",
+               "name": "党支部年度计划",
+               "style": "/static/images/ico_listsearch.png",
+               "id": "002"
+       },
+     {
+             "url": "/modules/dwgl/shyk/ndjh/ndjhList.html",
+             "name": "年度计划汇总",
+             "style": "/static/images/ico_listsearch.png",
+             "id": "002"
+     },
+    {
+              "url": "#",
+              "name": "三会一课",
+              "style": "/static/images/ico_listsearch.png",
+              "id": "002",
+                "childrenList":[ {
+                         "url": "/modules/dwgl/shyk/zbdydh/zbdydhList.html",
+                         "name": "支部党员大会",
+                         "id": "002"
+                    },{
+                       "url": "/modules/dwgl/shyk/zbwyh/zbwyhList.html",
+                       "name": "支部委员会会议",
+                       "id": "002"
+                     },{
+                      "url": "/modules/dwgl/shyk/dxzh/dxzhList.html",
+                      "name": "党小组会",
+                      "id": "002"
+                    },{
+                        "url": "/modules/dwgl/shyk/dkgl/dkglList.html",
+                        "name": "党课",
+                        "id": "002"
+                    },{
+                        "url": "/modules/dwgl/shyk/zzshh/zzshhList.html",
+                        "name": "组织生活会",
+                        "id": "002"
+                    },{
+                        "url": "/modules/dwgl/shyk/jtxx1/jtxxList.html",
+                        "name": "集体学习讨论",
+                        "id": "002"
+                    },{
+                        "url": "/modules/dwgl/shyk/drhd/drhdList.html",
+                        "name": "党日活动",
+                        "id": "002"
+                      },{
+                        "url": "/modules/dwgl/shyk/zbdydh/zbdydhTjList.html",
+                        "name": "支部党员大会统计",
+                        "id": "002"
+                      },{
+                        "url": "/modules/dwgl/shyk/zbwyh/zbwyhTjList.html",
+                        "name": "支部委员会会议统计",
+                        "id": "002"
+                      },{
+                        "url": "/modules/dwgl/shyk/dxzh/dxzhTjList.html",
+                        "name": "党小组会统计",
+                        "id": "002"
+                     },{
+                            "url": "/modules/dwgl/shyk/dkgl/dkglTjList.html",
+                            "name": "党课统计",
+                            "id": "002"
+                     },{
+                            "url": "/modules/dwgl/shyk/zzshh/zzshhTjList.html",
+                            "name": "组织生活会统计",
+                            "id": "002"
+                      },{
+                        "url": "/modules/dwgl/shyk/jtxx1/jtxxTjList.html",
+                        "name": "集体学习讨论统计",
+                        "id": "002"
+                    },{
+                        "url": "/modules/dwgl/shyk/drhd/drhdTjList.html",
+                        "name": "党日活动统计",
+                        "id": "002"
+                      }]
+        },
+    {
+               "url": "/modules/dwgl/shyk/ndzj/NdzjList.html",
+               "name": "党支部年底总结",
+               "style": "/static/images/ico_listsearch.png",
+               "id": "002"
+       },
+     {
+             "url": "/modules/dwgl/shyk/ndzj/ndjhTjList.html",
+             "name": "年底总结汇总",
+             "style": "/static/images/ico_listsearch.png",
+             "id": "002"
+
+
+      }]
+
+
+
+}

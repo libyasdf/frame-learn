@@ -1,8 +1,8 @@
 ---
 order: 1
 title: 排版字体
-group: 
-  order: 3
+nav: 
+  order: 4
   title: 排版样式
 ---
 

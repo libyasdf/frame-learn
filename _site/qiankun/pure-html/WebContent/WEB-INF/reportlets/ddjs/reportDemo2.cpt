@@ -1,0 +1,1630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20170720" releaseVersion="9.0.0">
+<TableDataMap>
+<TableData name="ds1" class="com.fr.data.impl.DBTableData">
+<Parameters/>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[tjxm]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[SELECT * FROM "TJXM"."FINE_REPORT_DEMO"]]></Query>
+</TableData>
+<TableData name="ds2" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="year"/>
+<O>
+<![CDATA[2018]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="status"/>
+<O>
+<![CDATA[1]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[tjxm]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[SELECT * FROM "TJXM"."DDJS_BBGL_FIRST_TABLE" WHERE CRE_TIME LIKE '${year}%' and status ='${status}']]></Query>
+</TableData>
+</TableDataMap>
+<ReportWebAttr>
+<ServerPrinter/>
+<WebPageContent>
+<ToolBars>
+<ToolBarManager>
+<Location>
+<Embed position="1"/>
+</Location>
+<ToolBar>
+<Widget class="com.fr.report.web.button.page.First">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('ReportServerP-First')}]]></Text>
+<IconName>
+<![CDATA[first]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.page.Previous">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('ReportServerP-Previous')}]]></Text>
+<IconName>
+<![CDATA[previous]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.page.PageNavi">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+</Widget>
+<Widget class="com.fr.report.web.button.page.Next">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('ReportServerP-Next')}]]></Text>
+<IconName>
+<![CDATA[next]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.page.Last">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('ReportServerP-Last')}]]></Text>
+<IconName>
+<![CDATA[last]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.NewPrint">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('FR-Engine_Print')}]]></Text>
+<IconName>
+<![CDATA[print]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.Export">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Export')}]]></Text>
+<IconName>
+<![CDATA[export]]></IconName>
+<Buttons pdf="true" excelP="true" excelO="true" excelS="true" word="true" image="true" html="true"/>
+</Widget>
+<Widget class="com.fr.report.web.button.Email">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Email')}]]></Text>
+<IconName>
+<![CDATA[email]]></IconName>
+</Widget>
+</ToolBar>
+</ToolBarManager>
+</ToolBars>
+<WebPage isPage="false" isShowAsImage="false" isAutoScale="false" isTDHeavy="false"/>
+</WebPageContent>
+<WebViewContent>
+<ToolBars>
+<ToolBarManager>
+<Location>
+<Embed position="1"/>
+</Location>
+<ToolBar>
+<Widget class="com.fr.report.web.button.PageSetup">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('PageSetup-Page_Setup')}]]></Text>
+<IconName>
+<![CDATA[pagesetup]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.PrintPreview">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('PrintP-Print_Preview')}]]></Text>
+<IconName>
+<![CDATA[preview]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.NewPrint">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('FR-Engine_Print')}]]></Text>
+<IconName>
+<![CDATA[print]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.Export">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Export')}]]></Text>
+<IconName>
+<![CDATA[export]]></IconName>
+<Buttons pdf="true" excelP="true" excelO="true" excelS="true" word="true" image="true" html="true"/>
+</Widget>
+<Widget class="com.fr.report.web.button.Email">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Email')}]]></Text>
+<IconName>
+<![CDATA[email]]></IconName>
+</Widget>
+</ToolBar>
+</ToolBarManager>
+</ToolBars>
+<SortFuncCheck check="true"/>
+<ConditionFuncCheck check="true"/>
+<ListFuncCheck check="true"/>
+</WebViewContent>
+<WebWriteContent>
+<Listener event="writesuccess">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[	window.parent.load();
+	//alert(“阿斯顿发送到发撒旦法师打发斯蒂芬”);
+	//document.getElementById("reportFrame").src = "/ReportServer?reportlet=/demo/bbglFirstT//able.cpt&op=write&year=2018&status=2";
+	//location.reload();]]></Content>
+</JavaScript>
+</Listener>
+<ToolBars>
+<ToolBarManager>
+<Location>
+<Embed position="1"/>
+</Location>
+<ToolBar>
+<Widget class="com.fr.report.web.button.write.Submit">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Utils-Submit')}]]></Text>
+<IconName>
+<![CDATA[submit]]></IconName>
+<Verify failVerifySubmit="false" value="true"/>
+<Sheet onlySubmitSelect="false"/>
+</Widget>
+<Widget class="com.fr.report.web.button.write.Verify">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Verify-Data_Verify')}]]></Text>
+<IconName>
+<![CDATA[verify]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.NewPrint">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('FR-Engine_Print')}]]></Text>
+<IconName>
+<![CDATA[print]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.Export">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Export')}]]></Text>
+<IconName>
+<![CDATA[export]]></IconName>
+<Buttons pdf="true" excelP="true" excelO="true" excelS="true" word="true" image="true" html="true"/>
+</Widget>
+</ToolBar>
+</ToolBarManager>
+</ToolBars>
+<SelectedColor/>
+<WebWrite SheetPosition="1"/>
+<RptLocation isShowAtLeft="true"/>
+<UnloadCheck/>
+<ShowWidgets/>
+<OtherAttr isAutoStash="false"/>
+</WebWriteContent>
+</ReportWebAttr>
+<ElementCaseMobileAttr>
+<ElementCaseMobileAttrProvider horizontal="1" vertical="1" zoom="true" refresh="false" isUseHTML="false" isMobileCanvasSize="false"/>
+</ElementCaseMobileAttr>
+<Report class="com.fr.report.worksheet.WorkSheet" name="第一表: 党员数量变化情况">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[1136904,757936,1136904,757936,2918968,1743456,1743456,1705864,1705864,1819656,1743456,1743456,1743456,1743456,1743456,757936,723900,723900,2918968,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[1143000,1943100,2057400,3352800,990600,1371600,1143000,1371600,2057400,3352800,990600,1371600,5181600,1828800,9495692,1143000,1524000,2209800,3390900,1676400,1485900,2362200,1485900,2933700,1371600,8792307,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="2" cs="20" s="0">
+<O>
+<![CDATA[党员数量变化情况]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="3" cs="2" s="1">
+<O>
+<![CDATA[填报单位：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="3" cs="6" s="1">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="3" s="2">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="3" s="1">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="16" r="3" s="1">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="3" s="1">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="18" r="3" s="3">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="19" r="3" s="1">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="3" s="3">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="3" s="1">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="22" r="3" s="3">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="23" r="3" s="3">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="24" r="3" cs="2" s="4">
+<O>
+<![CDATA[第一表]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="4" cs="5" s="5">
+<O>
+<![CDATA[项    目]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="4" cs="4" s="6">
+<O>
+<![CDATA[人    数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="4" cs="5" s="6">
+<O>
+<![CDATA[项    目]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="4" cs="6" s="7">
+<O>
+<![CDATA[人    数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="5" cs="5" s="5">
+<O>
+<![CDATA[甲]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="5" cs="4" s="8">
+<O>
+<![CDATA[A]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="5" cs="5" s="5">
+<O>
+<![CDATA[甲]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="5" cs="6" s="9">
+<O>
+<![CDATA[A]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="6" cs="5" rs="2" s="5">
+<O>
+<![CDATA[一 、 上 年 底 总 数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="6" rs="2" s="8">
+<O>
+<![CDATA[1]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="6" cs="3" rs="2" s="10">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="BEFORE_YEAR_TOTAL"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<CellPageAttr/>
+<Widget class="com.fr.form.ui.TextEditor">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[null]]></Content>
+</JavaScript>
+</Listener>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ListCondition">
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="2">
+<O>
+<![CDATA[100]]></O>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="3">
+<O>
+<![CDATA[10000]]></O>
+</Compare>
+</Condition>
+</JoinCondition>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ForegroundHighlightAction">
+<Foreground color="-65536"/>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<CellInsertPolicy/>
+<Expand dir="0"/>
+</C>
+<C c="15" r="6" cs="5" s="5">
+<O>
+<![CDATA[三 、 本  年   减  少]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="6" s="11">
+<O>
+<![CDATA[9]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="6" cs="5" s="12">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="THIS_YEAR_REMOVE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Present class="com.fr.base.present.FormulaPresent">
+<Content>
+<![CDATA[=SUM(V8+V9+V10+V11)]]></Content>
+</Present>
+<Expand dir="0"/>
+</C>
+<C c="15" r="7" cs="5" s="5">
+<O>
+<![CDATA[出            党]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="7" s="11">
+<O>
+<![CDATA[10]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="7" cs="5" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="OUT_PARTY"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="6" r="8" cs="5" s="5">
+<O>
+<![CDATA[二 、 本 年 增 加]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="8" s="8">
+<O>
+<![CDATA[2]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="8" cs="3" s="14">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="THIS_YEAR_ADD"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.SummaryGrouper">
+<FN>
+<![CDATA[com.fr.data.util.function.SumFunction]]></FN>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Present class="com.fr.base.present.FormulaPresent">
+<Content>
+<![CDATA[=SUM(M10+M12+M14)]]></Content>
+</Present>
+<Expand/>
+</C>
+<C c="15" r="8" cs="5" s="5">
+<O>
+<![CDATA[停    止   党   籍]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="8" s="9">
+<O>
+<![CDATA[11]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="8" cs="5" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="STOP_MEMBERSHIP"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="6" r="9" cs="5" s="15">
+<O>
+<![CDATA[发  展  党  员]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="9" s="8">
+<O>
+<![CDATA[3]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="9" cs="3" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="DEVELOPMENT_MEMBER"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[var M11value = contentPane.curLGP.getCellValue("M11"); //获取M10单元格的值
+if (this.getValue()*1 < M11value){     //判断输入值是否小于M10单元格值
+   FR.Msg.alert(FR.i18n.Alert, "3栏 >= 4栏");     //弹出对话框
+   return false;
+}]]></Content>
+</JavaScript>
+</Listener>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="15" r="9" cs="5" s="5">
+<O>
+<![CDATA[死            亡]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="9" s="11">
+<O>
+<![CDATA[12]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="9" cs="5" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="DEATH"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="6" r="10" cs="2" s="16">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="10" cs="3" s="5">
+<O>
+<![CDATA[重 新 入 党]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="10" s="8">
+<O>
+<![CDATA[4]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="10" cs="3" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="REJOIN_HE_PARTY"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[var M10value = contentPane.curLGP.getCellValue("M10"); //获取M10单元格的值
+if (this.getValue()*1 > M10value){     //判断输入值是否小于M10单元格值
+   FR.Msg.alert(FR.i18n.Alert, "5栏 >= 6栏");     //弹出对话框
+   this.setValue("")
+   return false;
+}]]></Content>
+</JavaScript>
+</Listener>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="15" r="10" cs="5" s="15">
+<O>
+<![CDATA[转 出 组 织 关 系]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="10" s="11">
+<O>
+<![CDATA[13]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="10" cs="5" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="TURN_OUT_RELATIONS"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="6" r="11" cs="5" s="17">
+<O>
+<![CDATA[恢 复 党 籍]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="11" s="18">
+<O>
+<![CDATA[5]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="11" cs="3" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="RECOVERY_MEMBERSHIP"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[var M13value = contentPane.curLGP.getCellValue("M13"); //获取M10单元格的值
+if (this.getValue()*1 < M13value){     //判断输入值是否小于M10单元格值
+   FR.Msg.alert(FR.i18n.Alert, "5栏 >= 6栏");     //弹出对话框
+   return false;
+}]]></Content>
+</JavaScript>
+</Listener>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="15" r="11" cs="2" s="16">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="17" r="11" cs="3" s="5">
+<O>
+<![CDATA[整 建 制 转 出]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="11" s="19">
+<O>
+<![CDATA[14]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="11" cs="5" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="TURN_OUT_TRANSFER_SYSTEM"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="6" r="12" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="12" cs="3" s="21">
+<O>
+<![CDATA[停止党籍后恢复党籍]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="12" s="18">
+<O>
+<![CDATA[6]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="12" cs="3" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="STOPAFTER_REC_MEMSHIP"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[var M12value = contentPane.curLGP.getCellValue("M12"); //获取M10单元格的值
+if (this.getValue()*1 > M12value){     //判断输入值是否小于M10单元格值
+   FR.Msg.alert(FR.i18n.Alert, "5栏 >= 6栏");     //弹出对话框
+   this.setValue("")
+   return false;
+}]]></Content>
+</JavaScript>
+</Listener>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="15" r="12" cs="5" s="5">
+<O>
+<![CDATA[四 、 本 年 底 应 有 数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="12" s="8">
+<O>
+<![CDATA[15]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="12" cs="5" s="22">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="END_YEAR_DUE_NUMBER"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Present class="com.fr.base.present.FormulaPresent">
+<Content>
+<![CDATA[=SUM(M7+M9-V9)]]></Content>
+</Present>
+<Expand dir="0"/>
+</C>
+<C c="6" r="13" cs="5" s="17">
+<O>
+<![CDATA[转 入 组 织 关 系]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="13" s="18">
+<O>
+<![CDATA[7]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="13" cs="3" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="TRANSFER_INTO_RELATIONS"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[var M15value = contentPane.curLGP.getCellValue("M15"); //获取M10单元格的值
+if (this.getValue()*1 < M15value){     //判断输入值是否小于M10单元格值
+   FR.Msg.alert(FR.i18n.Alert, "7栏 >= 8栏");     //弹出对话框
+   return false;
+}]]></Content>
+</JavaScript>
+</Listener>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="15" r="13" cs="5" s="5">
+<O>
+<![CDATA[五 、 本 年 底 实 有 数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="13" s="8">
+<O>
+<![CDATA[16]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="13" cs="5" s="13">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="END_YEAR_REAL_NUMBER"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="6" r="14" cs="2" s="20">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="14" cs="3" s="21">
+<O>
+<![CDATA[整 建 制 转 入]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="14" s="23">
+<O>
+<![CDATA[8]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="14" cs="3" s="24">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="TRANSFER_SYSTEM"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[var M14value = contentPane.curLGP.getCellValue("M14"); //获取M10单元格的值
+if (this.getValue()*1 > M14value){     //判断输入值是否小于M10单元格值
+   FR.Msg.alert(FR.i18n.Alert, "7栏 >= 8栏");     //弹出对话框
+   this.setValue("")
+   return false;
+}]]></Content>
+</JavaScript>
+</Listener>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="15" r="14" cs="5" s="15">
+<O>
+<![CDATA[六 、实有数与应有数之差]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="14" s="25">
+<O>
+<![CDATA[17]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="21" r="14" cs="5" s="26">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="DUE_AND_REAL_DIFFERENCE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Present class="com.fr.base.present.FormulaPresent">
+<Content>
+<![CDATA[=SUM(V14 - V13)]]></Content>
+</Present>
+<Expand dir="0"/>
+</C>
+<C c="3" r="15">
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand/>
+</C>
+<C c="6" r="15" cs="7" s="27">
+<O>
+<![CDATA[补充资料：党组织收到党员本年转出组织关系介绍信回执 ]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="15" cs="2" s="28">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="LETTER_OF_INTRODUCTION_NUMBER"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="15" r="15" cs="3" s="29">
+<O>
+<![CDATA[份。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="18" r="15" s="30">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="19" r="15" s="30">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="20" r="15" cs="6" s="31">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="18">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="ID"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<CellGUIAttr printContent="false"/>
+<CellPageAttr/>
+<Widget class="com.fr.form.ui.TextEditor">
+<WidgetAttr invisible="true" description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<Reg class="com.fr.form.ui.reg.NoneReg"/>
+<widgetValue/>
+</Widget>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[显隐]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[H19 != ""]]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.RowHeightHighlightAction"/>
+</Highlight>
+</HighlightList>
+<Expand dir="0"/>
+</C>
+<C c="7" r="19">
+<O t="DSColumn">
+<Attributes dsName="ds2" columnName="STATUS"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+</CellElementList>
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting/>
+</ReportSettings>
+<Header reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Header>
+<Footer reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Footer>
+</ReportAttrSet>
+<ReportWriteAttr>
+<SubmitVisitor class="com.fr.report.write.WClassSubmiter">
+<Name>
+<![CDATA[自定义提交1]]></Name>
+<SubmitTask class="com.fr.data.ClassSubmitJob">
+<ClassAttr className="com.fr.data.SinoSoftFrDemo"/>
+<Property name="ID">
+<ColumnRow column="7" row="18"/>
+</Property>
+<Property name="BEFORE_YEAR_TOTAL">
+<ColumnRow column="12" row="6"/>
+</Property>
+<Property name="THIS_YEAR_ADD">
+<ColumnRow column="12" row="8"/>
+</Property>
+<Property name="DEVELOPMENT_MEMBER">
+<ColumnRow column="12" row="9"/>
+</Property>
+<Property name="REJOIN_HE_PARTY">
+<ColumnRow column="12" row="10"/>
+</Property>
+<Property name="RECOVERY_MEMBERSHIP">
+<ColumnRow column="12" row="11"/>
+</Property>
+<Property name="STOPAFTER_REC_MEMSHIP">
+<ColumnRow column="12" row="12"/>
+</Property>
+<Property name="TRANSFER_INTO_RELATIONS">
+<ColumnRow column="12" row="13"/>
+</Property>
+<Property name="TRANSFER_SYSTEM">
+<ColumnRow column="12" row="14"/>
+</Property>
+<Property name="THIS_YEAR_REMOVE">
+<ColumnRow column="21" row="6"/>
+</Property>
+<Property name="OUT_PARTY">
+<ColumnRow column="21" row="7"/>
+</Property>
+<Property name="STOP_MEMBERSHIP">
+<ColumnRow column="21" row="8"/>
+</Property>
+<Property name="DEATH">
+<ColumnRow column="21" row="9"/>
+</Property>
+<Property name="TURN_OUT_RELATIONS">
+<ColumnRow column="21" row="10"/>
+</Property>
+<Property name="TURN_OUT_TRANSFER_SYSTEM">
+<ColumnRow column="21" row="11"/>
+</Property>
+<Property name="END_YEAR_DUE_NUMBER">
+<ColumnRow column="21" row="12"/>
+</Property>
+<Property name="END_YEAR_REAL_NUMBER">
+<ColumnRow column="21" row="13"/>
+</Property>
+<Property name="DUE_AND_REAL_DIFFERENCE">
+<ColumnRow column="21" row="14"/>
+</Property>
+<Property name="LETTER_OF_INTRODUCTION_NUMBER">
+<ColumnRow column="13" row="15"/>
+</Property>
+<Property name="STATUS">
+<ColumnRow column="7" row="19"/>
+</Property>
+</SubmitTask>
+</SubmitVisitor>
+</ReportWriteAttr>
+<PrivilegeControl/>
+</Report>
+<Report class="com.fr.report.worksheet.WorkSheet" name="指标解释">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[1895348,20704048,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[838200,12915900,838200,13296900,952500,13296900,2743200,2743200,2743200,2743200,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="0" cs="5" s="33">
+<O>
+<![CDATA[第一表  党员数量变化情况]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="1" s="32">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="1" s="34">
+<O>
+<![CDATA[    一、指标解释 \n    1．本表统计本年党员数量的增减变化情况。\n    2．\"本年增加\"系指本年内，发展党员、恢复党籍和组织关系从其他党组织转入本党组织的党员。\n    3．\"发展党员\"系指本年发展的党员。\n    4.“重新入党”系指本年办理重新入党手续的党员，包括开除党籍后的重新入党、劝退或除名后的重新入党、停止党籍后的重新入党。\n\n    \n     \n    二、表内关系\n　　1．2栏=3栏+5栏+7栏\n　　2．3栏≥4栏\n　　3．5栏≥6栏\n\n\n    三、表间关系 \n　　1．A3≤第三表J1\n　　2．A3=第十六表A1\n]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="1" s="35">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="1" s="34">
+<O>
+<![CDATA[\n　　5．“恢复党籍”系指本年办理恢复党籍手续的党员，包括对停止党籍的恢复党籍和错误开除党籍的恢复党籍。\n　　6．“转入组织关系”系指本年从其他党组织转入本党组织的党员。\n    7．“本年减少”系指本年内，出党、停止党籍、死亡及转往其他党组织的党员。\n    8．“出党”系指本年被开除党籍和被劝退、除名、取消预备党员资格以及不予承认的党员。\n\n   \n\n\n\n　　4．7栏≥8栏\n　　5．9栏=10栏至13栏之和\n　　6．13栏≥14栏\n\n\n\n　　3．A10=第十表A1\n　　4．A11≤第三十五表J1\n\n]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="1" s="35">
+<O>
+<![CDATA[]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="1" s="34">
+<O>
+<![CDATA[　　\n　　9．“停止党籍”系指因出国或去港澳定居等原因，本年办理停止党籍手续的党员。\n　　10．“死亡”系指本年死亡的党员。\n　　11．“转出组织关系”系指本年从本党组织转往其他党组织的党员。\n    12. “党组织收到党员本年转出组织关系介绍信回执”系指当年转出党员组织关系的党组织收到党员组织关系接收单位党组织按规定邮寄、传真来的介绍信回执联或电子回执的数量。\n\n\n\n\n\n　　7．15栏=1栏+2栏-9栏\n　　8．17栏=16栏-15栏\n\n\n\n\n　　5．A16=第二表A1]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+</CellElementList>
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting/>
+</ReportSettings>
+</ReportAttrSet>
+<PrivilegeControl/>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="true" windowPosition="1" align="0" useParamsTemplate="true"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+<Parameter>
+<Attributes name="year"/>
+<O>
+<![CDATA[${year}]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="status"/>
+<O>
+<![CDATA[${status}]]></O>
+</Parameter>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="136"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="2" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="224"/>
+<Background name="ColorBackground" color="-3368449"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3355393"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3355393"/>
+<Border>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3342337"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Bottom style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3342337"/>
+<Border>
+<Top style="1" color="-16777216"/>
+<Left style="1" color="-16777216"/>
+<Right style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88" foreground="-16776961"/>
+<Background name="ColorBackground" color="-3368449"/>
+<Border>
+<Top style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="88"/>
+<Background name="ColorBackground" color="-1"/>
+<Border>
+<Top style="1" color="-16777216"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="80"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="1" size="112"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" vertical_alignment="3" textStyle="1" imageLayout="1">
+<FRFont name="宋体" style="0" size="88"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+</StyleList>
+<DesignerVersion DesignerVersion="JAA"/>
+<PreviewType PreviewType="1"/>
+<TemplateID TemplateID="faef483b-af12-4ac0-a783-876f78fa547c"/>
+<TemplateIdAttMark class="com.fr.base.iofileattr.TemplateIdAttrMark">
+<TemplateIdAttMark TemplateId="1c4d1be6-440d-41c6-bb85-9cab7396df57"/>
+</TemplateIdAttMark>
+</WorkBook>

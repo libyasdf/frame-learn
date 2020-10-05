@@ -1,9 +1,9 @@
 ---
 order: 2
 title: 基础颜色
-group:
+nav:
   title: 样式主题
-  order: 2
+  order: 3
 ---
 
 ```tsx | inline

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案编研0107.java"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	
+	<fileset id="maqiuxia" dir="../../../../../">
+
+		<!--档案编研-后台-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bygl/"/>
+		<include name="src/com/sinosoft/sinoep/modules/dagl/constant/"/>
+		<!--档案编研-页面-->
+		<include name="WebContent/modules/dagl/bygl/"/>
+
+		<!--附件类的修改-->
+		<include name="src/com/sinosoft/sinoep/modules/system/component/affix/"/>
+
+		<!--附件js
+		添加了上传文件数量的控制，一次性选择的数量不能超过限制的数量；
+		获取文件名后缀的方法错误；改为了lastIndexOf
+		2.修改了限制文档格式的方法，如果只允许摸个格式的文档时，只需要写出完整的后缀即可-->
+		<include name="WebContent/static/js/common/myfilupload.js"/>
+	</fileset>
+	
+	<target name="all">
+		<mkdir dir="${export.dir.root}/cqqx"/>
+		<copy todir="${export.dir.root}/cqqx" overwrite="true">
+			<fileset refid="maqiuxia"/>
+		</copy>
+	</target>
+	<!--删除上次导出文件-->
+	<target name="deleteOldFile" >  
+	    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+	       <fileset dir="${export.dir.root}">
+	           <include name="**/*"/>
+	       </fileset>
+	    </delete>
+	</target> 
+
+	<target name="default" depends="deleteOldFile,mqx">
+        <exec executable="cmd" failonerror="false">  
+            <arg line='/c explorer "${export.dir.root}\"' />  
+        </exec>
+	</target>	
+</project>

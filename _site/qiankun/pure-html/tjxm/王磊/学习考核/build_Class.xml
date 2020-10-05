@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\学习考核全部class_20180918"></property>
+	
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../">
+			
+		<!--模块内页面和js -->
+		<include name="WebContent/modules/zhbg/xxkh/"/>
+
+        <!-- 数据字典滚动条 -->
+        <include name="WebContent/modules/system/config/dictionary/dictionaryList.html"/>
+
+        <!-- 人员树滚动条 -->
+        <include name="WebContent/modules/system/component/tree/"/>
+
+        <!-- 工作计划 -->
+        <include name="WebContent/common/js/main.js"/>
+        <include name="WebContent/static/css/common/style.css"/>
+
+        <!-- 导航栏渲染 -->
+        <include name="WebContent/main.html"/>
+        <include name="WebContent/moduleIndex.html"/>
+        <include name="WebContent/modules/system/config/toggle/"/>
+        <include name="WebContent/modules/system/config/holidayset/jjrSet.html"/>
+        <include name="WebContent/common/js/main.js"/>
+        <include name="WebContent/common/js/main.js"/>
+        <include name="WebContent/common/js/main.js"/>
+
+		<!-- 模块内class文件-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/xxkh/"/>
+		
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		<!--<include name="WebContent/common/js/config.js"/>
+		<include name="WebContent/common/js/cookie.js"/>-->
+		
+		<!-- 公共class-->
+		<!-- 放开放开根据业务id删除待办方法，这个已经是最新，可以直接打包-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/waitNoflow/services/SysWatiNoflowServiceImpl.class"/>
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

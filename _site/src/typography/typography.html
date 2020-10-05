@@ -1,0 +1,118 @@
+<h2 id="排版">排版</h2>
+
+<h3 id="字体">字体</h3>
+
+<p>字体方面，暂时参考 https://ant.design/docs/spec/font-cn</p>
+
+<h4 id="font-family">font-family</h4>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@font-family</span><span class="p">:</span> <span class="n">-apple-system</span><span class="p">,</span> <span class="n">BlinkMacSystemFont</span><span class="p">,</span> <span class="s2">'Segoe UI'</span><span class="p">,</span> <span class="n">Roboto</span><span class="p">,</span> <span class="s2">'Helvetica
+Neue'</span><span class="p">,</span> <span class="n">Arial</span><span class="p">,</span> <span class="s2">'Noto Sans'</span><span class="p">,</span> <span class="nb">sans-serif</span><span class="p">,</span> <span class="s2">'Apple Color Emoji'</span><span class="p">,</span> <span class="s2">'Segoe UI Emoji'</span><span class="p">,</span> <span class="s2">'Segoe UI Symbol'</span><span class="p">,</span>
+  <span class="s2">'Noto Color Emoji'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">styled</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">styled-components</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">WithTheme</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../theme/theme</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">TextDemo</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">p</span><span class="s2">`
+  font-family: </span><span class="p">${(</span><span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">.</span><span class="nx">fontFamilyPrimary</span><span class="p">;</span>
+  <span class="p">}}</span><span class="s2">;
+`</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">WithTheme</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">TextDemo</span><span class="p">&gt;</span>font family 中文字型 1234567890<span class="p">&lt;/</span><span class="nc">TextDemo</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">WithTheme</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="字号与行高">字号与行高</h4>
+
+<p>根据 antd 的设计指引，字号尽量在 3-5 种，建议主字号为 14，与之对应行高为 22</p>
+
+<p><img src="https://gw.alipayobjects.com/zos/rmsportal/iFjgfIBExksqCqGMwUlw.png" /></p>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">styled</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">styled-components</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">WithTheme</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../theme/theme</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">TextSizeDemo</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">p</span><span class="o">&lt;</span><span class="p">{</span> <span class="na">fz</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span> <span class="nl">lh</span><span class="p">:</span> <span class="kr">string</span> <span class="p">}</span><span class="o">&gt;</span><span class="s2">`
+  font-family: </span><span class="p">${(</span><span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">.</span><span class="nx">fontFamilyPrimary</span><span class="p">}</span><span class="s2">;
+  font-size: </span><span class="p">${(</span><span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">[</span><span class="nx">props</span><span class="p">.</span><span class="nx">fz</span><span class="p">];</span>
+  <span class="p">}}</span><span class="s2">;
+  line-height: </span><span class="p">${(</span><span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">[</span><span class="nx">props</span><span class="p">.</span><span class="nx">lh</span><span class="p">]}</span><span class="s2">;
+`</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="mi">100</span><span class="p">).</span><span class="nx">map</span><span class="p">((</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="nx">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">WithTheme</span><span class="p">&gt;</span>
+      <span class="p">&lt;&gt;</span>
+        <span class="si">{</span><span class="nx">arr</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">v</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+          <span class="p">&lt;</span><span class="nc">TextSizeDemo</span> <span class="na">fz</span><span class="p">=</span><span class="si">{</span><span class="dl">'</span><span class="s1">fontSize</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">v</span><span class="si">}</span> <span class="na">key</span><span class="p">=</span><span class="si">{</span><span class="nx">i</span><span class="si">}</span> <span class="na">lh</span><span class="p">=</span><span class="si">{</span><span class="dl">'</span><span class="s1">lineHeight</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">v</span><span class="si">}</span><span class="p">&gt;</span>
+            字号与行高<span class="si">{</span><span class="nx">v</span><span class="si">}</span>
+          <span class="p">&lt;/</span><span class="nc">TextSizeDemo</span><span class="p">&gt;</span>
+        <span class="p">))</span><span class="si">}</span>
+      <span class="p">&lt;/&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">WithTheme</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="字重">字重</h4>
+
+<p>3 种等级，400，500，600 ，对应变量名 100，200，300</p>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">styled</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">styled-components</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">WithTheme</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../theme/theme</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">TextSizeDemo</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">p</span><span class="o">&lt;</span><span class="p">{</span> <span class="na">fw</span><span class="p">:</span> <span class="kr">string</span> <span class="p">}</span><span class="o">&gt;</span><span class="s2">`
+  font-family: </span><span class="p">${(</span><span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">.</span><span class="nx">fontFamilyPrimary</span><span class="p">}</span><span class="s2">;
+  font-weight: </span><span class="p">${(</span><span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">props</span><span class="p">.</span><span class="nx">theme</span><span class="p">[</span><span class="nx">props</span><span class="p">.</span><span class="nx">fw</span><span class="p">]}</span><span class="s2">;
+`</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="mi">100</span><span class="p">).</span><span class="nx">map</span><span class="p">((</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="nx">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">WithTheme</span><span class="p">&gt;</span>
+      <span class="p">&lt;&gt;</span>
+        <span class="si">{</span><span class="nx">arr</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">v</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+          <span class="p">&lt;</span><span class="nc">TextSizeDemo</span> <span class="na">fw</span><span class="p">=</span><span class="si">{</span><span class="dl">'</span><span class="s1">fontWeight</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">v</span><span class="si">}</span> <span class="na">key</span><span class="p">=</span><span class="si">{</span><span class="nx">i</span><span class="si">}</span><span class="p">&gt;</span>
+            字重<span class="si">{</span><span class="nx">v</span><span class="si">}</span>
+          <span class="p">&lt;/</span><span class="nc">TextSizeDemo</span><span class="p">&gt;</span>
+        <span class="p">))</span><span class="si">}</span>
+      <span class="p">&lt;/&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">WithTheme</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="字体颜色">字体颜色</h4>
+
+<p>这个涉及到对比度问题，字体颜色在主题的颜色里已经定义，如果有需要变更，调整 color 颜色即可：</p>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Demo</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./typography</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">export</span> <span class="k">default</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nc">Demo</span> <span class="p">/&gt;;</span>
+</code></pre></div></div>
+
+<h3 id="阴影">阴影</h3>
+
+<p>阴影向下：主要应用于组件内部或组件本身，是比较常规场景的用法</p>
+
+<p>阴影向上：主要应用于底部导航或工具栏等</p>
+
+<p>阴影向左：主要应用于右边导航栏、抽屉组件或固定表格栏</p>
+
+<p>阴影向右：主要应用于左边导航栏、抽屉组件或固定表格栏</p>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ShadowDemo</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./typography</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">export</span> <span class="k">default</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nc">ShadowDemo</span> <span class="p">/&gt;;</span>
+</code></pre></div></div>

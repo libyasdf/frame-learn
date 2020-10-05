@@ -1,0 +1,223 @@
+<style type="text/css">
+	.panel-controls{
+		position: absolute;
+		right: 40px;
+		top: 10px;
+	}
+	.panel-controls > i.showSelect{
+		font-size: 16px;
+		color: #acb1b8;
+		cursor: pointer;
+	}
+	label{
+		font-weight: normal;
+	}
+	
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<!--查询-->
+		<form class="form-horizontal" >
+			<div class="col-md-12">
+				<div class="panel panel-default toggle">
+					<div class="panel-heading" style="cursor: pointer;">
+						<h3 class="panel-title">查询项</h3>
+						<div class="panel-controls " >
+							<i class="glyphicon glyphicon-plus showSelect"></i>
+						</div>
+					</div>
+					<div class="panel-body" style="display: none;">
+						<div class="form-group">
+							<label class="col-md-2 control-label"> 展示日期：</label>
+							<div class="col-md-3">
+								<input class="form-control" type="text" id="timeRange" name="timeRange" />
+							</div>
+							<label class="col-md-2 control-label"> 状态：</label>
+							<div class="col-md-3">
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio1" name="state" value="" checked="checked"> 全部
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio2" name="state" value="0"> 草稿
+								</label>
+								<label class="radio-inline">
+									<input type="radio" id="inlineRadio3" name="state" value="1"> 已发布
+								</label>
+							</div>
+						</div>
+
+						<!--查询重置等按钮-->
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center">
+								<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+								</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-primary"
+										onclick="TableInit.refTable('right_table')"> 重&nbsp;&nbsp;置
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--查询结束-->
+
+		<div class="col-md-12">
+			<div class="list_button_area">
+				<button class="list_table_btn2"
+						onclick="draft();">
+					<span class="glyphicon glyphicon-plus-sign"></span> 新增
+				</button>
+				
+			</div>
+			<!--bootstrap-table表格-->
+			<table id="right_table"></table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	//起草
+	function draft(){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/mypage/wm/takeout/takeOutEditForm1.html?resId=' + resId,title:'起草外卖信息',width:'90%',height:'98%'})
+		//MyLayer.layerOpenUrl({url:'/modules/zhbg/xxkh/paperManage/sjglEditForm.html?type='+parameter.treeType+'&nodeId='+nodeId+"&resId="+resId,title:'新增试卷信息',width:'90%',height:'98%'})
+	
+	}
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'showDate'
+        , title: '展示日期'
+        , width: '18%'
+        , align:"center"
+    },{
+        field: 'deadlineDate'
+        , title: '最晚预定日期'
+        , width: '16%'
+        , align:"center"
+    },{
+        field: 'orderLimt'
+        , title: '订单限制(次/人)'
+        , width: '16%'
+        , align:"center"
+    },{
+       field: 'isStop'
+       , title: '是否停止预定'
+       , width: '16%'
+       , align:"center"
+       , formatter: function (value, row, index) {
+        	if(value=='0'){
+        		return '未停止'
+        	}else{
+        		return '已停止'
+        	}
+        }
+    },{
+        field: 'orderPersonNum'
+        , title: '订单数量'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	return '<a style="color:blue;cursor:pointer" onclick="showOrder()" title="点击查看订单详情">'+value+'</a>'
+        }
+    },{
+        field: 'status'
+        , title: '状态'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+             	if(value=='0'){
+             		return '草稿'
+             	}else{
+             		return '已发布'
+             	}
+          }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '16%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+           
+            if(row.status=='0'){
+    			html += "<i style='cursor:pointer;' class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\""+ row.id + "\")\'></i>&nbsp;&nbsp;";
+            	 html += "<i style='cursor:pointer;' class='glyphicon glyphicon-trash' title='删除'></i>&nbsp;&nbsp;";
+            }
+           
+            return html;
+        }
+    }];
+    
+	//显示订单人
+	function showOrder(){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/mypage/wm/takeout/takeOutOrderForm.html?resId=' + resId,title:'确认订单信息',width:'90%',height:'98%'})
+
+	}
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mock/taskout/statisticsList.json",
+            columns:right_table_col,
+            queryParams:function(params){
+                return params;
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center","cursor":"default"}
+                };
+            },
+            readOnlyFn:function(){
+            }
+        });
+    });
+
+    var list = {
+			editFun : function(id) {
+				var resId = $('#left_ul').find('a.active').attr("id");
+				MyLayer.layerOpenUrl({url:'/modules/mypage/wm/takeout/takeOutEditForm1.html?resId=' + resId,title:'起草外卖信息',width:'90%',height:'98%'})
+				
+			},
+			deleteFun : function(id) {
+				var resId = $('#left_ul').find('a.active').attr("id");
+	            MyLayer.deleteOpt({
+	            	url: '/zhbg/kqgl/overTime/deleteoverTime?id=' + id + "&resId=" + resId,
+	                tableId:'right_table1'
+	            })
+			}
+		}
+
+
+
+
+</script>

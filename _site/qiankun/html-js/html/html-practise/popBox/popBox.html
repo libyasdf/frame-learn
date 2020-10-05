@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>pop box</title>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <style type="text/css">
+    /*关闭弹窗*/
+    .popBox {
+      display: none;
+    }
+
+    /*打开弹窗*/
+    .popBox:target {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    /*设置弹窗内容*/
+    .popBox .con {
+      background-color: rgba(250, 188, 199, 0.76);
+      border-radius: 5px;
+      padding: 1.5rem;
+      position: relative;
+      width: 25rem;
+    }
+
+    /*关闭按钮*/
+    .popBox .close {
+      display: block;
+      position: relative;
+    }
+
+    .popBox .close::after {
+      align-items: center;
+      color: white;
+      content: "×";
+      cursor: pointer;
+      background-color: rgba(79, 79, 79, 0.9);
+      border-radius: 50%;
+      display: flex;
+      font-size: 1.25rem;
+      justify-content: center;
+      position: absolute;
+      right: -2.5rem;
+      top: -2.5rem;
+      height: 2rem;
+      width: 2rem;
+      z-index: 2;
+    }
+
+    /*弹窗遮罩层*/
+    .popBox::before {
+      content: "";
+      cursor: default;
+      background-color: rgba(173, 173, 173, 0.66);
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <input id="liby" placeholder="waiting~~"/>
+  <ul>
+    <li><a href="#example1">案例1</a></li>
+    <li><a href="#example2">案例2</a></li>
+  </ul>
+  <article class="popBox" id="example1">
+    <div class="con">
+      <a href="#" class="close">close</a>
+      <p>案例，就是人们在生产生活当中所经历的典型的富有多种意义的事件陈述。它是人们所经历的故事当中的有意截取。案例一般包括三大要素。案例对于人们的学习、研究、生活借鉴等具有重要意义。基于案例的教学是通过案例向人们传递有针对性的教育意义的有效载体。</p>
+    </div>
+  </article>
+
+  <article class="popBox" id="example2">
+    <div class="con">
+      <a href="#" class="close">close</a>
+      <p>A case is a typical multi-meaning event statement that people experience in production and life. It is a deliberate interception of the stories people experience. Cases generally include three major elements. Cases are of great significance
+        to people's learning, research, and life reference. Case-based teaching is an effective carrier to convey targeted educational significance to people through cases.</p>
+    </div>
+  </article>
+</body>
+
+<script type="text/javascript">
+  $('#liby').attr("disabled",true);
+</script>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>企业中心</title>
+    <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="modal-body selectjs">
+    <div class="col-sm-6 ">
+        <div class="selectjs_block">
+
+            <div class="selectjs_block">
+                <div class="title">迁移党组织</div>
+                <div class="main">
+                    <div class="left_tree_area">
+                        <ul id="originalTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-sm-6 ">
+        <div class="selectjs_block">
+
+            <div class="selectjs_block">
+                <div class="title">目标党组织</div>
+                <div class="main">
+                    <div class="left_tree_area">
+                        <ul id="targetTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <input type="hidden" id="originalUpId" />
+    <input type="hidden" id="originalUpName" />
+    <input type="hidden" id="targetId" />
+    <input type="hidden" id="targetName" />
+    <input type="hidden" id="originalId" />
+    <input type="hidden" id="originalName" />
+    <input type="hidden" id="targetOrgId" />
+</div>
+<div class="modal-footer" style="text-align: center">
+    <button type="button" class="btn btn-primary  btn-blue  bigbtn" id="confirm">
+        确&nbsp;&nbsp;定
+    </button>
+</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script src="/modules/dwgl/dzz/dzzbg/js/zzbgTree.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript">
+
+    if(getcookie("rolesNo").indexOf("D478") >= 0){
+        zzbgTree.init({id:'4028d08266cd1d0a0166cd462e260001',type:"org"});
+    }else{
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/djgl/ddjs/dzz/dzzgl/getOrgId",
+            dataType: "json",
+            success: function (data) {
+                zzbgTree.init({id:data.data,type:"org"});
+            },
+            error: function (data) {
+            }
+        })
+    }
+
+    $('#confirm').on("click",function(){
+        var originalTree = $.fn.zTree.getZTreeObj("originalTree");
+        var targetTree = $.fn.zTree.getZTreeObj("targetTree");
+        var originalNode = originalTree.getSelectedNodes()[0];
+        var targetNode = targetTree.getSelectedNodes()[0];
+        if(!originalNode || !targetNode){
+            layer.msg("请选择变更组织及目标组织", {icon: 0});
+            return false;
+        }
+        var opNode = originalNode.getParentNode();//迁移上级党组织
+        $("#originalUpId").val(opNode.id);
+        $("#originalUpName").val(opNode.name);
+        $("#targetId").val(targetNode.id);
+        $("#targetName").val(targetNode.name);
+        $("#originalId").val(originalNode.id);
+        $("#originalName").val(originalNode.name);
+        $("#targetOrgId").val(targetNode.code);
+        openY();
+
+    })
+
+    //参数 迁移上级党组织，目标党组织
+    function openY(){
+        layer.open({
+            type: 2,
+            content: "/modules/dwgl/dzz/dzzbg/dzzbgEditForm.html",
+            area: ['1000px', '400px'],
+            title: ['变更信息', 'font-size:16px;font-weight:bold;']
+        })
+    }
+
+    function closeFraem(){
+        parent.refreshPage();
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+
+    }
+
+</script>
+
+</body>
+</html>

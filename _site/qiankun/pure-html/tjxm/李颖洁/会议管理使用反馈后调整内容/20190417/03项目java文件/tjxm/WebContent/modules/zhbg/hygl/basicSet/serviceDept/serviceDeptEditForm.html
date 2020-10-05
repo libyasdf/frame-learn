@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    
+</head>
+<body class="formpage_bj">
+	<div class="container-fluid formpage_area">
+		<form class="form-horizontal" id="form">
+			<input name="resId" id="resId" type="hidden" value="">
+			<!-- 流程字段-->
+			<input name="id" id="id" type="hidden" value=""/><!-- 工作项ID -->
+			<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+			<!-- 流程字段结束 -->
+			<!-- 基本信息 -->
+			<div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<span class="name">会务服务单位信息</span>
+					</div>
+				</div>
+			</div>
+			<div class="row m-t-15">
+				<div class="col-md-12">
+					<div class="form-group">
+                    <div class="rowGroup">
+                        <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 会务服务单位：</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="serviceDeptName" name="serviceDeptName" unselectable="on" onclick="openSelectZtree({'id':'serviceDeptId','name':'serviceDeptName','isMulti':'1','type':'2','asyn':false,'level':'2','url':'/system/component/tree/deptTree'})" class="form-control">
+                                <input type="hidden" id="serviceDeptId" name="serviceDeptId" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'serviceDeptId','name':'serviceDeptName','isMulti':'1','type':'2','asyn':false,'level':'2','url':'/system/component/tree/deptTree'})">
+                                      <span class="glyphicon glyphicon-user"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                	</div>
+					<div class="form-group">
+						<label for="" class="col-md-2 control-label">备注： </label>
+						<div class="col-md-10">
+							<textarea name="remark" class="form-control" rows="3"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 基本信息结束 -->
+		</form>
+		<div class="row m-t-15"></div>
+		<!--文件上传end-->
+	</div>
+	<!-- 按钮区 -->
+	<div class="form_btn_area" style="text-align: center;">
+		<button id="save" class="btn btn-primary form_btn_area_btn2"
+			onclick="comitForm();">
+			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+			保存
+		</button>
+	</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 引入自己模块功能的js -->
+<script type="text/javascript" src="js/serviceDeptEdit.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="js/serviceDeptValidator.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!-- 部门人员树 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+</body>
+</html>

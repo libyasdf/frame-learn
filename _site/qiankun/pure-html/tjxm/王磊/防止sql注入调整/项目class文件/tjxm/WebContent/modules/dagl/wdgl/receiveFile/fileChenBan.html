@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>发文打印</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+</head>
+<style type="text/css">
+    body{
+        font-family: "宋体";
+        font-size: 16px;
+    }
+    .cc {
+        font-weight: bolder;
+        font-size: 50px;
+    }
+    .name {
+        font-size: 20px;
+    }
+    .wenhao {
+        font-size: 18px;
+    }
+</style>
+<style type="text/css" media=print>
+    .noprint {
+        display:none
+    }
+    .hidden{
+        display:block !important;
+        visibility:visible !important;
+    }
+    .modal-body{
+        padding:0px;
+    }
+    .main{
+        border:0px !important;
+    }
+</style>
+<body>
+<!--最外层tab-->
+<div class="modal-body selectjs">
+    <div class="selectjs_block" style="position:relative">
+        <span class="glyphicon glyphicon-chevron-left pull-left noprint" onclick="navMoveleft()" style="top: 15px;display: none"></span>
+        <div class="title_tab noprint" style="overflow: hidden;width: 95%;float: left">
+            <ul class="nav nav-tabs top_nav" id="page" style="width: 3000px">
+            </ul>
+        </div>
+        <span class="glyphicon glyphicon-chevron-right pull-right noprint" onclick="navMoveRight()" style="top:15px;display: none"></span>
+        <div class="main" id="main" style="margin-bottom: 100px;height: auto">
+        </div>
+    </div>
+</div>
+<div class="form_btn_area noprint" style="text-align: center;">
+    <button  id="save" class="btn btn-primary form_btn_area_btn2" onclick="documentPrint()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> 打印</button>
+</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+    var starthtml1 = '';
+    var starthtml2 = '';
+    var titleHtml = '';
+    var herderHtml = '';
+    var endhtml = '</table>';
+    var divHtml = '</div>';
+    var content = "";
+    $(function() {
+        var theRequest = GetRequest();
+        //资源id
+        var urgencyDegree = decodeURI(theRequest.urgencyDegree);
+        var securityClass = decodeURI(theRequest.securityClass);
+        var quantity = decodeURI(theRequest.quantity);
+        var title = decodeURI(theRequest.title);
+        var fileNum = decodeURI(theRequest.fileNum);
+        var note = decodeURI(theRequest.note);
+        var fileType = decodeURI(theRequest.fileType);
+        var zhusUnit = decodeURI(theRequest.zhusUnit);
+        var barcode = decodeURI(theRequest.barcode);
+        var fileDept = decodeURI(theRequest.fileDept);
+        var createdDate = decodeURI(theRequest.createdDate);
+        content = "GB0626-2005^" + barcode + "^" + fileDept + "^" + fileType + "^" + fileNum + "^" + zhusUnit + "^" + title + "^" + securityClass + "^" + urgencyDegree + "^" + createdDate + "^" + note + "^^";
+        var data = [{
+            urgencyDegree:urgencyDegree,
+            securityClass:securityClass,
+            quantity:quantity,
+            title:title,
+            fileNum:fileNum,
+            note:note
+        }];
+        //参数1：每页数据条数
+        //参数2：返回json数据
+        //参数3：新打:1;套打：0
+        //参数4：从第几条开始
+        apenHtml(1,data);
+    })
+
+    function appendHtml(data){
+        starthtml1 = '<table width="90%" align="center" cellpadding="0" cellspacing="0" border="0">' +
+            '<tr>' +
+            '    <td width="2%" height="100">&nbsp;</td>' +
+            '    <td width="48%" valign="bottom" style="vertical-align: bottom !important;">' +
+            '    </td>' +
+            '    <td width="20%"></td>' +
+            '    <td width="30%" style="vertical-align: bottom !important;"><div id="code"><img style="width: 180px;height: 55px" src="/dagl/wdgl/receiveFile/getCode?content=' + encodeURI(content) +  '"></img></div></td>' +
+            '  </tr>' +
+            '</table>';
+        starthtml2 = '<table width="90%" align="center" cellpadding="0" cellspacing="0" border="0" style="page-break-before:always;">' +
+            '<tr>' +
+            '    <td width="2%" height="100">&nbsp;</td>' +
+            '    <td width="48%" valign="bottom" style="vertical-align: bottom !important;">' +
+            '    </td>' +
+            '    <td width="25%">&nbsp;</td>' +
+            '    <td width="25%">&nbsp;</td>' +
+            '  </tr>' +
+            '</table>';
+        titleHtml = '<table width="90%" align="center" cellpadding="0" cellspacing="0" height="67" border="0">' +
+            '  <tr>' +
+            '    <td align="center" class="cc">××××××××××承办单</td>' +
+            '  </tr>' +
+            '</table>';
+        herderHtml = '<table width="90%" align="center" height="790" border="0" cellpadding="0" cellspacing="0">' +
+            '  <tr>' +
+            '    <td width="3%" height="48" style="border-bottom:2px solid #000" valign="bottom">&nbsp;</td>' +
+            '    <td width="47%" style="border-bottom:2px solid #000;vertical-align: bottom !important;" valign="bottom"><div style="width:80%;max-height:20px;word-wrap:break-word;">急缓等级：' + (typeof(data) == "undefined" || data.urgencyDegree == null?"":data.urgencyDegree) + '</div></td>' +
+            '    <td colspan="4" valign="bottom" style="border-bottom:2px solid #000;vertical-align: bottom !important;"><div style="width:80%;max-height:20px;word-wrap:break-word;">密级：' + (typeof(data) == "undefined" || data.securityClass == null?"":data.securityClass) + '</div></td>' +
+            '    <td width="18%" style="border-bottom:2px solid #000;vertical-align: bottom !important;" valign="bottom"><div style="width:80%;max-height:20px;word-wrap:break-word;">份数：' + (typeof(data) == "undefined" || data.quantity == null?"":data.quantity) + '份</div></td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="28" valign="bottom">&nbsp;</td>' +
+            '    <td colspan="6" valign="bottom">文件名称：</td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="60" colspan="7" align="center" valign="middle" class="name"><div style="width:95%;max-height:20px;word-wrap:break-word; margin-left:auto; margin-right:auto">' + (typeof(data) == "undefined" || data.title == null?"":data.title) + '</div></td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="48" colspan="7" align="right" valign="bottom" style="border-bottom:1px solid #000;padding-right:10px;vertical-align: bottom !important;font-size: 18px"><div style="width:95%;max-height:25px;word-wrap:break-word;margin-left:auto; margin-right:auto">' + (typeof(data) == "undefined" || data.fileNum == null?"":data.fileNum) + '</div></td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="30" colspan="2">&nbsp;&nbsp;承办意见：</td>' +
+            '    <td height="30" style="border-left:1px solid #000" colspan="5" valign="middle">&nbsp;&nbsp;局批示：</td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="140" style="border-bottom:1px solid #000" colspan="2">&nbsp;</td>' +
+            '    <td height="140" style="border-left:1px solid #000;" colspan="5" valign="top">&nbsp;</td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="30" colspan="2">&nbsp;&nbsp;审核意见：</td>' +
+            '    <td height="30" style="border-left:1px solid #000;" colspan="5" valign="top">&nbsp;</td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="333" style="border-bottom:1px solid #000" colspan="2">&nbsp;</td>' +
+            '    <td height="333" style="border-left:1px solid #000;" colspan="5" valign="top">&nbsp;</td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="37" colspan="2"><div align="left" style="width:80%;max-height:20px;word-wrap:break-word;">&nbsp;&nbsp;备注：' + (typeof(data) == "undefined" || data.note == null?"":data.note) + '</div></td>' +
+            '    <td height="50" colspan="5" rowspan="2" valign="top" style="border-left:1px solid #000;">&nbsp;</td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="19" colspan="2"></td>' +
+            '  </tr>' +
+            '  <tr>' +
+            '    <td height="22" colspan="2" style="border-bottom:2px solid #000">&nbsp;</td>' +
+            '    <td height="22" style="border-left:1px solid #000;border-bottom:2px solid #000" colspan="5" valign="top">&nbsp;</td>' +
+            '  </tr>' +
+            '</table>';
+    }
+
+    function apenHtml(pageSize,data,newOrCopy,start){
+        if(start != ""){
+            for(var i = 0;i<(start-1);i++){
+                data.unshift("undefind");
+            }
+        }
+        for(var i = 0;i<pageSize;i++){
+            appendHtml(data[i]);
+            var page = '';
+            var table = '';
+            if(i == 0){
+                page = '<li class="active" for="formpage' + (i + 1) + '">' +
+                    '<a href="#" data-toggle="tab">' +
+                    '第' + (i+1) + '页' +
+                    '</a>' +
+                    '</li>';
+                table = '<div id="formpage' + (i+1) + '" class="active" style="width: 100%;">' + starthtml1 + titleHtml + herderHtml;
+            }else{
+                page = '<li for="formpage' + (i + 1) + '">' +
+                    '<a href="#" data-toggle="tab">' +
+                    '第' + (i+1) + '页' +
+                    '</a>' +
+                    '</li>';
+                table = '<div id="formpage' + (i+1) + '" class="hidden" style="width: 100%;">' + starthtml2 + titleHtml + herderHtml;
+            }
+            table = table + endhtml + divHtml;
+            $("#page").append(page);
+            $("#main").append(table);
+        }
+    }
+
+    $(document).ready(function(){
+        navSwitch();
+        // tab页切换
+        $('.nav-tabs > li').unbind('click').bind('click', function () {
+            var id = $(this).attr('for');
+            $(this).addClass('active').siblings('li').removeClass('active');
+            $('.main').children().addClass('hidden');
+            $('#' + id).removeClass('hidden');
+        })
+    })
+
+    function getScrleft() {
+        return $(".selectjs_block div").scrollLeft();
+    }
+
+    //获取滚动条可以滚动的宽度
+    function getTargetScroll() {
+        var liCount = $(".top_nav").children("li").size(); //li个数
+        var liWidths = 0, lrBorder = 31;
+        //递归导航栏li元素，获取总宽度
+        $(".top_nav").children("li").each(function () {
+            liWidths += $(this).width();
+        })
+        liWidths += (liCount * lrBorder);
+        //获取窗口宽度
+        var winWidth = window.innerWidth;
+        //li总宽度减去窗口的宽度。即得到滚动条需要滚动的长度
+        var targetScroll = liWidths - winWidth;
+        return targetScroll + 100;
+    }
+
+    //判断是否需要显示左移按钮
+    function isShowMoveLeft() {
+        var scrleft = getScrleft();
+        if (scrleft > 0)
+            return true;
+        else
+            return false;
+    }
+
+    //判断是否需要显示右移按钮
+    function isShowMoveRight() {
+        var targetScroll = getTargetScroll();
+        //目前滚动条已经滚动的长度
+        var scrleft = getScrleft();
+        if (!isNaN(targetScroll) && (scrleft < targetScroll)) {
+            return true;
+        } else
+            return false;
+    }
+    //导航栏左移、右移按钮切换
+    function navSwitch() {
+        //$(".glyphicon-chevron-right").hide();
+        //$(".glyphicon-chevron-left").hide();
+        if (isShowMoveRight()) {
+            $(".glyphicon-chevron-right").show();
+        } else
+            $(".glyphicon-chevron-right").hide();
+        if (isShowMoveLeft())
+            $(".glyphicon-chevron-left").show();
+        else
+            $(".glyphicon-chevron-left").hide();
+    }
+
+    //点击左移按钮功能
+    function navMoveleft() {
+        var divWidth = window.innerWidth * 0.8;
+        var scrleft = getScrleft();
+        var targetScroll = getTargetScroll();
+        if (isShowMoveLeft) {
+            $(".selectjs_block div").animate({ scrollLeft: (scrleft - divWidth) }, 500);
+            if ((scrleft - divWidth) <= 0)
+                $(".glyphicon-chevron-left").hide();
+            if ((scrleft - divWidth) < targetScroll)
+                $(".glyphicon-chevron-right").show();
+            else
+                $(".glyphicon-chevron-right").hide();
+        } else
+            $(".glyphicon-chevron-left").hide();
+    }
+    //点击右移按钮功能
+    function navMoveRight() {
+        //根据窗口宽度，*0.8作为每次滚动的宽度
+        var divWidth = window.innerWidth * 0.8;
+        //目前滚动条已经滚动的长度
+        var scrleft = getScrleft();
+        var targetScroll = getTargetScroll();
+        if (isShowMoveRight) {
+            $(".selectjs_block div").animate({ "scrollLeft": scrleft + divWidth }, 500); //若目前的滚动条的长度小于 最终需要滚动的长度，则向左拉动滚动条，拉动的距离为一个li的宽度和它的左外空的距离。
+            scrleft += divWidth;
+            if (scrleft > 0)
+                $(".glyphicon-chevron-left").show();
+            else
+                $(".glyphicon-chevron-left").hide();
+            if (scrleft >= targetScroll) {
+                $(".glyphicon-chevron-right").hide();
+            } else
+                $(".glyphicon-chevron-right").show();
+        } else {
+            $(".glyphicon-chevron-right").hide();
+        }
+    }
+
+    function documentPrint(){
+        try{
+            var hkey_root,hkey_path,hkey_key;
+            hkey_root="HKEY_CURRENT_USER"; hkey_path="\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
+            var RegWsh = new ActiveXObject("WScript.Shell");
+            hkey_key="header";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"");
+            hkey_key="footer";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"");
+            //设置页边距(0.6 要乘以 2.5为实际打印的尺寸)
+            hkey_key="margin_bottom";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            hkey_key="margin_left";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            hkey_key="margin_right";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            hkey_key="margin_top";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            window.print();
+        }catch(e){
+            layer.alert("1、请使用IE浏览器<br>2、把网址加入可信任站点<br>3、浏览器设置-安全-受信任站点-自定义级别-Active控件和插件全部改为启动");
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 申请时间：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="creTime" id="creTime"/>
+                            </div>
+                        </div>
+
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary"> 重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="draft();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 起草
+                </button>
+                <button class="list_table_btn2"
+                        onclick="seeCollect();">
+                    <span class="glyphicon glyphicon-list-alt"></span> 查看收集
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+
+    //起草
+    function draft() {
+        // 获取资源id
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({
+            url: '/modules/dagl/daly/borrow/apply/borrowApplyEditForm.html?oper=NEW&resId=' + resId,
+            title: '起草档案借阅信息'
+        })
+    }
+
+    function seeCollect() {
+        var resId = $('#left_ul').find('a.active').attr("id");
+        MyLayer.layerOpenUrl({
+            url: '/modules/dagl/daly/borrow/apply/shoppingTrolleyList.html?type=borrow&resId=' + resId,
+            title: '查看收集列表'
+        })
+    }
+
+    //清空查询条件
+    function clearAll() {
+        $("#title").val("");	//标题
+        $("#timeRange").val("");	//时间
+    }
+
+    //刷新方法，流程中需要回调
+    function refreshPage() {
+        TableInit.refTable("right_table");
+    }
+
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#year',
+        range: true
+        , type: "year"
+    });
+    laydate.render({
+        elem: '#creTime',
+        range: true
+    });
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber = $('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='" + row.id + "'>" + orderNum + "</span>";
+        }
+    }, {
+        field: 'creTime'
+        , title: '申请时间'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'flowType'
+        , title: '借阅类型'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {
+            var curDate = getCurrentDate("yyyy-MM-dd");
+            if (value == "1") {
+                return "借阅本单位";
+            } else if (value == "2") {
+                return "借阅非本单位";
+            }
+        }
+    }, {
+        field: 'approveUnitName'
+        , title: '审批单位'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'cz'
+        , title: '操作'
+        , width: '8%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "add") {
+                } else if (opt[i] == "update") {
+                    html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                } else if (opt[i] == "delete") {
+                    html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+                }
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        userLevel.init({type: "1", position: "position"});
+        var rest = userLevel.getNameAndLevel({type: "1"});
+        console.log(rest);
+        console.log(rest['6']);
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/dagl/daly/borrow/getlist",
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.creTime = $("#creTime").val();
+                params.subflag = Config.startflag;
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({
+                        url: '/modules/dagl/daly/borrow/apply/borrowApplyReadOnlyForm.html?id=' + id + "&oper=VIEW&resId=" + resId,
+                        title: "档案借阅详情"
+                    });
+                });
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url: '/modules/dagl/daly/borrow/apply/borrowApplyEditForm.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title: "修改档案借阅信息"
+            })
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+                url: '/dagl/daly/borrow/deleteDaglBorrow?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+
+    //关闭导入窗口
+    function putBackData(msg) {
+        //关闭窗口
+        layer.close(_index);
+        layer.msg(msg.msg, {icon: 1});
+    }
+</script>

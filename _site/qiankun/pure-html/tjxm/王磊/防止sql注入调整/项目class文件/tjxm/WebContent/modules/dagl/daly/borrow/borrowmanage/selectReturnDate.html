@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+    <link rel="stylesheet" type="text/css"
+          href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <!--<link type="text/css" rel="stylesheet" href="/modules/dagl/xtpz/contrastingrelations/css/metroStyle/metroStyle.css">-->
+
+</head>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form id="form" class="form-horizontal">
+        <!-- resId -->
+        <input type="text" id="resId" name="resId" value="" hidden="true">
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name" >基本信息</span>
+                </div>
+            </div>
+        </div>
+        <!--查询项输入框选择框等开始-->
+        <div class="row m-t-15">
+            <div class="col-md-12">
+
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            借阅日期：</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" id="borrowDate" name="borrowDate" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="rowGroup">
+                        <label class="col-sm-offset-1 col-sm-2 control-label">
+                            <b style="color: red;">*</b> 应还日期：</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" name="shouldReturnDate" id="shouldReturnDate"  autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <!--查询项输入框选择框等结束-->
+
+                <div class="exam_page_top" style="padding-top: 20px;">
+                    应还日期须知：<br>
+                    1. Q2的档案借阅默认为22个工作日。<br>
+                    2. 其他档案借阅默认为7个工作日。<br>
+                    3. 档案不在数据库的，无默认归还日期，请自主选择。
+                </div>
+
+                <!--查询重置等按钮-->
+                <div class="form-group">
+                    <div class="col-sm-12" style="text-align: center;padding-top: 20px;">
+                        <button type="button" class="btn btn-primary" onclick="saveShouldReturnDate()">
+                            借&nbsp;&nbsp;出
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" onclick="closeIfram();">
+                            关&nbsp;&nbsp;闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--查询重置等按钮 end-->
+    </form>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--下拉存放树形结构的js-->
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.all.js"></script>
+<script type="text/javascript" src="/modules/dagl/xtpz/contrastingrelations/js/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/modules/dagl/xtpz/contrastingrelations/js/MultipleTreeSelect.js"></script>
+
+
+<script type="text/javascript">
+
+
+    var theRequest = GetRequest();
+    var resId = theRequest.resId ? theRequest.resId : "";
+    var id = theRequest.id ? theRequest.id : "";//本次借阅的id
+    var categoryCode = theRequest.categoryCode ? theRequest.categoryCode : "";//门类code
+    var date = new Date();
+    function DateToStringFomatter(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+    };
+
+    var today = DateToStringFomatter(date);
+
+    $("#resId").val(resId);
+    $("#borrowDate").val(today);
+
+    if("q2" == categoryCode){
+        //Q2的档案借阅默认为22个工作日。
+        $.ajax({
+            type: "POST",
+            url: "/zhbg/kqgl/holidaySet/getDateByStartDateAndDays",
+            // contentType: "application/json",
+            data: {startDate:today,num:"22"},
+            dataType: 'JSON',
+            async: false,
+            success: function (json) {
+
+                if(json.flag =="1"){
+                    $("#shouldReturnDate").val(json.endDate);
+                }else{
+                    layer.msg("获取默认归还日期失败！", {icon: 2});
+                }
+            },
+            error: function () {
+                layer.msg("获取默认归还日期失败！", {icon: 2});
+            }
+        });
+    }else if("" == categoryCode){
+        //档案不在数据库的，不填默认归还日期
+    }else{
+        //其他档案借阅默认为7个工作日
+        $.ajax({
+            type: "POST",
+            url: "/zhbg/kqgl/holidaySet/getDateByStartDateAndDays",
+            // contentType: "application/json",
+            data: {startDate:today,num:"7"},
+            dataType: 'JSON',
+            async: false,
+            success: function (json) {
+
+                if(json.flag =="1"){
+                    $("#shouldReturnDate").val(json.endDate);
+                }else{
+                    layer.msg("获取默认归还日期失败！", {icon: 2});
+                }
+            },
+            error: function () {
+                layer.msg("获取默认归还日期失败！", {icon: 2});
+            }
+        });
+    }
+    laydate.render({
+        elem: '#shouldReturnDate' //指定元素
+        ,type: 'date'//指定元素
+        ,min:today
+    });
+
+    //保存
+    function saveShouldReturnDate(){
+        if("" == $("#shouldReturnDate").val()){
+            layer.msg("请选择应还日期！",{icon:0,time:1000});
+        }else{
+            //确认是否退出
+            layer.confirm('确定借出吗？',
+                {
+                    icon:3
+                    ,title:'退出'
+                    ,btn: ['确定','取消'] //按钮
+                    ,btn1:function(){
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/dagl/daly/borrow/toConductBorrow",
+                            // contentType: "application/json",
+                            data:{  id:id,
+                                borrowDate:$("#borrowDate").val(),
+                                shouldReturnDate:$("#shouldReturnDate").val()
+                            },
+                            dataType: 'JSON',
+                            async: false,
+                            success: function (json) {
+                                if(json.flag =="1"){
+                                    closeIfram();
+                                    parent.closeIfram();
+                                    parent.parent.layer.msg("借出并设置应还日期成功！", {icon: 1});
+                                    parent.parent.TableInit.refTable('right_table');
+                                }else{
+                                    layer.msg("借出并设置应还日期失败！", {icon: 0});
+                                }
+                            },
+                            error: function () {
+                                layer.msg("借出并设置应还日期失败！", {icon: 2});
+                            }
+                        });
+
+                    },btn2:function(){
+                       //什么都不做
+                    }
+                });
+        }
+    }
+    //关闭当前窗口
+    function closeIfram(){
+        var index=parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+
+</script>
+</body>
+</html>

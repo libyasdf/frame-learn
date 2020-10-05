@@ -1,0 +1,228 @@
+<h2 id="javascript-代码风格规范">javascript 代码风格规范</h2>
+
+<h3 id="避免使用默认导出">避免使用默认导出</h3>
+
+<ul>
+  <li>默认导出需要自己重命名，会让人混淆。</li>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">HomeApi</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./home.api</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="使用-indexjs-统一文件夹下的导出">使用 index.js 统一文件夹下的导出。</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">homeActions</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../home/home-utils/home.actions</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">routeUtils</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../../utils/route.utils</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">homeTypes</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../home/home.typings</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">homeActions</span><span class="p">,</span> <span class="nx">homeTypes</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../home</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">routeUtils</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../../utils</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="同类处理函数包装成对象">同类处理函数包装成对象</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// utils.js</span>
+<span class="kd">const</span> <span class="nx">formatTimeSlots</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{};</span>
+<span class="kd">const</span> <span class="nx">updateTimeSlots</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{};</span>
+<span class="kd">const</span> <span class="nx">createTimeSlots</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{};</span>
+
+<span class="c1">//file.js</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">formatTimeSlots</span><span class="p">,</span> <span class="nx">createTimeSlots</span><span class="p">,</span> <span class="nx">updateTimeSlots</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// utils.js</span>
+<span class="kd">const</span> <span class="nx">utils</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">formatTimeSlots</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{},</span>
+  <span class="na">updateTimeSlots</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{},</span>
+  <span class="na">createTimeSlots</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{},</span>
+<span class="p">};</span>
+
+<span class="c1">//file.js</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">utils</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>或者可以这么导入：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="o">*</span> <span class="k">as</span> <span class="nx">utils</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="跨层级太多尽量使用别名">跨层级太多尽量使用别名</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">User</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../../scenes/Account/User</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">THEME_COLOR</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../../constants/theme</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getUser</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../services/userServices</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">User</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@scenes/Account/User</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">THEME_COLOR</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@constants/theme</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getUser</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@services/userServices</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="布尔值变量方法需要以-is-开头">布尔值变量方法需要以 is 开头</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">isCompleted</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">isValidUser</span> <span class="o">=</span> <span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">!!</span><span class="nx">user</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="常量变量总是大写">常量变量总是大写</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">NEW_MODE</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">New Mode</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">GOOGLE_KEY</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">1da541ac298</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">IS_PRODUCTION</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="使用少量变量让可读性更好">使用少量变量让可读性更好</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">(</span><span class="nx">income</span> <span class="o">-</span> <span class="nx">expenses</span><span class="p">)</span> <span class="o">-</span> <span class="nx">income</span> <span class="o">&gt;</span> <span class="nx">expenses</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">?</span> <span class="nx">income</span> <span class="o">*</span> <span class="mi">0</span><span class="p">,</span><span class="mi">25</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">income</span> <span class="o">-</span> <span class="nx">expenses</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">isUseTaxes</span> <span class="o">=</span> <span class="nx">income</span> <span class="o">&gt;</span> <span class="nx">expenses</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">taxes</span> <span class="o">=</span> <span class="nx">isUseTaxes</span> <span class="p">?</span> <span class="nx">income</span> <span class="o">*</span> <span class="mi">0</span><span class="p">,</span><span class="mi">25</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">value</span> <span class="o">-</span> <span class="nx">taxes</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="尽量将对象解构出来使用">尽量将对象解构出来使用</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">setState</span><span class="p">({</span>
+  <span class="na">account</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2"> </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">surname</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+  <span class="na">photo</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">photo</span><span class="p">,</span>
+  <span class="na">options</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">options</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">response</span><span class="p">;</span>
+<span class="c1">// two times if needed</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">surname</span><span class="p">,</span> <span class="nx">photo</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">user</span><span class="p">;</span>
+
+<span class="nx">setState</span><span class="p">({</span>
+  <span class="na">account</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2"> </span><span class="p">${</span><span class="nx">surname</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+  <span class="nx">photo</span><span class="p">,</span>
+  <span class="nx">options</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="合理使用简短的三元表达式替代-if">合理使用简短的三元表达式替代 if</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">isCompleted</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">method</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">return</span> <span class="nx">isCompleted</span> <span class="p">?</span> <span class="nx">method</span><span class="p">()</span> <span class="p">:</span> <span class="kc">null</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="合理构造对象来代替多个-if">合理构造对象来代替多个 if</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">fetchData</span><span class="p">();</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">message</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">saved</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">message</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">updated</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">message</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">const</span> <span class="nx">responseHandleMap</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="na">saved</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="cm">/* ... */</span><span class="p">,</span>
+   <span class="na">updated</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="cm">/* ... */</span><span class="p">,</span>
+   <span class="na">error</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="cm">/* ... */</span>
+  <span class="p">}</span>
+  <span class="cm">/* ... */</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">fetchData</span><span class="p">();</span>
+  <span class="nx">responseHandleMap</span><span class="p">[</span><span class="nx">response</span><span class="p">.</span><span class="nx">message</span><span class="p">]();</span>
+</code></pre></div></div>
+
+<h3 id="使用-async--await-替代-then--catch">使用 async / await 替代 then / catch</h3>
+
+<ul>
+  <li>示例：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">getUserInfo</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(({</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">options</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="cm">/* ... */</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="cm">/* ... */</span>
+  <span class="p">});</span>
+</code></pre></div></div>
+
+<ul>
+  <li>改成这样：</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">request</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">options</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getUserInfo</span><span class="p">();</span>
+    <span class="cm">/* ... */</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/* ... */</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>

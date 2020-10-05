@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\学习考核全部java_20180918"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../">
+		<!--模块内页面和js -->
+		<!--12.17 修改文电校验 -->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/js/wdglValidator.js"/>		
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglEditForm.html"/>		
+		<include name="WebContent/modules/dagl/wdgl/sendFile/js/wdglValidator.js"/>		
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendEditForm.html"/>		
+		<!--12.18 修改列表样式加【没有找到匹配的记录】 -->
+		<include name="WebContent/modules/dagl/bmgl/css/common.css"/>
+		<include name="WebContent/modules/dagl/bmgl/js/index.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForAdmin.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForUnit.js"/>
+		<!--12.18 修改实时校验 -->
+		<include name="WebContent/modules/dagl/bmgl/js/form.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/modify.js"/>
+		
+		<!--12.18 修改文电导入 -->
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendlImportFileFrom.html"/>
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglImportFileFrom.html"/>
+		
+		<!--12.19 修改编目列表的样式 -->
+		<include name="WebContent/modules/dagl/bmgl/css/index.css"/>
+		<include name="WebContent/modules/dagl/bmgl/css/common.css"/>
+		<include name="WebContent/modules/dagl/bmgl/js/index.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForAdmin.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForUnit.js"/>
+		
+		<!--12.19增加批量修改文件类型功能 -->
+		<include name="WebContent/modules/dagl/wdgl/receiveFile/wdglList.html"/>
+		<include name="WebContent/modules/dagl/wdgl/sendFile/wdglSendList.html"/>
+		
+		
+		<!-- 模块内公共的java文件-->
+		<!-- 12.17修改档案汇总的功能-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/services/BmglServiceImpl.java"/>	
+		<!-- 12.19增加批量修改文件类型功能-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/controller/DaglReceiveFileController.java"/>		
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/controller/DaglSendFileController.java"/>		
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/services/DaglReceiveFileService.java"/>		
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/services/DaglReceiveFileServiceImpl.java"/>		
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/services/DaglSendFileService.java"/>		
+		<include name="src/com/sinosoft/sinoep/modules/dagl/wdgl/services/DaglSendFileServiceImpl.java"/>		
+			
+			
+		<!-- 公共js,部署测试环境和正式环境只需要将修改部署即可-->
+		
+		
+		<!-- 公共java-->
+			
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

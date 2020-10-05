@@ -1,0 +1,119 @@
+<style type="text/css">
+</style>
+<div id="child " class="container-fluid formpage_area" style="min-height: 300px;">
+    <form class="form-horizontal" >
+        <!-- 基本信息 -->
+        <input name="id" id="id" type="hidden">
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-5 control-label"> 串口号：</label>
+                    <div class="col-md-3 form-view" style="display: inline">
+                        <select class="form-control" name="comnum" id="comnum" style="height: 30px	">
+                            <option value=''>-请选择串口-</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-5 control-label"> 波特率：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="BaudRate">9600</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-5 control-label"> 校验位：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="CheckBit">NONE</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-5 control-label"> 数据位：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="DataBits">8</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-5 control-label"> 停止位：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="StopBits">1</span>
+                    </div>
+                </div>
+                <div class="form-group" style="height: 10px">
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4" style="width:100%;text-align: center">
+                    <button type="button" class="btn btn-primary" onclick="ceshi()" > 测&nbsp;&nbsp;试 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-primary" onclick="saveConfig()" > 保&nbsp;&nbsp;存 </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    $(function() {
+        var locator = new ActiveXObject("WbemScripting.SWbemLocator");
+        var service = locator.ConnectServer(".");
+        var properties = service.ExecQuery("SELECT * FROM Win32_PnPEntity where Name like '%(COM%)'");
+        var e = new Enumerator (properties);
+        var strHtml = "";
+        if(!e.atEnd()){
+            var i=1;
+            for (;!e.atEnd();e.moveNext ()){
+                var p = e.item ();
+                var num = ((p.Name).split("COM")[1]).split(")")[0];
+                strHtml += "<option value='" + num + "'>" + p.Name + "</option>"
+                i++;
+            }
+        }else{
+            $("#comnum").html("<option value=''>-请连接扫码设备-</option>");
+            layer.alert("系统没有检测到设备信息！可能原因：<br>1、未使用IE浏览器；<br>2、未安装设备驱动;<br>3、未注册扫码控件;<br>4、未连接扫码设备;", {icon: 5});
+        }
+        $("#comnum").append(strHtml);
+        getConfig();
+    })
+
+    function getConfig(){
+        $.ajax({
+            type: "POST",
+            url:"/dagl/wdgl/receiveFile/editConfig",
+            success:function(json){
+                if(json.flag == 1){
+                    $("#comnum").val(json.data.comId);
+                    $("#id").val(json.data.id);
+                }
+            },
+            error:function(){
+            }
+        });
+    }
+
+    function ceshi(){
+        var resId = $('#left_ul').find('a.active').attr("id");
+        var comName = $("#comnum").val();
+        MyLayer.layerOpenUrl({
+            url:'/modules/dagl/wdgl/configuration/ceshiEdit.html?resId='+resId + "&comName=" + comName,
+            title:"扫码枪测试页",
+            width:"70%",
+            height:"70%"
+        })
+    }
+
+    function saveConfig(){
+        $.ajax({
+            type: "POST",
+            url:"/dagl/wdgl/receiveFile/saveConfig",
+            data:{id:$("#id").val(),comId:$("#comnum :selected").val()},
+            success:function(json){
+                if(json.flag == 1){
+                    layer.msg("保存成功！", {icon: 1});
+                }
+            },
+            error:function(){
+            }
+        });
+    }
+</script>

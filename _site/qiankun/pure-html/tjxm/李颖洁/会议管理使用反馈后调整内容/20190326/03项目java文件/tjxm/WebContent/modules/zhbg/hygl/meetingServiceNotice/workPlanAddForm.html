@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+   <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+     <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title> </title>
+</head>
+<body>
+   <span id="tishi" style="text-align: center;display:block;color: red;margin-bottom:5px;"></span>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+                <form class="form-horizontal"  style="margin-top:15px;" id="form">
+                  <!--查询项输入框选择框等开始-->
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label"> 类别：</label>
+                      <div class="col-sm-4">
+	                          <select  id="planType" name="planType"  class="form-control" ></select>
+	                          <input type="hidden" id="id" name="id"> 
+	                         <input type="hidden" id="datePlan" name="datePlan"> 
+                      </div>
+                      <div id="remindDiv" style="display: none">
+	                      <label class="col-sm-2 control-label"> 提醒时间：</label>
+	                      <div class="col-sm-4">
+	                         <input type="text"  id="remindTime" name="remindTime"  class="form-control" >
+				                <input type="hidden" name="isFinish" id="isFinish" value="0"/>
+				                 <input type="hidden" name="isChange" id="isChange" value="0"/>
+	                      </div>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label"><b style="color: red;">*</b> 内容：</label>
+                      <div class="col-sm-10">
+                          <textarea name="content" autofocus="autofocus" id="content" class="form-control" rows="5" placeholder=""></textarea>
+                      </div>
+                      
+                  </div>
+                  <!--查询项输入框选择框等结束-->
+
+                  <!--查询重置等按钮-->
+                  <br/>
+                  <div class="form-group">
+                      <div class="col-sm-12" style="text-align: center">
+                          <button type="button" class="btn btn-primary" onclick="save()"> 保&nbsp;&nbsp;存
+                          </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <button type="button" class="btn btn-primary" onclick="reset1()"> 重&nbsp;&nbsp;置
+                          </button>
+                      </div>
+                  </div>
+                  <!--查询重置等按钮 end-->
+                 </form>
+        </div>
+      </div>
+    </div>
+ <script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/product/workflow/js/storages.js"></script>
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- <script type="text/javascript" src="/common/js/overlay.js"></script> -->
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 自定义意见(最后进行加载) -->
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 数据回显 -->
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!-- 数据校验 -->
+<script type="text/javascript" src="js/workPlanAddValidator.js"></script>
+<!-- 引入自己模块功能的js -->
+<script type="text/javascript" src="js/workPlanAdd.js"></script>
+
+
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<script type="text/javascript">
+Dictionary.init({mark:'log_type',type:'1',position:"planType",domType:"select",name:"planType",hasSelect:false});
+var curDate = getCurrentDate("yyyy-MM-dd HH:mm:ss")
+//获取父窗口会议的开始时间
+var meetingStartDate = $(parent.document.getElementById("meetingStartDate")).text()
+$("#tishi").text("您正在添加"+meetingStartDate+"日的工作计划")
+$("#datePlan").val(meetingStartDate)
+var tempCurDate = curDate.split(" ");
+if(meetingStartDate>=tempCurDate[0]){
+	$('#remindDiv').css("display", "block")
+}
+
+
+
+//初始化提醒时间
+var minDate = getBeforeDate(curDate,-1);
+var now = $("#datePlan").val()+" 23:00:00";
+	laydate.render({
+        elem: '#remindTime' //指定元素
+        ,btns: ['clear', 'confirm']
+        ,type: 'datetime'
+        ,min: minDate
+        ,max: now
+        ,ready:function(date){
+            // disableTimeSelection();   // 禁用分钟和秒选项
+			// 绑定切换面板事件
+			selectDate = date.date;
+            $('.laydate-btns-time').click(function(){
+            	var len = $('.laydate-time-list li:first ol li:lt('+hourCnt+')').length;
+            	/* if(selectDate==dayCnt){
+	            	$('.laydate-time-list li:first ol li').each(function(index){
+	            		if(index<=hourCnt){
+	            			//alert(index)
+	            			$(this).addClass('laydate-disabled')
+	            			
+	            		}s
+	    			})
+            	} */
+    			
+                // 禁用分钟和秒选项
+                $('.laydate-time-list').children('li').each(function(index,itemList){
+                    if(index<=0) {
+                        //$(this).children('ol').children('li').removeClass('laydate-disabled')
+					}
+					if(index>0){
+						 $(this).children('ol').children('li').addClass('laydate-disabled')
+                    }
+                    // 绑定选择小时的点击事件
+                    $('.laydate-time-list').find('li').click(function(){
+                        disableTimeSelection();   // 禁用分钟和秒选项
+                        if(selectDate!=dayCnt) return;
+                        $('.laydate-time-list li:first ol li').each(function(index){
+    	            		if(index<=hourCnt){
+    	            			//alert(index)
+    	            			$(this).addClass('laydate-disabled')
+    	            			
+    	            		}
+    	    			})
+                    })
+                })
+            });
+
+	    }
+	    ,change:function(value, date, endDate){
+           // disableTimeSelection();   // 禁用分钟和秒选项
+           console.log(value)
+           console.log(date)
+           console.log(endDate)
+	    	selectDate = parseInt(date.date);
+           console.log(endDate)
+		}
+        ,done: function(value, date, endDate){
+        	$('#remindTime').val(value).change()
+        	
+        }
+		
+    });
+		
+	 // 禁用分钟和秒选项
+	function disableTimeSelection(){
+	    // console.log('禁用分钟和秒')
+        $('.laydate-time-list').children('li').each(function(index,itemList){
+            if(index<=0) {
+                $(this).children('ol').children('li').removeClass('laydate-disabled')
+            }
+            if(index>0){
+               $(this).children('ol').children('li').addClass('laydate-disabled')
+            }
+        })
+	}
+	 
+var selectDate;//日期控件中被选中的日期值
+var hourCnt;//当前时间的小时值
+var dayCnt;//当前时间的天值
+function getBeforeDate(date,n) {
+		   var n = n;
+		    var d = new Date(date.replace(/-/g, '/'));
+		    var year = d.getFullYear();
+		    var mon = d.getMonth() + 1;
+		    var day = d.getDate();
+		    var hours = d.getHours();
+		     hourCnt=parseInt(hours)
+		     dayCnt = parseInt(day)
+		    if(day <= n) {
+		      if(mon > 1) {
+		                mon = mon - 1;
+		        } else {
+		                year = year - 1;
+		                mon = 12;
+		        }
+		   }
+		 d.setDate(d.getDate() - n);
+		 year = d.getFullYear();
+		 mon = d.getMonth() + 1;
+		 day = d.getDate()-1;
+		 s = year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day)+" " + (hours+1) + ":00:00";
+		  return s;
+}
+</script>
+</body>
+</html>

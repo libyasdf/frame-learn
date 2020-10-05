@@ -1,0 +1,181 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls > i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+<div class="container-fluid">
+    <div class="row">
+        <form class="form-horizontal" id="form1">
+            <div class="col-md-12 ">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 标题：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="name" id="name1"/>
+                            </div>
+                            <label class="col-md-2 control-label"> 创建时间：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="code" id="code1"/>
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                </button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="list_button_area">
+                    <button type="button" class="list_table_btn2" onclick="addTypes('1')">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                </div>
+                <!--bootstrap-table表格-->
+                <table id="right_table" data-use-row-attr-func="true" data-reorderable-rows="true"></table>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript">
+    // 刷新列表
+    function refresh() {
+        $("#right_table1").bootstrapTable("refresh");
+    }
+
+    //清空查询条件
+    function clearAll() {
+        $("#name1").val("");	//字典名称
+        $("#code1").val("");	//字典值
+    }
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col1 = [{
+        title: '编号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            return "<span recordId='"+row.id+"'>"+(index + 1)+"</span>";//计算序号
+        }
+    }, {
+        field: 'name'
+        , title: '文章标题'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'isSp'
+        , title: '创建时间'
+        , width: '10%'
+        , align: "center"
+    }, {
+        field: 'code'
+        , title: '发布时间'
+        , width: '15%'
+        , align: "center"
+    },  {
+        field: 'flag'
+        , title: '状态'
+        , width: '15%'
+        , align: "center"
+    }, {
+        field: 'remark'
+        , title: '是否置顶'
+        , width: '15%'
+        , align: "center"
+    }, {
+        title: '操作'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+            html += "<i class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'> 审批</i>&nbsp;&nbsp;"
+            return html;
+        }
+    }];
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "mock/InfoContentList1.json",
+            pagination:true,	//分页
+            columns: right_table_col1,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.name = $("#name1").val();
+                params.code = $("#code1").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                $('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+                    //取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+                    //取消事件冒泡 end
+                    var id = $(this).parent().find("span[data-id]").attr("data-id");
+                    var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+                    var resId = $('#left_ul').find('a.active').attr("id");
+                    //流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: 'modules/info/column/infoContentReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "只读页"});
+                });
+            }
+        });
+    });
+    //表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            MyLayer.layerOpenUrl({
+                url: 'modules/info/column/infoContentAddForm.html',
+                title: "修改",
+                width: "1100px",
+                height: "550px"
+            })
+        },
+        deleteFun: function (id) {
+            MyLayer.deleteOpt({
+                url: '/system/config/dictionary/deleteItem?ids=' + id,
+                tableId: 'right_table'
+            })
+        }
+    }
+
+</script>

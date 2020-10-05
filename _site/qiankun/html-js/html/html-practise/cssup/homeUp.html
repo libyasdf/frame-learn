@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./home.css">
+  <title>css动画</title>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+
+<body>
+  <div id="homepage" class="homepage">
+    <div id="background_img" class="bg bg-blur"></div>
+    <div id="header"></div>
+    <div id="fakeimg" class="content-front">fg洒大地</div>
+  </div>
+  <div id="body"> 显示页面的全部内容
+    <div id="open">打开弹框</div>
+  </div>
+  <div id="cover"></div>
+  <div id="modal">
+    <div id="close">关闭弹框</div>
+  </div>
+</body>
+<script type="text/javascript">
+  $(document).ready(function(){
+       $("#open").click(function() {
+             cover.style.display="block";   //显示遮罩层
+             modal.style.display="block";   //显示弹出层
+       })
+        $("#close").click(function() {
+            cover.style.display="none";   //隐藏遮罩层
+            modal.style.display="none";   //隐藏弹出层
+        })
+  })
+</script>
+
+</html>

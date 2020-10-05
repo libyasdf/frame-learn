@@ -1,0 +1,251 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+
+</style>
+<link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <form class="form-horizontal" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                         <div class="form-group">
+                            <label class="col-md-1 control-label"> 会议标题：</label>
+                            <div class="col-md-3">
+                            <input class="form-control" type="text" id="applyTitle" name="applyTitle"/>
+                                <!-- <select class="form-control" id="meetingRoom" name="meetingRoom" >
+                                    <option></option>
+                                    <option>第一会议室</option>
+                                    <option>第二会议室</option>
+                                </select> -->
+                            </div>
+
+
+                            <label class="col-md-1 control-label"> 预约时间：</label>
+                            <div class="col-md-3">
+                               <input class="form-control" type="text" id="timeRange" />
+                            </div>
+
+                            <label class="col-md-1 control-label"> 主办单位：</label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                <input type="text" id="serviceDeptName" name="serviceDeptName" unselectable="on" onclick="openSelectZtree({'id':'serviceDeptId','name':'serviceDeptName','isMulti':'1','type':'2','asyn':true,'url':'/system/component/tree/deptTree',
+                                	                                                                                                      'select':true,'check':'s','cancle':'s'})" class="form-control">
+                                <input type="hidden" id="serviceDeptId" name="serviceDeptId" /><!-- 人员ID隐藏域 -->
+                                <span class="input-group-addon" onclick="openSelectZtree({'id':'serviceDeptId','name':'serviceDeptName','isMulti':'1','type':'2','asyn':true,'level':'4','url':'/system/component/tree/deptTree','select':true,'check':'','cancle':''})">
+                                      <span class="glyphicon glyphicon-user"></span>
+                                </span>
+                            	</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+             <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="draft();">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 起草
+                </button>
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<!-- 人员树 -->
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript">
+/* Dictionary.init({position:"meetingRoom",mark:"meeting_room",type:"1",name:"meetingRoom",domType:"select"}); */
+	var workFlowName = "会议室申请";
+	//起草
+	function draft(){
+		var resId = $('#left_ul').find('a.active').attr("id");
+		MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingApply/meetingRoomApplyEditForm.html?oper=NEW&resId=' + resId,title:'起草'+workFlowName+"信息",width:'90%',height:'98%'})
+		//MyLayer.layerOpenUrl({url:'/modules/zhbg/xxkh/paperManage/sjglEditForm.html?type='+parameter.treeType+'&nodeId='+nodeId+"&resId="+resId,title:'新增试卷信息',width:'90%',height:'98%'})
+
+	}
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+         title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	//计算序号，并存放业务ID，及已办事项ID
+        	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+           }
+    }, 
+    {
+        field: 'applyTitle'
+        , title: '会议标题'
+        , width: '10%'
+        , align:"center"
+    },  
+    {
+        field: 'meetingRoomName'
+        , title: '会议室名称'
+        , width: '10%'
+        , align:"center"
+       	, formatter: function (value, row, index) {
+           	var length = "";
+           	var val = '';
+           	if(value != null){
+           		length = value.length
+           		if(length>21){
+           	   		val = value.substring(0,20)+"...";//
+           	   	}else{
+           	   	   val = value;
+           	   	}
+           		return  "<span >"+val+"</span>";
+           	}else{
+           		return "-"
+           	}
+         }
+     },{
+         field: 'meetingTime'
+           , title: '会议时间'
+           , width: '15%'
+           , align:"center"
+     },{
+         field: 'hostDeptName'
+           , title: '主办单位'
+           , width: '10%'
+           , align:"center"
+     },{
+         field: 'cz'
+           , title: '操作'
+           , width: '5%'
+           , align: "center"
+           , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+               	 var html = "";
+                    html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                    html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\",\"" + row.serviceDeptName + "\")\'></i>";
+                    return html;
+           }
+     }];
+
+    //初始化表格
+     $(document).ready(function (e) {
+    	    	//初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/hygl/meetingApply/getlist",
+            columns:right_table_col,
+            queryParams:function(params){
+            	params.resId = $('#left_ul').find('a.active').attr("id");
+            	params.subflag = Config.startflag;
+            	params.applyTitle = $("#applyTitle").val();
+            	params.timeRange = $("#timeRange").val();
+            	params.serviceDeptName = $("#serviceDeptName").val();
+            	params.serviceDeptId = $("#serviceDeptId").val();
+                return params;
+            },
+            //暂时屏蔽到只读
+           	readOnlyFn:function(){
+           		$('tr.readOnly').attr("title","点击查看详情");
+            	$('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+					//取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    } else {
+                        evt.cancelBubble = true;
+                    }
+					//取消事件冒泡 end
+					var id = $(this).parent().find("span[data-id]").attr("data-id");
+					var workItemId = $(this).parent().find("span[data-id]").attr("data-workitemid");
+					var resId = $('#left_ul').find('a.active').attr("id");
+					//流程审批列表需要workitemid已办事项ID
+                    MyLayer.layerOpenUrl({url: '/modules/zhbg/hygl/meetingApply/meetingRoomApplyReadOnlyForm.html?id='+id+"&oper=VIEW&resId=" + resId, title: "会议申请只读"});
+                });
+            	  
+            } 
+           
+        });
+    })
+    
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	MyLayer.layerOpenUrl({
+                url: '/modules/zhbg/hygl/meetingApply/meetingRoomApplyEditForm.html?id=' + id + "&oper=EDIT&resId=" + resId,
+                title: "修改会议申请"
+            }) 
+        },
+        deleteFun: function (id,serviceDeptName) {
+        	var resId = $('#left_ul').find('a.active').attr("id");
+        	MyLayer.deleteOpt({
+                url: '/zhbg/hygl/meetingApply/delete?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+
+
+    //清空查询条件
+	function clearAll(){
+		$("#applyTitle").val("");
+		$("#timeRange").val("");
+		$("#serviceDeptName").val("");
+		$("#serviceDeptId").val("");
+	}
+    
+    //回车
+    function keyLogin(){
+    	if (event.keyCode==13)  //回车键的键值为13
+    	TableInit.refTable('right_table');
+    }
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+    
+  //刷新方法，流程中需要回调
+	function refreshPage(){
+		TableInit.refTable("right_table");
+	}
+
+</script>

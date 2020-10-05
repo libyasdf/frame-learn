@@ -1,8 +1,8 @@
 ---
 order: 2
-group:
+nav:
   title: 规范
-  order: 1
+  order: 2
 ---
 
 ## javascript 代码风格规范

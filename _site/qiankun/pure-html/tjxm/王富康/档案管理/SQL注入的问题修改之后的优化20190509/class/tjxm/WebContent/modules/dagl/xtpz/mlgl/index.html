@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列表</title>
+    <link rel="stylesheet" href="/static/core/layui/css/layui.css">
+    <link rel="stylesheet" href="/modules/dagl/xtpz/mlgl/css/index.css">
+    <link rel="stylesheet" href="/modules/dagl/xtpz/mlgl/css/cohttp://192.168.90.135:8080/moduleIndex.html?id=1027629mmon.css">
+    <link rel="stylesheet" href="/static/core/layer/theme/default/layer.css">
+    <link rel="stylesheet" type="text/css" href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <!--<link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.css">-->
+    <link rel="stylesheet" type="text/css" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css">
+    <style>
+        /* .c1{
+            display: inline-block;
+            line-height: 16px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: rgb(231, 231, 231);
+            border-image: initial;
+            border-radius: 3px;
+            padding: 6px 10px;
+               background: url(/static/images/btn_bj.png) repeat-x rgb(236, 236, 236);
+        } */
+        .c1:hover{
+            color:#fff;
+            background-color: #3071a9;
+            border-color: #285e8e;
+        }
+        .c1{
+            color: #fff;
+            background-color: #428bca;
+            border-color: #375cbd;
+            display: inline-block;
+            line-height: 16px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: rgb(231, 231, 231);
+            border-image: initial;
+            border-radius: 3px;
+            padding: 6px 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .c2 {
+            display: inline;
+            height: 32px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.42857143;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+        .form-group {
+            width: 45%;
+            display: inline-table;
+            margin-left: 3%;
+            margin-top: 3px;
+        }
+
+        .panel-controls{
+            position: absolute;
+            right: 40px;
+            top: 10px;
+        }
+        .panel-controls > i.showSelect{
+            font-size: 16px;
+            color: #acb1b8;
+            cursor: pointer;
+        }
+        label{
+            font-weight: normal;
+        }
+
+    </style>
+</head>
+
+<body>
+<input type="hidden" id="sqlStr" value="">
+<div class="app">
+
+    <!-- 树 -->
+    <div class="demoTree">
+
+        <div class="vertify-panel vertify-tree x-unselectable" role="presentation">
+            <div class="inner">
+                <div class="folderBar">
+                    <i class="glyphicon glyphicon-plus-sign" onclick="addType();" style="font-size: 18px; cursor: pointer;"
+                       title="添加门类"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="glyphicon glyphicon-edit" onclick="editType();"
+                       style="font-size: 18px; cursor: pointer;" title="修改节点名称"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="glyphicon glyphicon-trash" onclick="deletType();" style="font-size: 18px; cursor: pointer;"
+                       title="删除门类"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="glyphicon glyphicon-search" onclick="showSearchFrame()" style="font-size: 18px; cursor: pointer;"
+                       title="查询节点"></i>
+                </div>
+                <div id="searchDiv" class="input-group input-group-sm" style="display: none; padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+                    <input type="text" id="typeName" class="form-control" > <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="searchType();">查询</button>
+                        </span>
+                </div>
+                <ul id="treeDemo" class="ztree" style="margin-top: 10px; height: 606px; overflow-x: hidden;">
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-component-container">
+        <div class="tab-form"  >
+            <!-- 标签容器 -->
+            <div class="tab-container">
+                <!--<div class="select-container dropdown"></div>-->
+                <div class="tab tab-active" >立卷单位授权</div>
+            </div>
+            <!-- 面板容器 -->
+            <div class="tab-panel-container">
+                <!-- 面板 -->
+                <section class="content">
+                    <div class="row">
+                        <form id="dmForm">
+                            <div class="col-md-12">
+                                <div class="panel panel-default toggle">
+                                    <div class="panel-heading" style="cursor: pointer;" onclick="openAndClose();">
+                                        <h3 class="panel-title">查询项</h3>
+                                        <div class="panel-controls " >
+                                            <i class="glyphicon glyphicon-plus showSelect" id="tubiao"></i>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" style="display: none;" id="SearchArea">
+                                        <div class="col-md-12">
+                                            <label class="col-md-1 control-label" style="text-align: right;"> 立卷单位：</label>
+                                            <div class="col-md-3">
+                                                <select class="form-control" name="ljdwMarkOfSearch" id="ljdwMarkOfSearch" >
+                                                    <option value="">---请选择---</option>
+                                                </select>
+                                            </div>
+                                            <label class="col-md-1 control-label" style="text-align: right;"> 录入人：</label>
+                                            <div class="col-md-3">
+                                                <input type="text" id="lrrNamesOfSearch" name="lrrNamesOfSearch" class="form-control" autocomplete="off">
+                                            </div>
+                                            <label class="col-md-1 control-label" style="text-align: right;"> 立卷单位管理员：</label>
+                                            <div class="col-md-3">
+                                                <input type="text" id="ljdwAdminNamesOfSearch" name="ljdwAdminNamesOfSearch" class="form-control" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <!--查询重置等按钮-->
+                                        <div class="col-md-12" style="text-align: center;padding-top: 5px;">
+                                            <button type="button" class="btn btn-primary"
+                                                    onclick="$('#tb_customer1').bootstrapTable('refresh');"> 查&nbsp;&nbsp;询
+                                            </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <button type="reset" class="btn btn-primary">
+                                                重&nbsp;&nbsp;置
+                                            </button>
+                                        </div>
+                                        <!--查询重置等按钮 end-->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="panel-body" style="padding-bottom:0px;">
+
+                            <!--<button class="btn  btn-primary" onclick="return false">门类字段管理</button>-->
+                            <div id="toolbar1" class="btn-group" style="padding-left: 10px;">
+                                <button type="button" class="list_table_btn2" id="btnShowAdd1">
+                                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> 新增
+                                </button>
+                                <label style="color: red;"> * 在【内部审批>信息处审批>人员权限申请】模块申请授权【档案录入人】或【立卷单位管理员】业务角色后，才可被设置为立卷单位的录入人和立卷单位管理员！</label>
+                            </div>
+
+                            <div class="box">
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <table id="tb_customer1" data-response-handler="responseHandler">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </section>
+            </div>
+        </div>
+        <div class="tab-table" style="display: none" >
+            <!-- 标签容器 -->
+            <div class="tab-container">
+                <div class="tab tab-active">门类字段管理</div>
+            </div>
+            <div class="tab-panel-container">
+                <section class="content">
+                    <div class="row">
+                        <div class="panel-body" style="padding-bottom:0px;height: 600px;">
+                            <!--<button class="btn  btn-primary" onclick="return false">门类字段管理</button>-->
+                            <div id="toolbar" class="btn-group">
+                                <button type="button" class="list_table_btn2" id="btnShowAdd">
+                                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> 新增
+                                </button>
+                                <button id="remove" class="list_table_btn2"  onclick="delectAll()">
+                                    <span class="glyphicon glyphicon-trash"></span> 删除
+                                </button>
+                                <button type="button" class="list_table_btn2"  onclick="updateCss()">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 著录界面设置
+                                </button>
+                            </div>
+                            <div class="box">
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <table id="tb_customer" data-response-handler="responseHandler">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </section>
+                <!-- /.content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--新增内容 模态框-->
+<!--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel" style="font-size: 16px; font-weight: bold; cursor: move;">
+                    新增
+                </h4>
+            </div>-->
+<!--表单内容区域-->
+<div class="modal-body">
+    <form id="tableForm">
+        <div class="form-group">
+            <label><span style="color:red">* </span>中文名称</label>
+            <input type="text" class="form-control" name="COLUMN_CHN_NAME" />
+        </div>
+        <div class="form-group">
+            <label><span style="color:red">* </span>英文名称</label>
+            <input type="text" class="form-control" name="COLUMN_NAME" />
+        </div>
+        <div class="form-group">
+            <label>字段类型</label>
+            <select name="COLUMN_TYPE" class="form-control" id="column_type">
+                <option value="1">字符串</option>
+                <option value="2">整数</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>字段长度</label>
+            <input type="number" oninput="value=value.replace(/[^\d]/g,'')" id="column_width" name="COLUMN_WIDTH" class="form-control" placeholder="请输入正整数" >
+        </div>
+        <div class="form-group">
+            <label>著录形式</label>
+            <select name="COLUMN_INPUT_TYPE" class="form-control" id="slect_input_type">
+                <option value="T">文本输入</option>
+                <option value="S">选择输入</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>对应字典</label>
+            <select name="COLUMN_SELECT_NO" class="form-control" disabled="disabled" id="select_no">
+                <option value="0">请选择</option>
+            </select>
+            <!--<input type="text" class="form-control" name="COLUMN_SELECT_NO" disabled="disabled" placeholder="请输入对应字典" id="select_no">-->
+        </div>
+        <div class="form-group">
+            <label>是否表单项：</label>
+            <!--<div style="margin-left: 70px">-->
+            <input type="radio" name="COLUMN_VISIBLE"  value="T" checked="checked"> 是
+            <input type="radio" name="COLUMN_VISIBLE"  value="F"> 否
+            <!--</div>-->
+        </div>
+        <div class="form-group">
+            <label>是否为空：</label>
+            <!--<div style="margin-left: 70px">-->
+            <input type="radio" name="COLUMN_CAN_NULL" value="T" > 是
+            <input type="radio" name="COLUMN_CAN_NULL" value="F" checked="checked"> 否
+            <!--</div>-->
+        </div>
+        <div class="form-group">
+            <label>是否简单查询：</label>
+            <!--<div style="margin-left: 70px">-->
+            <input type="radio" name="COLUMN_AS_SIMQUERY"  value="T"> 是
+            <input type="radio" name="COLUMN_AS_SIMQUERY"  value="F" checked="checked"> 否
+            <!--</div>-->
+        </div>
+
+        <div class="form-group">
+            <label>是否列表项：</label>
+            <!--<div style="margin-left: 70px">-->
+            <input type="radio" name="COLUMN_LIST_ISSHOW"  value="T" checked="checked"> 是
+            <input type="radio" name="COLUMN_LIST_ISSHOW"  value="F" > 否
+            <!--</div>-->
+        </div>
+        <input type="hidden" name="COLUMN_LIST_ORDER"  value="" >
+        <div class="subButton">
+            <button type="submit" name="submit" class="btn btn-primary center-block">保存</button>
+        </div>
+    </form>
+</div>
+<!--底部按钮-->
+<!--<div class="modal-footer">-->
+<!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭-->
+<!--</button>-->
+<!--<button type="button" class="btn btn-primary">-->
+<!--提交-->
+<!--</button>-->
+<!--</div>-->
+<!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;
+</div>&lt;!&ndash; /.modal &ndash;&gt;
+</div>-->
+
+<!--新增内容 模态框 -->
+<!--杨奇改的，为了修改placehoder内容在IE无法自动消失的问题，原因是因为bootstrap模态框里面不能嵌套layer弹框-->
+<div class="addModal">
+    <form id="tableForm1" class="addForm" autocomplete="off">
+        <div class="form-group">
+            <label><b style="color: red;">*</b>立卷单位</label>
+            <select class="form-control" name="ljdwMark" id="ljdwMark">
+                <option value="">---请选择---</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label><b style="color: red;">*</b>录入人</label>
+            <input type="text" class="form-control" name="lrrNames" id="lrrNames" unselectable="on" onclick="openSelectZtree({'id':'lrrIds','name':'lrrNames','type':'1','asyn':false,'deptId':'441','parentId':'lrrDeptId','rolesNo':'D701','level':'10','url':'/system/component/tree/getDeptUserByDeptIdAndRolesNo','check':'ps','cancle':'ps'})"/>
+            <input type="text" class="form-control" name="lrrIds" id="lrrIds" hidden/>
+            <input class="userName" id="lrrDeptId" name="lrrDeptId" hidden/><!-- 人员父部门ID隐藏域 -->
+        </div>
+        <div class="form-group">
+            <label><b style="color: red;">*</b>立卷单位管理员</label>
+            <input type="text" class="form-control" name="ljdwAdminNames" id="ljdwAdminNames" unselectable="on" onclick="openSelectZtree({'id':'ljdwAdminIds','name':'ljdwAdminNames','type':'1','asyn':false,'deptId':'441','parentId':'ljdwAdminDeptId','rolesNo':'D705','level':'10','url':'/system/component/tree/getDeptUserByDeptIdAndRolesNo','check':'ps','cancle':'ps'})"/>
+            <input type="text" class="form-control" name="ljdwAdminIds" id="ljdwAdminIds" hidden/>
+            <input class="userName" id="ljdwAdminDeptId" name="ljdwAdminDeptId" hidden/><!-- 人员父部门ID隐藏域 -->
+        </div>
+        <div class="subButton">
+            <button type="submit" name="submit1" id="submit1" class="btn btn-primary center-block">保存</button>
+        </div>
+    </form>
+</div>
+
+<!--<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+<!--<div class="modal-dialog">-->
+<!--<div class="modal-content">-->
+<!--<div class="modal-header">-->
+<!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">-->
+<!--&times;-->
+<!--</button>-->
+<!--<h4 class="modal-title" id="myModalLabel1" style="font-size: 16px; font-weight: bold; cursor: move;">-->
+<!--新增-->
+<!--</h4>-->
+<!--</div>-->
+<!--&lt;!&ndash;表单内容区域&ndash;&gt;-->
+<!--<div class="modal-body">-->
+<!--<form id="tableForm1" autocomplete="off">-->
+<!--<div class="form-group">-->
+<!--<label><b style="color: red;">*</b>立卷单位</label>-->
+<!--<select class="form-control" name="ljdwMark" id="ljdwMark" >-->
+<!--<option value="">-&#45;&#45;请选择-&#45;&#45;</option>-->
+<!--</select>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label><b style="color: red;">*</b>录入人</label>-->
+<!--<input type="text" class="form-control" name="lrrNames" id="lrrNames" unselectable="on" onclick="openSelectZtree({'id':'lrrIds','name':'lrrNames','type':'1','asyn':false,'deptId':'441','level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})"/>-->
+<!--<input type="text" class="form-control" name="lrrIds" id="lrrIds" hidden/>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label><b style="color: red;">*</b>立卷单位管理员</label>-->
+<!--<input type="text" class="form-control" name="ljdwAdminNames" id="ljdwAdminNames" unselectable="on" onclick="openSelectZtree({'id':'ljdwAdminIds','name':'ljdwAdminNames','type':'1','asyn':false,'deptId':'441','level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})"/>-->
+<!--<input type="text" class="form-control" name="ljdwAdminIds" id="ljdwAdminIds" hidden/>-->
+<!--</div>-->
+<!--<div class="subButton">-->
+<!--<button type="submit" name="submit1" id="submit1" class="btn btn-primary center-block">保存</button>-->
+<!--</div>-->
+<!--</form>-->
+<!--</div>-->
+<!--&lt;!&ndash;底部按钮&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="modal-footer">&ndash;&gt;-->
+<!--&lt;!&ndash;<button type="button" class="btn btn-default" data-dismiss="modal">关闭&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+<!--&lt;!&ndash;<button type="button" class="btn btn-primary">&ndash;&gt;-->
+<!--&lt;!&ndash;提交&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal &ndash;&gt;-->
+<!--</div>-->
+
+</body>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/modules/dagl/xtpz/mlgl/js/index.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<!--这里是单独引用的自己的js，因COLUMN_AS_SIMQUERY为应用公用的js固定表头会出现问题-->
+<script src="/static/core/mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<!--行内编辑所需js-->
+
+<script src="/modules/dagl/xtpz/mlgl/js/table.js"></script>   <!--不要更换这两个js的顺序-->
+<script src="/modules/dagl/xtpz/mlgl/tree/js/dictionaryTypeTree.js"></script>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/modules/dagl/xtpz/mlgl/js/mergeTable.js"></script>
+<script type="text/javascript">
+    // 查询窗口
+    function showSearchFrame() {
+        var search = $("#searchDiv");
+        if (search.is(":hidden")) {
+            search.show();
+            $("#typeName").focus();
+        } else {
+            search.hide();
+        }
+    }
+</script>
+
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\个人门户java_20191016"></property>
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../">
+		<!-- 常用模块添加上级模块，固定列表高度-->
+		<include name="WebContent/modules/mypage/oftenModel/"/>
+		<include name="src/com/sinosoft/sinoep/modules/mypage/oftenModel/"/>
+		<!-- 应用导航不显示新设置的内容-->
+		<include name="WebContent/main.html"/>
+		<!-- 信息发布、音视频发布等标题截取-->
+		<include name="WebContent/common/js/main.js"/>
+		<!-- 音视频播放历史展示-->
+		<include name="src/com/sinosoft/sinoep/modules/video/background/services/VideoContentServiceImpl.java"/>
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

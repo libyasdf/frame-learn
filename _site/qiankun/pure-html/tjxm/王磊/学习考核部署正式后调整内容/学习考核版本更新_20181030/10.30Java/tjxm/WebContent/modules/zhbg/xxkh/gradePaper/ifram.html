@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考生</title>
+	<link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style1.css" rel="stylesheet">
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+	<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/font/iconfont.css">
+  </head>
+<body>
+
+    <!-- 主题页面 -->
+    <div class="examinee-box">
+
+        <!-- 标签 -->
+        <div class="tab-box">
+            <ul id = "paper">
+                <!-- <li class="tab tab-active">试卷A</li>
+                <li class="tab">试卷B</li>
+                <li class="tab">试卷C</li>
+                <li class="tab">试卷D</li> -->
+            </ul>
+        </div>
+
+        <!-- 面板 -->
+        <!-- <div class="examinee-panel" id = "ren">
+        	
+        </div> -->
+   <!--      <div class="examinee-panel hide">
+        	<iframe id="left" src="/modules/zhbg/xxkh/gradePaper/answerSheets.html" style="width:100%;height:100%;"></iframe>
+        </div>
+        <div class="examinee-panel hide">
+        	<iframe id="left" src="/modules/zhbg/xxkh/gradePaper/answerSheets.html" style="width:100%;height:100%;"></iframe>
+        </div>
+        <div class="examinee-panel hide">
+        	<iframe id="left" src="/modules/zhbg/xxkh/gradePaper/answerSheets.html" style="width:100%;height:100%;"></iframe>
+        </div> -->
+    </div>
+
+    <!-- 关闭按钮 -->
+    <div class="close-box" style="text-align: center;">
+    	<button id="preserveBtn" class="btn close-btn" onclick="closeWindows()" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭 </button>
+	</div>
+    
+</body>
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/app1.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript">
+	function closeWindows(){
+		$.get("/zhbg/xxkh/grade/getTestToUser",{id:theRequest.id},function(data){
+			if(data.flag==1){
+				console.log("已更新");
+				parent.TableInit.refTable('right_table');
+			}
+				MyLayer.closeOpen();
+		},"json")
+	}
+	
+	function getPaperName(){
+		return $(".tab-active").html();
+	}
+	function getHeight(){
+		return $(".examinee-panel").height();
+	}
+	var theRequest = GetRequest();
+	$(document).ready(function (e) {
+		//alert(getHeight());
+			$.ajax({
+				url:"/zhbg/xxkh/testmanage/getPapers",
+				data:{testId:theRequest.id,isJanDa:"haha",testPaperUpPeople:"bushikongde"},
+				async: false,
+				dataType: "json",
+				success: function(data) {
+					var buffer = "";
+					var count = 0;
+					var hideOrShow = "";
+					for(var i in data.data.rows){
+						if(data.data.rows[i].testPaperUpPeople<=0){
+							continue;
+						}
+						var s = data.data.rows[i].name;
+						if(data.data.rows[i].name.length>9){
+							s = s.substring(0,9)+"..";
+						}
+						if(i==0){
+							buffer = " tab-active";
+							hideOrShow = "";
+							count++;
+						}else{
+							buffer = "";
+							hideOrShow = " hide"; 
+							if(count==0){
+								buffer = " tab-active";
+								hideOrShow = "";
+								count++;
+							}
+						}
+						$("#paper").append('<li id="a'+data.data.rows[i].paperId+'" class="tab'+buffer+'" title = "'+data.data.rows[i].name+'" style="width:200px">'+s+'</li>')
+						
+						
+						/* if(i==0){
+							$("#ren").html('<iframe id="b'+data.data.rows[i].paperId+'" class="left" name = "childFrame"  src="/modules/zhbg/xxkh/gradePaper/answerSheets.html?testId='+data.data.rows[i].testId+'&paperId='+data.data.rows[i].paperId+'" style="width:100%;height:100%;border:none;"></iframe>')
+						}else{ */
+						$(".examinee-box").append(' <div class="examinee-panel '+hideOrShow+'"><iframe id="b'+data.data.rows[i].paperId+'"  class="left" name = "childFrame"  src="/modules/zhbg/xxkh/gradePaper/answerSheets.html?testId='+data.data.rows[i].testId+'&paperId='+data.data.rows[i].paperId+'&resId='+theRequest.resId+'" style="width:100%;height:100%;border:none;"></iframe></div>')
+						//}
+					}
+				}
+			});
+		
+	    // 获取 DOM 元素
+	    var tab = $(".tab");
+	    var tabBox = $(".tab-box");
+	    var examineeBox = $(".examinee-box");
+
+	    // 绑定点击事件
+	   
+
+	    // 切换标签
+	   $("#paper li").click(function() {
+	        if(!$(this).hasClass("tab-active")) {
+
+	            // 获取当前点击的标签的索引和已经激活的标签的索引
+	            var thisIndex = $(this).index();
+	            var activeIndex = tabBox.find(".tab-active").index();
+
+	            // 找到激活的标签移除激活样式并为点击的标签添加激活样式
+	            tabBox.find(".tab-active").removeClass("tab-active");
+	            $(this).addClass("tab-active");
+	            // 获取已经激活的面板并将它隐藏
+	            examineeBox.find(".examinee-panel:eq(" + activeIndex + ")").addClass("hide");
+	            examineeBox.find(".examinee-panel:eq(" + activeIndex + ")").find("iframe").addClass("hide");
+	            // 显示点击的标签对应的面板
+	            examineeBox.find(".examinee-panel:eq(" + thisIndex + ")").removeClass("hide");
+	            examineeBox.find(".examinee-panel:eq(" + thisIndex + ")").find("iframe").removeClass("hide");
+
+	        }
+	    } );
+	});
+	
+	function parent1(testId,paperId,userId,userName){
+		 MyLayer.layerOpenUrl({
+             url:'/modules/zhbg/xxkh/gradePaper/markPapers.html?testId='+testId+'&paperId='+paperId+'&userId='+userId+"&resId="+theRequest.resId,
+             title:userName,
+             width: "90%", 
+             height: "90%"
+         }) 
+	}
+
+</script>
+</html>

@@ -1,0 +1,284 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<div class="container-fluid">
+
+    <div class="row">
+        <!--查询-->
+        <form class="" id="form">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                       <h3 class="panel-title">查询项</h3>
+                       <div class="panel-controls " >
+                           <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                     <input id="resId" name="resId" type="hidden"/>
+                         <div class="form-group">
+                         	 <label class="col-md-2 control-label"> 姓名：</label>
+                            <div class="col-md-3">
+                            	<input id="cruDeptId" name="cruDeptId" type="hidden"/>
+                            	<div class="input-group">
+	                         	<input type="text" id="userName" unselectable="on" onclick="openSelectZtree({'id':'userId','name':'userName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})" class="form-control" >
+		                          <input type="hidden" id="userId" name="userId" /><!-- 人员ID隐藏域 -->
+		                          <span class="input-group-addon" onclick="openSelectZtree({'id':'absenteeismUserId','name':'absenteeismUserName','type':'1','asyn':false,'deptId':$('#cruDeptId').val(),'level':'10','url':'/system/component/tree/deptUserTree','check':'ps','cancle':'ps'})">
+                                      <span class="glyphicon glyphicon-user"></span>
+                                </span>
+                                </div>
+                            </div>
+                            <label class="col-md-2 control-label"> 旷工日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="absenteeismTime" name="absenteeismTime"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-12" style="text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="clearAll();"> 重&nbsp;&nbsp;置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        
+        <div class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="draft()">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 录入
+                </button>
+                <button class="list_table_btn2"
+                        onclick="exportDate()">
+                    <span class=" glyphicon glyphicon-chevron-right">导出</span> 
+                </button> 
+            </div>
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script type="text/javascript">
+     $("#cruDeptId").val(getcookie("chuShiId"));
+    //参考：http://www.layui.com/laydate/
+    //日期范围
+    laydate.render({
+        elem: '#absenteeismTime'
+        , range: true
+    });
+
+	//起草
+	function draft(){
+		  var resId = $('#left_ul').find('a.active').attr("id");
+		  MyLayer.layerOpenUrl({url:'/modules/zhbg/kqgl/absenteeism/absenteeismForm.html?oper=NEW&resId=' + resId,title:'录入旷工信息'})
+	}
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+         title: '序号'
+        , width: '2%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+        	 var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;
+             var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;
+             var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+             return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+           }
+    },  
+    {
+        field: 'absenteeismUserName'
+        , title: '姓名'
+        , width: '11%'
+        , align:"center"
+    }, 
+    {
+        field: 'absApplicantUnitName'
+        , title: '单位'
+        , width: '11%'
+        , align:"center"
+    },
+    {
+        field: 'absenteeismDate'
+        , title: '旷工日期'
+        , width: '10%'
+        , align:"center"
+        /* ,formatter: function (value, row, index){
+        	return "2018-08-11"
+        } */
+    },
+    {
+        field: 'absenteeismReason'
+        , title: '旷工原因'
+        , width: '15%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            	if(value!=null){
+            		var length = value.length
+    	  	   	      var val = '';
+    	  	   	      if(length>15){
+    	  	   	    	  val = value.substring(0,16)+"...";//
+    	  	   	      }else{
+    	  	   	    	  val = value;
+    	  	   	      }
+      	   	   		return  "<span data-content='" + value+"'>"+val+"</span>";
+            	}else{
+            		return "";
+            	}
+            }
+        /* ,formatter: function (value, row, index){
+            	return ""
+          } */
+    },
+    {
+        field: 'absenteeismType'
+        , title: '旷工类型'
+        , width: '10%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            	if(value!=null){
+            		if(value=='0'){
+            			return "旷工";
+            		}else if(value =='1'){
+            			return "无故迟到";
+            		}else if(value =='2'){
+            			return "无故早退";
+            		}
+            	}else{
+            		return "-";
+            	}
+         }
+    },
+   {
+        field: 'cz'
+        , title: '操作'
+        , width: '10%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "add") {
+
+                } else if (opt[i] == "update") {
+                	html += "<i class='glyphicon glyphicon-edit' title='修改' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;";
+                } else if (opt[i] == "delete") {
+                	 html += "<i class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>";
+                }
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/zhbg/kqgl/absenteeism/getList",
+            columns:right_table_col,
+            queryParams:function(params){
+            	params.timeRange = $("#absenteeismTime").val();
+                params.userId = $("#userId").val();
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                return params;
+            },
+            readOnlyFn:function(){
+            	$('tr.readOnly').find('td:not(:last)').attr("title", "点击查看详情");
+            	$('tr.readOnly').find('td:not(:last)').unbind('click').bind('click', function (e) {
+             		//取消事件冒泡
+ 						var resId = $('#left_ul').find('a.active').attr("id");
+ 		         		 var id = $(this).parent().find("span[data-id]").attr("data-id");
+ 		         		 MyLayer.layerOpenUrl({url: '/modules/zhbg/kqgl/absenteeism/absenteeismReadOnlyForm.html?id='+id+"&oper=VIEW&resId="+resId,title:'只读详情'});
+                  })
+            }
+        });
+    });
+
+//    表格数据项的操作
+    var list = {
+        editFun:function(id){
+        	 var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/kqgl/absenteeism/absenteeismForm.html?id='+id+ "&oper=EDIT&resId=" + resId,
+                title:"修改旷工信息"
+            })
+        },
+        deleteFun:function(id){
+        	 var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.deleteOpt({
+            	url: '/zhbg/kqgl/absenteeism/delete?id=' + id + "&resId=" + resId,
+                tableId:'right_table'
+            })
+        }
+    }
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+    	var resId = $('#left_ul').find('a.active').attr("id");
+    	$('#resId').val(resId);
+    	layer.confirm("是否导出查询的所有信息？", function(e) {
+    		layer.close(e);
+    		 $.ajax({
+ 				url : "/zhbg/kqgl/absenteeism/getCdztData",
+ 				data : {
+ 					resId:resId,
+ 					timeRange : $("#absenteeismTime").val(), //时间
+ 					userId : $("#userId").val()
+ 				},
+ 				type : "post",
+ 				success : function(data){
+ 					if( data.flag=='0'){ //0 查询有数据， 可导出
+ 						$('#form').attr('action','/zhbg/kqgl/absenteeism/export');
+ 						$('#form').attr('method','get');
+ 						$("#form").submit();
+ 					}else{
+ 						if(data.msg.indexOf("您没有操作权限")!=-1){
+							MyLayer.layerOpenUrl({
+								url:'/modules/errorMsg/noPagePermission.jsp'
+							})
+						}else{
+							layer.msg('暂无可导出信息！', {
+								icon : 0
+							}); //没有数据时弹出提示信息
+						}
+ 					}
+ 				}
+ 			})
+    		
+    	})
+    	  
+    };
+  //清空查询条件
+	function clearAll(){
+		$("#userName").val("");	//时间
+		$("#userId").val("");
+		$("#absenteeismTime").val("");
+	}
+	//刷新方法，流程中需要回调
+	function refreshPage(){
+		TableInit.refTable("right_table");
+	}
+</script>

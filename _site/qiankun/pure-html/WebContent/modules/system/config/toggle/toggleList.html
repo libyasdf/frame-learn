@@ -1,0 +1,401 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls>i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--查询style="OVERFLOW: auto"-->
+        <form class="form-horizontal" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls ">
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <!--查询项输入框选择框等开始-->
+                        <div class="form-group">
+                            <label class="col-md-1 control-label"> 开关名称：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="name" id="name" />
+                            </div>
+                            <label class="col-md-1 control-label"> 开关标识：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="key" id="key" />
+                            </div>
+                            <label class="col-md-1 control-label"> 开关描述：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" name="describe" id="describe" />
+                            </div>
+                        </div>
+                        <!--查询项输入框选择框等结束-->
+
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <button type="button" class="btn btn-primary" onclick="TableInit.refTable('right_table');">
+                                    查&nbsp;&nbsp;询
+                                </button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary" onclick="clearAll();">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <div id="toolbar" class="col-md-12">
+            <div class="list_button_area">
+                <button class="list_table_btn2" onclick="addType()">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+                <!-- <button class="list_table_btn2" onclick="openqrcode()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 二维码
+                    </button>-->
+            </div>
+        </div>
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // 刷新列表
+    function refresh() {
+        $("#right_table").bootstrapTable("refresh");
+    }
+
+    //清空查询条件
+    function clearAll() {
+        $("#name").val("");		//名称
+        $("#key").val("");		//标识
+        $("#describe").val("");	//状态
+    }
+
+    //定义bootatrap-table数据列
+    //sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize = $('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber = $('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='" + row.id + "' >" + orderNum + "</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'name'
+        , title: '开关名称'
+        , width: '15%'
+        , align: "left"
+        , formatter: function (value, row, index) {
+            var length = value.length
+            var val = "";
+            if (length > 9) {
+                val = value.substring(0, 8) + "...";
+            } else {
+                val = value;
+            }
+            return "<span data-content='" + row.name + "'>" + val + "</span>";
+        }
+    }, {
+        field: 'key'
+        , title: '开关标识'
+        , width: '15%'
+        , align: "left"
+        , formatter: function (value, row, index) {
+            var length = value.length
+            var val = "";
+            if (length > 9) {
+                val = value.substring(0, 8) + "...";
+            } else {
+                val = value;
+            }
+            return "<span data-content='" + row.key + "'>" + val + "</span>";
+        }
+    }, {
+        field: 'isOpen'
+        , title: '开关状态'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {
+            toggle_checkbox = "<input class=\"tgl tgl-ios\" id=\"toggle_" + index + "\" type=\"checkbox\" align=\"center\" onchange=\"toggleChange(('" + row.id + "')," + index + ")\"";
+            if (row.isOpen == 1) {
+                //如果标识为1，则开关为开启状态
+                toggle_checkbox += "checked=\"true\" ";
+            }
+            if (row.state == 1) {
+                //如果标识为1，则开关不可编辑
+                toggle_checkbox += " disabled"
+            }
+            toggle_checkbox += " /> <label class=\"tgl-btn\" for=\"toggle_" + index + "\" id=\"isOpen_" + index + "\" ";
+            if (row.state == 1) {
+                toggle_checkbox += " style=\"cursor: not-allowed;\" ";
+            }
+            toggle_checkbox += "></label>";
+            return toggle_checkbox;
+        }
+
+    }, {
+        field: 'describe'
+        , title: '开关描述'
+        , width: '35%'
+        , align: "left"
+        , formatter: function (value, row, index) {
+            if (value == null) {
+                //描述非必填项可能为空，如果为空，列表什么都不显示
+                val = "";
+                return "<span data-content=''>" + val + "</span>";
+            } else {
+                var length = value.length
+                var val = "";
+                if (length > 21) {
+                    val = value.substring(0, 20) + "...";
+                } else {
+                    val = value;
+                }
+                return "<span data-content='" + row.describe + "'>" + val + "</span>";
+            }
+        }
+        //             }
+    }, {
+        title: '操作'
+        , width: '15%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            //该开关数据的状态，比如删除，暂停使用，锁定等，默认值为0。 各取值的定义为： 0：正常使用 1：开关被锁定(不可编辑) 2：暂停使用 3：开关被删除
+            var html = "";
+            if (row.state == "0") {
+                //正常使用情况下展示编辑，删除，开着的小锁
+                html += "<i id=\"edit_" + index + "\" class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\' title=\"修改\"></i>&nbsp;&nbsp;"
+                html += "<i id=\"delete_" + index + "\" class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\' title=\"删除\"></i>&nbsp;&nbsp;";
+                html += "<i id=\"lock_" + index + "\" class=\"fa fa-unlock\" aria-hidden=\"true\" onclick=\'lockFun(\"" + row.id + "\"," + index + ")\' title=\"锁定\"></i>";
+                html += "<i id=\"unlock_" + index + "\" class='glyphicon glyphicon-lock' onclick=\'unlockFun(\"" + row.id + "\"," + index + ")\' style=\"display:none;\" title=\"解锁\"></i>";
+            } else if (row.state == "1") {
+                //锁定的情况下展示锁着的小锁
+                html += "<i id=\"edit_" + index + "\" class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\' style=\"display:none;\" title=\"修改\"></i>&nbsp;&nbsp;"
+                html += "<i id=\"delete_" + index + "\" class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\' style=\"display:none;\" title=\"删除\"></i>&nbsp;&nbsp;";
+                html += "<i id=\"lock_" + index + "\" class=\"fa fa-unlock\" aria-hidden=\"true\" onclick=\'lockFun(\"" + row.id + "\"," + index + ")\'style=\"display:none;\" title=\"锁定\"></i>";
+                html += "<i id=\"unlock_" + index + "\" class='glyphicon glyphicon-lock' onclick=\'unlockFun(\"" + row.id + "\"," + index + ")\' title=\"开锁\"></i>";
+            }
+            return html;
+        }
+    }];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId: "right_table",
+            url: "/system/config/toggle/list",
+            pagination: true,	//分页
+            columns: right_table_col,
+            queryParams: function (params) {
+                //这里将各个查询项添加到要传递的参数中
+                //可以做一些校验
+                params.name = $("#name").val();
+                params.key = $("#key").val();
+                params.describe = $("#describe").val();
+                return params;
+            },
+            readOnlyFn: function () {
+                //开关名称
+                $('tr.readOnly').find('td:eq(1)').bind('mouseover', function (e) {
+                    var txt = $(this).find("span[data-content]").attr("data-content");
+                    $(this).attr("title", txt)
+
+                });
+                //开关标识
+                $('tr.readOnly').find('td:eq(2)').bind('mouseover', function (e) {
+                    var txt = $(this).find("span[data-content]").attr("data-content");
+                    $(this).attr("title", txt)
+
+                });
+                //开关描述
+                $('tr.readOnly').find('td:eq(4)').bind('mouseover', function (e) {
+                    var txt = $(this).find("span[data-content]").attr("data-content");
+                    $(this).attr("title", txt)
+
+                });
+            }
+        });
+    });
+
+    //开关按钮变化
+    function toggleChange(id, index) {
+        if ($("#toggle_" + index).is(':checked')) {
+            //打开开关,根据id修改isOpen--开关是否处于打开状态，0为关闭，1为打开。添加开关时未指定值，该字段默认为0
+            $.ajax({
+                type: "POST",
+                url: "/system/config/toggle/updateToggle",
+                data: { "id": id, "isOpen": 1 },
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    if ('1' == data.flag) {
+                        layer.msg("保存成功！", { icon: 1, time: 1000 }, function (index) {
+                        });
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        } else {
+            //关闭开关
+            $.ajax({
+                type: "POST",
+                url: "/system/config/toggle/updateToggle",
+                data: { "id": id, "isOpen": 0 },
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    if ('1' == data.flag) {
+                        layer.msg("保存成功！", { icon: 1, time: 1000 }, function (index) {
+                        });
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        }
+    }
+
+    //点击（打开的）小锁
+    function lockFun(id, index) {
+        //该开关数据的状态，比如删除，暂停使用，锁定等，默认值为0。 各取值的定义为： 0：正常使用 1：开关被锁定(不可编辑) 2：暂停使用 3：开关被删除
+        //修改数据库状态标识	
+        $.ajax({
+            type: "POST",
+            url: "/system/config/toggle/updateToggleState",
+            data: { "id": id, "state": 1 },
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if ('1' == data.flag) {
+                    layer.msg("锁定成功！", { icon: 1, time: 1000 }, function (index) {
+                    });
+                }
+            },
+            error: function (data) {
+            }
+        });
+        //开关按钮不可点击
+        //两种方法设置disabled属性 
+        $("#toggle_" + index).attr("disabled", true);
+        // 			$("#toggle_"+index).attr("disabled","disabled"); 
+        //			鼠标样式改为不可移动
+        $("#isOpen_" + index).css("cursor", "not-allowed");
+        //隐藏编辑，删除按钮
+        $("#edit_" + index + "").hide();
+        $("#delete_" + index + "").hide();
+        $("#lock_" + index + "").hide();
+        $("#unlock_" + index + "").show();
+
+    }
+
+    //点击（锁定的）小锁
+    function unlockFun(id, index) {
+        //该开关数据的状态，比如删除，暂停使用，锁定等，默认值为0。 各取值的定义为： 0：正常使用 1：开关被锁定(不可编辑) 2：暂停使用 3：开关被删除
+        $.ajax({
+            type: "POST",
+            url: "/system/config/toggle/updateToggleState",
+            data: { "id": id, "state": 0 },
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if ('1' == data.flag) {
+                    layer.msg("解锁成功！", { icon: 1, time: 1000 }, function (index) {
+                    });
+                }
+            },
+            error: function (data) {
+            }
+        });
+        //开关按钮可点击
+        // 			以下三种方法是移除（去除）掉input的disabled属性的方法：
+        $("#toggle_" + index).attr("disabled", false);
+        // 			$("#toggle_"+index).removeAttr("disabled"); 
+        // 			$("#toggle_"+index).attr("disabled","");
+        //编辑展示，删除按钮
+        $("#edit_" + index).show();
+        $("#delete_" + index).show();
+        $("#lock_" + index + "").show();
+        $("#unlock_" + index + "").hide();
+        //			鼠标样式改为小手
+        $("#isOpen_" + index).css("cursor", "pointer");
+    }
+
+    //新增
+    function addType() {
+        var resId = $('#left_ul').find('a.active').attr('id');
+        var url = "/modules/system/config/toggle/editForm.html?type=0&resId=" + resId;
+        var title = "新增开关信息";
+        layer.open({
+            type: 2,
+            shadeClose: true,
+            content: url,
+            area: ['1000px', '550px'],
+            title: [title, 'font-size:16px;font-weight:bold;']
+        })
+    }
+    //进入二维码页面
+    function openqrcode() {
+        var url = "/modules/system/config/toggle/printQrcodeIndex.html";
+        var title = "二维码生成页面";
+        layer.open({
+            type: 2,
+            shadeClose: true,
+            content: url,
+            area: ['1000px', '550px'],
+            title: [title, 'font-size:16px;font-weight:bold;']
+        })
+    }
+    function keyLogin() {
+        if (event.keyCode == 13)  //回车键的键值为13
+            TableInit.refTable('right_table');
+    }
+    //    表格数据项的操作
+    var list = {
+        editFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr('id');
+            MyLayer.layerOpenUrl({
+                url: '/modules/system/config/toggle/editForm.html?id=' + id + "&type=1&resId=" + resId,
+                title: "修改开关信息",
+                width: "1000px",
+                height: "550px"
+            })
+        },
+        deleteFun: function (id) {
+            var resId = $('#left_ul').find('a.active').attr('id');
+            MyLayer.deleteOpt({
+                url: '/system/config/toggle/delete?id=' + id + "&resId=" + resId,
+                tableId: 'right_table'
+            })
+        }
+    }
+    //@ sourceURL=dictionary.html
+</script>

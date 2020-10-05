@@ -1,0 +1,116 @@
+<style>
+    table,table tr th, table tr td { border:1px solid #ddd; }
+    table { width: 90%; min-height: 25px; line-height: 25px; text-align: center; border-collapse: collapse; margin:auto}
+</style>
+<html>
+<body>
+<link rel="stylesheet" type="text/css" href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<form id="dmForm">
+<div class="container-fluid" style="height:100%;">
+    <div class="row" style="height:100%;">
+        <!--<div class="vertify-panel vertify-centerButton"></div>-->
+        <div>
+            <!--查询style="OVERFLOW: auto"-->
+            <form class="form-horizontal">
+                <input type="hidden" id="superId" name="" value="">
+                <div class="col-md-12">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center">
+                                <p style="display: inline">操作项:</p>
+                                <button type="button" style="display: inline"
+                                        onclick="saveTable();"> 导出预览表格
+                                </button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" style="display: inline" onclick="printer();">
+                                    打印条码
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div style="text-align:center">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<!-- 导出js-->
+<script src="/modules/dagl/printerRead/js/FileSaver.js"></script>
+<script src="/modules/dagl/printerRead/js/tableExport.js"></script>
+<script src="/modules/dagl/printerRead/js/js-xlsx/xlsx.core.min.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript">
+   var printerHtml = window.parent.printerHtml;
+   var printerData = "";
+   $(function() {
+       var tableHtml = "<thead><tr>" +
+           "<th>序号</th>" +
+           "<th>档号</th>" +
+           "<th>条形码号</th>" +
+           "</tr></thead>";
+       tableHtml += printerHtml;
+       $("#right_table").html(tableHtml);
+   });
+   
+   function saveTable() {
+       $('#right_table').tableExport({type:'excel',fileName:"打印预览表格"});
+   }
+   function printerZeBra(printerName,printerIp) {
+       var tab=document.getElementById("right_table");
+       var rows=tab.rows;
+       console.log(rows.length);//获取表格的行数
+       var flag = false;
+       for(var i=1;i<rows.length;i++){ //遍历表格的行
+           var daCode = rows[i].cells[1].innerHTML; //档案号
+           var code = rows[i].cells[2].innerHTML;  //条码号
+           console.log("打印机名称="+printerName+"打印机ip="+printerIp+"档案号daCode="+daCode+"   条码号code="+code);
+           var url =encodeURI("/dagl/bmgl/zeBraprinter?printerName="+printerName+"&printerIp="+printerIp+"&daCode="+daCode+"&code="+code);
+           $.ajax({
+               type: "get",
+               url: url,
+               dataType: "json",
+               async: false,
+               success: function (data) {
+                   flag = data
+                   if(!flag){
+                       layer.msg("档案号wei:"+daCode+"的数据打印失败！",{icon:0});
+                   }
+               },
+               error: function (data) {
+               }
+           });
+       }
+       if(flag){
+           layer.msg("打印完成！",{icon:1});
+       }
+   }
+   function printer() {
+       layer.open({
+           type: 2,
+           title: '选择打印机',
+           content: '/modules/dagl/printerRead/selectPrinter.html',
+           area: ['600px', '330px'],
+           offset: '30px',
+           resize: false,
+           maxmin: true,
+           success: function (layero, index) {
+           },
+           full: function (layero) {
+               // 让 iframe 高度自适应
+               layero.find('iframe').css('max-height', 'none');
+           },
+       });
+   }
+</script>
+</body>
+</html>

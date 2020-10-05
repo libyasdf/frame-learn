@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>签到</title>
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+
+    <style type="text/css">
+        .panel-controls{
+            position: absolute;
+            right: 40px;
+            top: 10px;
+        }
+        .panel-controls > i.showSelect{
+            font-size: 16px;
+            color: #acb1b8;
+            cursor: pointer;
+        }
+        label{
+            font-weight: normal;
+        }
+    </style>
+</head>
+
+<body class="formpage_bj">
+<div class="col-md-12 p-f-60">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-1  form-view"></div>
+                                <div class="col-md-7  form-view">
+                                    <a >
+                                        保卫科
+                                    </a>
+                                </div>
+                                <div class="col-md-3  form-view">
+                                    <span>3/5</span>
+                                </div>
+                                <div class="col-md-1  form-view"></div>
+                            </div>
+                        </div>
+                    </div>
+                </h4>
+            </div>
+
+            <div id="collapse2" class="panel-collapse collapse">
+                <table class="table table-bordered" style="cursor:pointer;text-align: center">
+                    <tr>
+                        <td>1</td>
+                        <td>张三</td>
+                        <td>已签到</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>李四</td>
+                        <td>已签到</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>王五</td>
+                        <td>已签到</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>李河</td>
+                        <td>未签到</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>王刚</td>
+                        <td>未签到</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-1  form-view"></div>
+                                <div class="col-md-7  form-view">
+                                    <a >
+                                        办公室
+                                    </a>
+                                </div>
+                                <div class="col-md-3  form-view">
+                                    <span>3/5</span>
+                                </div>
+                                <div class="col-md-1  form-view"></div>
+                            </div>
+                        </div>
+                    </div>
+                </h4>
+            </div>
+            <div id="collapse3" class="panel-collapse collapse">
+                <!-- Table -->
+                <table class="table table-bordered" style="cursor:pointer;text-align: center">
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>张三</td>
+                        <td>已签到</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>李四</td>
+                        <td>已签到</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>王五</td>
+                        <td>已签到</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>李河</td>
+                        <td>未签到</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>王刚</td>
+                        <td>未签到</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</div>
+<!-- 按钮区结束 -->
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/url.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+
+<!--文件上传js-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/static/core/jquery-fileupload/js/jquery.fileupload.js"></script>
+<script src="/static/js/common/myfilupload.js"></script>
+<!--文件上传js end-->
+<script src="/static/js/template/form.js"></script>
+<script type="text/javascript">
+    //绑定日期输入input
+    laydate.render({
+        elem: '#birth' //指定元素
+    });
+</script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+   /* var right_table_col = [{
+        field: 'id'
+        , title: '编号'
+        , width: '5%'
+        , sortable: true
+        , order: "desc"
+        , align:"center"
+    }, {
+        field: 'meetingRoom'
+        , title: '会议室'
+        , width: '10%'
+        , align:"center"
+    }, {
+        field: 'meetingName'
+        , title: '会议名称'
+        , width: '9%'
+        , sortable: true
+        , align:"center"
+    }, {
+        field: 'joinDept'
+        , title: '参会单位'
+        , width: '20%'
+        , align:"center"
+    }, {
+        field: 'joinPerson'
+        , title: '参会人'
+        , width: '10%'
+        , sortable: true
+        , align:"center"
+    },{
+        field: 'status'
+        , title: '签到状态'
+        , sortable: true
+        , width: '15%'
+        , align:"center"
+    },
+        {
+            field: 'cz'
+            , title: '操作'
+            , width: '18%'
+            , align:"center"
+            , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            for (var i = 0; i < opt.length; i++) {
+                if (opt[i] == "add") {
+
+                } else if (opt[i] == "update") {
+
+                    html +="<button type=\"button\" class=\"btn btn-primary\"onclick=\"TableInit.refTable('right_table')\"> 签&nbsp;&nbsp;到</button>"
+                    //html +="<i class='icon iconfont icon-edit' onclick=\'list.editFun("+row.id+")\'></i>&nbsp;&nbsp;"
+                } else if (opt[i] == "delete") {
+                    html += "<i class='icon iconfont icon-delete' onclick=\'list.deleteFun("+row.id+")\'></i>"
+                }
+            }
+            return html;
+        }
+        }];*/
+
+
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"/mock/zhbg/hygl/meetingSignIn/meetingSignInList.json",
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.directorName = $('#queryDiv input[name=\'meetingRoom\']').val();
+                params.mailName = $('#queryDiv input[name=\'rangeTime\']').val();
+                params.status = $('#queryDiv input[name=\'status\']').val();
+                params.status = $('#queryDiv input[name=\'applyDept\']').val();
+                return params;
+            },
+            readOnlyFn:function(){
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+//                    取消事件冒泡 end
+                    MyLayer.layerOpenUrl({url:'/modules/zhbg/hygl/meetingRoomApply/sendMailReadOnlyForm.html',title:'只读'});
+                });
+            }
+        });
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'modules/ldztc/jzztc/sendMailEditForm.html?id='+id,
+                title:"修改"
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'../index.html?id=' + id,
+                tableId:'right_table'
+            })
+        }
+    }
+
+</script>
+</body>
+</html>

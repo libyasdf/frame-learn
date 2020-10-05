@@ -1,0 +1,390 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<link rel="stylesheet" type="text/css"
+      href="/static/css/common/Loading.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/css/common/Loading.css">
+<link rel="stylesheet" type="text/css"
+      href="/modules/system/config/dictionary/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="vertify-panel vertify-tree x-unselectable"
+             role="presentation">
+            <div class="inner">
+                <div id="searchDiv" class="input-group input-group-sm"
+                     style=" padding-left: 5px; margin-top: 5px; padding-right: 5px;">
+                    <input id="keyword" name="deptName" onkeydown="CommonUtil.keyDown(event);" type="text" class="form-control"
+                           placeholder="快速搜索">
+                    <span class="input-group-btn">
+    						<button class="btn btn-default" type="button" id="search-bt" onclick="search()">
+    							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    						</button>
+					    </span>
+                </div>
+                <ul id="tree-obj" class="ztree" style="margin-top: 10px; height:510px; overflow:auto;"></ul>
+            </div>
+        </div>
+        <div class="vertify-panel vertify-details">
+            <!--查询-->
+            <form class="form-horizontal" >
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls " >
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <div class="form-group">
+                                <input id="cruDeptId" name="cruDeptId" type="hidden"/>
+                                <input id="type" name="type" type="hidden" value="1"/>
+                                <!-- 获取当前用户的业务角色 add by hlt -->
+                                <input id="busiRole" name="busiRole" type="hidden"/>
+
+                                <label class="col-md-2 control-label"> 时间：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="timeRange" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="col-md-12" style="text-align: center">
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="TableInit.refTable('right_table')"> 查&nbsp;&nbsp;询
+                                        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="clearAll()"> 重&nbsp;&nbsp;置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+            <div class="col-md-12">
+                <!--bootstrap-table表格-->
+                <table id="right_table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/common/js/commonFunction.js"></script>
+<script type="text/javascript"
+		src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/dateutil.js"></script>
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<script src="/common/js/config.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/core/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js" ></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+var currentTime=getCurrentDate("yyyy-MM-dd");
+var firstDay=currentTime.substring(0,8)+"01";
+$("#timeRange").val(firstDay + " - " + currentTime)
+$("#cruDeptId").val(getcookie("deptid"))
+$("#busiRole").val(getcookie("rolesNo"))
+//用于存放选择的id刷新列表
+var userIds = "";
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+  
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        ,btns:	['confirm']
+        , range: true
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+         title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+                 return "<span >"+(index+1)+"</span>";
+         }
+    }, 
+    {
+        field: 'deptName'
+            , title: '&nbsp; &nbsp; &nbsp;部门名称&nbsp; &nbsp; &nbsp;  '
+            , width: '25%'
+            , align:"center"
+     },
+    {
+        field: 'name'
+            , title: '&nbsp;&nbsp; &nbsp;姓&nbsp;&nbsp; 名&nbsp;&nbsp;&nbsp;  '
+            , width: '30%'
+            , align:"center"
+        },
+        {
+            field: 'bjcnt'
+            , title: '病假总次数'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        },
+        {
+            field: 'sickDays'
+            , title: '病假天数'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        },
+        /* {
+            field: 'sickLeaveLongTimeh'
+            , title: '病假小时数'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        }, */
+        {
+            field: 'sjcnt'
+            , title: '事假总次数'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        },
+        {
+            field: 'casualDays'
+            , title: '事假天数'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        }
+       /*  ,{
+            field: 'casualLeaveLongTimeh'
+            , title: '事假小时数'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        } */
+        
+        ,{
+            field: 'lateNum1'
+            , title: '迟到/次'
+            , width: '10%'
+            , align:"center"
+            , formatter: function (value, row, index) {
+                     if(value=='0')
+                     	return '-'
+                     else 
+                         return value
+                     
+              }
+        },{
+            field: 'earlyLeaveNum1'
+                , title: '早退/次'
+                , width: '10%'
+                , align:"center"
+                , formatter: function (value, row, index) {
+                         if(value=='0')
+                         	return '-'
+                         else 
+                             return value
+                         
+                  }
+         },
+        {
+                field: 'noComeGoCnt1'
+                    , title: '无出入记录/次'
+                    , width: '10%'
+                    , align:"center"
+                    , formatter: function (value, row, index) {
+                             if(value=='0')
+                             	return '-'
+                             else 
+                                 return value
+                             
+                      }
+         },
+         {
+             field: 'cccnt'
+                 , title: '出差/次'
+                 , width: '10%'
+                 , align:"center"
+                , formatter: function (value, row, index) {
+                         if(value=='0')
+                         	return '-'
+                         else 
+                             return value
+                         
+                  }
+      	},
+      /*   {
+            field: 'wccnt'
+                , title: '外出/次'
+                , width: '10%'
+                , align:"center"
+                , formatter: function (value, row, index) {
+                         if(value=='0')
+                         	return '-'
+                         else 
+                             return value
+                         
+                  }
+         }, */
+        /*  {
+             field: 'bqcnt'
+                 , title: '补签/次'
+                 , width: '10%'
+                 , align:"center"
+                , formatter: function (value, row, index) {
+                         if(value=='0')
+                         	return '-'
+                         else 
+                             return value
+                         
+                  }
+          }, */
+        {
+            field: 'overTimed'
+                , title: '加班天数'
+                , width: '10%'
+                , align:"center"
+                , formatter: function (value, row, index) {
+                         if(value=='0')
+                         	return '-'
+                         else 
+                             return value
+                         
+                  }
+            }
+            ,{
+                field: 'overTimeh'
+                , title: '加班小时数'
+                , width: '10%'
+                , align:"center"
+               , formatter: function (value, row, index) {
+                        if(value=='0')
+                        	return '-'
+                        else 
+                            return value
+                        
+                 }
+            }
+    ];
+
+    $(document).ready(function (e) {
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:"zhbg/kqgl/statistics/sectionlStats/getList",
+            pagination:false,	//不分页
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            },
+            height:450,
+            columns:right_table_col,
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+				 params.resId = $('#left_ul').find('a.active').attr("id");
+                params.timeRange = $('#timeRange').val();
+                params.userids = userIds;
+                return params;
+            },
+            readOnlyFn:function(){
+              
+            }
+        });
+    });
+
+//    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            MyLayer.layerOpenUrl({
+                url:'/modules/zhbg/kqgl/qj/qjEditForm.html?id='+id,
+                title:"修改"
+            })
+        },
+        deleteFun:function(id){
+            MyLayer.deleteOpt({
+                url:'../index.html?id=' + id,
+                tableId:'right_table'
+            })
+        }
+    }
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+        // alert("fdsddsf");
+        layer.confirm("是否导出查询的所有信息？");
+    };
+  //清空查询条件
+	function clearAll(){
+		$("#timeRange").val(firstDay + " - " + currentTime)	//时间
+		$("#userId").val("");
+		$("#userName").val("");
+		
+	}
+</script>
+<!--部门人员树，放在最后的原因是放在前边获取不到$("#cruDeptId").val()的值-->
+<script src="/modules/zhbg/kqgl/kqcx/js/tree.js"></script>

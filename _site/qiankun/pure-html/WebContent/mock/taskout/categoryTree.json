@@ -1,0 +1,32 @@
+{
+    "flag": "1", 
+    "data": [
+        {
+            "code": "28", 
+            "id": "4028da076a38d292016a38e395d2001b", 
+            "isFirst": "1", 
+            "name": "门类管理", 
+            "nodeLevel": "1", 
+            "orderNo": " ", 
+            "pId": "0"
+        }, 
+        {
+            "code": "29", 
+            "id": "4028da076a38d292016a38e3f375001d", 
+            "isFirst": "0", 
+            "name": "面", 
+            "nodeLevel": "2", 
+            "orderNo": " ", 
+            "pId": "4028da076a38d292016a38e395d2001b"
+        }, 
+        {
+            "code": "30", 
+            "id": "4028da076a38d292016a3950071d0027", 
+            "isFirst": "0", 
+            "name": "炒菜", 
+            "nodeLevel": "2", 
+            "orderNo": " ", 
+            "pId": "4028da076a38d292016a38e395d2001b"
+        }
+    ]
+}

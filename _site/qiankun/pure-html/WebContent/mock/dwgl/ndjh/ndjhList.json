@@ -1,0 +1,28 @@
+{
+	"flag": "1",
+	"data": {
+		"total": 300,
+		"rows": [
+			{
+				"id": "1",
+				"nd":"2018",
+				"ysbdwges":"50",
+				"ssbdwgs": "45",
+				"wsbdwgs":"5"
+			},{
+				"id": "2",
+				"nd":"2017",
+				"ysbdwges":"50",
+				"ssbdwgs": "45",
+				"wsbdwgs":"5"
+			},{
+				"id": "3",
+				"nd":"2016",
+				"ysbdwges":"50",
+				"ssbdwgs": "45",
+				"wsbdwgs":"5"
+			}
+
+		]
+	}
+}

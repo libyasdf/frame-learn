@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\会议管理_19.5.24"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		
+		<!-- 会议管理:5.23日天津反馈的问题 -->
+		<!-- 会议管理:自动排+手动排座位混乱问题-->
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/arrangeSeat/js/drag.js"/>
+		<!-- 会议管理:会议反馈提醒时间建议早于最晚反馈时间，添加时间校验-->
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/js/validator1.js"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/meetingAllInfoList.html"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/meetingApplyInfoForm.html"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/meetingApplyInfoList.html"/>
+		<include name="WebContent/modules/zhbg/hygl/meetingNotice/meetingNoticeEditForm.html"/>
+		
+		<!-- 会议管理:会议撤办后，申请的会议室仍是占用状态问题修改-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingNotice/service/**"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingApply/controller/MeetingApplyController.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/meetingApply/service/**"/>
+		<!-- 会议管理:会议室删除后再新建提示已经占用的问题-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/hygl/basicSet/meetingRoom/service/**"/>
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

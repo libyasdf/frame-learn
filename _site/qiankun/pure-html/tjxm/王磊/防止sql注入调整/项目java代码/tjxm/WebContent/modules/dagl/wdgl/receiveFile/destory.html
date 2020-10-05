@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>发文打印</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+</head>
+<style type="text/css">
+    .title1 {
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .jingban {
+        font-size: 14px;
+    }
+    .jingban {
+        font-size: 14px;
+    }
+    .shenhe {
+        font-size: 14px;
+    }
+    .pizhun {
+        font-size: 14px;
+    }
+    .time1 {
+        font-size: 20px;
+    }
+    .time1 {
+        font-weight: bold;
+    }
+</style>
+<style type="text/css" media=print>
+    .noprint {
+        display:none
+    }
+    .hidden{
+        display:block !important;
+        visibility:visible !important;
+    }
+    .modal-body{
+        padding:0px;
+    }
+    .main{
+        border:0px !important;
+    }
+</style>
+<body>
+<!--最外层tab-->
+<div class="modal-body selectjs">
+    <div class="selectjs_block" style="position:relative">
+        <span class="glyphicon glyphicon-chevron-left pull-left noprint" onclick="navMoveleft()" style="top: 15px;display: none"></span>
+        <div class="title_tab noprint" style="overflow: hidden;width: 95%;float: left">
+            <ul class="nav nav-tabs top_nav" id="page" style="width: 3000px">
+            </ul>
+        </div>
+        <span class="glyphicon glyphicon-chevron-right pull-right noprint" onclick="navMoveRight()" style="top:15px;display: none"></span>
+        <div class="main" id="main" style="font-family:宋体;margin-bottom: 100px;height: auto">
+        </div>
+    </div>
+</div>
+<div class="form_btn_area noprint" style="text-align: center;">
+    <button  id="save" class="btn btn-primary form_btn_area_btn2" onclick="documentPrint()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> 打印</button>
+</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script type="text/javascript">
+    var starthtml1 = '<table border="1" cellpadding="0" cellspacing="0" width="95%" style="margin:auto;border-collapse: collapse;">';
+    var starthtml1_hide = '<table border="0" cellpadding="0" cellspacing="0" width="95%" style="margin:auto;border-collapse: collapse;">';
+    var herderhtml = '';
+    var titleHtml='';
+    var titleHtml2='';
+    var titleHtml_hide = '<table border="0" cellpadding="0" cellspacing="0" width="95%" style="margin:auto;border-collapse: collapse;">' +
+        '<tr>' +
+        '    <td height="34" colspan="10">&nbsp;</td>' +
+        '</tr>' +
+        '<tr>' +
+        '    <td width="23%" height="36">&nbsp;</td>' +
+        '    <td width="12%" align="center" valign="bottom" style="border-bottom:1px solid #000; font-size: 28px; font-weight: bold;"></td>' +
+        '    <td width="38%" valign="bottom" class="title1"></td>' +
+        '    <td width="10%" align="center" valign="bottom" class="time1"><span class="time1"></span></td>' +
+        '    <td width="4%" align="center" valign="bottom">&nbsp;</td>' +
+        '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1"></span></td>' +
+        '    <td width="4%" align="center" valign="bottom">&nbsp;</td>' +
+        '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1"></span></td>' +
+        '    <td width="3%" align="center" valign="bottom">&nbsp;</td>' +
+        '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1"></span></td>' +
+        '</tr>' +
+        '<tr >' +
+        '</tr>' +
+        '</table><p style="height: 15px"></p>';
+    var endTableHtml = '';
+    var endhtml = '</table>';
+    var divHtml = '</div>';
+    $(function() {
+        var data = [{}];
+        var theRequest = GetRequest();
+        //资源id
+        var resId = theRequest.resId;
+        var year = theRequest.year;
+        titleHtml = '<table border="0" cellpadding="0" cellspacing="0" width="95%" style="margin:auto;border-collapse: collapse;">' +
+            '<tr>' +
+            '    <td height="34" colspan="10">&nbsp;</td>' +
+            '</tr>' +
+            '<tr>' +
+            '    <td width="23%" height="36">&nbsp;</td>' +
+            '    <td width="12%" align="center" valign="bottom" style="border-bottom:1px solid #000; font-size: 28px; font-weight: bold;">' + year + '</td>' +
+            '    <td width="38%" valign="bottom" class="title1">年文件销毁清单登记表</td>' +
+            '    <td width="10%" align="center" valign="bottom" class="time1"><span class="time1">销毁时间:</span></td>' +
+            '    <td width="4%" align="center" valign="bottom">&nbsp;</td>' +
+            '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1">年</span></td>' +
+            '    <td width="4%" align="center" valign="bottom">&nbsp;</td>' +
+            '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1">月</span></td>' +
+            '    <td width="3%" align="center" valign="bottom">&nbsp;</td>' +
+            '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1">日</span></td>' +
+            '</tr>' +
+            '<tr >' +
+            '</tr>' +
+            '</table><p style="height: 15px"></p>';
+        titleHtml2 = '<table border="0" cellpadding="0" cellspacing="0" width="95%" style="margin:auto;border-collapse: collapse;page-break-before:always;">' +
+            '<tr>' +
+            '    <td height="34" colspan="10">&nbsp;</td>' +
+            '</tr>' +
+            '<tr>' +
+            '    <td width="23%" height="36">&nbsp;</td>' +
+            '    <td width="12%" align="center" valign="bottom" style="border-bottom:1px solid #000; font-size: 28px; font-weight: bold;">' + year + '</td>' +
+            '    <td width="38%" valign="bottom" class="title1">年文件销毁清单登记表</td>' +
+            '    <td width="10%" align="center" valign="bottom" class="time1"><span class="time1">销毁时间:</span></td>' +
+            '    <td width="4%" align="center" valign="bottom">&nbsp;</td>' +
+            '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1">年</span></td>' +
+            '    <td width="4%" align="center" valign="bottom">&nbsp;</td>' +
+            '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1">月</span></td>' +
+            '    <td width="3%" align="center" valign="bottom">&nbsp;</td>' +
+            '    <td width="2%" align="center" valign="bottom" class="time1"><span class="time1">日</span></td>' +
+            '</tr>' +
+            '<tr >' +
+            '</tr>' +
+            '</table><p style="height: 15px"></p>';
+        $.ajax({
+            type: "POST",
+            url:"/dagl/wdgl/receiveFile/getDestoryList",
+            data:{resId:resId,
+                year:year
+            },
+            async:false,
+            success:function(json){
+                if(json.length != 0){
+                    data = json;
+                }
+            },
+            error:function(){
+            }
+        });
+        //参数1：每页数据条数
+        //参数2：返回json数据
+        //参数3：新打:1;套打：0
+        //参数4：从第几条开始
+        apenHtml("10",data);
+    })
+    //标题行
+    function setHerder(){
+        herderhtml = '<tr align="center" style="font-size: 18px;">' +
+            '    <td width="4%" height="50">序<br/>号</td>' +
+            '    <td width="9%">文件号</td>' +
+            '    <td width="13%">来文单位</td>' +
+            '    <td width="41%"><c style="letter-spacing: 20px;">文件标题</c></td>' +
+            '    <td width="4%">页<br/>' +
+            '    数</td>' +
+            '    <td width="4%">份<br/>' +
+            '    数</td>' +
+            '    <td width="4%">密<br/>' +
+            '    级</td>' +
+            '    <td width="14%"><c style="letter-spacing: 10px;">退件单位</c></td>' +
+            '    <td width="7%"><c style="letter-spacing: 10px;">备注</c></td>' +
+            '  </tr>';
+    }
+    //标题行(隐藏)
+    function setHerderHide(){
+        herderhtml ='<tr align="center" style="font-size: 18px;">' +
+            '    <td width="4%" height="50"></td>' +
+            '    <td width="9%"></td>' +
+            '    <td width="13%"></td>' +
+            '    <td width="41%"><c style="letter-spacing: 20px;"></c></td>' +
+            '    <td width="4%"><br/>' +
+            '    </td>' +
+            '    <td width="4%"><br/>' +
+            '    </td>' +
+            '    <td width="4%"><br/>' +
+            '    </td>' +
+            '    <td width="14%"><c style="letter-spacing: 10px;"></c></td>' +
+            '    <td width="7%"><c style="letter-spacing: 10px;"></c></td>' +
+            '  </tr>';
+    }
+    //数据内容
+    function setBody(data,num){
+        var tr =  '<tr align="center">' +
+            '    <td height="50px"><div style="width:50px;max-height:49px;word-wrap:break-word">' + (typeof(data) == "undefined" || data.id == null?"":num) + '</td>' +
+            '    <td><div style="width:100px;max-height:44px;word-wrap:break-word">' + (typeof(data) == "undefined" || data.fileNum == null?"":data.fileNum) + '</td>' +
+            '    <td><div style="width:160px;max-height:44px;word-wrap:break-word">' + (typeof(data) == "undefined" || data.fileDept == null?"":data.fileDept) + '</td>' +
+            '    <td><div style="width:350px;max-height:44px;word-wrap:break-word">' + (typeof(data) == "undefined" || data.title == null?"":data.title) + '</td>' +
+            '    <td><div style="width:30px;max-height:44px;word-wrap:break-word">' + (typeof(data) == "undefined" || data.pageNum == null?"":data.pageNum) + '</td>' +
+            '    <td><div style="width:30px;max-height:44px;word-wrap:break-word">' + (typeof(data) == "undefined" || data.quantity == null?"":data.quantity) + '</td>' +
+            '    <td><div style="width:30px;max-height:44px;word-wrap:break-word">' + (typeof(data) == "undefined" || data.securityClass == null?"":data.securityClass) + '</td>' +
+            '    <td><div style="width:100px;max-height:44px;word-wrap:break-word">' + "" + '</td>' +
+            '    <td><div style="width:60px;max-height:44px;word-wrap:break-word">' + "" + '</td>' +
+            '  </tr>';
+        return tr;
+    }
+
+    function apenHtml(pageSize,data,newOrCopy,start){
+        if(start != ""){
+            for(var i = 0;i<(start-1);i++){
+                data.unshift("undefind");
+            }
+        }
+        for(var i = 0;i*pageSize<data.length;i++){
+            var pageNum = 1;
+            var page = '';
+            var table = '';
+            if(i == 0){
+                page = '<li class="active" for="formpage' + (i + 1) + '">' +
+                    '<a href="#" data-toggle="tab">' +
+                    '第' + (i+1) + '页' +
+                    '</a>' +
+                    '</li>';
+                if(newOrCopy == 0){
+                    setHerderHide()
+                    table = '<div id="formpage' + (i+1) + '" class="active" style="width: 100%;">' + titleHtml_hide + starthtml1_hide + herderhtml;
+                }else{
+                    setHerder();
+                    table = '<div id="formpage' + (i+1) + '" class="active" style="width: 100%;">' + titleHtml + starthtml1 + herderhtml;
+                }
+            }else{
+                page = '<li for="formpage' + (i + 1) + '">' +
+                    '<a href="#" data-toggle="tab">' +
+                    '第' + (i+1) + '页' +
+                    '</a>' +
+                    '</li>';
+                setHerder();
+                table = '<div id="formpage' + (i+1) + '" class="hidden" style="width: 100%;">' + titleHtml2 + starthtml1 + herderhtml;
+            }
+            for(var h = i*pageSize;h<(i+1)*pageSize;h++){
+                table += setBody(data[h],pageNum);
+                pageNum ++
+            }
+            endTableHtml = '<table border="0" cellpadding="0" cellspacing="0" width="95%" style="margin:auto;border-collapse: collapse;">' +
+                '  <tr>' +
+                '    <td width="10%" height="23"><span class="jingban"><span class="jingban">&nbsp;&nbsp; 经办人</span>：</span></td>' +
+                '    <td width="22%">&nbsp;</td>' +
+                '    <td width="6%" class="shenhe">审核人：</td>' +
+                '    <td width="21%" class="shenhe">&nbsp;</td>' +
+                '    <td width="6%" class="pizhun">批准人：</td>' +
+                '    <td width="18%" class="pizhun">&nbsp;</td>' +
+                '    <td width="2%">第</td>' +
+                '    <td width="3%" align="center">' + (i + 1) + '</td>' +
+                '    <td width="4%">页(总</td>' +
+                '    <td width="5%" align="center">' + Math.ceil(data.length/pageSize) + '</td>' +
+                '    <td width="3%">页)</td>' +
+                '  </tr>' +
+                '</table>';
+            table = table + endhtml + endTableHtml + divHtml;
+            $("#page").append(page);
+            $("#main").append(table);
+        }
+    }
+
+    $(document).ready(function(){
+        navSwitch();
+        // tab页切换
+        $('.nav-tabs > li').unbind('click').bind('click', function () {
+            var id = $(this).attr('for');
+            $(this).addClass('active').siblings('li').removeClass('active');
+            $('.main').children().addClass('hidden');
+            $('#' + id).removeClass('hidden');
+        })
+    })
+
+    function getScrleft() {
+        return $(".selectjs_block div").scrollLeft();
+    }
+
+    //获取滚动条可以滚动的宽度
+    function getTargetScroll() {
+        var liCount = $(".top_nav").children("li").size(); //li个数
+        var liWidths = 0, lrBorder = 31;
+        //递归导航栏li元素，获取总宽度
+        $(".top_nav").children("li").each(function () {
+            liWidths += $(this).width();
+        })
+        liWidths += (liCount * lrBorder);
+        //获取窗口宽度
+        var winWidth = window.innerWidth;
+        //li总宽度减去窗口的宽度。即得到滚动条需要滚动的长度
+        var targetScroll = liWidths - winWidth;
+        return targetScroll + 100;
+    }
+
+    //判断是否需要显示左移按钮
+    function isShowMoveLeft() {
+        var scrleft = getScrleft();
+        if (scrleft > 0)
+            return true;
+        else
+            return false;
+    }
+
+    //判断是否需要显示右移按钮
+    function isShowMoveRight() {
+        var targetScroll = getTargetScroll();
+        //目前滚动条已经滚动的长度
+        var scrleft = getScrleft();
+        if (!isNaN(targetScroll) && (scrleft < targetScroll)) {
+            return true;
+        } else
+            return false;
+    }
+    //导航栏左移、右移按钮切换
+    function navSwitch() {
+        //$(".glyphicon-chevron-right").hide();
+        //$(".glyphicon-chevron-left").hide();
+        if (isShowMoveRight()) {
+            $(".glyphicon-chevron-right").show();
+        } else
+            $(".glyphicon-chevron-right").hide();
+        if (isShowMoveLeft())
+            $(".glyphicon-chevron-left").show();
+        else
+            $(".glyphicon-chevron-left").hide();
+    }
+
+    //点击左移按钮功能
+    function navMoveleft() {
+        var divWidth = window.innerWidth * 0.8;
+        var scrleft = getScrleft();
+        var targetScroll = getTargetScroll();
+        if (isShowMoveLeft) {
+            $(".selectjs_block div").animate({ scrollLeft: (scrleft - divWidth) }, 500);
+            if ((scrleft - divWidth) <= 0)
+                $(".glyphicon-chevron-left").hide();
+            if ((scrleft - divWidth) < targetScroll)
+                $(".glyphicon-chevron-right").show();
+            else
+                $(".glyphicon-chevron-right").hide();
+        } else
+            $(".glyphicon-chevron-left").hide();
+    }
+    //点击右移按钮功能
+    function navMoveRight() {
+        //根据窗口宽度，*0.8作为每次滚动的宽度
+        var divWidth = window.innerWidth * 0.8;
+        //目前滚动条已经滚动的长度
+        var scrleft = getScrleft();
+        var targetScroll = getTargetScroll();
+        if (isShowMoveRight) {
+            $(".selectjs_block div").animate({ "scrollLeft": scrleft + divWidth }, 500); //若目前的滚动条的长度小于 最终需要滚动的长度，则向左拉动滚动条，拉动的距离为一个li的宽度和它的左外空的距离。
+            scrleft += divWidth;
+            if (scrleft > 0)
+                $(".glyphicon-chevron-left").show();
+            else
+                $(".glyphicon-chevron-left").hide();
+            if (scrleft >= targetScroll) {
+                $(".glyphicon-chevron-right").hide();
+            } else
+                $(".glyphicon-chevron-right").show();
+        } else {
+            $(".glyphicon-chevron-right").hide();
+        }
+    }
+
+    function documentPrint(){
+        try{
+            var hkey_root,hkey_path,hkey_key;
+            hkey_root="HKEY_CURRENT_USER"; hkey_path="\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
+            var RegWsh = new ActiveXObject("WScript.Shell");
+            hkey_key="header";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"");
+            hkey_key="footer";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"");
+            //设置页边距(0.6 要乘以 2.5为实际打印的尺寸)
+            hkey_key="margin_bottom";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            hkey_key="margin_left";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            hkey_key="margin_right";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            hkey_key="margin_top";
+            RegWsh.RegWrite(hkey_root+hkey_path+hkey_key,"0.2");
+
+            window.print();
+        }catch(e){
+            layer.alert("1、请使用IE浏览器<br>2、把网址加入可信任站点<br>3、浏览器设置-安全-受信任站点-自定义级别-Active控件和插件全部改为启动");
+        }
+    }
+</script>
+</body>
+</html>

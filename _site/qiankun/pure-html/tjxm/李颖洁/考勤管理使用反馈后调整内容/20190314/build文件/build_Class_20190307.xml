@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\考勤管理_19.3.13"></property>
+	
+	<target name="lyj">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="liyingjie"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="liyingjie" dir="../../../../../">
+		
+		 <!--模块页面-->
+		 <!--考勤导入列表添加录入成功的总条数功能-->
+		<include name="WebContent/modules/zhbg/kqgl/xtpz/kqLogList.html"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/xtpz/service/KqLogServiceImpl.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/xtpz/entity/KqLog.class"/>
+	     <!--模块Class文件-->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/absenteeism/entity/AbsenteeismInfo.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/comeLateLeaveEarly/entity/ComeLateLeaveEarlyInfo.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/comeLateLeaveEarly/service/ComeLateLeaveEarlyServiceImpl.class"/>
+
+		<!-- 03-22 考勤统计查询 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/controller/AttendenceQueryController.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceQueryService.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceQueryServiceImp.class"/>
+
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/absenteeism/service/AbsenteeismInfoService.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/absenteeism/service/AbsenteeismInfoServiceImpl.class"/>
+
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/qj/service/KqglLeaveInfoService.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/qj/service/KqglLeaveInfoServiceImpl.class"/>
+
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/comeLateLeaveEarly/service/ComeLateLeaveEarlyService.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/comeLateLeaveEarly/service/ComeLateLeaveEarlyServiceImpl.class"/>
+
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/Util/"/>
+
+		<include name="WebContent/modules/zhbg/kqgl/statistics/js/"/>
+		<include name="WebContent/modules/zhbg/kqgl/statistics/attendanceStatsList.html"/>
+
+		<!-- 03-23 迟到早退修改 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/comeLateLeaveEarly/entity/ComeLateLeaveEarlyInfo.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/comeLateLeaveEarly/service/ComeLateLeaveEarlyServiceImpl.class"/>
+		<include name="WebContent/modules/zhbg/kqgl/comeLateLeaveEarly/js/comeLateLeaveEarlyForm.js"/>
+		<include name="WebContent/modules/zhbg/kqgl/comeLateLeaveEarly/comeLateLeaveEarlyForm.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/comeLateLeaveEarly/comeLateLeaveEarlyList.html"/>
+		<!-- 03-23 旷工修改 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/absenteeism/entity/AbsenteeismInfo.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/absenteeism/service/AbsenteeismInfoServiceImpl.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/comeLateLeaveEarly/controller/ComeLateLeaveEarlyController.class"/>
+		<include name="WebContent/modules/zhbg/kqgl/absenteeism/js/absenteeismForm.js"/>
+		<include name="WebContent/modules/zhbg/kqgl/absenteeism/js/validator.js"/>
+		<include name="WebContent/modules/zhbg/kqgl/absenteeism/absenteeismForm.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/absenteeism/absenteeismList.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/absenteeism/absenteeismReadOnlyForm.html"/>
+		<!-- 03-23  考勤管理员授予了四个模块的权限修改 -->
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceQueryServiceImp.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/kqcx/services/AttendenceTableServiceImp.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/statistics/controller/SectionStatsController.class"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/statistics/service/SectionStatsServiceImpl.class"/>
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/js/tree.js"/>
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/attendenceQuery.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/kqcx/attendenceTable.html"/>
+		<include name="WebContent/modules/zhbg/kqgl/statistics/sectionStatsList.html"/>
+		<include name="WebContent/WEB-INF/classes/com/sinosoft/sinoep/modules/zhbg/kqgl/common/**"/>
+		
+		
+		
+		<!-- 公共文件 -->
+		<include name="WebContent/static/js/common/tablelist.js"/>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,lyj">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

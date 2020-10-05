@@ -1,0 +1,6 @@
+﻿insert into sys_data_dictionary (ID, PID, NAME, CODE, MARK, FLAG, VISIBLE, SORT, REMARK, TYPE, CRE_TIME, CRE_USER_ID, CRE_USER_NAME, CRE_DEPT_ID, CRE_DEPT_NAME, UPDATE_TIME, UPDATE_USER_ID, UPDATE_USER_NAME)
+values ('4028d0946ed4100a016ed416e31e0002', '4028d0876706f436016706ffd0ed0002', '单位归档库', 'dwgdk_stratTime', 'dwgdk_stratTime', '1', '1', 17, '单位归档库档案显示起始时间', '0', '2019-12-05 11:24:59', '111245', '杜蒙蒙', '97583', '资金交易科室1', '2019-12-05 11:26:29', '111245', '杜蒙蒙');
+
+insert into sys_data_dictionary (ID, PID, NAME, CODE, MARK, FLAG, VISIBLE, SORT, REMARK, TYPE, CRE_TIME, CRE_USER_ID, CRE_USER_NAME, CRE_DEPT_ID, CRE_DEPT_NAME, UPDATE_TIME, UPDATE_USER_ID, UPDATE_USER_NAME)
+values ('4028d0946ed4100a016ed41987820003', '', '起始时间', '20191201', 'dwgdk_stratTime', '1', '1', 0, '单位归档库档案显示的起始时间', '1', '2019-12-05 11:27:53', '111245', '杜蒙蒙', '97583', '资金交易科室1', '2019-12-05 14:01:05', '111245', '杜蒙蒙');
+

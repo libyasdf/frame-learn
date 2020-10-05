@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\档案管理java_20191105"></property>
+	<target name="wl">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="wanglei"/>
+		</copy>
+	</target>
+	
+	<!-- 这里的dir层级目录要注意，跟build文件所在目录有关-->
+	<fileset id="wanglei" dir="../../../../">
+
+		<!--档案管理整理编目，归档库的第一层顺序调整，把某一个档案调至空缺的档案-->
+		<include name="src/com/sinosoft/sinoep/modules/dagl/bmgl/services/"/>
+
+		<!--单位预立库新增表单回填左侧树上方的立卷单位；
+			预立库（按门类），预立库（按立卷单位），新增档案时回填左侧树的立卷单位-->
+		<include name="WebContent/modules/dagl/bmgl/js/form.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/index.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForLjMl.js"/>
+		<include name="WebContent/modules/dagl/bmgl/js/indexForMlLj.js"/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/tjxm"/>
+			<copy todir="${export.dir.root}/tjxm" overwrite="true">
+				<fileset refid="wl"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,wl">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

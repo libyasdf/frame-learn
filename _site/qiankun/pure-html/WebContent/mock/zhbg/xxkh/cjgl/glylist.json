@@ -1,0 +1,46 @@
+{
+  "flag": "1",
+  "data": {
+    "total": 300,
+    "rows": [
+      {
+        "id": "1",
+        "ksmc": "2017年12月考试",
+        "ksfl": "A类",
+        "ksfs": "100",
+        "kszgf": "99",
+        "kszdf": "20",
+        "pjf": "66",
+        "jgrs": "150",
+        "ycjksrs": "200",
+        "sjcjksrs": "180",
+        "cz":"update"
+      },{
+        "id": "2",
+        "ksmc": "2017年11月考试",
+        "ksfl": "A类",
+        "ksfs": "100",
+        "kszgf": "80",
+        "kszdf": "30",
+        "pjf": "77",
+        "jgrs": "150",
+        "ycjksrs": "200",
+        "sjcjksrs": "188",
+        "cz":"update"
+      },{
+        "id": "2",
+        "ksmc": "2017年11月考试",
+        "ksfl": "A类",
+        "ksfs": "100",
+        "kszgf": "93",
+        "kszdf": "50",
+        "pjf": "87",
+        "jgrs": "150",
+        "ycjksrs": "180",
+        "sjcjksrs": "169",
+        "cz":"update"
+      }
+
+    ]
+  }
+}

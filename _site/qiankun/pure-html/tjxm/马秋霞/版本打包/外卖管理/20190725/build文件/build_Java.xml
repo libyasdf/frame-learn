@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tjxm" default="default">
+	<property name="export.dir.root" value="D:\导出项目文件\9.11"></property>
+	
+	<target name="mqx">
+		<mkdir dir="${export.dir.root}\tjxm"/>
+		<copy todir="${export.dir.root}\tjxm" overwrite="true">
+			<fileset refid="fengchao"/>
+		</copy>
+	</target>
+	
+	
+	<fileset id="fengchao" dir="../../../../../../">
+			
+		  <!--外卖管理-->
+		<include name="WebContent/modules/mypage/wmgl/takeout/takeOutCollectList.html"/>
+		<include name="WebContent/modules/mypage/wmgl/takeout/takeOutEditForm.html"/>
+		<include name="WebContent/modules/mypage/wmgl/takeout/takeOutOrderForm.html"/>
+		<include name="WebContent/modules/mypage/wmgl/takeout/takeOutReadOnlyForm.html"/>
+		<include name="WebContent/modules/mypage/wmgl/takeout/js/takeOutValidator.js"/>
+		
+		<include name="src/com/sinosoft/sinoep/modules/mypage/wmgl/takeout/takeoutinfo/controller/TakeOutInfoController.java"/>
+		<include name="src/com/sinosoft/sinoep/modules/mypage/wmgl/takeout/takeoutinfo/services/TakeOutInfoService.java"/>
+		<include name="src/com/sinosoft/sinoep/modules/mypage/wmgl/takeout/takeoutinfo/services/TakeOutInfoServiceImpl.java"/>
+		<include name="src/com/sinosoft/sinoep/modules/mypage/wmgl/takeout/takeoutinfo/entity/TakeOutInfo.java"/>
+
+	</fileset>
+	
+	<target name="all">
+			<mkdir dir="${export.dir.root}/cqqx"/>
+			<copy todir="${export.dir.root}/cqqx" overwrite="true">
+				<fileset refid="fc"/>
+			</copy>
+		</target>
+		<!--删除上次导出文件-->
+		<target name="deleteOldFile" >  
+		    <delete verbose="true" includeemptydirs="true" failonerror="false" >
+		       <fileset dir="${export.dir.root}">
+		           <include name="**/*"/>
+		       </fileset>
+		    </delete>
+		</target> 
+
+		<target name="default" depends="deleteOldFile,mqx">
+	        <exec executable="cmd" failonerror="false">  
+	            <arg line='/c explorer "${export.dir.root}\"' />  
+	        </exec>
+		</target>	
+	</project>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title></title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+    
+     <!-- Bootstrap -->
+    <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link href="/static/core/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+</head>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area">
+    <form class="form-horizontal" id="form">
+        <input type="hidden" id="textId"/>
+        	<input name="resId" id="resId" type="hidden" value="">
+		<!-- 流程字段-->
+		<input name="pid" id="pid" type="hidden" value=""/><!-- 
+
+
+项ID -->
+		<input name="fankunUserId" id="fankunUserId" type="hidden" value=""/>
+		<input name="opertation" id="opertation" type="hidden" value=""/><!-- 操作方法 -->
+        <input type="hidden" class="form-control" id="meetingServiceName" name="meetingServiceName">
+        <input name="workItemId1" id="workItemId1:" type="hidden" value=""/><!-- 操作方法 -->
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">会议标题：</label>
+                    <div class="col-md-8 form-view">
+                        <span name="applyTitle"></span>
+                    </div>
+                </div>
+                <!-- <div class="form-group">
+                    <label for="" class="col-md-2 control-label">会议室：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingroomName">第一会议室</span>
+                    </div>
+                    <label for="" class="col-md-2 control-label">会议地点：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingPlace"></span>
+                    </div>
+                </div> -->
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">主办单位：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="hostDeptName"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label">会务服务：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingServices" id="meetingServices"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">开始时间：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingStartDate" id="meetingStartDate"></span>&nbsp;<span name="meetingStartTime"> </span>
+                    </div>
+                    <label for="" class="col-md-2 control-label">结束时间：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="meetingEndDate"></span>&nbsp;<span name="meetingEndTime"> </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label">备注： </label>
+                    <div class="col-md-8 form-view">
+                        <span name="remark"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="tablePlan">
+                   	<label for="" class="col-md-2 control-label"> 会议室安排：</label>
+                       <div class="col-md-10" id="plan">
+                       	<table id="right_table1"></table>
+                    </div>
+               	</div>
+            </div>
+        </div>
+        <!-- 基本信息结束 -->
+        <!-- 反馈信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">反馈信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <table id="right_table" ></table>
+            </div>
+        </div>
+        <!-- 反馈信息结束 -->
+
+
+    </form>
+
+    <div class="row m-t-15">
+    </div>
+    <!--文件上传end-->
+</div>
+
+<!-- 按钮区 -->
+<div class="form_btn_area" style="text-align: center;">
+    <button id="save" style="display:none;" class="btn btn-primary form_btn_area_btn2" onclick="save();" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+    <button id="sendFLow" style="display:none;" class="btn btn-primary form_btn_area_btn2" onclick="fankui();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 反馈</button>
+    <button id="addWorkTask"  class="btn btn-primary form_btn_area_btn2" style="width: 140px" onclick="addWorkTask();" ><span class="glyphicon  glyphicon-upload" aria-hidden="true"></span> 导入工作计划</button>
+    
+    <button id="close" class="btn btn-primary form_btn_area_btn2" onclick="closeForm();" >
+		<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+</div>
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/nodetpl.min.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+
+<script type="text/javascript" src="/common/js/dateutil.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script type="text/javascript" src="/message/js/notityMessage.js"></script>
+
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+	<!-- 引入自己模块功能的js -->
+<script type="text/javascript" src="js/meetingServiceNoticeEdit.js"></script>
+<script type="text/javascript" src="js/meetingServiceNoticeValidator.js"></script>
+<script type="text/javascript" src="/static/js/common/displayData.js"></script>
+<!--文件上传js end-->
+<script type="text/javascript">
+    //绑定日期输入input
+    laydate.render({
+        elem: '#startTime' //指定元素
+    });
+    laydate.render({
+        elem: '#endTime' //指定元素
+    });
+    
+    var right_table_col = [{
+    	field: 'id'
+       ,title: '序号'
+       , width: '5%'
+       , order: "desc"
+       , align:"center"
+       , formatter: function (value, row, index) {
+       	//计算序号，并存放业务ID，及已办事项ID
+       	var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+           var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+           var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+           return "<span data-id='"+row.id+"' data-status='"+row.status+"'>"+orderNum+"</span>";
+          }
+   	}, {
+   		field: 'meetingServiceName'
+           , title: '会务服务'
+           , width: '10%'
+           , align:"center"
+       }, {
+    		field: 'isOrNot'
+           , title: '<b style="color: red;">*&nbsp;</b> 能否按时提供'
+           , width: '15%'
+           , align:"center"
+           , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+             	var html = "";
+                	html += '<select class="form-control" name="isOrNot" id="isOrNot" CK_type="required,max" max="10" CK_info="能否按时提供">';
+                	html += '<option value="">---请选择---</option>';
+                	if(value == '0'){
+                		html += '<option selected value="0">按时提供</option>';
+                    	html += '<option value="1">其他</option>';
+                	}else if(value == '1'){
+                		html += '<option  value="0">按时提供</option>';
+                    	html += '<option  selected value="1">其他</option>';
+                	}else{
+                		html += '<option value="0">按时提供</option>';
+                    	html += '<option value="1">其他</option>';
+                    	html += '</select>';
+                	}
+                return html;
+             }
+       }, {
+           field: 'remark'
+           , title: '备注'
+           , width: '20%'
+           , align:"center"
+           , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            	var html = "";
+            	html += '<input type="text" class="form-control" id="remark" CK_type="max" max="20" CK_info="长度验证失败！" name="remark" value="'+row.remark+'" >';
+            	return html;
+         	}
+       }
+        /* ,{ field: 'status'
+                 , title: '状态'
+                 , width: '20%'
+                 , align:"center"
+                 ,visible:false
+                 , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+                  	var html = "";
+                  	html += '<input type="text" class="form-control" id="status" name="status" value="'+row.status+'" >';
+                  	return html;
+               }
+       } */];
+
+   //初始化表格
+    $(document).ready(function (e) {
+   	    	//初始化表格
+       TableInit.init({
+           domId:"right_table",
+           pagination:false,	//不分页
+           url:"/zhbg/hygl/meetingServiceNotice/getByMeetingApplyId",
+           columns:right_table_col,
+           queryParams:function(params){
+           		params.resId = $("#resId").val();
+            	params.meetingroomApplyId = $("#pid").val();
+                return params;
+           },
+           //暂时屏蔽到只读
+          	readOnlyFn:function(){
+          		$('#right_table').find('tr').find('td').each(function(){
+            		if($(this).find("span[data-status]").attr("data-status")=='1'){
+            			$('#save').css("display", "none")//将保存设置为隐藏 
+    					$('#sendFLow').css("display", "none")//将反馈设置为隐藏 
+    					return false;
+            		}else{
+            			$('#save').css("display", "inline-block")//将保存设置为隐藏 
+    					$('#sendFLow').css("display", "inline-block")//将反馈设置为隐藏 
+    					return false;
+            		}
+            	
+            	});
+           } 
+          
+       });
+   })
+      function save(){
+    	var checkResult = aotoCheckForm.check($("#right_table").find("tr").find("input,select,textarea").not(':hidden'));
+       if(checkResult){
+    	var datas = JSON.stringify(getData());
+       // alert(datas);
+        $.ajax({
+    		type: "POST",
+    		url:"/zhbg/hygl/meetingServiceNotice/saveForm",
+    		data:datas,
+    		dataType: 'json',
+    		contentType:"application/json",
+    		success:function(result){
+    			 if(result){
+            		 if(result.flag == "1"){
+            			// 修改页面不允许修改服务单位
+            			layer.msg("保存成功！", {icon: 1});
+            			 //TableInit.refTable('right_table');
+            			 if(parent.getWorkFlowData){
+	            			 parent.getWorkFlowData("daiban");
+            			 }else{
+	            			 parent.TableInit.refTable('right_table');
+            			 }
+    	             }
+            	 }
+    		}
+    	});
+       }
+    }
+   // 处理子表数据
+    function getData(){
+    	var meetingServiceList = new Array();//子表1信息
+        //需要提交到后台的数据
+
+		//遍历页面中子表1信息 形成 subTableList
+		var $subTableRows = $('#right_table').find("tr");//所有子表信息行
+		$subTableRows.each(function (i,index) {
+		    var disk = {
+		    		isOrNot : $(index).find('[name="isOrNot"]').val(),
+		    		remark : $(index).find('[name="remark"]').val(),
+		    		id : $(index).find("span[data-id]").attr("data-id"),
+		    }
+		    meetingServiceList.push(disk);
+		});
+		//以下输出对象deviceInfo 就是完整的请求报文
+		meetingServiceList.splice(0, 1);
+		return meetingServiceList;
+    }
+    function  fankui(){
+    	var checkResult = aotoCheckForm.check($("#right_table").find("tr").find("input,select,textarea").not(':hidden'));
+        if(checkResult){
+        var datas = JSON.stringify(getData());
+        //alert(datas);
+        $.ajax({
+    		type: "POST",
+    		url:"/zhbg/hygl/meetingServiceNotice/fankuiForm",
+    		data:datas,
+    		dataType: 'json',
+    		contentType:"application/json",
+    		success:function(result){
+    			 if(result){
+            		 if(result.flag == "1"){
+            			// 修改页面不允许修改服务单位
+            			$('#save').css("display", "none")//将保存设置为隐藏 
+    					$('#sendFLow').css("display", "none")//将反馈设置为隐藏 
+    					//$('#close').css("display", "block")
+    					if(parent.refreshPage){
+	            			parent.refreshPage("daiban");//刷新待办列表
+	                        parent.getMsgCount();//刷新消息数量
+	                        parent.getMsgList();//刷新消息列表
+    					}else{
+	                        parent.TableInit.refTable('right_table');
+    					}
+            			layer.msg("反馈成功！", {icon: 1,time:2000},function(){
+            				confirmExport()
+            			});
+    	             }
+            	 }
+    		}
+    	}); 
+        }
+    }
+    function closeForm(){
+    	if( parent.TableInit.refTable){
+    	 parent.TableInit.refTable('right_table');
+    	}
+		   MyLayer.closeOpen()
+	   } 
+    
+    //进入工作计划页面
+    var index;
+    function addWorkTask(){
+        /* index = layer.open({
+		                type: 2,
+		                shadeClose: true,
+		                content: '/modules/zhbg/hygl/meetingServiceNotice/workPlanAddForm.html',
+		                area: ['800px', '500px'],
+		                title: ['新增工作计划信息', 'font-size:16px;font-weight:bold;']
+		          }) */
+		           MyLayer.layerOpenUrl({
+						url: '/modules/zhbg/hygl/meetingServiceNotice/workPlanAddForm.html',
+						width:"70%",
+						height: "80%",
+						title: "新增工作计划信息",
+						success:function(layero,index){
+			                //var iframeWin = window[layero.find('iframe')[0]['name']];
+			                //index = iframeWin.getIndex();
+							 //index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+				           	//	console.log("打开是"+index)
+						}
+						
+					})
+    }
+    //关闭弹框
+    function colseLayer(index){
+    	 //MyLayer.closeOpen()
+    	//console.log("关闭是"+index)
+    	layer.close(index);
+    	layer.msg("成功添加工作计划！", {icon: 1});
+    	if(flg=='1'){
+    		//需要刷新父页面的日历
+    		top.setData($('#year', window.top.document).val().substring(0,$('#year', window.top.document).val().indexOf("年")), $('#month', window.top.document).val().substring(0,$('#month', window.top.document).val().indexOf("月")))
+    	}
+    	
+    }
+    function confirmExport(){
+    	layer.confirm("是否立即将此次会务服务导入到工作计划中？",function(index){
+			addWorkTask();
+			layer.close(index);
+		})
+    }
+    
+    var right_table_col1 = [{
+	    field: 'id'
+	    , title: '序号'
+	    , width: '5%'
+	    , sortable: false
+	    , align:"center"
+	    , formatter: function (value, row, index) {
+			return "<span data-id='"+row.id+"'>" + (index+1) + "</span>"; //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号   
+	    }  
+	},{
+	    field: 'useDate'
+	    , title: '会议日期'
+	    , width: '8%'
+	    , sortable: false
+	    , align:"center"
+	},{
+	    field: 'weekDate'
+	    , title:'星期'
+	    , width: '8%'
+	    , sortable: false
+	    , align:"center"
+	},{
+	    field: 'meetingroomName'
+	    , title: '会议室名称'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	},{
+	    field: 'location'
+	    , title: '会议室地点'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	},{
+	    field: 'useTime'
+	    , title: '会议时间'
+	    , sortable: false
+	    , width: '10%'
+	    , align:"center"
+	}]; 
+   function showMeetingRoom(id){//会议室申请id
+		$("#right_table1").bootstrapTable({
+           pagination:true,
+           striped:true,
+           classes: 'table table-hover',
+           fixedColumns: true,//是否固定列
+           pageList: "[10, 25, 50, 100]",
+           detailView:false,
+           columns: right_table_col1
+		})
+		$.ajax({
+			type : "get",
+			url : "/zhbg/hygl/meetingRoomUseInfo/getByApplyId",
+			data : {applyId:id,resId:$('#left_ul').find('a.active').attr("id")},
+			async : false,
+			success : function(json) {
+				if (json.flag=='1') {
+					$('#right_table1').bootstrapTable('removeAll');
+					$('#right_table1').bootstrapTable('load',json.data);
+					$('#plan .pull-left').css('display','none')
+				}
+			}
+		}); 
+	}    
+</script>
+</body>
+</html>

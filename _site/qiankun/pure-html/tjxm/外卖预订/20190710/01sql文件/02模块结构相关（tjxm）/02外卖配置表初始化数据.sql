@@ -1,0 +1,3 @@
+--外卖基础配置初始化2019的数据
+insert into wmgl_config (ID, ISVALID, PERIOD, LOST_CREDIT_LIMT, LOCK_TIME, ATTENTION_ITME, VISIBLE, CRE_USER_ID, CRE_USER_NAME, CRE_DEPT_ID, CRE_DEPT_NAME, CRE_CHUSHI_ID, CRE_CHUSHI_NAME, CRE_JU_ID, CRE_JU_NAME, CRE_TIME, UPDATE_USER_ID, UPDATE_USER_NAME, UPDATE_TIME)
+values ('4028d0876f5cb0b7016f5cb4092a0000', '', '2019', 3, 1, '1、点餐时注意不浪费原则2、请根据取餐时间前来取餐，过期不到者计入失信1次，失信3次后账号会被锁定无法在进行购买3、请自行计划价钱', '1', '', '', '', '', '', '', '', '', '2020-01-01 00:05:00', '4028da066bd49d17016bd59e11570079', '莱德', '2019-07-09 20:42:23');

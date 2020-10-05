@@ -1,0 +1,350 @@
+<style type="text/css">
+    .panel-controls{
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+    .panel-controls > i.showSelect{
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+    label{
+        font-weight: normal;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!--查询-->
+        <!-- resId -->
+        <input type="text" id="resId" name="resId" value="" hidden="true">
+        <!-- 值班表id字段 -->
+        <input type="text" id="reportId" name="reportId" value="" hidden="true">
+        <form id="dmForm" onkeydown="keyLogin();">
+            <div class="col-md-12">
+                <div class="panel panel-default toggle">
+                    <div class="panel-heading" style="cursor: pointer;">
+                        <h3 class="panel-title">查询项</h3>
+                        <div class="panel-controls " >
+                            <i class="glyphicon glyphicon-plus showSelect"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="display: none;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label" style="text-align: right;"> 值班日期：</label>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="watchDate" name="watchDate"/>
+                            </div>
+                            <label class="col-md-1 control-label" style="text-align: right;"> 部门：</label>
+                            <div class="col-md-3">
+                                <input type="text" id="creJuName" unselectable="on" onclick="openSelectZtree({'id':'creJuId','name':'creJuName','type':'2','asyn':false,'level':1,'deptId':441,'url':'/system/component/tree/deptTree'})" class="form-control" >
+                                <input type="hidden" id="creJuId" name="creJuId" /><!-- 单位ID隐藏域 -->
+                            </div>
+                            <label class="col-md-1 control-label" style="text-align: right;"> 值班单位：</label>
+                            <div class="col-md-3">
+                                <select name="creChushiId" id="creChushiId" class="form-control">
+                                    <option value="">请选择单位</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮-->
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align: center;padding-top: 5px;">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="TableInit.refTable('right_table');"> 查&nbsp;&nbsp;询
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" class="btn btn-primary" onclick="clearAll();">
+                                    重&nbsp;&nbsp;置
+                                </button>
+                            </div>
+                        </div>
+                        <!--查询重置等按钮 end-->
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--查询结束-->
+        <div class="col-md-12">
+
+            <div class="list_button_area">
+                <button class="list_table_btn2"
+                        onclick="exportDate()">
+                    <span class="glyphicon glyphicon-chevron-right"></span> 导出
+                </button>
+            </div>
+
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/modules/system/component/tree/js/deptUserTree.js"></script>
+<!--合并单元格的js-->
+<script type="text/javascript" src="/common/js/mergeTable.js"></script>
+<script type="text/javascript">
+    //参考：http://www.layui.com/laydate/
+    //绑定日期输入input
+    laydate.render({
+        elem: '#watchDate'
+        ,type: 'date'//指定元素
+        ,done : function(value, date, endDate) {
+            querySelectData();
+        }
+    });
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放开关ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' >"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    }, {
+        field: 'watchDate'
+        , title: '日期'
+        , width: '9%'
+        , align:"center"
+    },{
+        field: 'weekday'
+        , title: '星期'
+        , width: '5%'
+        , align:"center"
+    },{
+        field: 'creJuName'
+        , title: '部门'
+        , width: '12%'
+        , align:"center"
+    },{
+        field: 'creChushiName'
+        , title: '值班单位'
+        , width: '12%'
+        , align:"center"
+    },{
+        field: 'classes'
+        , title: '值班班次'
+        , width: '2%'
+        , align:"center"
+    },{
+        field: 'watchName'
+        , title: '值班员'
+        , width: '7%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'phone'
+        , title: '手机号'
+        , width: '10%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'shiftLeaderName'
+        , title: '带班领导'
+        , width: '7%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'shiftLeaderPhone'
+        , title: '手机号'
+        , width: '8%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'privatePhone'
+        , title: '专网电话'
+        , width: '12%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    },{
+        field: 'commonPhone'
+        , title: '普网电话'
+        , width: '12%'
+        , align:"center"
+        ,formatter: function (value, row, index){
+            if(""==value){
+                return "-";
+            }else{
+                return value;
+            }
+        }
+    }];
+
+    $(document).ready(function (e) {
+
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            striped:false,//斑马线
+            url:"/zhbg/zbgl/dutytable/getListOfDutySearch",
+            classes: 'table',
+            pagination:true,	//分页
+            columns:right_table_col,
+            editable:true,//开启编辑模式
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.watchDate = $('#watchDate').val();
+                params.creJuId = $('#creJuId').val();
+                params.creChushiId = $('#creChushiId option:selected').val();
+                return params;
+            },
+            readOnlyFn:function(data){
+                try{
+                    $("#watchDate").val(data.rows[0].watchDate);
+                }catch (e) {}
+
+                try {
+                    mergeTableRow("watchDate");
+                    mergeTableRow("weekday");
+                    mergeTableRow("creJuName");
+                    mergeTableRow("creChushiName");
+                    mergeTableRow("privatePhone");
+                    mergeTableRow("commonPhone");
+                }catch (e) {}
+
+                $('tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//                    取消事件冒泡
+                    var evt = e ? e : window.event;
+                    if (evt.stopPropagation) {
+                        evt.stopPropagation();
+                    }else {
+                        evt.cancelBubble = true;
+                    }
+                });
+            },
+            rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+                return {
+                    classes: 'readOnly'
+                    ,css: {"text-align":"center"}
+                };
+            }
+        });
+        querySelectData();
+    });
+
+    //重置按钮不清空隐藏域，需要方法清空
+    function clearAll() {
+        $("#creJuId").val("");
+        querySelectData();
+    }
+
+    function querySelectData(){
+        //没有选择日期
+        var year_month ="";
+        if("" == $("#watchDate").val()){
+            var date = new Date();
+            var watchDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            year_month = DateToStringFomatter(watchDate);//获取当前月份
+        }else{
+            //选择了日期
+            var watchDate = $("#watchDate").val();
+            var test = new Array();
+            test = watchDate.split("-");
+            year_month = test[0]+"-"+test[1];
+        }
+
+        $.ajax({
+            type: 'get',
+            url: "/zhbg/zbgl/config/queryOne",
+            dataType: "json",
+            data: {dutyMonth: year_month},
+            success: function (data) {
+                var unitId = new Array();
+                var unitName = new Array();
+                unitId = data.data.rows[0].unitId.split(",");
+                unitName = data.data.rows[0].unitName.split(",");
+
+                // console.log(data);
+                $("#creChushiId").empty();
+                $("#creChushiId").append("<option value=''>请选择单位</option>");
+                for (var i = 0; i < unitId.length; i++) {
+                    $("#creChushiId").append('<option value=' + unitId[i] + '>' + unitName[i] + '</option>');
+                }
+            }
+        });
+    }
+    //格式化日期
+    function DateToStringFomatter(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m;
+    };
+
+    /**
+     * 导出按钮的事件
+     */
+    function exportDate () {
+        $("#resId").val($('#left_ul').find('a.active').attr("id"));
+        layer.confirm("是否导出查询的所有信息？", function(e) {
+            layer.close(e);
+            $.ajax({
+                url : "/zhbg/zbgl/dutytable/getListOfSearch",
+                data : {
+                    resId:$("#resId").val(),
+                    watchDate: $("#watchDate").val(),
+                    creJuId:$("#creJuId").val(),
+                    creChushiId : $('#creChushiId option:selected').val()
+                },
+                type : "get",
+                success : function(data){
+                    if( data.data.rows.length > 0){ //0 查询有数据， 可导出
+                        $('#dmForm').attr("action","/zhbg/zbgl/dutytable/exportZzbcx");
+                        $("#dmForm").attr("method","POST");
+                        $("#dmForm").submit();
+                    }else{
+                        layer.msg('暂无可导出信息！', {
+                            icon : 0
+                        }); //没有数据时弹出提示信息
+                    }
+                }
+            })
+        })
+
+    };
+</script>
+</body>
+</html>

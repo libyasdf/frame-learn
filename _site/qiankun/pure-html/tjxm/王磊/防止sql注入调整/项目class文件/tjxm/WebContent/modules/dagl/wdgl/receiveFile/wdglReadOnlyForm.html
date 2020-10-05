@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>表单页面</title>
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/static/core/html5/html5shiv.min.js"></script>
+    <script src="/static/core/html5/respond.js"></script>
+    <![endif]-->
+    <link href="/static/css/common/style.css" rel="stylesheet"/>
+    <link href="/static/css/common/form-public.css" rel="stylesheet"/>
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet"/>
+<style type="text/css">
+    	span#hh{ white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;text-align:left}
+</style> 
+
+</head>
+
+<body class="formpage_bj">
+<div class="container-fluid formpage_area" style="min-height: 300px">
+    <form class="form-horizontal" id="form">
+    	<input type="hidden" id="id"/>
+        <!-- 基本信息 -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="block_title">
+                    <span class="name">收文基本信息</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-15">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"> 文件标题：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="title" id="hh"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                	<label for="" class="col-md-2 control-label"> 文号：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="fileNum"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label"> 页数：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="pageNum"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                   	<label for="" class="col-md-2 control-label"> 来文单位：</label>
+	                  <div class="col-md-4 form-view">
+	                     <span name="fileDept"></span>
+	                  </div>
+                    <label for="" class="col-md-2 control-label"> 份数：</label>
+                    <div class="col-md-4 form-view">
+                        <span name=quantity></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                 	<label for="" class="col-md-2 control-label"> 成文日期：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="createdDate"></span>
+                    </div>
+                 	<label for="" class="col-md-2 control-label"> 收文日期：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="fileTime"></span>
+                    </div>
+                    </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"> 密级：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="securityClass"></span>
+                    </div>
+                   	<label for="" class="col-md-2 control-label"> 文件类型：</label>
+	                  <div class="col-md-4 form-view">
+	                     <span name="type"></span>
+	                  </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"> 文件编号：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="serialNum" id="serialNum"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label"> 条码编号：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="barcode" id="barcode"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"> 文种：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="fileType" id="fileType"></span>
+                    </div>
+                    <label for="" class="col-md-2 control-label"> 主送单位：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="zhusUnit" id="zhusUnit"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"> 紧急程度：</label>
+                    <div class="col-md-4 form-view">
+                        <span name="urgencyDegree" id="urgencyDegree"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label"> 备注：</label>
+                    <div class="col-md-7 form-view">
+                        <span name="note" id="hh"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 按钮区 -->
+<div class="form_btn_area" style="text-align: center;">
+    <button  class="btn btn-primary form_btn_area_btn2" style="width: auto" onclick="directorUndertake();"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> 承办单打印(局)</button>
+    <button id="preserveBtn" class="btn btn-primary form_btn_area_btn2" onclick="MyLayer.closeOpen();" ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> 关闭</button>
+</div>
+<!-- 按钮区结束 -->
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script src="/static/js/common/pageEcho.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<script src="/product/workflow/js/common/getCook.js"></script>
+<!-- 表格js -->
+<script src="/static/js/common/tablelist.js"></script>
+<script src="/static/js/common/assistUtil.js"></script>
+<script type="text/javascript">
+	var isReport = false;
+    $(document).ready(function () {
+    	var theRequest = GetRequest();
+    	//获取文件id
+    	var id = theRequest.id;
+    	$("#id").val(theRequest.id);
+    	var resId = theRequest.resId;
+        // 加载数据
+        var params = {
+        		id:id,
+        		resId:resId
+        };
+        //文件信息回显
+        $.getJSON("/dagl/wdgl/receiveFile/edit",params, function (result) {
+            var data = result.data;
+            /** 密级 （这里要在数据字典中获取对应值）*/
+	       	//获取数据字典
+	        /* var map = {};
+	    	var mark = "04";
+	        map = Dictionary.getNameAndCode({
+	    		mark:mark,
+	    		type:'1'
+	    	});
+			data.securityClass = map[data.securityClass]; */
+        	/** 文件类型（从数据字典中获取） */
+        	var typeMap = Dictionary.getNameAndCode({
+	    		mark:"dagl_fileType",
+	    		type:'1'
+	    	});
+			data.type = typeMap[data.type];
+        	/** 文件种类（从数据字典中获取） */
+        	var fileMap = Dictionary.getNameAndCode({
+	    		mark:"dagl_file_type",
+	    		type:'1'
+	    	});
+        	data.fileType = fileMap[data.fileType];
+        	/** 紧急程度（从数据字典中获取） */
+        	var urgencyMap = Dictionary.getNameAndCode({
+	    		mark:"dagl_urgency_degree",
+	    		type:'1'
+	    	});
+        	data.urgencyDegree = urgencyMap[data.urgencyDegree];
+        	if(data.pageNum==0||data.pageNum==null){
+				data.pageNum = "";
+			}else{
+				data.pageNum = ""+data.pageNum;
+			}
+			if(data.quantity==0||data.quantity==null){
+				data.quantity = "";
+			}else{
+				data.quantity = ""+data.quantity;
+			}
+            PageEcho.parseData({
+                data: data,
+            });
+        });
+    })
+
+    function directorUndertake(){
+        var urgencyDegree = $("span[name=urgencyDegree]").text();
+        var securityClass = $("span[name=securityClass]").text();
+        var quantity = $("span[name=quantity]").text();
+        var title = $("span[name=title]").text();
+        var fileNum = $("span[name=fileNum]").text();
+        var note = $("span[name=note]").text().trim();
+        var fileType = $("span[name=fileType]").text();
+        var zhusUnit = $("span[name=zhusUnit]").text();
+        var barcode = $("span[name=barcode]").text();
+        var fileDept = $("span[name=fileDept]").text();
+        var createdDate = $("span[name=createdDate]").text();
+        MyLayer.layerOpenUrl({
+            url:'/modules/dagl/wdgl/receiveFile/fileChenBan.html?urgencyDegree=' + encodeURI(urgencyDegree) + "&securityClass=" + encodeURI(securityClass) + "&quantity=" + encodeURI(quantity) + "&title=" + encodeURI(title) + "&fileNum=" + encodeURI(fileNum) + "&note=" + encodeURI(note) + "&fileType=" + encodeURI(fileType) + "&zhusUnit=" + encodeURI(zhusUnit) + "&barcode=" + encodeURI(barcode) + "&fileDept=" + encodeURI(fileDept) + "&createdDate=" + encodeURI(createdDate),
+            title:"承办单打印",
+            width:"90%",
+            height:"90%"
+        })
+    }
+</script>
+</body>
+</html>
+ 

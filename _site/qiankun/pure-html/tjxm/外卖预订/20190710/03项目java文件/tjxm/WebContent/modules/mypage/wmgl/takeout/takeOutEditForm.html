@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title></title>
+        <link rel="stylesheet" type="text/css" href="/static/css/common/Loading.css">
+    <link rel="stylesheet" href="/static/core/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/core/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" href="/static/core/jquery-fileupload/css/jquery.fileupload.css">
+     <link href="/static/core/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/core/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link href="/static/core/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/core/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="/static/css/gateway/reset.css">
+    <link rel="stylesheet" href="/static/font/iconfont-gateway/iconfont.css">
+
+    <!-- style.css -->
+    <link href="/static/css/common/style.css" rel="stylesheet">
+    <link href="/static/css/common/form-public.css" rel="stylesheet">
+    <link href="/static/css/common/index.css" rel="stylesheet">
+
+    <!-- 滚动条 -->
+    <link rel="stylesheet" href="/static/core/mCustomScrollbar/jquery.mCustomScrollbar.css">
+
+    <!-- 获取url -->
+    <script src="/static/js/common/url.js" type="text/javascript"></script>
+
+    <!-- 开关配置 -->
+    <link rel="stylesheet" type="text/css" href="/modules/system/config/toggle/css/toggleStyle.css">
+    <link href="/static/core/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="/static/core/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		#table_list tr {
+		 	text-align:center
+		}
+    	.control-span {
+    		padding-top: 7px;
+    		margin-bottom: 0;
+    		float: left;
+    	}
+	</style>
+</head>
+
+<body class="formpage_bj">
+    <form class="form-horizontal" id="form">
+        <!-- resId -->
+        <input name="resId" id="resId" type="hidden" value="">
+        <!-- 流程字段-->
+        <input name="id" id="id" type="hidden" value="" /><!-- 工作项ID -->
+        <input name="status" id="status" type="hidden" value="" />
+        <input name="title" id="title1" type="hidden" value="" />
+        <input name="classId" id="classId"  value="" type="hidden"/>
+        <input name="classId1" id="classId1"  value="" type="hidden"/>
+        <!-- 流程字段结束 -->
+        <div class="container-fluid formpage_area" style="margin-bottom: 140px">
+            <!-- 基本信息 -->
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="block_title">
+                        <span class="name">基本信息</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-15">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="rowGroup">
+                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 主题：</label>
+                            <div class="col-md-10 form-view">
+                                <span id="title" ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                    	<div class="rowGroup">
+                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 最晚下单时间：</label>
+                            <div class="col-md-4" >
+                               <input style="cursor: default;background-color: #fff;" readOnly type="text" class="form-control" id="deadlineTime" name="deadlineTime">
+                            </div>
+                        </div>
+                        <div class="rowGroup">
+                            <label for="" class="col-md-2 control-label"><b style="color: red;">*</b> 取餐时间：</label>
+                            <div class="col-md-4" >
+                                <input style="cursor: default;background-color: #fff;" readOnly type="text" class="form-control" id="takeFoodTime" name="takeFoodTime">
+                            </div>
+                        </div>
+                        
+                    </div>
+                   
+                    <div class="form-group">
+                        <div class="rowGroup">
+                            <label for="" class="col-md-2 control-label">注意事项：</label>
+                            <div class="col-md-10">
+                                <textarea name="attentionItem" id="attentionItem" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <div class="rowGroup">
+                            <label for="" class="col-md-2 control-label">备注：</label>
+                            <div class="col-md-10">
+                                <textarea name="mark" id="mark" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 基本信息结束 -->
+            <!-- 第一个附件 -->
+            
+            <div class="row">
+				<div class="col-md-12 ">
+					<div class="block_title">
+						<!-- <span id="choseRoom" class="name">选择商品</span> -->
+						 <button class="list_table_btn2" type="button" id='meetingroomName' onclick="openSelectZtree()">
+                       			<span class="glyphicon glyphicon-plus-sign"></span> 选择商品
+                   		</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal-body selectjs">
+			<div class="selectjs_block" style="height: auto;">
+				<div class="title_tab">
+					
+                	
+                	<ul class="nav nav-tabs" id="category">
+					 
+					</ul>
+				</div>
+				<div class="main" style="height: auto;">
+					
+					<div id="formpage1" class="active">
+						<!--<div class="container-fluid formpage_area">-->
+						
+
+						<div class="row m-t-15">
+							<div class="col-md-12">
+								<div class="list_button_area" id="zuhe" style="height:50px;">
+										<label class="col-md-2 control-label" style="width:17%"> 是否进行组合
+			               					 <span class="glyphicon glyphicon-exclamation-sign userTitle" data-toggle="tooltip" data-placement="bottom" title="组合：选择商品组合成套餐，可以设置套餐的购买规则，例如：A、B、C组合成套餐，设置购买规则为3选1，则客户在购买套餐系列时，只能购买此套餐组合中任意1个商品。"></span>                    
+										：</label>
+										<div class="col-md-1" style=" width:14%;padding-left: 0px;padding-right: 0px;">
+												<label class="radio-inline">
+													<input type="radio" id="inlineRadio3" name="isZuhe" checked="checked" value="0"> 否
+												</label>
+												<label class="radio-inline">
+													<input type="radio" id="inlineRadio2" name="isZuhe" value="1"> 是
+												</label>
+												
+										</div>
+									<div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">
+										<button class="list_table_btn2" onclick="groupGoods();">
+											<span class="glyphicon glyphicon-cog"></span> 组合
+										</button>
+									</div>
+								</div>
+							
+								<table id="right_table" data-use-row-attr-func="true" data-reorderable-rows="true" ></table>
+								
+							</div>
+						</div>
+					</div>
+					
+				
+				</div>
+				
+			</div>
+		</div>
+            
+            
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="block_title">
+                        <span class="name">套餐组合</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-body selectjs">
+			<div class="selectjs_block" style="height: auto;">
+				<div class="title_tab">
+					<ul class="nav nav-tabs" id="category1">
+					 
+					</ul>
+				</div>
+				<div class="main" style="height: auto;">
+					<div id="formpage2" class="active">
+						<div class="row m-t-15">
+							<div class="col-md-12">
+								<table id="right_table2" data-use-row-attr-func="true" data-reorderable-rows="true" ></table>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+        </div>
+    </form>
+    
+
+   
+
+    <div class="form_btn_area" style="text-align: center;">
+       <button id="save" class="btn btn-primary form_btn_area_btn2" onclick="comitForm('0');" ><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 保存</button>
+		<button id="fbButton" class="btn btn-primary form_btn_area_btn2" onclick="comitForm('1')" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 发布</button>
+        
+    </div>
+    <!-- 按钮区结束 -->
+
+<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/core/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/core/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+<script src="/static/core/layer/layer.js"></script>
+<script src="/static/js/common/mylayer.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+    <script src="/static/core/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+    <script src="/static/core/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/laydate/laydate.js"></script>
+<!-- 流程相关 -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+
+<script type="text/javascript" src="/common/js/commonFunction.js"></script>
+<script type="text/javascript" src="/common/html/notion/notion.js"></script>
+<!-- 获取cookie值 -->
+<script type="text/javascript" src="/product/workflow/js/common/getCook.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 引入自己模块功能的js -->
+<!-- 数据渲染 -->
+<script src="/static/js/common/displayData.js"></script>
+
+<!--文件上传js-->
+<script src="/static/core/jquery-fileupload/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/core/jquery-fileupload/js/jquery.iframe-transport.js"></script>
+<script src="/static/js/common/tablelist.js"></script>
+<script src="/modules/mypage/wmgl/categorygoods/js/goodsChooseTree.js"></script>
+<script type="text/javascript" src="/modules/mypage/wmgl/takeout/js/takeOutValidator.js"></script>
+<script type="text/javascript" src="/modules/mypage/wmgl/takeout/js/takeOutEditForm.js"></script>
+    <!--文件上传js end-->
+    <script type="text/javascript">
+    Array.prototype.insert = function (index, item) { 
+    	this.splice(index, 0, item); 
+    };
+    
+    $("input[name=isZuhe]").click(function(){
+    	var isZuHe = $(this).val();
+    	
+    	if(isZuHe=='0'){//不组合
+    		$('#right_table').bootstrapTable('hideColumn', 'title');
+    	}else{
+    		$('#right_table').bootstrapTable('showColumn', 'title');
+    	}
+    	//商品列表中的a添加编辑事件
+    	editGoodsTable()
+    })
+    
+    //商品组合
+    function groupGoods(){
+    	var selectRows = $('#right_table').bootstrapTable('getSelections');
+    	if(selectRows.length<=0){
+    		layer.msg("请选择进行组合的商品！", {icon : 0});
+    	}else if(selectRows.length==1){
+    		layer.msg("至少要选择两个商品进行组合！", {icon : 0});
+    	}else{
+    		var param = {};
+    		param.categoryId = $("#classId").val();
+    		param.takeOutId  = $("#id").val()
+    		var goodsIds = new Array();
+    		var goodsNameArry = new Array();
+    		//var goodsIds = [];
+    		for(var i=0;i<selectRows.length;i++){
+    			var goodsId = selectRows[i].goodsId
+    			var goodsName = selectRows[i].goodsName
+    			goodsIds.push(goodsId);
+    			goodsNameArry.push(goodsName)
+    		}
+    		 var goodsIdStr = goodsIds.join(",");
+    		 var goodsNameStr = goodsNameArry.join(",");
+    		 param.goodsIds=goodsIdStr;
+    		 param.goodsNames=goodsNameStr;
+    		   $.post("/mypage/wmgl/takeout/setmeal/CombineGoods", param,function(data){
+    			 if(data.flag=='1'){
+    				 layer.msg("组合成功！", {icon : 1});
+    				 TableInit.refTable('right_table')
+    				 //刷新套餐列表
+    				 loadCategory1()
+    			 }
+    			 
+    		 } );  
+    	}
+    }
+    var curDate = getCurrentDate("yyyy-MM-dd  HH:mm:ss")
+    var curDate1 = getCurrentDate("yyyy-MM-dd")
+   var isTwo="0";//选中日期
+      var endDate =  laydate.render({
+    	  elem: '#takeFoodTime'
+    	  ,type: 'datetime'
+    	  ,min: curDate1
+    	  ,range: true
+    	  ,done: function(value, datas){
+    		 /*  startDate.config.max = {
+						year:datas.year,
+						month:datas.month-1,
+						date:datas.date,
+						hours:0,
+						minutes:0,
+						secondes:0
+				} */
+          	$('#takeFoodTime').val(value).change()
+          }
+   		,change: function(value, date, endDate){
+   				isTwo="1"
+   			 	$(".layui-laydate-footer span[lay-type='datetime']").removeClass("laydate-disabled");
+   		}
+   		  ,ready:function(date){
+   			 //日期未选，不允许选择时间
+   			 var len = $("#layui-laydate1 td.layui-this").length
+   			 if(len<2){
+   				 $(".layui-laydate-footer span[lay-type='datetime']").addClass("laydate-disabled");
+   			 }
+   			 //必须选择一个时间段才可选择时间
+   			  $("#layui-laydate1 td").click(function(){
+   				  if(isTwo=="1"){
+   					isTwo="0"
+   					$(".layui-laydate-footer span[lay-type='datetime']").removeClass("laydate-disabled");
+   				  }else{
+   					$(".layui-laydate-footer span[lay-type='datetime']").addClass("laydate-disabled");
+   				  }
+	   				
+   			  })
+   			//控制时间是否可以选中
+   			//var flg="1";//点击的是返回日期还是返回时间
+   			$(".layui-laydate-footer span[lay-type='datetime']").unbind( "click" ).bind("click", function(){
+
+   				var hasCheck=$("#layui-laydate1 td:not(.laydate-disabled):first").hasClass("layui-this");//判断当天日期是否被选择
+   				var len = $("#layui-laydate1 td.layui-this").length
+   				if(hasCheck){//当天日期被选择
+   					//alert("djdj")
+   					$("div.laydate-main-list-0 ol:first li").click(function(){
+   						$("div.laydate-main-list-0 ol:first li:lt("+(hourCnt+1)+")").addClass("laydate-disabled");
+   					})
+   					$("div.laydate-main-list-0 ol:first li:lt("+(hourCnt+1)+")").addClass("laydate-disabled");
+   					
+   					 if(len<2){//开始日期和结束日期都是当天
+   						$("div.laydate-main-list-1 ol:first li").click(function(){
+   							$("div.laydate-main-list-1 ol:first li:lt("+(hourCnt+1)+")").addClass("laydate-disabled");
+   						})
+   						$("div.laydate-main-list-0 ol:first li:lt("+(hourCnt+1)+")").addClass("laydate-disabled");
+   						$("div.laydate-main-list-1 ol:first li:lt("+(hourCnt+1)+")").addClass("laydate-disabled");
+   						
+   					} 
+   				}
+   			});
+   				
+   			
+   		  }
+    	});
+    
+    var minDate = getBeforeDate(curDate,-1);
+
+    var startDate = laydate.render({
+        elem: '#deadlineTime' //指定元素
+        ,btns: ['clear', 'confirm']
+        ,type: 'datetime'
+        ,min: minDate
+        ,ready:function(date){
+        	// disableTimeSelection();   // 禁用分钟和秒选项
+			// 绑定切换面板事件
+			selectDate = date.date;
+            $('.laydate-btns-time').click(function(){
+            	var len = $('.laydate-time-list li:first ol li:lt('+hourCnt+')').length;
+            	
+    			
+                // 禁用分钟和秒选项
+                $('.laydate-time-list').children('li').each(function(index,itemList){
+                    if(index<=0) {
+                        //$(this).children('ol').children('li').removeClass('laydate-disabled')
+					}
+					if(index>0){
+						 $(this).children('ol').children('li').addClass('laydate-disabled')
+                    }
+                    // 绑定选择小时的点击事件
+                    $('.laydate-time-list').find('li').click(function(){
+                        disableTimeSelection();   // 禁用分钟和秒选项
+                        if(selectDate!=dayCnt) return;
+                        $('.laydate-time-list li:first ol li').each(function(index){
+    	            		if(index<=hourCnt){
+    	            			//alert(index)
+    	            			$(this).addClass('laydate-disabled')
+    	            			
+    	            		}
+    	    			})
+                    })
+                })
+            });
+
+	    }
+	    ,change:function(value, date, endDate){
+	    	
+		    	selectDate = parseInt(date.date);
+          
+		}
+        ,done: function(value, datas){
+        	
+        	/* endDate.config.min = {
+						year:datas.year,
+						month:datas.month-1,
+						date:datas.date,
+						hours:datas.hours,
+						minutes:datas.minutes,
+						secondes:10
+				} */
+        	
+        	$('#deadlineTime').val(value).change()
+        	
+        }
+		
+    });
+    var right_table_col = [
+    	 {
+    		 field: 'title',
+    		title : "",
+    		visible:false,
+    		width : '3%',
+    		align : "center",
+    		checkbox : "true",
+    		formatter : function(value, row, index) {
+	   			 if (row.combination=='1' )
+	   		         return {
+	   		             disabled : true,//设置是否可用
+	   		     	};
+  			}
+    	}, 
+    	{
+        field: 'id'
+        , title: '序号'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+            var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+            var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+            return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+        }
+    },{
+        field: 'goodsId'
+            , title: '商品id'
+            ,visible:false
+            , width: '18%'
+            , align:"center"
+        },
+    {
+        field: 'goodsName'
+        , title: '商品名称'
+        , width: '18%'
+        , align:"center"
+    },
+     {
+            field: 'goodsPrice' 
+           , title: '商品单价'
+           , width: '16%'
+           , align:"center"
+        	, formatter: function (value, row, index) {
+        		return "<a href='#' name='goodsPrice' data-type='text' data-pk='"+row.id+"' data-title='商品单价'>" + value + "</a>元/" + row.valuationUnit;
+                  // return "<span >" + row.goodsPrice + "元/"+ row.valuationUnit + "</span>";
+            }
+        },
+        {
+            field: 'goodsNum' 
+           , title: '库存量'
+           , width: '16%'
+           , align:"center"
+        	, formatter: function (value, row, index) {
+        		
+        		if(row.amountLimit && row.amountLimit=='1'){
+        			return "<a href='#' name='goodsNum'  data-type='text' data-goodsId='"  + row.goodsId + "' data-val='"  + value + "' data-buyUnit='"+row.buyUnit+"' data-pk='"+row.id+"' data-title='库存量'>" + value + "</a><span class='buyUnit'>" + row.buyUnit + "</span>";
+        		}else{
+        			return "<a href='#' name='goodsNum' data-type='text' data-goodsId='"  + row.goodsId + "' data-val='"  + value + "' data-buyUnit='"+row.buyUnit+"' data-pk='"+row.id+"' data-title='库存量'>" + '' + "</a>" ;
+        		}
+        		
+            }
+        },
+         {
+            field: 'buyNum' 
+           , title: '最多购买数量'
+           , width: '16%'
+           , align:"center"
+        	, formatter: function (value, row, index) {
+        		if(row.buyLimit && row.buyLimit=='1'){
+        			return "<a href='#' name='buyNum'  data-type='text' data-goodsId='"  + row.goodsId + "' data-val='"  + value + "' data-buyUnit='"+row.buyUnit+"' data-pk='"+row.id+"' data-title='最多购买数量'>" + value + "</a><span class='buyUnit'>" + row.buyUnit + "</span>";
+        		}else{
+        			return "<a href='#' name='buyNum' data-type='text' data-goodsId='"  + row.goodsId + "' data-val='"  + value + "' data-buyUnit='"+row.buyUnit+"' data-pk='"+row.id+"' data-title='最多购买数量'>" + '' + "</a>" ;
+        		}
+        		
+            }
+        }, 
+
+    {
+        field: 'cz'
+        , title: '操作'
+        , width: '16%'
+        , align: "center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var opt = value.split(",");
+            var html = "";
+            html += "<i style='cursor:pointer;' class='glyphicon glyphicon-trash' title='删除' onclick=\'list.deleteFun(\""+ row.id + "\",\""+ row.combination + "\")\'></i>&nbsp;&nbsp;";
+            return html;
+        }
+    }];
+  
+    var right_table_col2 = [
+   	{
+       field: 'id'
+       , title: '序号'
+       , width: '5%'
+       , align:"center"
+       , formatter: function (value, row, index) {
+           //计算序号，并存放业务ID，及已办事项ID
+           var pageSize=$('#right_table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+           var pageNumber=$('#right_table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+           var orderNum = pageSize * (pageNumber - 1) + index + 1;//计算序号
+           return "<span data-id='"+row.id+"' data-workitemid='"+row.yibanid+"'>"+orderNum+"</span>";    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+       }
+   },{
+       field: 'goodsNames'
+       , title: '套餐组合'
+       , width: '35%'
+       , align:"center"
+       ,formatter:function(value,row,index){
+    	   if(value!=null){
+          		var length = value.length
+  	  	   	      var val = '';
+  	  	   	      if(length>30){
+  	  	   	    	  val = value.substring(0,30)+"...";
+  	  	   	      }else{
+  	  	   	    	  val = value;
+  	  	   	      }
+   	   	   		return  "<span style='cursor:default' title='"+value+"'>"+val+"</span>";
+       		}else{
+       			return "-";
+       		}
+       }
+   },
+       {
+           field: 'optNum' 
+          , title: '购买规则'
+          , width: '16%'
+          , align:"center"
+       	, formatter: function (value, row, index) {
+       		var num = row.goodsIds.split(",").length;
+       		return  num+ "选<a href='#' name='optNum'  data-value='"+value+"'data-type='select' data-data='"+num+"' data-pk='"+row.id+"' data-title=''>" + value+"</a>";
+           }
+       },
+   {
+       field: 'cz'
+       , title: '操作'
+       , width: '16%'
+       , align: "center"
+       , formatter: function (value, row, index) { 
+           var html = "";
+           //html += "<i style='cursor:pointer;'class='glyphicon glyphicon-ok' title='确认' onclick=\'list.updateTable2Fun(\""+ row.id + "\")\'></i>&nbsp;&nbsp;";
+           html += "<i style='cursor:pointer;'class='glyphicon glyphicon-trash' title='解除' onclick=\'list.deleteTable2Fun(\""+ row.id + "\")\'></i>&nbsp;&nbsp;";
+           return html;
+       }
+   }];
+       
+    var list = {
+    		undateLimit : function(id,amountLimit) {
+    			var param = {}
+    			param.id = id;
+    			if(amountLimit=='1') amountLimit='0';
+    			else amountLimit='1';
+    			param.amountLimit = amountLimit;
+    			param.flg = '1';
+    			 $.ajax({
+                     type: 'POST',
+                     url: "/mypage/wmgl/takeout/takeoutDetil/updateDetil",
+                     data: param,
+                     dataType: 'JSON',
+                     success: function (data, textStatus, jqXHR) {
+                    	 layer.msg("转换成功!",{icon:1})
+                    	 TableInit.refTable('right_table');
+                     },
+                     error: function () { layer.msg("转换失败!",{icon:2})}
+                 }); 
+			},
+			deleteFun : function(id,combination) {
+				if(combination=='1'){
+					layer.msg("请在套餐组合中解除该商品的绑定！", {icon : 0});
+				}else if(categoryLength==1 && tabletotal1==1 && $("#status").val()=='1'){//发布状态情况下，必须保留一个商品
+					layer.msg("至少要保留一个商品信息！", {icon : 0});
+				}else{
+					var resId = $('#left_ul').find('a.active').attr("id");
+					flag='0'
+		            MyLayer.deleteOpt({
+		            	url: '/mypage/wmgl/takeout/takeoutDetil/delete?id=' + id + "&resId=" + resId,
+		                tableId:'right_table'
+		            })
+				}
+
+			},
+			deleteTable2Fun : function(id) {
+				var resId = $('#left_ul').find('a.active').attr("id");
+	            MyLayer.deleteOpt({
+	            	url: '/mypage/wmgl/takeout/setmeal/delete?id=' + id + "&resId=" + resId,
+	                tableId:'right_table2',
+	                confirmBtn:function(json){
+	                	$.ajax({
+	                        url: json.url
+	                        , type: "GET"
+	                        , dataType: "json"
+	                        , success: function (result) {
+	                            var msg = "";
+	                            if (result.flag === "1") {
+	                                msg = '删除成功！';
+	                                if ($.trim(result.msg)) {
+	                                    msg = result.msg;
+	                                }
+	                                layer.msg(msg, {icon: 1});
+	                                //刷新套餐列表
+	                                loadCategory1();
+	                                //刷新商品列表
+	                                TableInit.refTable('right_table')
+	                            } else {
+	                                msg = '删除失败，请重试！';
+	                                if ($.trim(result.msg)) {
+	                                    msg = result.msg;
+	                                }
+	                                layer.msg(msg, {icon: 2});
+	                            }
+	                        }
+	                        , error: function () {
+	                            layer.msg('删除失败，请重试！', {icon: 2});
+	                        }
+	                	})
+	            	}
+	            })
+			},
+			updateTable2Fun:function(){
+				var resId = $('#left_ul').find('a.active').attr("id");
+	            MyLayer.deleteOpt({
+	            	url: '/mypage/wmgl/takeout/setmeal/save?id=' + id + "&resId=" + resId,
+	                tableId:'right_table2'
+	            })
+			}
+		} 
+	
+    var selectDate;//日期控件中被选中的日期值
+    var hourCnt;//当前时间的小时值
+    var dayCnt;//当前时间的天值
+     function getBeforeDate(date,n) {
+    	        var n = n;
+    	        var d = new Date(date.replace(/-/g, '/'));
+    	        var year = d.getFullYear();
+    	        var mon = d.getMonth() + 1;
+    	        var day = d.getDate();
+    	        var hours = d.getHours();
+    	        hourCnt=parseInt(hours)
+    	        dayCnt = parseInt(day)
+    	        if(day <= n) {
+    	            if(mon > 1) {
+    	                mon = mon - 1;
+    	            } else {
+    	                year = year - 1;
+    	                mon = 12;
+    	            }
+    	        }
+    	        d.setDate(d.getDate() - n);
+    	        year = d.getFullYear();
+    	        mon = d.getMonth() + 1;
+    	        if(d.getDate()==1){
+	    	        day = d.getDate();
+    	        }else{
+    	        	day = d.getDate()-1;
+    	        }
+    	        s = year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day)+" " + (hours+1) + ":00:00";
+    	        console.log(s)
+    	        return s;
+    	    }
+     // 禁用分钟和秒选项
+ 	function disableTimeSelection(){
+ 	    // console.log('禁用分钟和秒')
+         $('.laydate-time-list').children('li').each(function(index,itemList){
+             if(index<=0) {
+                 $(this).children('ol').children('li').removeClass('laydate-disabled')
+             }
+             if(index>0){
+                $(this).children('ol').children('li').addClass('laydate-disabled')
+             }
+         })
+ 	}
+     
+   var flag = "0";//用于判断是否重新加载标签页
+   var tabletotal1=0;
+   var curRow = {};
+	 //初始化表格
+     TableInit.init({
+         domId:"right_table",
+         url:"/mypage/wmgl/takeout/takeoutDetil/getDetilByInfoId",
+         columns:right_table_col,
+         pagination:false,
+         queryParams:function(params){
+         	params.infoId = $("#id").val();
+         	params.classId=$("#classId").val();
+             return params;
+         },
+         rowStyle: function (row, index) {
+             return {
+                 classes: 'readOnly'
+                 ,css: {"text-align":"center","cursor":"default"}
+             };
+         },
+         readOnlyFn: function (data) {
+        	 tabletotal1=data.total;
+        	 if(data.total==0 && flag=='0'){
+        		 flag = "1";
+        		 loadCategory()
+        	 }
+        	//商品列表中的a添加编辑事件
+        	 editGoodsTable()
+        },
+         onReorderRowsDrag: function (table, row) {
+             //当选中行，拖拽时的哪行数据，并且可以获取这行数据的上一行数据和下一行数据
+             return false;
+         },
+         onReorderRowsDrop: function (table, row) {
+             if(row.childNodes.length<=1) return
+             //拖拽完成后的这条数据，并且可以获取这行数据的上一行数据和下一行数据
+             var tableBs = $(table);
+             //选中行的index
+             var selectedIndex = row.id.split("_")[1];
+             //拖曳结束后，相同位置行的index
+             var afterIndex = table.tBodies[0].rows[selectedIndex].id.split("_")[1];
+             //alert("排序后相同位置行的index == "+afterIndex);
+             //alert("选中行的index == "+selectedIndex);
+             /**
+              *	选中行的index != 拖曳后相同位置行的index，则说明改变了行顺序，则进行重新排序
+              *	例如选中第三行selectedIndex=2，将第三行向上拖动一行，则拖曳后第三行afterIndex将变为原第二行的index=1
+              */
+             if (selectedIndex != afterIndex) {
+                 var ids = [];
+                 for (var i = 0; i < table.tBodies[0].rows.length; i++) {
+                     var cruRow = $(table.tBodies[0].rows[i]);
+                     var recordId = $(cruRow).find("span[data-id]").attr("data-id");
+                     ids.push(recordId);
+                 }
+                 var idStr = ids.join("&id=");
+                 $.ajax({
+                     type: "post",
+                     url: "/mypage/wmgl/takeout/takeoutDetil/sort?id=" + idStr,
+                     dataType: "json",
+                     success: function (res) {
+                         if (res.flag == "1") {
+                             layer.msg("排序成功！", { icon: 1 });
+                         } else {
+                             layer.msg("排序失败！", { icon: 2 });
+                         }
+                         //刷新列表
+                         $(table).bootstrapTable('refresh');
+                     },
+                     error: function () {
+                         layer.msg("排序异常，请刷新重试！", { icon: 2 });
+                     }
+                 })
+             }
+             return false;
+         },
+         onReorderRow: function (newData) {
+             //当拖拽结束后，整个表格的数据
+             return false;
+         }
+     });
+	 
+	 function getInitTable2(){
+	     TableInit.init({
+	         domId:"right_table2",
+	         url:"/mypage/wmgl/takeout/setmeal/list",
+	         columns:right_table_col2,
+	         pagination:true,
+	         //height:200,
+	         //sortable:false,
+	         queryParams:function(params){
+	         	params.infoId = $("#id").val();
+	         	params.classId=$("#classId1").val();
+	            return params;
+	         },
+	         rowStyle: function (row, index) {	//默认样式：居中，鼠标为手
+
+	                return {
+	                    classes: 'readOnly'
+	                    ,css: {"text-align":"center","cursor":"default"}
+	                };
+            },
+	         readOnlyFn: function (data) {
+	        	 $("#right_table2 a").editable({
+	                 url: function (params) {
+	                     var sName = $(this).attr("name");
+	                     curRow[sName] = params.value;
+	                    var id = $(this).attr("data-pk")
+	                     curRow.id=id
+	                     $.ajax({
+	                         type: 'POST',
+	                         url: "/mypage/wmgl/takeout/setmeal/save",
+	                         data: curRow,
+	                         dataType: 'JSON',
+	                         success: function (data, textStatus, jqXHR) {
+	                        	 layer.msg("提交数据成功！", { icon: 1 });
+	                         },
+	                         error: function () { layer.msg("提交数据失败！", { icon: 1 });}
+	                     });
+	                 },
+	                 source:function(){
+	                    var num = $(this).attr("data-data");
+	                    var datas = [];
+	                    for(i=1;i<num;i++){
+	                    	datas.push({value:i,text:i})
+	                    }
+	                    return datas;
+	                 }
+	             });
+	        }
+	        
+	     });
+		 
+	 }
+	 
+	 //商品列表编辑事件
+	 function editGoodsTable(){
+		 $("#right_table  a").editable({
+             url: function (params) {
+                 var sName = $(this).attr("name");
+                 curRow[sName] = params.value;
+                 var _this = $(this);
+                var id = $(this).attr("data-pk");
+                var buyUnit = $(this).attr("data-buyUnit")
+                 var goodsId = $(this).attr("data-goodsId");
+                 curRow.id=id
+                
+                 if(sName=='goodsPrice'){
+                	 curRow.flg = '0';
+                 }else if(sName=='goodsNum'){
+                	 curRow.flg = '1';
+                 }else{
+                	 curRow.flg = '2';
+                 }
+                 if(sName=='goodsNum'){
+                	
+                	 $.ajax({
+                         type: 'POST',
+                         url: "/mypage/wmgl/takeout/takeoutDetil/judgeUpdateGoodsNum",
+                         data: {'takeOutId':$("#id").val(),'goodsId':goodsId,'goodsNum':curRow[sName]},
+                         dataType: 'JSON',
+                         success: function (data, textStatus, jqXHR) {
+     	                   	 if(data.flag=='1'){
+     	                   		 var flg='0';
+     	                   		 if(data.data.flg=='0'){
+     	                   		   _this.editable('setValue', data.data.orderNum);
+     	                           _this.html(data.data.orderNum);
+     	                           var msg="目前此商品已订购" + data.data.orderNum + buyUnit+",库存数量最低不能低于"+data.data.orderNum+buyUnit+"!"
+     	                    	   
+     	                    	    flg='1';
+     	                    	  	curRow[sName] = data.data.orderNum;
+     	                   		 }
+     	                   		 
+     	                   			$.ajax({
+     	                               type: 'POST',
+     	                               url: "/mypage/wmgl/takeout/takeoutDetil/updateDetil",
+     	                               data: curRow,
+     	                               dataType: 'JSON',
+     	                               success: function (data, textStatus, jqXHR) {
+     	                              	
+     	                              	 if(flg=='1'){
+     	                              		layer.msg(msg,{icon:1})
+     	                              	 }else{
+     	                              		 layer.msg("保存成功!",{icon:1})
+     	                              	 }
+     	                              	 var parent = _this.parent();
+     	                              	 if(curRow.flg == '1' || curRow.flg == '2'){//修改的是库存量或最多购买数量
+     	                              		 if(curRow[sName] || curRow[sName]=='0'){
+     	                                  		 var len = parent.find(".buyUnit").length
+     	                                  		 if(len==0){
+     	                                  			 parent.append("<span class='buyUnit'>" + buyUnit + "</span>")
+     	                                  		 }
+     	                                  		
+     	                                  	 }else{
+     	                                  		 parent.find(".buyUnit").remove()
+     	                                  	 }
+     	                              	 }
+     	                        
+     	                               },
+     	                               error: function () { layer.msg("保存失败!",{icon:2})}
+     	                           });  
+     	                   		 
+     	                   	 }
+             
+                        	  
+                         },
+                         error: function () { layer.msg("保存失败!",{icon:2})}
+                     });
+                 }else{
+                	 $.ajax({
+                         type: 'POST',
+                         url: "/mypage/wmgl/takeout/takeoutDetil/updateDetil",
+                         data: curRow,
+                         dataType: 'JSON',
+                         success: function (data, textStatus, jqXHR) {
+                        	 layer.msg("保存成功!",{icon:1})
+                        	 var parent = _this.parent();
+                        	 if(curRow.flg == '1' || curRow.flg == '2'){//修改的是库存量或最多购买数量
+                        		 if(curRow[sName] || curRow[sName]=='0'){
+                            		 var len = parent.find(".buyUnit").length
+                            		 if(len==0){
+                            			 parent.append("<span class='buyUnit'>" + buyUnit + "</span>")
+                            		 }
+                            		
+                            	 }else{
+                            		 parent.find(".buyUnit").remove()
+                            	 }
+                        	 }
+                        	 
+             
+                        	  
+                         },
+                         error: function () { layer.msg("保存失败!",{icon:2})}
+                     });  
+                 }
+                 
+                
+               
+                   
+             },
+             type: 'text',
+             emptytext:'无限量',
+             validate: function(v) {
+             	 //if (!v) return '不能为空';
+            	 var sName = $(this).attr("name");
+            	
+            	 if(sName == "goodsPrice"){
+                     if(v.length>4) return '不能超过4个字';
+                 	 var reg = new RegExp("^\\d+(\\.\\d+){0,1}$");
+                      if(!reg.test(v)) return '必须是数字且最多保留一位小数';
+            	 }
+            	 if(sName == 'goodsNum'){
+            		 if(v.length>4) return '不能超过4个字';
+            		 var reg = new RegExp("^[0-9]+$");
+            		 if(v){
+            			 if(!reg.test(v)) return '必须是整数';
+            			 //校验库存数目是否大于该商品的订单数量
+            			 
+            		 }
+            	 }
+             }
+         }); 
+	 }
+	 
+	 //修改外卖商品信息的属性值
+	 function updateDetil(){
+		 
+	 }
+    </script>
+</body>
+
+</html>

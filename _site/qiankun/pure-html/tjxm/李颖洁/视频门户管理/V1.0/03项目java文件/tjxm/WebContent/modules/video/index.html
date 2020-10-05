@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="shortcut icon" href="./res/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./lib/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="./lib/video.js/dist/video-js.min.css">
+    <link rel="stylesheet" href="./lib/index/style.css">
+    <style id="timeline"></style>
+</head>
+
+<body>
+
+    <!-- 导航栏 -->
+    <div class="ysp-header ysp-header-black">
+        <div class="logocon clearFloat">
+            <img src="./res/images/logo-ysp.png" class="fl" />
+            <div class="fl searchBox">
+                <input type="text" name="" id="searchText" value="" />
+                <input type="button" id="search" onclick="search('1')" value="搜索" />
+            </div>
+            <div class="userBox fr">
+                <img src="./res/images/userImg.png" class="userImg" />
+                <span id="userInfo"></span>&nbsp;&nbsp;|
+                <a href="javascript:void(0);" id="logout" onclick="logout()">注销</a>&nbsp;&nbsp;
+            </div>
+            <button class="history fr">
+                <img src="./res/images/lishi.png" />
+                &nbsp;&nbsp;观看历史
+                <ul class="history-list">
+                    <li>
+                        <p>动物世界: 第一集 荒野的呼唤</p>
+                        <!-- <span>已看完</span> -->
+                    </li>
+                    <li>
+                        <p>动物世界: 第二集 棕熊把守的水上要塞</p>
+                        <!-- <span>剩余时长: 03:20</span> -->
+                    </li>
+                    <li>
+                        <p>动物世界: 第三集 海豹的生活</p>
+                        <!-- <span>已看完</span> -->
+                    </li>
+                    <li>
+                        <p>动物世界: 第四集 被母狮拯救的小角马</p>
+                        <!-- <span>剩余时长: 01:03:20</span> -->
+                    </li>
+                    <li>
+                        <p>动物世界: 第五集 河里的捕食大师</p>
+                        <!-- <span>剩余时长: 00:37</span> -->
+                    </li>
+                </ul>
+            </button>
+        </div>
+    </div>
+
+    <!-- 播放部分 -->
+    <div class="ysp-player-container">
+
+        <!-- 播放器 -->
+        <div class="ysp-player">
+            <video id="player" width="900" height="600" class="video-js vjs-big-play-centered" controls preload="auto" data-setup='{}'>
+                <source src="./res/video/popstar.mkv" type="video/mp4">
+                </source>
+                <source src="./res/video/popstar.mkv" type="video/webm">
+                </source>
+                <source src="./res/video/popstar.mkv" type="video/ogg">
+                </source>
+                <source src="./res/video/popstar.mkv" type="video/mkv">
+                </source>
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a web browser that
+                    <a href="http://videojs.com/html5-video-support/" target="_blank">
+                        supports HTML5 video
+                    </a>
+                </p>
+            </video>
+
+            <!-- 显示按钮 -->
+            <div class="extend extend_show" style="display: none;">
+                <img src="./res/images/extend_btn_show.png" alt="显示按钮">
+            </div>
+        </div>
+
+        <!-- 播放目录 -->
+        <div class="ysp-player-menu">
+
+            <!-- 标题 -->
+            <div class="ysp-player-menu-title">
+                <span></span>
+            </div>
+
+            <!-- 目录字样 -->
+            <div class="play-menu">
+                <img src="./res/images/menu.png" alt="菜单">
+                <span>目录</span>
+            </div>
+
+            <!-- 目录 -->
+            <div id="cd-timeline" class="ysp-player-menu-panel cd-container">
+                <!-- <div class="cd-timeline-block">
+
+                    <div class="cd-timeline-number">
+                        <span class="cd-date">001</span>
+                    </div>
+
+                    <div class="cd-timeline-img cd-played"></div>
+
+                    <div class="cd-timeline-content">
+                        <span class="cd-date fl">荒野的呼唤</span>
+                        <span class="cd-date">32:00</span>
+                    </div>
+                </div>
+
+                <div class="cd-timeline-block">
+
+                    <div class="cd-timeline-number">
+                        <span class="cd-date">002</span>
+                    </div>
+
+                    <div class="cd-timeline-img cd-playing"></div>
+
+                    <div class="cd-timeline-content">
+                        <span class="cd-date fl">棕熊把守的水上要塞</span>
+                        <span class="cd-date">05:00</span>
+                    </div>
+                </div>
+
+                <div class="cd-timeline-block">
+
+                    <div class="cd-timeline-number">
+                        <span class="cd-date">003</span>
+                    </div>
+
+                    <div class="cd-timeline-img cd-play"></div>
+
+                    <div class="cd-timeline-content">
+                        <span class="cd-date fl">海豹的生活</span>
+                        <span class="cd-date">00:40</span>
+                    </div>
+                </div>
+
+                <div class="cd-timeline-block">
+
+                    <div class="cd-timeline-number">
+                        <span class="cd-date">004</span>
+                    </div>
+
+                    <div class="cd-timeline-img cd-play"></div>
+
+                    <div class="cd-timeline-content">
+                        <span class="cd-date fl">被母狮拯救的小角马</span>
+                        <span class="cd-date">03:05:00</span>
+                    </div>
+                </div> -->
+            </div>
+
+            <!-- 隐藏按钮 -->
+            <div class="extend_hide extend">
+                <img src="./res/images/extend_btn_hide.png" alt="隐藏按钮">
+            </div>
+        </div>
+
+        <!-- 当前视频名 -->
+        <div class="video-name">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="ysp-footer">
+        <p>
+            <a href="#">关于本站</a>丨
+            <a href="#">网站地图</a>丨
+            <a href="#">网络运维</a>丨
+            <a href="#">添加收藏</a>
+        </p>
+        <p>联系电话：0311-XXXXXXXX</p>
+    </div>
+
+</body>
+<script src="./lib/jquery/jquery-1.11.2.min.js"></script>
+<script src="./lib/bootstrap/bootstrap.js"></script>
+<script src="./lib/layer/layer.js"></script>
+<script src="./lib/video.js/dist/video.js"></script>
+<script src="./lib/index/app.js"></script>
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+
+</html>
+
+<div></div>

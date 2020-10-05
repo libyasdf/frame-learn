@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>测试页面</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/static/core/bootstrap/css/bootstrap.min.css">
+
+	<script src="/static/core/jquery/jquery-1.11.2.min.js"></script>
+	<script src="/static/core/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--全局工具js-->
+    <script src="/manage/hp/js/help.js"></script>
+
+	<style>
+	</style>
+
+  </head>
+<body>
+    <div id="tePaDIV">
+        <div class="col-md-12 col-xs-12"  style=" margin-bottom: 5px;">
+            <label class="col-md-2 col-xs-6" style="padding-top:7px">表名:</label>
+            <div class="col-md-4 col-xs-6">
+                <input id="tePaT" type="text"class="form-control">
+            </div>
+        </div>
+
+
+    </div>
+
+    <button id="tePaBut" class="btn btn-default tePaDelectEvent ">生成</button>
+
+</body>
+
+<script>
+    (() => {
+        //解绑事件
+        $(".tePaDelectEvent").off();
+        $(document).off(".tePa");
+        // $(document).on('click.tePa', '#tePaBut', function() {
+        $("#tePaBut").on("click",()=> {
+
+            let tabN=$.trim($("#tePaT").val());
+            let packageN=tabN.toLowerCase().replace(/(?<=_)[A-Za-z0-9_]{1}/g, function(word){ return word.toUpperCase();}).replace(/_/g,"");
+            let packagen=packageN.toLocaleLowerCase();
+            let packAgeN=packageN.replace(/[A-Za-z0-9]/, function(word){ return word.toUpperCase();})
+
+            $.ajax({
+                'url' : '/codeGenerationController/autoCode',
+                'type':'POST',
+                'dataType':'json',
+                'data' : {
+                    'tabN':tabN,
+                    'packageN':packageN,
+                    'packagen':packagen,
+                    'packAgeN':packAgeN
+                }
+            }).done(( data, textStatus, jqXHR )=> {
+                console.log("成功返回");
+                if(!data){data=[];}
+                if(data.statusCode&&data.statusCode!=200){
+                    layer.msg(data.stateDescribe, { icon: 2 });
+                    return;
+                }else{
+                    layer.msg(data.stateDescribe, { icon: 1 });
+                    return;
+                }
+
+            }).fail(function( jqXHR, textStatus, errorThrown ) {
+                console.log("错误异常:"+errorThrown);
+            })
+        });
+
+
+
+    })()
+</script>
+
+</html>

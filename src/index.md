@@ -1,6 +1,7 @@
 ---
+order: 1
 nav:
-    order: 1
+    order: 1    
 ---
 
 # Hello dumi!

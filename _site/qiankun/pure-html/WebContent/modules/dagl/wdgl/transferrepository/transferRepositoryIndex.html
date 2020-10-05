@@ -1,0 +1,1474 @@
+<style type="text/css">
+    .panel-controls {
+        position: absolute;
+        right: 40px;
+        top: 10px;
+    }
+
+    .panel-controls>i.showSelect {
+        font-size: 16px;
+        color: #acb1b8;
+        cursor: pointer;
+    }
+
+    label {
+        font-weight: normal;
+    }
+    #myFrom form .form-group .col-xs-3
+    {
+        padding-top: 0px;
+    }
+    #myFrom form .form-group>div:nth-child(1)
+    {
+        padding-top: 7px;
+        padding-left: 0px;
+        padding-right: 0px;
+        width: 110px;
+    }
+    #myFrom form .form-group>div:nth-child(2)
+    {
+        width: calc(100% - 110px);
+    }
+    .input-em {
+        height: 35px;
+        line-height: 20px;
+        word-break: keep-all;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+    }
+   .ruleDropdown {
+        position: absolute;
+        top: 103%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        list-style: none;
+        text-shadow: none;
+        max-height: 100px;
+        overflow: auto;
+        padding: 5px;
+        margin: 0px;
+        box-shadow: 0 1px 8px #ccc;
+        font-size: 14px;
+        font-family: "Segoe UI",Helvetica,Arial,sans-serif;
+        border: 1px solid #ddd;
+        min-width: 98.64px;
+    }
+    #ruleFromDiv .form-group, #ruleFrom .form-group div{
+        padding: 0px;
+    }
+    form.row .btn.btn-default.dropdown-toggle {
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    form.row .btn .frcaret {
+        position: absolute;
+        right: 15px;
+    }
+
+
+    #ruleFromDiv #myFrom .form-group .col-xs-3{
+        padding-top: 7px;
+        padding-right: 10px;
+        padding-left: 0px;
+        padding-bottom: 0px;
+    }
+    #ruleFromDiv #myFrom .form-group .col-xs-6{
+        padding-top: 7px;
+        padding-right: 10px;
+        padding-left: 0px;
+        padding-bottom: 0px;
+    }
+</style>
+<link rel="stylesheet" type="text/css"
+      href="/modules/dagl/wdgl/transferrepository/css/vertify.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.css">
+<link rel="stylesheet" type="text/css"
+      href="/static/core/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+<!--固定表头所需css-->
+<link href="/static/core/bootstrap-table-fixed-columns/css/bootstrap-table-fixed-columns.css" rel="stylesheet"/>
+<!--表单样式-->
+<link rel="stylesheet" href="/modules/dagl/bmgl/css/common.css">
+<div class="container-fluid" id = "ruleFromDiv">
+    <div class="row" style="height: 100%;">
+        <!--查询-->
+            <form class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="panel panel-default toggle">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h3 class="panel-title">查询项</h3>
+                            <div class="panel-controls ">
+                                <i class="glyphicon glyphicon-plus showSelect"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="display: none;">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"> 文件标题：</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" id="maintitle" name="maintitle" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2" style="width: 100%; text-align: center">
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="TableInit.refTable('right_table')"><!-- TableInit.refTable('right_table') -->
+                                        查&nbsp;&nbsp;询</button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="chongzhi()">
+                                        重&nbsp;&nbsp;置</button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--查询结束-->
+
+        <div class="col-md-12">
+            <!--bootstrap-table表格-->
+            <table id="right_table"></table>
+            <div style="padding-left: 0px; padding-top: 5px; padding-bottom: 5px; padding-left: 10px; " id="addButton">
+                <span style="color: red;">1.勾选的顺序决定归档的顺序；2.选择归档门类，自动带出需要填写的内容；3.系统不支持三层表归档!</span>
+            </div>
+        </div>
+        <div class="form-group col-md-12" id="myFrom">
+            <!-- 表单 -->
+            <form class="row">
+                <div class="form-group col-xs-6">
+                    <div class="col-xs-3">
+                        <span class="text-red">* </span>
+                        <label>归档门类</label>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="select-container dropdown">
+                            <button name="type" id="typeButton" class="btn btn-default dropdown-toggle text-left" data-toggle="dropdown" data-value="">请选择<span class="caret frcaret"></span>
+                            </button>
+                            <ul class="dropdown-menu ruleDropdown" id="type">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="ruleFrom">
+                </div>
+            </form>
+        </div>
+        <div class="form_btn_area" style="text-align: center;">
+            <button id="submit" class="btn btn-primary form_btn_area_btn2" onclick="tidyRecode();" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 归档</button>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/common/jquery.tablednd.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/core/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script src="/modules/zhbg/xxkh/tree/js/dictionaryTypeTree.js"></script>
+<!-- 页面获取参数 -->
+<script type="text/javascript" src="/common/js/getrequest.js"></script>
+<!-- 页面常量配置config.js -->
+<script type="text/javascript" src="/common/js/config.js"></script>
+<script type="text/javascript" src="/static/js/common/assistUtil.js"></script>
+<!--这里是单独引用的自己的js，因为应用公用的js固定表头会出现问题-->
+<script src="/static/core/bootstrap/js/bootstrap.js"></script>
+<script src="/modules/zhbg/zbgl/dutytable/js/bootstrap-table.min.js"></script>
+<script src="/static/core/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--固定表头所需js-->
+<script src="/static/core/bootstrap-table/extensions/reorder-rows/bootstrap-table-reorder-rows.js"></script>
+<script type="text/javascript" src="/static/core/bootstrap-table-fixed-columns/js/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript">
+    var num2 = 1;
+    //收文模板的id
+    var templateId = Config.fileModelId;
+    //用来接收数据字典的值
+    var securityClassMap = {};
+    var typeMap = {};
+    var stateMap = {};
+    var selectData = [];
+    var selectId = [];
+    //接收参数
+    var parameter ;
+    var categoryCode = "";
+    // 表单数据
+    var form = [];
+    // 档号规则
+    var fileNumberRule = null;
+    //目标表名
+    var targetTableName = "";
+    //选择数据对照之后，对应的全宗
+    var generalArchiveCode = "";
+
+    //获取url中的参数
+    var url = $("#left_ul").find("a.active").attr("url");
+    var resId = $("#left_ul").find("a.active").attr("id");
+    parameter = new GetParameter(url);
+    //获取配置列表
+    var name = parameter.sourceName;
+
+    //绑定日期输入input
+    laydate.render({
+        elem: '#time' //指定元素
+    });
+    //日期范围
+    laydate.render({
+        elem: '#timeRange'
+        , range: true
+        ,format:'yyyyMMdd'
+    });
+
+
+    //定义bootatrap-table数据列
+    //    sortable：开启列排序，其他参考API
+    var right_table_col = [{
+        title : "",
+        width : '3%',
+        align : "center",
+        checkbox : "true",
+    },{
+        title: 'id'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , visible:false
+    },{
+        title: '序号'
+        , width: '5%'
+        , order: "desc"
+        , align: "center"
+        , formatter: function (value, row, index) {
+            //计算序号，并存放业务ID，及已办事项ID
+            var orderNum =  index + 1;//计算序号
+            return "<span data-id='"+row.id+"'>"+orderNum+"</span>";
+        }
+    },{
+        field: 'title'
+        , title: '文件标题'
+        , width: '15%'
+        , align:"center"
+        , formatter: function (value, row, index) {
+            if(value!=null){
+                var length = value.length
+                var val = '';
+                if(length>12){
+                    val = value.substring(0,12)+"...";
+                }else{
+                    val = value;
+                }
+                return  "<span title='"+value+"'>"+val+"</span>";
+            }else{
+                return "";
+            }
+        }
+    }, {
+        field: 'fileNum'
+        , title: '文号'
+        , width: '5%'
+        , align:"center"
+        , visible:false
+    },{
+        field: 'pageNum'
+        , title: '页数'
+        , width: '5%'
+        , align:"center"
+        , visible:false
+    },{
+        field: 'fileDept'
+        , title: '发文单位'
+        , width: '10%'
+        , align:"center"
+        , visible:true
+    },{
+        field: 'securityClass'
+        , title: '密级'
+        , width: '10%'
+        , align:"center"
+        /* ,formatter: function (value, row, index) {
+            if(value==null){
+                value = "-";
+            }else{
+                value = securityClassMap[value];
+            }
+            return "<span data-id='"+row.id+"'>"+value+"</span>";
+        } */
+    },{
+        field: 'createdDate'
+        , title: '成文日期'
+        , width: '10%'
+        , align:"center"
+        , visible:true
+    },{
+        field: 'fileTime'
+        , title: '发文日期'
+        , width: '10%'
+        , align:"center"
+        , visible:false
+    },{
+        field: 'type'
+        , title: '文件类型'
+        , width: '10%'
+        , align:"center"
+        , visible:true
+        ,formatter: function (value, row, index) {
+            if(value==null){
+                value = "-";
+            }else{
+                value = typeMap[value];
+            }
+            return "<span data-id='"+row.id+"'>"+value+"</span>";
+        }
+    },{
+        field: 'state'
+        , title: '文件状态'
+        , width: '15%'
+        , align:"center"
+        , visible:true
+        ,formatter: function (value, row, index) {
+            if(value==null){
+                value = "-";
+            }else{
+                value = stateMap[value];
+            }
+            return "<span data-id='"+row.id+"'>"+value+"</span>";
+        }
+    },{
+        field: 'cz'
+        , title: '操作'
+        , width: '5%'
+        , align:"center"
+        , formatter: function (value, row, index) {  //直接定义function,return就是html代码
+            var html = "";
+                //html +="<i title='修改' class='glyphicon glyphicon-edit' onclick=\'list.editFun(\"" + row.id + "\")\'></i>&nbsp;&nbsp;"
+                html += "<i title='删除' class='glyphicon glyphicon-trash' onclick=\'list.deleteFun(\"" + row.id + "\")\'></i>"
+            return html;
+        }
+    }];
+
+
+    $(document).ready(function (e) {
+        //搜索按钮
+        $(document).keyup(function(e) {
+            var key = e.which;
+            if (key == 13) {
+                searchType();
+            }
+        });
+        $.ajax({
+               url:"/dagl/xtpz/datacontrast/getContrastingRelations",
+               data:{sourceName:name},
+               success:function(json){
+                   if (json.flag == '1') {
+                       var data = json.data.rows;
+                       for(var i=0;i<data.length;i++){
+                           $("#type").append($('<li class="dropdown-item" data-value="' + data[i].id + '" target-name="'+data[i].targetName+'" source-name="'+data[i].sourceName+'">' + data[i].contrastName + '</li>'));
+
+                       }
+
+                       var text = $("#typeButton").html().split('<')[0];
+                       for(var i = 0; i < $("#type").find('.dropdown-item').length; ++i) {
+                           if($("#type").find('.dropdown-item:eq('+i+')').html() === text) {
+                               $("#typeButton").attr('data-value', $("#type").find('.dropdown-item:eq('+i+')').attr('data-value'));
+                               break;
+                           }
+                       }
+                       $("#type").find('.dropdown-item').click(function () {
+                           // 改变按钮的值
+                           $("#typeButton").html($(this).html() + '<span class="caret frcaret"></span>')
+                               .attr('data-value', $(this).attr('data-value'));
+                           $("#typeButton").attr('target-name', $(this).attr('target-name'));
+                           $("#typeButton").attr('source-name', $(this).attr('source-name'));
+                           targetTableName = $(this).attr('target-name');
+                           //首先清空没用的表单项
+                           $("#ruleFrom").html("");
+                           getRuleFrom($(this).attr('target-name'));
+                       });
+                   }else {
+
+                   }
+               }
+           });
+        typeMap = Dictionary.getNameAndCode({
+            mark:"dagl_fileType",
+            type:'1'
+        });
+        stateMap = Dictionary.getNameAndCode({
+            mark:"dagl_fileStatus",
+            type:'1'
+        });
+        var listUrl = "";
+        if("dagl_send_file"==name){
+            listUrl = "/dagl/wdgl/sendFile/getTransferRepositoryList";
+        }else if("dagl_receive_file"==name){
+            listUrl = "/dagl/wdgl/receiveFile/getTransferRepositoryList";
+        }
+        //初始化表格
+        TableInit.init({
+            domId:"right_table",
+            url:listUrl,
+            columns:right_table_col,
+            height:"280",
+            classes: 'table',
+            pagination:false,	//不分页
+            queryParams:function(params){
+                //这里将各个查询项添加到要传递的参数中
+//                可以做一些校验
+                params.resId = $('#left_ul').find('a.active').attr("id");
+                params.title = $('#maintitle').val();
+                return params;
+            },
+            readOnlyFn:function(){
+                setReadOnly();
+            },
+            onCheck : function(row,$element) {
+                selectData.push(row);
+                selectId.push(row.id);
+            },
+            onUncheck : function(row,$element) {
+                 for(var i in selectData){
+                    if(row.id==selectData[i].id){
+                        selectData.splice(i,1);
+                    }
+                }
+                for(var i in selectId){
+                    if(row.id==selectId[i]){
+                        selectId.splice(i,1);
+                    }
+                }
+            },onCheckAll: function (rows) {
+                for (var i= 0;i<rows.length;i++){
+                    if(selectId.indexOf(rows[i].id) == -1){
+                        selectId.push(rows[i].id);
+                        //这里是因为全选按钮的原因导致数据重复，当解决，全选框不勾选的问题之后这里的判断则不再需要，目前只能这样控制，等待前端解决全选按钮问题
+                        selectData.push(rows[i]);
+                    }
+                    /*if(selectBorrowId.indexOf(rows[i].borrowId) == -1){
+                        //不包含则新增
+                        selectBorrowId.push(rows[i].borrowId);
+                    }*/
+                }
+            },
+            onUncheckAll: function (rows) {
+                for (var i= 0;i<rows.length;i++){
+
+                    //删除id
+                    var indexOfId = selectId.indexOf(rows[i].id);
+                    if (indexOfId > -1) {
+                        selectId.splice(indexOfId, 1);
+                        //删除数据
+                        selectData.splice(indexOfId, 1);
+                    }
+
+                    /*var indexOfBorrowId = selectBorrowId.indexOf(rows[i].borrowId);
+                    if (indexOfBorrowId > -1) {
+                        selectBorrowId.splice(indexOfBorrowId, 1);
+                    }*/
+
+                }
+            }
+        });
+
+    });
+
+    //    表格数据项的操作
+    var list = {
+        editFun:function(id){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            MyLayer.layerOpenUrl({
+                url:'/modules/dagl/wdgl/sendFile/wdglSendEditForm.html?id='+id+"&resId="+resId,
+                title:"修改发文信息",
+                width:"90%",
+                height:"90%"
+            })
+        },
+        deleteFun:function(id){
+            var resId = $('#left_ul').find('a.active').attr("id");
+            var returnBackUrl = "";
+            if("dagl_send_file"==name){
+                returnBackUrl = '/dagl/wdgl/sendFile/returnBack?id='+id+"&resId="+resId;
+            }else if("dagl_receive_file"==name){
+                returnBackUrl = '/dagl/wdgl/receiveFile/returnBack?id='+id+"&resId="+resId;
+            }
+            MyLayer.deleteOpt({
+                url:returnBackUrl,
+                tableId:'right_table',
+            })
+        }
+    }
+
+    //打开只读页面
+    function setReadOnly(){
+        $('#right_table tr.readOnly').find('td:not(:last)').attr("title","点击查看详情");
+        $('#right_table tr.readOnly').find('td:not(:last)').unbind('click').bind('click',function(e){
+//            取消事件冒泡
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {
+                evt.stopPropagation();
+            }else {
+                evt.cancelBubble = true;
+            }
+//            取消事件冒泡 end
+            var id = $(this).parent().find("span[data-id]").attr("data-id");
+            var resId = $('#left_ul').find('a.active').attr("id");
+            var readOnlyUrl = "";
+            var readOnlyTitle = "";
+            if("dagl_send_file"==name){
+                readOnlyUrl = '/modules/dagl/wdgl/sendFile/wdglSendReadOnlyForm.html?id='+id+"&resId="+resId;
+                readOnlyTitle = "发文基本信息";
+            }else if("dagl_receive_file"==name){
+                readOnlyUrl = '/modules/dagl/wdgl/receiveFile/wdglReadOnlyForm.html?id='+id+"&resId="+resId;
+                readOnlyTitle = "收文基本信息";
+            }
+            MyLayer.layerOpenUrl({url:readOnlyUrl,title:readOnlyTitle,width:'90%',height:'90%'});
+        });
+        $('#right_table tr.readOnly').find('td:eq(0)').unbind('click');
+        $('#right_table tr.readOnly').find('td:eq(2)').bind('mouseover', function (e) {
+            var txt = $(this).find("span[data-content]").attr("data-content");
+            $(this).attr("title",txt)
+
+        });
+    }
+
+    /**
+     * @Author 王富康
+     * @Description //TODO 根据表名获取门类id->根据门类id获取档号规则->回显页面输入框/下拉框
+     * @Date 2019/7/22 16:39
+     * @Param
+     * @return
+     **/
+    function getRuleFrom(tableName){
+        $.ajax({
+            url:"/dagl/wdgl/sendFile/getRuleFrom?rdm="+Math.random(),
+            data:{tableName:tableName},
+            success:function(json){
+                if (json.flag == '1') {
+                    //首先添加全宗，并回填
+                    //层数
+                    var ceng = json.ceng;
+                    //全宗code
+                    generalArchiveCode = json.generalArchiveCode;
+                    //档号规则
+                    var ruleData = json.rule;
+                    fileNumberRule = ruleData;
+                    //表描述
+                    var tableStructDescriptionList = json.tableStructDescriptionList;
+                    //门类code
+                    categoryCode = json.categoryCode;
+                    //单独加载立卷单位
+                    for(var j=0;j<tableStructDescriptionList.length;j++){
+                        if("basefolder_unit" == tableStructDescriptionList[j].COLUMN_NAME){
+                            loadInput(tableStructDescriptionList[j],0);
+                            form[0] = tableStructDescriptionList[j];
+                        }
+                    }
+                    //因为是归档到最后一层，去除最后一位档号规则（“序号”）
+                    for(var i=0;i<ruleData.length-1;i++){
+                        //获取框的属性
+                        for(var j=0;j<tableStructDescriptionList.length;j++){
+                            if(ruleData[i].RULE_FIELD == tableStructDescriptionList[j].COLUMN_NAME){
+                                loadInput(tableStructDescriptionList[j],i+1);
+                                form[i+1] = tableStructDescriptionList[j];
+                            }
+                        }
+                    }
+
+                    // 根据档号规则添加事件
+                    for (var i = 0; i < fileNumberRule.length; ++i) {
+                        var $input = null;
+                        if("year_folder_no" == fileNumberRule[i].RULE_FIELD ){
+                            $input = $('.form-group label:contains(' + fileNumberRule[i].RULE_NAME + ')').parent().next().children().children().eq(0);
+                        }else{
+                            $input = $('.form-group label:contains(' + fileNumberRule[i].RULE_NAME + ')').parent().next().children().eq(0);
+                        }
+
+                        // 给文本框绑定事件
+                        if (!$input.hasClass('dropdown') ) {//&& fileNumberRule[i].COLUMN_TYPE =="2"
+                            $input.change({ length: fileNumberRule[i].NUMB_LENGTH }, checkInputLength);
+                        }
+                    }
+                    $('[data-toggle=dropdown]').dropdown()
+
+                    //添加档号规则的表单内容
+                }else if(json.flag == '0'){
+                    layer.msg(json.msg,{icon:0,time:2000});
+                }
+            }
+        });
+    }
+
+    /**
+     * 加载表单控件
+     * @param data 加载表单控件所需要的数据对象
+     */
+    function loadInput(data,index) {
+        // T text S select A textarea(只会占一行) D treelayer F
+        switch (data.COLUMN_INPUT_TYPE) {
+            case "T":
+                loadTextInput(data,index);
+                break;
+            case "S":
+                loadDropdown(data,index);
+                break;
+            case "A":
+                loadTextArea(data,index);
+                break;
+            case "D":
+                loadTreeLayer(data,index);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 加载文本框
+     * @param data 加载文本框所需要的数据对象
+     * @param index 文本框的索引
+     */
+    function loadTextInput(data,index) {
+        //如果是日期类型，默认设置为当前日期yyyymmdd 王磊 20190403
+        var defaultDay="";
+        if(data.COLUMN_NAME === "year_folder_no"){
+            //特殊处理案卷号
+            var $dropdownDom = $(''
+                + '<div class="form-group col-xs-3" name = "year_folder_no">'
+                + '<div class="col-xs-3">'
+                + '<span class="text-red">* </span>'
+                + '<label>' + data.COLUMN_CHN_NAME + '</label>'
+                + '</div>'
+                + '<div class="col-xs-9">'
+                + '<div style="float: left;width: 50%;">'
+                //+ '<input type="text" class="form-control"  onkeyup="InputChange('+ index +')" id="'+data.COLUMN_NAME+'">'
+                + '<input '+(data.COLUMN_NAME=="barcode" ? "readonly":"")+' onkeyup="InputChange('+ index +')" type="text" class="form-control" value="'
+                + (defaultDay)
+                + '" name="' + data.COLUMN_NAME + '">'
+                + '</div>'
+                + '<div class="select-container dropdown" style="float: left;width: 50%;">'
+                + '<button name="'+data.COLUMN_NAME+'"  class="btn btn-default dropdown-toggle text-left" data-toggle="dropdown" data-value="">'
+                // + (data.COLUMN_VALUE_DEFAULT ? data.COLUMN_VALUE_DEFAULT : "请选择")
+                + '请选择'
+                + '<span class="caret frcaret"></span>'
+                + '</button>'
+                + '<ul class="dropdown-menu ruleDropdown" id="dropdown-menu">'
+                + '</ul>'
+                + '</div>'
+                + '<em class="input-em text-info"></em>'
+                + '</div>'
+                + '</div>'
+            );
+            $('#ruleFrom').append($dropdownDom);
+        }else{
+            $('#ruleFrom').append($(''
+                + '<div class="form-group col-xs-3">'
+                + '<div class="col-xs-3">'
+                + '<span class="text-red">* </span>'
+                + '<label>' + data.COLUMN_CHN_NAME + '</label>'
+                + '</div>'
+                + '<div class="col-xs-9">'
+                + '<input '+(data.COLUMN_NAME=="barcode" ? "readonly":"")+' onkeyup="InputChange('+ index +')" type="text" class="form-control" value="'
+                + (defaultDay)
+                + '" name="' + data.COLUMN_NAME + '">'
+                + '<em class="input-em text-info"></em>'
+                + '</div>'
+                + '</div>')
+            );
+            if(data.COLUMN_TYPE==5){
+                $('#ruleFrom .form-group:last-child').find('input').blur(function () {
+                    bu0($(this),index,data)
+                });
+            }
+        }
+    }
+
+    /**
+     * 加载下拉菜单
+     * @param data 加载下拉菜单所需要的数据对象
+     * @param index 下拉菜单的索引
+     */
+    function loadDropdown(data,index) {
+        if (data.COLUMN_NAME === "basefolder_unit") {
+            var $dropdownDom = $(''
+                + '<div class="form-group col-xs-3">'
+                + '<div class="col-xs-3">'
+                + '<span class="text-red">* </span>'
+                + '<label>' + data.COLUMN_CHN_NAME + '</label>'
+                + '</div>'
+                + '<div class="col-xs-9">'
+                + '<div class="select-container dropdown">'
+                + '<button name="'+data.COLUMN_NAME+'"  class="btn btn-default dropdown-toggle text-left" data-toggle="dropdown" data-value="">'
+                // + (data.COLUMN_VALUE_DEFAULT ? data.COLUMN_VALUE_DEFAULT : "请选择")
+                + '请选择'
+                + '<span class="caret frcaret"></span>'
+                + '</button>'
+                + '<ul class="dropdown-menu ruleDropdown" id="dropdown-menu">'
+                + '</ul>'
+                + '</div>'
+                + '<em class="input-em text-info"></em>'
+                + '</div>'
+                + '</div>'
+            );
+                    //单位预立库，展示当前登录人负责的立卷单位。
+                    $.ajax({
+                        url: "/dagl/xtpz/category/LJDWmark?code="+categoryCode+"&userId="+getcookie("userid"),
+                        type: 'get',
+                        dataType: 'json',
+                        asyn:true,
+                        success: function (data) {
+                            var count = 0;
+                            if(data.flag==1){
+
+                                for(var i in data.data){
+                                    count++;
+                                    $dropdownDom.find('ul.dropdown-menu')
+                                        .append($('<li class="dropdown-item" onclick=InputChange('+ index +') data-value="' + i + '">' + data.data[i] + '</li>'));
+
+                                }
+
+                                var text = $dropdownDom.find('button').html().split('<')[0];
+                                for(var i = 0; i < $dropdownDom.find('.dropdown-item').length; ++i) {
+                                    if($dropdownDom.find('.dropdown-item:eq('+i+')').html() === text) {
+                                        $dropdownDom.find('button').attr('data-value', $dropdownDom.find('.dropdown-item:eq('+i+')').attr('data-value'));
+                                        break;
+                                    }
+                                }
+
+                                $dropdownDom.find('.dropdown-item').click(function () {
+                                    chushiid = $(this).attr('data-value');
+                                    // 改变按钮的值
+                                    $dropdownDom.find('[data-toggle="dropdown"]')
+                                        .html($(this).html() + '<span class="caret frcaret"></span>')
+                                        .attr('data-value', $(this).attr('data-value'));
+                                    updateYearFolderNo();
+                                });
+
+                            }
+                        }
+                    });
+            $('#ruleFrom').append($dropdownDom);
+        }else{
+            //立卷单位以外的下拉框的初始化
+            var zujuan=data.COLUMN_NAME;
+            var defaultData="";
+            if("fonds_no" ==zujuan){
+                //defaultData=generalArchiveCode;
+            }
+            var $dropdownDom = $(''
+                + '<div class="form-group col-xs-3">'
+                + '<div class="col-xs-3">'
+                + '<span class="text-red">* </span>'
+                + '<label>' + data.COLUMN_CHN_NAME + '</label>'
+                + '</div>'
+                + '<div class="col-xs-9">'
+                + '<div class="select-container dropdown">'
+                + '<button name="'+data.COLUMN_NAME+'"  class="btn btn-default dropdown-toggle text-left" data-toggle="dropdown" data-value="">'
+                + (defaultData !=""&&defaultData !=null? defaultData : "请选择")
+                //+ '请选择'
+                + '<span class="caret frcaret"></span>'
+                + '</button>'
+                + '<ul class="dropdown-menu ruleDropdown">'
+                + '</ul>'
+                + '</div>'
+                + '<em class="input-em text-info"></em>'
+                + '</div>'
+                + '</div>'
+            );
+
+            // 请求菜单项
+            $.ajax({
+                url: "/system/config/dictionary/getMapByMark?mark=" + data.COLUMN_SELECT_NO + "&type=1",
+                type: 'get',
+                dataType: 'json',
+                asyn:true,
+                success: function (result) {
+                    // 解析 data
+                    var result = result.data;
+                    var j=0;
+                    for (var i in result) {
+                        $dropdownDom.find('ul.dropdown-menu')
+                            .append($('<li class="dropdown-item" onclick=InputChange('+ index +') data-value="' + i + '">' + result[i] + '</li>'));
+
+                        if(zujuan=='archive_flag'&&j==0){
+                            $dropdownDom.find('button').html(result[i]+'<span class="caret frcaret"></span>').attr("data-value",i)
+                            j++;
+                            $dropdownDom.find("button").attr("disabled",true);
+                        }
+                        if(zujuan=='fonds_no'){
+                            if(generalArchiveCode==i){
+                                $dropdownDom.find('button').html(result[i]+'<span class="caret frcaret"></span>').attr("data-value",i)
+                                $dropdownDom.find("button").attr("disabled",true);
+                            }
+                        }
+                    }
+                    /*if(){
+                        //档案实体状态的初始化
+                    }*/
+
+                    var text = $dropdownDom.find('button').html().split('<')[0];
+                    for(var i = 0; i < $dropdownDom.find('.dropdown-item').length; ++i) {
+                        if($dropdownDom.find('.dropdown-item:eq('+i+')').html() === text) {
+                            $dropdownDom.find('button').attr('data-value', $dropdownDom.find('.dropdown-item:eq('+i+')').attr('data-value'));
+                            break;
+                        }
+                    }
+                    $dropdownDom.find('.dropdown-item').click(function () {
+                        chushiid = $(this).attr('data-value');
+                        // 改变按钮的值
+                        $dropdownDom.find('[data-toggle="dropdown"]')
+                            .html($(this).html() + '<span class="caret frcaret"></span>')
+                            .attr('data-value', $(this).attr('data-value'));
+                        updateYearFolderNo();
+                    });
+                },
+                error: function (err) {
+                    layer.msg('加载下拉菜单失败，请稍后再试',{icon: 2,time:1000});
+                }
+            });
+
+            $('#ruleFrom').append($dropdownDom);
+        }
+    }
+
+    /**
+     * 重置
+     */
+    function chongzhi(){
+        $("#maintitle").val("")
+    }
+
+    //归档
+    function tidyRecode() {
+        var resId = $('#left_ul').find('a.active').attr("id");
+        //勾选的数据，按照勾选顺序排列的数据
+        var data = selectData;
+        if (data.length == 0) {
+            layer.msg("请选择数据后再归档！", {icon: 0});
+        } else {
+            var typeData = $('#typeButton').html().split("<")[0];
+            if("请选择" ==typeData){
+                layer.msg("请选择归档门类！", {icon: 0});
+                return;
+            }
+            // 清除错误提示
+            $('em.input-em').html('');
+
+            // 进行表单校验
+            if (!checkFormData()) {
+                layer.msg("请完善必填信息！",{icon: 0,time:2000});
+                return;
+            }
+
+            // 声明表单提交的数据
+            var formData = {};
+            // 判断控件类型并获取控件名和值
+            for (var i = 0; i < $('#ruleFrom .form-group').length; ++i) {
+                if ($('#ruleFrom .form-group:eq(' + i + ') input[type="text"]').length) {
+                    getTextInputValue(i);
+                } else if ($('#ruleFrom .form-group:eq(' + i + ') .dropdown-toggle').length) {
+                    getDropDownValue(i);
+                } else if ($('#ruleFrom .form-group:eq(' + i + ') textarea').length) {
+                    getTextareaValue(i);
+                } else {
+                    console.log("未找到控件！");
+                }
+            }
+            //校验通过，把数据传到后台
+            var par = {
+                //关联关系的id
+                id :$("#typeButton").attr("data-value"),
+                sourceName:$("#typeButton").attr("source-name"),
+                targetName:$("#typeButton").attr("target-name"),
+                ljdwName:$("#ljdw option:selected").attr("ljdw-name"),
+                ljdwMark:$("#ljdw option:selected").attr("ljdw-name"),
+                fileNumberRule:JSON.stringify(fileNumberRule),
+                jsonStr: JSON.stringify(formData),
+                data:JSON.stringify(data),
+                form:JSON.stringify(form)
+            };
+            var tidyRecodeUrl = "";
+            if("dagl_send_file"==name){
+                tidyRecodeUrl = "/dagl/wdgl/sendFile/tidyRecode";
+            }else if("dagl_receive_file"==name){
+                tidyRecodeUrl = "/dagl/wdgl/receiveFile/tidyRecode";
+            }
+            $.ajax({
+                url:tidyRecodeUrl,
+                data:par,
+                type: "post",
+                dataType: "json",
+                success:function(json){
+                    if (json.flag == '1') {
+                        layer.msg("归档成功！", {icon: 1});
+                        //清空数据
+                        $("#right_table").bootstrapTable("removeAll");
+                        parent.TableInit.refTable('right_table');
+                    }else {
+                        layer.msg("归档失败！", {icon: 2});
+                    }
+                }
+            });
+        }
+
+        /**
+         * 获取文本框的值
+         * @param index 文本框容器在表单中的索引
+         */
+        function getTextInputValue(index) {
+            formData[form[index].COLUMN_NAME] = $('#ruleFrom .form-group:eq(' + index + ') input[type="text"]').val()
+        }
+
+        /**
+         * 获取下拉菜单的值
+         * @param index 下拉菜单容器在表单中的索引
+         */
+        function getDropDownValue(index) {
+            formData[form[index].COLUMN_NAME+"_code"] = (($('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').html().split('<')[0] === "请选择") ? "" : $('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').attr("data-value").split('<')[0]);
+            formData[form[index].COLUMN_NAME] = (($('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').html().split('<')[0] === "请选择") ? "" : $('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').html().split('<')[0]);
+        }
+    }
+
+    /**
+     * @method
+     * @param index 在表单中的索引
+     */
+    function InputChange(index){
+        if ($('#ruleFrom .form-group:eq(' + index + ') input[type="text"]').length) {
+            !checkTextInput(index) ? isLegal = false : hideTipEm(index);
+        } else if ($('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').length) {
+            setTimeout(function(){
+                !checkDropDown(index) ? isLegal = false : hideTipEm(index);
+            },0)
+        } else if ($('#ruleFrom .form-group:eq(' + index + ') textarea').length) {
+            !checkTextarea(index) ? isLegal = false : hideTipEm(index);
+        }
+    }
+
+    /**
+     * 校验表单数据
+     */
+    function checkFormData() {
+        var isLegal = true;
+        for (var i = 0; i < $('#ruleFrom .form-group').length; ++i) {
+            if ($('#ruleFrom .form-group:eq(' + i + ') input[type="text"]').length) {
+                if (!checkTextInput(i)) isLegal = false;
+            } else if ($('#ruleFrom .form-group:eq(' + i + ') .dropdown-toggle').length) {
+                if (!checkDropDown(i)) isLegal = false;
+            } else if ($('#ruleFrom .form-group:eq(' + i + ') textarea').length) {
+                if (!checkTextarea(i)) isLegal = false;
+            }
+        }
+
+        return isLegal;
+    }
+
+    /**
+     * 校验值类型
+     * @param value 用户输入的值
+     * @param data 数据中规定的值类型
+     * @return 是否合法
+     */
+    function checkValueByType(index, value, data) {
+        switch (data.COLUMN_TYPE) {
+            case "1":
+                return checkStringType(index, value, data);
+            case "2":
+                return checkIntType(index, value, data);
+            case "3":
+                return checkFloatType(index, value, data);
+            case "4":
+                return checkTimeType(index, value, data);
+            case "5":
+                return checkDateType(index, value, data);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * 校验字符串类型
+     * @param index 表单控件的索引值
+     * @param value 需要校验的值
+     * @param data 校验合法性的数据对象
+     * @return 是否合法
+     */
+    function checkStringType(index, value, data) {
+        var isRule = 0;
+        // 非必填字段，用户输入为空
+        if (data.COLUMN_CAN_NULL === "T" && value.length === 0) {
+            // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 字符串校验 通过 非必填字段，用户输入为空', 'green');
+            return true;
+        }
+
+        // 必填字段
+        if (data.COLUMN_CAN_NULL === "F" && value.length === 0) {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 不能为空！', 'red');//必填字段校验 未通过
+            return false;
+        }
+
+
+        // 根据档号规则校验
+        for (var i = 0; i < fileNumberRule.length; ++i) {
+
+            $input = $('.form-group label:contains(' + fileNumberRule[i].RULE_NAME + ')').parent().next().children().eq(0);
+
+            if (!$input.hasClass('dropdown')){ // 如果是文本框
+                if(fileNumberRule[i].RULE_NAME==data.COLUMN_CHN_NAME && value.length > fileNumberRule[i].NUMB_LENGTH){
+                    showTipEm(index, form[index].COLUMN_CHN_NAME + ' 长度不超过'+ fileNumberRule[i].NUMB_LENGTH+'位！', 'red');//长度校验 未通过
+                    isRule++;//我是档号规则
+                    return false;
+                }
+            }
+        }
+
+        if(0 ==isRule){//不是档号规则字段
+            // 长度验证
+            if (value.length > data.COLUMN_WIDTH) {
+                showTipEm(index, form[index].COLUMN_CHN_NAME + ' 长度不超过'+ data.COLUMN_WIDTH+'位！', 'red');//长度校验 未通过
+                return false;
+            }
+        }
+        // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 字符类型 校验通过', 'green');
+        return true;
+    }
+
+    /**
+     * 校验整数类型
+     * @param index 表单控件的索引值
+     * @param value 需要校验的值
+     * @param data 校验合法性的数据对象
+     * @return 是否合法
+     */
+    function checkIntType(index, value, data) {
+
+        // 非必填字段，用户输入为空
+        if (data.COLUMN_CAN_NULL === "T" && value.length === 0) {
+            // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 整数校验 通过 非必填字段，用户输入为空', 'green');
+            return true;
+        }
+
+        // 必填字段
+        if (data.COLUMN_CAN_NULL === "F" && value.length === 0) {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 不能为空！', 'red');
+            return false;
+        }
+
+        // 是否为正整数
+        if (!/^[0-9]+$/.test(value)) {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 必须为正整数！', 'red');
+            return false;
+        }
+
+        // 根据档号规则校验
+        for (var i = 0; i < fileNumberRule.length; ++i) {
+            var $input = $('.form-group label:contains(' + fileNumberRule[i].RULE_NAME + ')').parent().next().children().eq(0);
+            if (!$input.hasClass('dropdown')){ // 如果是文本框
+                if(fileNumberRule[i].RULE_NAME==data.COLUMN_CHN_NAME && value.length > fileNumberRule[i].NUMB_LENGTH){
+                    showTipEm(index, form[index].COLUMN_CHN_NAME + ' 长度不超过'+ fileNumberRule[i].NUMB_LENGTH+'位！', 'red');//长度校验 未通过
+                    return false;
+                }
+            }
+        }
+
+        // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 整数校验 通过', 'green');
+        return true;
+    }
+
+    /**
+     * 校验小数类型
+     * @param index 表单控件的索引值
+     * @param value 需要校验的值
+     * @param data 校验合法性的数据对象
+     * @return 是否合法
+     */
+    function checkFloatType(index, value, data) {
+
+        // logColorStr("小数校验", "#08c");
+
+        // 非必填字段，用户输入为空
+        if (data.COLUMN_CAN_NULL === "T" && value.length === 0) {
+            // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 小数校验 通过 非必填字段，用户输入为空', 'green');
+            return true;
+        }
+
+        // 必填字段
+        if (data.COLUMN_CAN_NULL === "F" && value.length === 0) {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 不能为空！', 'red');
+            return false;
+        }
+
+        // 如果有小数点
+        if (value.split('.').length) {
+
+            // 获取整数部分和小数部分
+            integralPart = value.split('.')[0];
+            decimalPart = value.split('.')[1];
+
+            // 是否为正整数
+            if (!/^[0-9]+$/.test(integralPart)) {
+                showTipEm(index, form[index].COLUMN_CHN_NAME + ' 小数必须为正整数！', 'red');
+                return false;
+            }
+
+            // 小数位数
+            if (decimalPart.length > form[index].COLUMN_POINT) {
+                showTipEm(index, form[index].COLUMN_CHN_NAME + ' 小数位数不超过'+form[index].COLUMN_POINT+'位！', 'red');
+                return false;
+            }
+
+        } else {
+            // 是否为正整数
+            if (!/^[0-9]+$/.test(value)) {
+                showTipEm(index, form[index].COLUMN_CHN_NAME + ' 小数必须为正整数！', 'red');
+                return false;
+            }
+        }
+
+        // 根据档号规则校验
+        for (var i = 0; i < fileNumberRule.length; ++i) {
+            var $input = $('.form-group label:contains(' + fileNumberRule[i].RULE_NAME + ')').parent().next().children().eq(0);
+            if (!$input.hasClass('dropdown')){ // 如果是文本框
+                if(fileNumberRule[i].RULE_NAME==data.COLUMN_CHN_NAME && value.length > fileNumberRule[i].NUMB_LENGTH){
+                    showTipEm(index, form[index].COLUMN_CHN_NAME + ' 长度不超过'+ fileNumberRule[i].NUMB_LENGTH+'位！', 'red');//长度校验 未通过
+                    return false;
+                }
+            }
+        }
+
+        // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 小数校验 通过', 'green');
+        return true;
+    }
+
+    /**
+     * 校验时间类型
+     * @param index 表单控件的索引值
+     * @param value 需要校验的值
+     * @param data 校验合法性的数据对象
+     * @return 是否合法
+     */
+    function checkTimeType(index, value, data) {
+
+    }
+
+    /**
+     * 校验日期类型
+     * @param index 表单控件的索引值
+     * @param value 需要校验的值
+     * @param data 校验合法性的数据对象
+     * @return 是否合法
+     */
+    function checkDateType(index, value, data) {
+
+        // 非必填字段，用户输入为空
+        if (data.COLUMN_CAN_NULL === "T" && value.length === 0) {
+            // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期校验 通过 非必填字段，用户输入为空', 'green');
+            return true;
+        }
+
+        var isLegal = true;
+        var yearStr = value.substr(0, 4);
+        var monthStr = value.substr(4, 2);
+        var dayStr = value.substr(6, 2);
+
+        // 必填字段
+        if (data.COLUMN_CAN_NULL === "F" && value.length === 0) {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 不能为空！', 'red');
+            return false;
+        }
+
+        // 长度校验
+        /*if (value.length > data.COLUMN_WIDTH) {
+        showTipEm(index, form[index].COLUMN_CHN_NAME + ' 长度不超过'+ data.COLUMN_WIDTH+'位！', 'red');
+        return false;
+        }*/
+        if (value.length != 8) {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 长度必须为8位！', 'red');
+            return false;
+        }
+
+        // 是否为正整数
+        if (!/^[0-9]+$/.test(value) && value.length !== 0) {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 必须为正整数，日期格式应为 YYYYMMDD！', 'red');
+            return false;
+        }
+
+        // 日期格式 YYYY
+        if (value.length === 4) {
+            isLegal = checkDateStr(yearStr, "no", "no")
+        } else if (value.length === 6) {
+            isLegal = checkDateStr(yearStr, monthStr, "no")
+        } else if (value.length === 8) {
+            isLegal = checkDateStr(yearStr, monthStr, dayStr)
+        } else {
+            showTipEm(index, form[index].COLUMN_CHN_NAME + '日期格式应为 YYYYMMDD', 'red');
+            return false;
+        }
+
+        /**
+         * 检验日期字符串格式和日期合法性
+         * @param {*} yearStr 年字符串 如果传参为"no"则代表不检验
+         * @param {*} monthStr 月份字符串
+         * @param {*} dayStr 日期字符串
+         * @return 是否合法
+         */
+        function checkDateStr(yearStr, monthStr, dayStr) {
+
+            var year = Number(yearStr);
+            var month = Number(monthStr);
+            var day = Number(dayStr);
+
+            if ("no" !== year) {
+                // 不得为 0000 年
+                /*if (yearStr === "0000") {
+                    showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期格式校验 未通过 不得为 0000 年！', 'red');
+                    return false;
+                }*/
+            }
+
+            if ("no" !== month) {
+                // 不得为 00 月
+                /*if (monthStr === "00") {
+                    showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期格式校验 未通过 不得为 0000 年！', 'red');
+                    return false;
+                }*/
+
+                // 一年只有12个月
+                if (month > 12) {
+                    showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期格式校验 未通过 一年只有12个月！', 'red');
+                    return false;
+                }
+            }
+
+            if ("no" !== day) {
+
+                // 没有 00 日
+                /*if (dayStr === "00") {
+                    showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期格式校验 未通过 没有 00 日！', 'red');
+                    return false;
+                }*/
+
+
+                // 日期范围
+                if (month === 2) {
+                    if (((year % 4) === 0) && ((year % 100) !== 0) || ((year % 400) === 0)) { // 闰年
+                        if (day > 29) {
+                            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期校验未通过 闰年2月不能超过29天！', 'red');
+                            return false;
+                        }
+                    } else {
+                        if (day > 28) {
+                            showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期校验未通过 平年2月不能超过28天！', 'red');
+                            return false;
+                        }
+                    }
+                } else if (month === 1 || month ===  3 || month ===  5 || month ===  7 || month ===  8 || month ===  10 ||month ===  12) {
+                    if (day > 31) {
+                        showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期校验未通过 不能超过31天！', 'red');
+                        return false;
+                    }
+                } else {
+                    if (day > 30) {
+                        showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期校验未通过 不能超过30天！', 'red');
+                        return false;
+                    }
+                }
+            }
+
+            // showTipEm(index, form[index].COLUMN_CHN_NAME + ' 日期校验 通过', 'green');
+            return true;
+        }
+
+        return isLegal;
+    }
+
+    /**
+     * 校验文本框的合法性
+     * @param index 文本框容器在表单中的索引
+     * @return  是否合法
+     */
+    function checkTextInput(index) {
+
+        // 获取元素和值
+        var $input = $('#ruleFrom .form-group:eq(' + index + ') input[type="text"]');
+        var val = $input.val();
+        var label = $('#ruleFrom .form-group:eq(' + index + ') label').html();
+        var validatorData = form[index];
+
+        if (label !== validatorData.COLUMN_CHN_NAME) {
+            return false;
+        }
+        //如果是案卷级档号，做一次校验，不可重复--王富康2019-03-18
+        /*if (label == "案卷级档号") {
+            console.log(index + '.' + label + ' COLUMN_CHN_NAME %c 校验失败 ' + validatorData.COLUMN_CHN_NAME, "color:red;");
+            return false;
+        }*/
+
+        // 分类校验
+        return checkValueByType(index, val, validatorData);
+    }
+
+    /**
+     * 校验下拉菜单的合法性
+     * @param index 下拉菜单容器在表单中的索引
+     * @return  是否合法
+     */
+    function checkDropDown(index) {
+        // 获取元素和值
+        var $dropdown = $('#ruleFrom .form-group:eq(' + index + ') [data-toggle="dropdown"]');
+        var val = $dropdown.html().split("<")[0];
+        var label = $('#ruleFrom .form-group:eq(' + index + ') label').html();
+        var validatorData = form[index];
+
+        if (val === "请选择") {
+            val = "";
+        }
+
+        if (label !== validatorData.COLUMN_CHN_NAME) {
+            return false;
+        }
+
+        // 分类校验
+        return checkValueByType(index, val, validatorData);
+    }
+
+    /**
+     * 校验文本域的合法性
+     * @param index 文本域容器在表单中的索引
+     * @return  是否合法
+     */
+    function checkTextarea(index) {
+        // 获取元素和值
+        var $textarea = $('#ruleFrom .form-group:eq(' + index + ') textarea');
+        var val = $textarea.val();
+        var label = $('#ruleFrom .form-group:eq(' + index + ') label').html();
+        var validatorData = form[index];
+
+        if (label !== validatorData.COLUMN_CHN_NAME) {
+            return false;
+        }
+
+        // 分类校验
+        return checkValueByType(index, val, validatorData);
+    }
+
+    /**
+     * 显示验证提示信息
+     * @param { Number } index 该表单控件在有效数据中的索引号
+     * @param { String } text 提示信息文本
+     * @param { String } color 提示信息文字颜色
+     */
+    function showTipEm(index, text, color) {
+        $('#ruleFrom .input-em:eq(' + index + ')').html(text).css('color', color)
+    }
+    /**
+     * 隐藏验证提示信息
+     * @param { Number } index 该表单控件在有效数据中的索引号
+     */
+    function hideTipEm(index){
+        $('#ruleFrom .input-em:eq(' + index + ')').html("");
+    }
+
+    /**
+     * 校验输入是否合法，若输入长度不够，补0，超出则提示错误信息
+     * @param event event 对象，用于获得参数 length
+     */
+    function checkInputLength(event) {
+        var length = event.data.length;
+
+        if (Boolean(length)) {
+            if ($(this).val().length < length) {
+                $(this).next().html('');
+                for (var i = $(this).val().length; i < length; ++i) {
+                    $(this).val("0" + $(this).val());
+                }
+            } else if ($(this).val().length > length) {
+                //alert(($(this).parent().prev().find('label').html())
+                $(this).next().html($(this).parent().prev().find('label').html()+' 长度不超过'+length+'位！').css('color', 'red');
+            } else {
+                $(this).next().html('');
+            }
+        }
+        updateYearFolderNo();
+    }
+
+    //选择立卷单位和档号信息之后，案卷号下拉内容的填充
+    function updateYearFolderNo(){
+        //String tName, String baseFolderUnit, String lrrId, String folderNo
+        var formData = {};
+        // 判断控件类型并获取控件名和值
+        for (var i = 0; i < $('#ruleFrom .form-group').length-1; ++i) {
+            if ($('#ruleFrom .form-group:eq(' + i + ') input[type="text"]').length) {
+                getTextInputValue(i);
+            } else if ($('#ruleFrom .form-group:eq(' + i + ') .dropdown-toggle').length) {
+                getDropDownValue(i);
+            } else if ($('#ruleFrom .form-group:eq(' + i + ') textarea').length) {
+                getTextareaValue(i);
+            } else {
+                console.log("未找到控件！");
+            }
+        }
+        var baseFolderUnit =  formData['basefolder_unit'];
+        var folderNo = "";
+        // 根据档号规则校验
+        for (var i = 0; i < fileNumberRule.length-2; ++i) {
+            if("" == formData[fileNumberRule[i].RULE_FIELD]){
+                return;
+            }
+            folderNo += formData[fileNumberRule[i].RULE_FIELD]+fileNumberRule[i].CONNECTOR;
+        }
+
+        // 请求菜单项
+        $.ajax({
+            url: "/dagl/bmgl/getYearFolderNo?tName=" + targetTableName + "&baseFolderUnit="+baseFolderUnit+"&lrrId="+getcookie('userid')+"&folderNo="+folderNo,
+            type: 'get',
+            dataType: 'json',
+            asyn:true,
+            success: function (result) {
+                // 解析 data
+                var result = result.data;
+                $("div[name='year_folder_no']").find('ul.dropdown-menu').html('');
+                for (var i=0;i<result.length;i++) {
+                    $("div[name='year_folder_no']").find('ul.dropdown-menu')
+                        .append($('<li class="dropdown-item" data-value="' + result[i].YEAR_FOLDER_NO + '">' + result[i].YEAR_FOLDER_NO + '</li>'));
+                }
+
+                var text = $("div[name='year_folder_no']").find('button').html().split('<')[0];
+                for(var i = 0; i < $("div[name='year_folder_no']").find('.dropdown-item').length; ++i) {
+                    if($("div[name='year_folder_no']").find('.dropdown-item:eq('+i+')').html() === text) {
+                        $("div[name='year_folder_no']").find('button').attr('data-value', $("div[name='year_folder_no']").find('.dropdown-item:eq('+i+')').attr('data-value'));
+                        break;
+                    }
+                }
+                $("div[name='year_folder_no']").find('.dropdown-item').click(function () {
+                    // 改变按钮的值
+                    $("div[name='year_folder_no']").find('[data-toggle="dropdown"]')
+                        .html($(this).html() + '<span class="caret frcaret"></span>')
+                        .attr('data-value', $(this).attr('data-value'));
+                    $("input[name='year_folder_no']").val($(this).attr('data-value'));
+                });
+            },
+            error: function (err) {
+                layer.msg('加载下拉菜单失败，请稍后再试',{icon: 2,time:1000});
+            }
+        });
+
+        /**
+         * 获取文本框的值
+         * @param index 文本框容器在表单中的索引
+         */
+        function getTextInputValue(index) {
+            formData[form[index].COLUMN_NAME] = $('#ruleFrom .form-group:eq(' + index + ') input[type="text"]').val()
+        }
+
+        /**
+         * 获取下拉菜单的值
+         * @param index 下拉菜单容器在表单中的索引
+         */
+        function getDropDownValue(index) {
+            formData[form[index].COLUMN_NAME] = (($('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').html().split('<')[0] === "请选择") ? "" : $('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').attr("data-value").split('<')[0]);
+            formData[form[index].COLUMN_NAME+"_name"] = (($('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').html().split('<')[0] === "请选择") ? "" : $('#ruleFrom .form-group:eq(' + index + ') .dropdown-toggle').html().split('<')[0]);
+        }
+    }
+</script>
