@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "dumi-app",
+  "name": "data-structure-docs",
   "scripts": {
     "start": "dumi dev",
     "build": "dumi build",
